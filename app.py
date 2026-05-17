@@ -166,6 +166,18 @@ import uuid
 import requests
 import csv
 import io
+import razorpay
+import hmac
+import hashlib
+
+razorpay_client = razorpay.Client(
+    auth=(
+        os.getenv("RAZORPAY_KEY_ID"),
+        os.getenv("RAZORPAY_KEY_SECRET")
+    )
+)
+
+PAYMENT_GAS_URL = "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--FmcKBivrsJEGarfEALgf6GLY_S-8y8VvtehVSlSjy7DWs_/exec"
 
 PROMPTS_DB = []
 
@@ -173,6 +185,20 @@ DATA_DIR = 'data'
 os.makedirs(DATA_DIR, exist_ok=True)
 EDITED_USERS_FILE = os.path.join(DATA_DIR, 'edited_users.json')
 DELETED_USERS_FILE = os.path.join(DATA_DIR, 'deleted_users.json')
+PURCHASES_FILE = os.path.join(DATA_DIR, 'purchases.json')
+
+def load_purchases():
+    if os.path.exists(PURCHASES_FILE):
+        try:
+            with open(PURCHASES_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+def save_purchases(data):
+    with open(PURCHASES_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, indent=4)
 
 def load_edited_users():
     if os.path.exists(EDITED_USERS_FILE):
@@ -458,6 +484,126 @@ def report_prompt():
             "success": False,
             "message": "Failed to submit report. Please try again later."
         }), 500
+
+@app.route('/create-order', methods=['POST'])
+def create_order():
+    try:
+        data = request.get_json()
+        prompt_id = data.get("prompt_id")
+        title = data.get("title")
+        price = data.get("price", 99)
+        
+        amount = int(float(price) * 100)
+        
+        order_data = {
+            "amount": amount,
+            "currency": "INR",
+            "payment_capture": 1,
+            "notes": {
+                "prompt_id": str(prompt_id),
+                "title": title
+            }
+        }
+        
+        order = razorpay_client.order.create(data=order_data)
+        
+        return jsonify({
+            "success": True,
+            "order_id": order["id"],
+            "amount": amount,
+            "currency": "INR",
+            "key": os.getenv("RAZORPAY_KEY_ID")
+        })
+    except Exception as e:
+        print(f"Error creating Razorpay order: {e}")
+        return jsonify({"success": False, "message": str(e)}), 500
+
+@app.route('/verify-payment', methods=['POST'])
+def verify_payment():
+    try:
+        data = request.get_json()
+        razorpay_payment_id = data.get("razorpay_payment_id")
+        razorpay_order_id = data.get("razorpay_order_id")
+        razorpay_signature = data.get("razorpay_signature")
+        prompt_id = data.get("prompt_id")
+        title = data.get("title")
+        price = data.get("price")
+        prompt_text = data.get("prompt_text", "")
+        image_url = data.get("image_url", "")
+        user_info = data.get("user") or session.get("user") or {}
+        
+        # Verify signature
+        params_dict = {
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature
+        }
+        
+        razorpay_client.utility.verify_payment_signature(params_dict)
+        
+        # Signature verified successfully
+        user_id = user_info.get("uid") or user_info.get("user_id") or "guest"
+        user_email = user_info.get("email") or ""
+        
+        # Save to Google Apps Script
+        payment_payload = {
+            "action": "save_payment",
+            "payment_id": razorpay_payment_id,
+            "order_id": razorpay_order_id,
+            "user_id": str(user_id),
+            "user_email": user_email,
+            "prompt_id": str(prompt_id),
+            "prompt_title": title,
+            "amount": price,
+            "currency": "INR",
+            "payment_status": "Success",
+            "payment_method": "Razorpay"
+        }
+        
+        try:
+            requests.post(PAYMENT_GAS_URL, json=payment_payload, timeout=10)
+        except Exception as e:
+            print(f"Error calling GAS for payment: {e}")
+            
+        # Save to local purchases JSON
+        import datetime
+        purchases = load_purchases()
+        if str(user_id) not in purchases:
+            purchases[str(user_id)] = []
+        
+        purchase_record = {
+            "prompt_id": str(prompt_id),
+            "title": title,
+            "price": price,
+            "payment_id": razorpay_payment_id,
+            "order_id": razorpay_order_id,
+            "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "prompt_text": prompt_text,
+            "image_url": image_url
+        }
+        purchases[str(user_id)].append(purchase_record)
+        save_purchases(purchases)
+        
+        return jsonify({"success": True, "message": "Payment successful."})
+        
+    except razorpay.errors.SignatureVerificationError:
+        return jsonify({"success": False, "message": "Payment verification failed."}), 400
+    except Exception as e:
+        print(f"Error verifying payment: {e}")
+        return jsonify({"success": False, "message": str(e)}), 500
+
+@app.route('/api/user/purchases', methods=['GET'])
+def get_user_purchases():
+    uid = request.args.get('uid')
+    if not uid and 'user' in session:
+        uid = session['user'].get('uid')
+        
+    if not uid:
+        return jsonify([])
+        
+    purchases = load_purchases()
+    user_purchases = purchases.get(str(uid), [])
+    return jsonify(user_purchases)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -240,6 +240,7 @@ const initDashboard = async () => {
         await selfHealingPromise;
         const finalUser = getCurrentUser() || localUser;
         await loadUserWishlist(finalUser.user_id || finalUser.uid);
+        await loadUserPurchases(finalUser.user_id || finalUser.uid);
         return; // Skip Firebase check
     }
 
@@ -262,6 +263,7 @@ const initDashboard = async () => {
             
             await loadUserProfile(user, updatedLocalUser);
             await loadUserWishlist(updatedLocalUser.user_id || user.uid);
+            await loadUserPurchases(updatedLocalUser.user_id || user.uid);
         } else {
             console.log("No authenticated user found.");
             window.currentUser = null;
@@ -708,6 +710,57 @@ async function removeFromWishlist(wishlistId) {
     }
 }
 
+// --- Purchases Logic ---
+async function loadUserPurchases(uid) {
+    const purchasesContainer = document.querySelector('#purchased-section tbody');
+    const paymentsContainer = document.querySelector('#payments-section tbody');
+    if (!purchasesContainer || !paymentsContainer) return;
+
+    try {
+        const response = await fetch(`/api/user/purchases?uid=${uid}`);
+        const purchases = await response.json();
+
+        // Render Purchased Prompts
+        if (purchases && purchases.length > 0) {
+            purchasesContainer.innerHTML = purchases.map(item => `
+                <tr>
+                    <td>
+                        <img 
+                            src="${convertDriveLink(item.image_url) || '/static/images/placeholder.png'}" 
+                            class="table-img" 
+                            style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);" 
+                            alt="Thumbnail"
+                            onerror="this.src='/static/images/placeholder.png';"
+                        >
+                    </td>
+                    <td><strong>${item.title || 'Untitled'}</strong></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="copyPromptText(this.dataset.prompt)" data-prompt="${encodeURIComponent(item.prompt_text || '')}" style="padding: 4px 12px; font-size: 12px;">Copy Text</button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            // Render Payment History
+            paymentsContainer.innerHTML = purchases.map(item => `
+                <tr>
+                    <td>${item.payment_id || item.order_id || 'N/A'}</td>
+                    <td>₹${item.price || 0}</td>
+                    <td>${item.date || 'Unknown'}</td>
+                    <td><span style="color:var(--color-success)">Successful</span></td>
+                </tr>
+            `).join('');
+            
+        } else {
+            purchasesContainer.innerHTML = '<tr><td colspan="3" class="text-center" style="padding: 40px;">No purchased prompts yet.</td></tr>';
+            paymentsContainer.innerHTML = '<tr><td colspan="4" class="text-center" style="padding: 40px;">No payment history.</td></tr>';
+        }
+    } catch (error) {
+        console.error('Error loading purchases:', error);
+        purchasesContainer.innerHTML = '<tr><td colspan="3" class="text-center text-danger" style="padding: 40px;">Unable to load purchased prompts.</td></tr>';
+        paymentsContainer.innerHTML = '<tr><td colspan="4" class="text-center text-danger" style="padding: 40px;">Unable to load payment history.</td></tr>';
+    }
+}
+
 // Modal Logic
 const modal = document.getElementById('prompt-modal');
 const modalBackdrop = document.getElementById('modal-backdrop');
@@ -751,7 +804,15 @@ const closeModal = () => {
 if (closeBtn) closeBtn.onclick = closeModal;
 if (modalBackdrop) modalBackdrop.onclick = closeModal;
 
-async function copyPromptText(text) {
+async function copyPromptText(textOrEvent) {
+    let text = textOrEvent;
+    // Decode if called directly from inline onclick
+    if (typeof textOrEvent === 'string' && textOrEvent.includes('%')) {
+        try {
+            text = decodeURIComponent(textOrEvent);
+        } catch(e){}
+    }
+    
     if (!text) {
         showToast("No prompt text available to copy.", "error");
         return;

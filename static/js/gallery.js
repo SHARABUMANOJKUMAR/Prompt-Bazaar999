@@ -6,6 +6,7 @@ const WISHLIST_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzeyp93N_8B
 
 // Global state
 window.currentUser = null;
+window.purchasedPrompts = [];
 let allPrompts = [];
 let currentCategory = "All";
 
@@ -105,13 +106,26 @@ const initAuth = async () => {
             window.currentUser = {
                 uid: updatedLocalUser.user_id || user.uid,
                 email: user.email,
-                name: updatedLocalUser.full_name || updatedLocalUser.username || user.displayName
+                name: updatedLocalUser.full_name || updatedLocalUser.username || user.displayName,
+                mobile_number: updatedLocalUser.mobile_number
             };
         } else {
             window.currentUser = null;
         }
+        loadPurchasedPrompts();
     });
 };
+
+async function loadPurchasedPrompts() {
+    if (!window.currentUser) return;
+    try {
+        const res = await fetch(`/api/user/purchases?uid=${window.currentUser.uid}`);
+        const data = await res.json();
+        window.purchasedPrompts = data.map(p => String(p.prompt_id));
+    } catch(e) {
+        console.error(e);
+    }
+}
 
 initAuth();
 
@@ -242,7 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
-        isPurchased = false;
+        isPurchased = window.purchasedPrompts.includes(String(prompt.prompt_id || prompt.id));
         updateActionBtn();
         
         // Reset wishlist button state in modal
@@ -288,17 +302,110 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     if (actionBtn) {
-        actionBtn.addEventListener('click', () => {
+        actionBtn.addEventListener('click', async () => {
             if (!isPurchased) {
+                if (!window.currentUser) {
+                    showToast('Please login to purchase.', 'error');
+                    window.location.href = '/login';
+                    return;
+                }
+                
                 actionBtn.innerHTML = `<div class="spinner"></div>`;
-                setTimeout(() => {
-                    isPurchased = true;
+                actionBtn.disabled = true;
+                
+                try {
+                    const res = await fetch('/create-order', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            prompt_id: window.currentPrompt.prompt_id || window.currentPrompt.id,
+                            title: window.currentPrompt.title,
+                            price: window.currentPrompt.price || 99
+                        })
+                    });
+                    const orderData = await res.json();
+                    
+                    if (!orderData.success) {
+                        showToast(orderData.message || 'Error creating order', 'error');
+                        updateActionBtn();
+                        actionBtn.disabled = false;
+                        return;
+                    }
+                    
+                    const options = {
+                        key: orderData.key,
+                        amount: orderData.amount,
+                        currency: orderData.currency,
+                        name: "Prompt Bazaar",
+                        description: window.currentPrompt.title,
+                        image: "https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png",
+                        order_id: orderData.order_id,
+                        prefill: {
+                            name: window.currentUser.name || "Customer",
+                            email: window.currentUser.email || "",
+                            contact: window.currentUser.mobile_number || ""
+                        },
+                        theme: { color: "#0D6EFD" },
+                        handler: async function (response) {
+                            try {
+                                const verifyRes = await fetch('/verify-payment', {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify({
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_signature: response.razorpay_signature,
+                                        prompt_id: window.currentPrompt.prompt_id || window.currentPrompt.id,
+                                        title: window.currentPrompt.title,
+                                        price: window.currentPrompt.price || 99,
+                                        prompt_text: window.currentPrompt.prompt_text || "",
+                                        image_url: window.currentPrompt.image_url || "",
+                                        user: window.currentUser
+                                    })
+                                });
+                                const verifyData = await verifyRes.json();
+                                if (verifyData.success) {
+                                    isPurchased = true;
+                                    window.purchasedPrompts.push(String(window.currentPrompt.prompt_id || window.currentPrompt.id));
+                                    updateActionBtn();
+                                    actionBtn.disabled = false;
+                                    showToast('Payment successful! Prompt unlocked.', 'success');
+                                    if (typeof window.addNotification === 'function') {
+                                        window.addNotification(`You unlocked "${window.currentPrompt.title}".`);
+                                    }
+                                } else {
+                                    showToast('Payment verification failed.', 'error');
+                                    updateActionBtn();
+                                    actionBtn.disabled = false;
+                                }
+                            } catch (e) {
+                                showToast('Payment verification error.', 'error');
+                                updateActionBtn();
+                                actionBtn.disabled = false;
+                            }
+                        },
+                        modal: {
+                            ondismiss: function() {
+                                updateActionBtn();
+                                actionBtn.disabled = false;
+                            }
+                        }
+                    };
+                    
+                    const rzp = new window.Razorpay(options);
+                    rzp.on('payment.failed', function (response){
+                        showToast('Payment failed: ' + response.error.description, 'error');
+                    });
+                    rzp.open();
+                } catch (e) {
+                    showToast('Failed to initialize payment.', 'error');
                     updateActionBtn();
-                    showToast('Prompt unlocked successfully!');
-                }, 1500);
+                    actionBtn.disabled = false;
+                }
             } else if (window.currentPrompt) {
-                navigator.clipboard.writeText(window.currentPrompt.prompt_text).then(() => {
-                    showToast('Prompt copied to clipboard!');
+                const textToCopy = window.currentPrompt.prompt_text || window.currentPrompt.description || window.currentPrompt.title;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast('Prompt copied successfully!');
                 });
             }
         });
