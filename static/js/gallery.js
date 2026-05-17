@@ -436,12 +436,7 @@ function createPromptCard(prompt) {
             <div class="card-content">
                 <h3 class="card-title">${title}</h3>
                 <p class="card-desc">${prompt.description || 'Discover this amazing AI prompt and boost your productivity instantly.'}</p>
-                <div class="card-meta">
-                    <div class="meta-stats">
-                        <span class="rating">⭐ ${prompt.rating || '4.9'}</span>
-                        <span>${prompt.sales || '1.2k'} sales</span>
-                    </div>
-                </div>
+                <div class="card-meta" style="display: none;"></div>
                 <div class="card-creator">
                     <span>${prompt.creator_name || 'Shaivika AI'}</span>
                     <span class="card-category">${prompt.category || 'General'}</span>
