@@ -80,6 +80,10 @@ def signup():
         return redirect(url_for('index'))
     return render_template('signup.html')
 
+@app.route('/api/health')
+def health_check():
+    return jsonify({'status': 'healthy', 'cors': 'enabled', 'version': '1.0.3'})
+
 @app.route('/login')
 def login():
     if 'user' in session:
