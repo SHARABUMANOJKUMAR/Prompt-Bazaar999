@@ -394,69 +394,65 @@ a:hover {
    RESPONSIVE BREAKPOINTS
    ========================================================================== */
 
-/* Mobile: 320 px to 575 px */
-/* Target resolutions: 360x640, 375x812 */
-@media (max-width: 575px) {
+/* Mobile Small: 320px – 479px */
+@media (max-width: 479px) {
   :root {
-    --space-4: 0.75rem;
-    --space-6: 1rem;
-    --space-8: 1.25rem;
+    --space-4: 0.5rem;
+    --space-6: 0.75rem;
+    --space-8: 1rem;
     --font-size-3xl: 1.5rem;
     --font-size-2xl: 1.25rem;
-    --font-size-xl: 1.125rem;
+    --font-size-xl: 1.1rem;
   }
-  
+  .container {
+    padding: 0 var(--space-3);
+  }
   .auth-layout {
     padding: var(--space-2);
   }
-
   .card {
     padding: var(--space-4);
     border-radius: var(--radius-lg);
   }
 }
 
-/* Tablet: 576 px to 767 px */
-/* Target resolutions: 768x1024, 800x1280 */
-@media (min-width: 576px) and (max-width: 767px) {
+/* Mobile Large: 480px – 767px */
+@media (min-width: 480px) and (max-width: 767px) {
   :root {
-    --space-4: 1rem;
-    --space-8: 1.5rem;
+    --space-4: 0.75rem;
+    --space-8: 1.25rem;
     --font-size-3xl: 1.75rem;
+    --font-size-2xl: 1.4rem;
   }
-
+  .container {
+    padding: 0 var(--space-4);
+  }
   .auth-layout {
     padding: var(--space-4);
   }
-  
   .card {
     padding: var(--space-6);
   }
-  
-  .container {
-    max-width: 540px;
-  }
 }
 
-/* Small Desktop: 768 px to 991 px */
-@media (min-width: 768px) and (max-width: 991px) {
+/* Tablet: 768px – 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
   .container {
     max-width: 720px;
   }
 }
 
-/* Medium Desktop: 992 px to 1199 px */
-@media (min-width: 992px) and (max-width: 1199px) {
+/* Laptop: 1024px – 1439px */
+@media (min-width: 1024px) and (max-width: 1439px) {
   .container {
     max-width: 960px;
   }
 }
 
-/* Large Desktop: 1200 px and up */
-/* Target resolutions: 1280x720, 1920x1080 */
-@media (min-width: 1200px) {
+/* Large Desktop: 1440px and up */
+@media (min-width: 1440px) {
   .container {
-    max-width: 1140px;
+    max-width: 1400px;
   }
 }
 

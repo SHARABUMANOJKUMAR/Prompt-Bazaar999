@@ -312,7 +312,30 @@ textarea.form-control {
     margin-left: 0;
   }
   .mobile-menu-btn {
-    display: block;
+    display: block !important;
+  }
+  .admin-header {
+    padding: 0 var(--space-4);
+  }
+  .admin-content {
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: 767px) {
+  .form-row {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .admin-table th, .admin-table td {
+    padding: var(--space-3);
+  }
+  .analytics-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  .admin-form-card {
+    padding: var(--space-4);
   }
 }
 

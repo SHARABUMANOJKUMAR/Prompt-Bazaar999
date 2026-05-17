@@ -178,7 +178,10 @@
 
     <!-- Main Content -->
     <main class="admin-main">
-        <header class="admin-header">
+        <header class="admin-header" style="display: flex; align-items: center; gap: 12px;">
+            <button class="mobile-menu-btn btn-icon" onclick="toggleAdminSidebar()" style="display: none; border: none; background: transparent; cursor: pointer; color: var(--color-text-primary);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
             <h2 class="text-h3 mb-0">Personal Dashboard</h2>
         </header>
 
@@ -394,7 +397,28 @@
             targetSection.classList.add('active');
             if (event) event.currentTarget.classList.add('active');
         }
+        // Auto-close sidebar on mobile after clicking tab
+        const sidebar = document.getElementById('admin-sidebar');
+        if (sidebar && window.innerWidth <= 991) {
+            sidebar.classList.remove('open');
+        }
     }
+
+    function toggleAdminSidebar() {
+        const sidebar = document.getElementById('admin-sidebar');
+        if (sidebar) {
+            sidebar.classList.toggle('open');
+        }
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+        const sidebar = document.getElementById('admin-sidebar');
+        const toggleBtn = document.querySelector('.mobile-menu-btn');
+        if (sidebar && sidebar.classList.contains('open') && !sidebar.contains(e.target) && (!toggleBtn || !toggleBtn.contains(e.target))) {
+            sidebar.classList.remove('open');
+        }
+    });
 </script>
 <script type="module" src="{{ url_for('static', filename='js/profile.js') }}?v={{ range(1, 100000) | random }}"></script>
 {% endblock %}
