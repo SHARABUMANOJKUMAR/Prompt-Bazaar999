@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-05-17T06:33:00Z",
+    "last_updated": "2026-05-17T11:12:00Z",
     "completed": [
         "Replaced direct Google Sheets CSV loading with local Flask proxy API endpoint /api/admin/users",
         "Created custom server-side CSV parser in Python Flask inside app.py",
@@ -11,7 +11,14 @@
         "Modified Personal Dashboard's profile picture update flow to accept external URLs and Google Drive links instead of local files",
         "Designed and implemented an elegant Change Profile Picture Modal in templates/profile.html with glassmorphism styling, clean inputs, and the user-mandated note",
         "Integrated client-side Google Drive link auto-conversion to direct view links in profile.js so Google Drive images render perfectly in the gallery and profile",
-        "Applied stale-while-revalidate cache buster parameter to profile.js script imports to guarantee immediate updates"
+        "Applied stale-while-revalidate cache buster parameter to profile.js script imports to guarantee immediate updates",
+        "Flattened and compiled Jinja2 templates (login, signup, profile, dashboard, index/gallery) into static HTML pages in the root directory",
+        "Integrated client-side dynamic avatar initials / photoURL rendering for the static header menu and dashboard fields to ensure standard functionality on static servers",
+        "Configured Firebase Hosting rewrite rules in firebase.json to correctly resolve clean URLs to static HTML files",
+        "Successfully deployed and verified clean path routing (/login, /signup, etc.) on the live Firebase site",
+        "Compiled templates/admin/dashboard.html into flat, self-contained admin-dashboard.html at the root folder",
+        "Resolved and converted all Jinja blocks and asset paths in the Admin Portal to relative URLs",
+        "Created clean /admin route map in firebase.json and successfully redeployed/tested on Firebase Hosting"
     ],
     "in_progress": [],
     "pending": [],
@@ -19,7 +26,8 @@
         "Persisted user edits and deletions to local server-side files to ensure changes remain highly stable and persistent even when external Google Sheet CSV is refetched",
         "Forwarded update_profile request to Google Sheets App Script API in the background to sync edits to the core sheet database",
         "Used a custom cache buster query parameter for static Javascript imports to bypass standard browser asset cache",
-        "Auto-converted Google Drive sharing link formats directly inside the client browser to maximize rendering compatibility"
+        "Auto-converted Google Drive sharing link formats directly inside the client browser to maximize rendering compatibility",
+        "Converted dynamic server-side pages into a purely client-driven architecture to leverage the high-performance capabilities of Firebase Hosting without backend-dependency"
     ],
     "blockers": []
 }

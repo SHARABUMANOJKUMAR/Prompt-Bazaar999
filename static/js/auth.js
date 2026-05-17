@@ -8,6 +8,7 @@ import {
     sendPasswordResetEmail
 } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
+const API_BASE_URL = "https://prompt-bazaar999.onrender.com";
 const USERS_API_URL = "https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6hIj1A7ErMlqXwxAyCSXajDO2Zc4x9a9jR-wnU9DQWdUxdMVDtTn/exec";
 
 class AuthController {
@@ -25,7 +26,7 @@ class AuthController {
             localStorage.setItem("currentUser", JSON.stringify(currentUser));
 
             // Inform backend about manual session
-            const response = await fetch('/api/sessionLogin', {
+            const response = await fetch(`${API_BASE_URL}/api/sessionLogin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -60,7 +61,7 @@ class AuthController {
             };
             localStorage.setItem("currentUser", JSON.stringify(currentUser));
 
-            const response = await fetch('/api/sessionLogin', {
+            const response = await fetch(`${API_BASE_URL}/api/sessionLogin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,7 +89,7 @@ class AuthController {
     static async handleSessionLogout() {
         try {
             localStorage.removeItem("currentUser");
-            await fetch('/api/sessionLogout', { method: 'POST' });
+            await fetch(`${API_BASE_URL}/api/sessionLogout`, { method: 'POST' });
             window.location.href = '/login';
         } catch (error) {
             console.error('Logout error:', error);
@@ -307,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem("user", JSON.stringify(currentUser));
                 localStorage.setItem("promptbazaar_user", JSON.stringify(currentUser));
 
-                await fetch("/google-login", {
+                await fetch(`${API_BASE_URL}/google-login`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"

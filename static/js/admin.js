@@ -4,7 +4,8 @@
  */
 
 // --- Configuration ---
-const USERS_API_URL = "/api/admin/users";
+const API_BASE_URL = "https://prompt-bazaar999.onrender.com";
+const USERS_API_URL = `${API_BASE_URL}/api/admin/users`;
 const REFRESH_INTERVAL = 60000; // 60 seconds
 const PAGE_SIZE = 10;
 
@@ -455,7 +456,7 @@ async function loadPrompts() {
     tbody.innerHTML = '<tr><td colspan="8" class="text-center">Loading...</td></tr>';
 
     try {
-        const res = await fetch('/api/prompts');
+        const res = await fetch(`${API_BASE_URL}/api/prompts`);
         const prompts = await res.json();
 
         allPrompts = prompts || [];
@@ -509,11 +510,11 @@ async function submitPromptForm(event) {
 
         if (window.editingPromptId) {
             // Delete old prompt first
-            const deleteRes = await fetch(`/api/admin/prompts/${window.editingPromptId}`, { method: 'DELETE' });
+            const deleteRes = await fetch(`${API_BASE_URL}/api/admin/prompts/${window.editingPromptId}`, { method: 'DELETE' });
             if (!deleteRes.ok) throw new Error('Failed to update: old prompt deletion failed.');
         }
 
-        const response = await fetch('/api/admin/add-prompt', { method: 'POST', body: formData });
+        const response = await fetch(`${API_BASE_URL}/api/admin/add-prompt`, { method: 'POST', body: formData });
         const result = await response.json();
 
         if (result.success) {
@@ -595,7 +596,7 @@ window.editPrompt = function(id) {
 async function deletePrompt(id) {
     if (!confirm('Are you sure?')) return;
     try {
-        const res = await fetch(`/api/admin/prompts/${id}`, { method: 'DELETE' });
+        const res = await fetch(`${API_BASE_URL}/api/admin/prompts/${id}`, { method: 'DELETE' });
         if (!res.ok) throw new Error('Delete failed');
         
         // Invalidate prompt gallery cache
@@ -749,7 +750,7 @@ async function saveUserChanges(event) {
     const accountStatus = document.getElementById('edit-user-status-input').value;
 
     try {
-        const response = await fetch('/api/admin/users/edit', {
+        const response = await fetch(`${API_BASE_URL}/api/admin/users/edit`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -795,7 +796,7 @@ async function deleteUser(userId) {
     }
 
     try {
-        const response = await fetch(`/api/admin/users/delete/${userId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/admin/users/delete/${userId}`, {
             method: 'DELETE'
         });
 

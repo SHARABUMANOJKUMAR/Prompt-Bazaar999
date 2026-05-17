@@ -4,6 +4,7 @@ import {
 } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
+const API_BASE_URL = "https://prompt-bazaar999.onrender.com";
 const USERS_API_URL = "https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6hIj1A7ErMlqXwxAyCSXajDO2Zc4x9a9jR-wnU9DQWdUxdMVDtTn/exec";
 const WISHLIST_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzeyp93N_8BIW40Qi5isffi5h7FfHvm84_1n3mWMIzYNVVovayy-fL5RNiC6k15i7GL8g/exec";
 
@@ -470,7 +471,7 @@ if (profileForm) {
 
             // Sync session back to Flask server context
             try {
-                await fetch('/api/session/update', {
+                await fetch(`${API_BASE_URL}/api/session/update`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -717,7 +718,7 @@ async function loadUserPurchases(uid) {
     if (!purchasesContainer || !paymentsContainer) return;
 
     try {
-        const response = await fetch(`/api/user/purchases?uid=${uid}`);
+        const response = await fetch(`${API_BASE_URL}/api/user/purchases?uid=${uid}`);
         const purchases = await response.json();
 
         // Render Purchased Prompts

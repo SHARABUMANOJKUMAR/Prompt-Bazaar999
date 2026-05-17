@@ -6,7 +6,10 @@ from werkzeug.utils import secure_filename
 
 load_dotenv()
 
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": ["https://prompt-bazaar.web.app", "http://localhost:5000", "http://127.0.0.1:5000"]}})
 app.secret_key = os.getenv('SECRET_KEY', 'dev_key')
 
 UPLOAD_FOLDER = 'static/uploads'

@@ -1,6 +1,7 @@
 import { auth } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
+const API_BASE_URL = "https://prompt-bazaar999.onrender.com";
 const REPORT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbynN-ZkLfN7XzjIPKCTmZG1pDjUksqZeLfUWAJCSFWrWhIIGkyYjqk81LAw-HVneSz8/exec";
 const WISHLIST_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzeyp93N_8BIW40Qi5isffi5h7FfHvm84_1n3mWMIzYNVVovayy-fL5RNiC6k15i7GL8g/exec";
 
@@ -119,7 +120,7 @@ const initAuth = async () => {
 async function loadPurchasedPrompts() {
     if (!window.currentUser) return;
     try {
-        const res = await fetch(`/api/user/purchases?uid=${window.currentUser.uid}`);
+        const res = await fetch(`${API_BASE_URL}/api/user/purchases?uid=${window.currentUser.uid}`);
         const data = await res.json();
         window.purchasedPrompts = data.map(p => String(p.prompt_id));
     } catch(e) {
@@ -314,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 actionBtn.disabled = true;
                 
                 try {
-                    const res = await fetch('/create-order', {
+                    const res = await fetch(`${API_BASE_URL}/create-order`, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
@@ -348,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         theme: { color: "#0D6EFD" },
                         handler: async function (response) {
                             try {
-                                const verifyRes = await fetch('/verify-payment', {
+                                const verifyRes = await fetch(`${API_BASE_URL}/verify-payment`, {
                                     method: 'POST',
                                     headers: {'Content-Type': 'application/json'},
                                     body: JSON.stringify({
@@ -454,7 +455,7 @@ async function loadPrompts() {
 
     // 2. Fetch fresh data in parallel
     try {
-        const response = await fetch('/api/prompts');
+        const response = await fetch(`${API_BASE_URL}/api/prompts`);
         const prompts = await response.json();
 
         if (prompts && prompts.length > 0) {
