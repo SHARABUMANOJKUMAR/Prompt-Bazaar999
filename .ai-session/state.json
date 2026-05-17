@@ -1,0 +1,25 @@
+{
+    "last_updated": "2026-05-17T06:33:00Z",
+    "completed": [
+        "Replaced direct Google Sheets CSV loading with local Flask proxy API endpoint /api/admin/users",
+        "Created custom server-side CSV parser in Python Flask inside app.py",
+        "Added file-based persistent overrides for editing users in data/edited_users.json",
+        "Added file-based persistent overrides for deleting users in data/deleted_users.json",
+        "Implemented secure, premium modal forms for View User and Edit User details with backdrop blurs and modern styling",
+        "Wired Edit, Delete, and View action buttons in admin.js to trigger Flask CRUD endpoints",
+        "Added dynamic range-randomizer cache-buster to static script injection in templates/admin/dashboard.html to prevent developer stale script issues",
+        "Modified Personal Dashboard's profile picture update flow to accept external URLs and Google Drive links instead of local files",
+        "Designed and implemented an elegant Change Profile Picture Modal in templates/profile.html with glassmorphism styling, clean inputs, and the user-mandated note",
+        "Integrated client-side Google Drive link auto-conversion to direct view links in profile.js so Google Drive images render perfectly in the gallery and profile",
+        "Applied stale-while-revalidate cache buster parameter to profile.js script imports to guarantee immediate updates"
+    ],
+    "in_progress": [],
+    "pending": [],
+    "decisions": [
+        "Persisted user edits and deletions to local server-side files to ensure changes remain highly stable and persistent even when external Google Sheet CSV is refetched",
+        "Forwarded update_profile request to Google Sheets App Script API in the background to sync edits to the core sheet database",
+        "Used a custom cache buster query parameter for static Javascript imports to bypass standard browser asset cache",
+        "Auto-converted Google Drive sharing link formats directly inside the client browser to maximize rendering compatibility"
+    ],
+    "blockers": []
+}

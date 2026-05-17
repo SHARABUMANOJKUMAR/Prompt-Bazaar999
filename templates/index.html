@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Prompt Gallery - Prompt Bazaar{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="gallery-layout">
+    <!-- Top Navbar -->
+    <header class="gallery-header">
+        <div class="header-left">
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+            Prompt Bazaar
+        </div>
+        <div class="header-right">
+            <div class="notification-wrapper" style="position: relative;">
+                <button class="icon-btn" id="notificationBtn" aria-label="Notifications">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                    <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
+                </button>
+                <div id="notificationDropdown" class="notification-dropdown">
+                    <div class="notif-header">Notifications</div>
+                    <ul id="notificationList">
+                        <li class="empty-notif text-secondary">No new notifications</li>
+                    </ul>
+                </div>
+            </div>
+            <a href="{{ url_for('profile') }}" class="user-avatar" title="Profile">
+                {% if user and user.photoURL %}
+                    <img src="{{ user.photoURL }}" alt="Avatar">
+                {% else %}
+                    {{ user.displayName[0] | upper if user else 'U' }}
+                {% endif %}
+            </a>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">Prompt Gallery</h1>
+        <p class="page-subtitle">Discover high-converting AI prompts for ChatGPT, Midjourney, LinkedIn, YouTube, coding, and business.</p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="filters-container">
+        <div class="search-bar-wrapper">
+            <div class="search-input-container">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="search-input" id="promptSearch" placeholder="Search prompts, creators, or categories...">
+            </div>
+        </div>
+        
+        <div class="category-chips">
+            <button class="chip active" data-category="All">All</button>
+            <button class="chip" data-category="Couple">Couple</button>
+            <button class="chip" data-category="Kids">Kids</button>
+            <button class="chip" data-category="Men">Men</button>
+            <button class="chip" data-category="Women">Women</button>
+            <button class="chip" data-category="Business">Business</button>
+            <button class="chip" data-category="LinkedIn">LinkedIn</button>
+            <button class="chip" data-category="YouTube">YouTube</button>
+            <button class="chip" data-category="ChatGPT">ChatGPT</button>
+            <button class="chip" data-category="Midjourney">Midjourney</button>
+        </div>
+    </div>
+
+    <!-- Prompt Cards Grid -->
+    <main id="promptGrid" class="prompt-grid">
+        <!-- Cards injected by JS -->
+    </main>
+
+    <!-- Pagination -->
+    <div class="pagination-container">
+        <button class="load-more-btn" id="loadMoreBtn">Load More Prompts</button>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container" class="toast-container"></div>
+
+<!-- Report Modal -->
+<div id="reportModal" class="modal">
+  <div class="modal-content report-modal-content">
+    <button class="close-btn" style="position: absolute; top: 1rem; right: 1rem;" onclick="closeReportModal()">×</button>
+
+    <h2 style="color: var(--color-text-primary);">Report Prompt</h2>
+    <p style="color: var(--color-text-secondary);">Please tell us why you are reporting this prompt.</p>
+
+    <form id="reportForm" class="report-form">
+        <input type="hidden" id="reportPromptId" name="prompt_id">
+
+        <div class="report-form-group">
+            <label for="reportUserName" style="color: var(--color-text-main);">Your Name</label>
+            <input type="text" id="reportUserName" name="user_name" placeholder="Enter your full name" required style="background: var(--color-bg-primary); color: var(--color-text-main); border: 1px solid var(--color-border);">
+        </div>
+
+        <div class="report-form-group">
+            <label for="reportUserEmail" style="color: var(--color-text-main);">Your Email</label>
+            <input type="email" id="reportUserEmail" name="user_email" placeholder="Enter your email address" required style="background: var(--color-bg-primary); color: var(--color-text-main); border: 1px solid var(--color-border);">
+        </div>
+
+        <div class="report-form-group">
+            <label for="reportReason" style="color: var(--color-text-main);">Reason</label>
+            <select id="reportReason" name="reason" required style="background: var(--color-bg-primary); color: var(--color-text-main); border: 1px solid var(--color-border);">
+                <option value="">Select a reason</option>
+                <option value="Inappropriate Content">Inappropriate Content</option>
+                <option value="Spam">Spam</option>
+                <option value="Copyright Violation">Copyright Violation</option>
+                <option value="Misleading Information">Misleading Information</option>
+                <option value="Broken Prompt">Broken Prompt</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="report-form-group">
+            <label for="reportDetails" style="color: var(--color-text-main);">Additional Details</label>
+            <textarea id="reportDetails" name="details" placeholder="Explain the issue..." style="background: var(--color-bg-primary); color: var(--color-text-main); border: 1px solid var(--color-border);"></textarea>
+        </div>
+
+        <button type="submit" class="report-submit-btn" style="background: var(--gradient-primary);">
+            Submit Report
+        </button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/gallery.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Prompt Bazaar{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
+    {% block head %}{% endblock %}
+    
+    <script>
+        window.FIREBASE_CONFIG = {{ firebase_config | tojson }};
+    </script>
+</head>
+<body>
+    <!-- Global Modal Backdrop -->
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+
+    <!-- Global Prompt Preview Modal -->
+    <div id="prompt-modal" class="modal-overlay">
+        <div class="modal-header">
+            <div id="modal-platform" class="platform-badge">MIDJOURNEY</div>
+            <button id="close-modal" class="close-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-image-container">
+            <img id="modal-image" src="" alt="Prompt Preview">
+        </div>
+        <div class="modal-content">
+            <h2 id="modal-title" class="text-h3 mb-2">Prompt Title</h2>
+            <div id="modal-price" class="price-badge mb-4" style="position:static; display:inline-block">₹2</div>
+            
+            <div class="modal-actions">
+                <button class="action-btn" id="modal-wishlist">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Wishlist</span>
+                </button>
+                <button class="action-btn" id="modal-share" onclick="sharePrompt(currentPrompt)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    <span>Share</span>
+                </button>
+                <button class="action-btn" id="modal-report" onclick="openReportModal(currentPrompt)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                    <span>Report</span>
+                </button>
+            </div>
+            
+            <button id="modal-primary-action" class="btn btn-primary mt-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span class="btn-text">🔒 UNLOCK PROMPT</span>
+            </button>
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

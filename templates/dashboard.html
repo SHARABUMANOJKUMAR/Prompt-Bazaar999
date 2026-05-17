@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Prompt Bazaar{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    <header class="header">
+        <div class="container nav-container">
+            <div class="logo">Prompt Bazaar</div>
+            <button id="logout-btn" class="btn btn-outline w-auto">
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <main class="container mt-8">
+        <div class="card max-w-full">
+            <h1 class="text-h2 mb-4">Welcome back, {{ user.displayName }}!</h1>
+            <p class="text-secondary text-body mb-6">
+                You have successfully logged in to Prompt Bazaar. This is your protected dashboard.
+            </p>
+            
+            <div class="p-4 bg-tertiary rounded-md">
+                <h3 class="text-h3 mb-2">Account Details</h3>
+                <p class="text-secondary"><strong class="text-primary">Name:</strong> {{ user.displayName }}</p>
+                <p class="text-secondary"><strong class="text-primary">Email:</strong> {{ user.email }}</p>
+                <p class="text-secondary"><strong class="text-primary">User ID:</strong> <span class="font-mono text-sm">{{ user.uid }}</span></p>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,400 @@
+{% extends 'base.html' %}
+
+{% block title %}User Profile - Prompt Bazaar{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<style>
+  .profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: white;
+    font-weight: bold;
+    margin-bottom: var(--space-4);
+  }
+  .profile-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+    .profile-card {
+    background-color: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-md);
+  }
+  .avatar-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: var(--space-6);
+  }
+  .profile-avatar-large {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  .profile-avatar-large:hover {
+    transform: scale(1.05);
+  }
+  .avatar-edit-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .profile-avatar-large:hover .avatar-edit-overlay {
+    opacity: 1;
+  }
+  .form-control:read-only {
+    background: rgba(15, 23, 42, 0.04);
+    cursor: not-allowed;
+    border-color: var(--color-border);
+  }
+  
+  /* Modal Overlay Styling */
+  .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1050;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+  }
+  .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+  }
+  .modal-card {
+      background: var(--color-bg-primary, #ffffff);
+      border: 1px solid var(--color-border, #e2e8f0);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 550px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+  }
+  .modal-overlay.active .modal-card {
+      transform: scale(1);
+  }
+  .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--color-border, #e2e8f0);
+  }
+  .modal-close-btn {
+      background: none;
+      border: none;
+      color: var(--color-secondary, #64748b);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+  }
+  .modal-close-btn:hover {
+      background: var(--color-bg-secondary, #f8fafc);
+      color: var(--color-primary, #0f172a);
+  }
+  .modal-body {
+      padding: 24px;
+      max-height: 70vh;
+      overflow-y: auto;
+  }
+  .modal-footer {
+      padding: 16px 24px;
+      background: var(--color-bg-secondary, #f8fafc);
+      border-top: 1px solid var(--color-border, #e2e8f0);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-body">
+    <!-- Sidebar / Tabs -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+        <div class="admin-brand">
+            <h1 class="logo mb-0">My Profile</h1>
+        </div>
+        <nav class="admin-nav">
+            <a href="{{ url_for('profile') }}" class="admin-nav-item {% if active_tab == 'account' %}active{% endif %}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Account Details
+            </a>
+            <a href="#" class="admin-nav-item" onclick="switchProfileTab('purchased', event)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                Purchased Prompts
+            </a>
+            <a href="{{ url_for('wishlist') }}" class="admin-nav-item {% if active_tab == 'wishlist' %}active{% endif %}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                Wishlist
+            </a>
+            <a href="{{ url_for('payments') }}" class="admin-nav-item {% if active_tab == 'payments' %}active{% endif %}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+                Payment History
+            </a>
+            <div class="admin-nav-bottom">
+                <a href="{{ url_for('logout') }}" class="admin-nav-item text-danger">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Logout
+                </a>
+                <a href="{{ url_for('index') }}" class="admin-nav-item mt-2">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    Back to Gallery
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <header class="admin-header">
+            <h2 class="text-h3 mb-0">Personal Dashboard</h2>
+        </header>
+
+        <div class="admin-content">
+            <!-- Account Section -->
+            <section class="admin-section {% if active_tab == 'account' %}active{% endif %}" id="account-section">
+                <h2 class="text-h2 mb-6">Account Details</h2>
+                <div class="profile-card">
+                    <!-- Profile Picture Upload -->
+                    <div class="avatar-upload-container">
+                        <div class="profile-avatar-large" id="profile-avatar-preview">
+                            {% if user and user.photoURL %}
+                                <img src="{{ user.photoURL }}" id="avatar-img" alt="Avatar">
+                            {% else %}
+                                <span id="avatar-initials">{{ user.displayName[0] | upper if user else 'U' }}</span>
+                            {% endif %}
+                            <div class="avatar-edit-overlay" onclick="openModal('changeAvatarModal')">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                            </div>
+                        </div>
+                        <p class="text-sm text-secondary mt-2" onclick="openModal('changeAvatarModal')" style="cursor: pointer;">Click to change profile picture</p>
+                    </div>
+                    
+                    <form id="profile-edit-form">
+                        <div class="form-row mt-6">
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input class="form-control" type="text" id="edit-display-name" value="{{ user.displayName if user else '' }}" placeholder="Enter full name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input class="form-control" type="email" value="{{ user.email if user else '' }}" readonly style="background: rgba(255,255,255,0.03); cursor: not-allowed;">
+                                <small class="text-xs text-secondary mt-1">Email cannot be changed</small>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Mobile Number</label>
+                            <input class="form-control" type="text" id="edit-mobile-number" value="" placeholder="+91 XXXXX XXXXX">
+                        </div>
+
+                        <!-- Password Change Section -->
+                        <div class="password-change-section mt-8 pt-6" style="border-top: 1px solid var(--color-border);">
+                            <h3 class="text-h4 mb-4">Change Password</h3>
+                            <p class="text-sm text-secondary mb-4">Leave blank if you don't want to change password</p>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input class="form-control" type="password" id="current-password" placeholder="••••••••">
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">New Password</label>
+                                    <input class="form-control" type="password" id="new-password" placeholder="••••••••">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Confirm New Password</label>
+                                    <input class="form-control" type="password" id="confirm-password" placeholder="••••••••">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8">
+                            <button type="submit" class="btn btn-primary" style="width: auto; padding: 12px 32px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Wishlist Section -->
+            <section class="admin-section {% if active_tab == 'wishlist' %}active{% endif %}" id="wishlist-section">
+                <h2 class="text-h2 mb-6">My Wishlist</h2>
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Prompt Image</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Platform</th>
+                                <th>Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wishlistTableBody">
+                            <!-- Populated by JS -->
+                            <tr><td colspan="6" class="text-center">Loading wishlist...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Payment History Section -->
+            <section class="admin-section {% if active_tab == 'payments' %}active{% endif %}" id="payments-section">
+                <h2 class="text-h2 mb-6">Payment History</h2>
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Payment ID</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>TXN-90210</td>
+                                <td>₹2.00</td>
+                                <td>2024-05-16</td>
+                                <td><span style="color:var(--color-success)">Successful</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Copy History Section -->
+            <section class="admin-section {% if active_tab == 'copy-history' %}active{% endif %}" id="copy-history-section">
+                <h2 class="text-h2 mb-6">Copy History</h2>
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Prompt Title</th>
+                                <th>Copied Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Cinematic Hero Portrait</td>
+                                <td>2024-05-16 14:32:00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Purchased Prompts Section -->
+            <section id="purchased-section" class="admin-section">
+                <h2 class="text-h2 mb-6">Purchased Prompts</h2>
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Prompt Image</th>
+                                <th>Title</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><img src="https://picsum.photos/400/600?random=1" class="table-img" alt="Thumbnail"></td>
+                                <td><strong>Cinematic Hero Portrait</strong></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 4px 12px; font-size: 12px;">Copy Text</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<!-- Change Profile Picture Modal -->
+<div id="changeAvatarModal" class="modal-overlay">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="text-h3 mb-0">Change Profile Picture</h3>
+            <button class="modal-close-btn" onclick="closeModal('changeAvatarModal')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group mb-4">
+                <label class="form-label" for="avatar-url-input">Image URL or Google Drive Link</label>
+                <input type="text" id="avatar-url-input" class="form-control" placeholder="https://example.com/image.jpg" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 8px;">
+                <div style="background: rgba(13, 110, 253, 0.05); border-left: 4px solid var(--color-primary); padding: 12px; border-radius: 4px; margin-top: 12px;">
+                    <p style="font-size: 0.825rem; font-weight: 500; color: var(--color-primary); margin: 0; line-height: 1.4;">
+                        <strong>Note:</strong> Upload your image to Google Drive. In <strong>Manage Access</strong>, set the file permission to <strong>Anyone with the link</strong> so the image can be displayed properly.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" style="display: flex; gap: 12px; justify-content: flex-end; padding: 16px 24px; background: var(--color-bg-secondary); border-top: 1px solid var(--color-border); border-radius: 0 0 16px 16px;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('changeAvatarModal')">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="applyAvatarUrl()">
+                <span>Apply Picture</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container" class="toast-container"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function switchProfileTab(tabName, event) {
+        document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.admin-nav-item').forEach(el => el.classList.remove('active'));
+        
+        const targetSection = document.getElementById(`${tabName}-section`);
+        if (targetSection) {
+            targetSection.classList.add('active');
+            if (event) event.currentTarget.classList.add('active');
+        }
+    }
+</script>
+<script type="module" src="{{ url_for('static', filename='js/profile.js') }}?v={{ range(1, 100000) | random }}"></script>
+{% endblock %}
