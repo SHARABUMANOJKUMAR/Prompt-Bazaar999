@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-05-17T11:12:00Z",
+    "last_updated": "2026-05-17T12:35:00Z",
     "completed": [
         "Replaced direct Google Sheets CSV loading with local Flask proxy API endpoint /api/admin/users",
         "Created custom server-side CSV parser in Python Flask inside app.py",
@@ -18,7 +18,11 @@
         "Successfully deployed and verified clean path routing (/login, /signup, etc.) on the live Firebase site",
         "Compiled templates/admin/dashboard.html into flat, self-contained admin-dashboard.html at the root folder",
         "Resolved and converted all Jinja blocks and asset paths in the Admin Portal to relative URLs",
-        "Created clean /admin route map in firebase.json and successfully redeployed/tested on Firebase Hosting"
+        "Created clean /admin route map in firebase.json and successfully redeployed/tested on Firebase Hosting",
+        "Identified that Gunicorn exited with status 1 on Render because the builder used a bleeding-edge Python 3.14 environment with setuptools >= 82.0.0, which completely removed `pkg_resources`",
+        "Pinned `setuptools` to `<81.0.0` in `requirements.txt` to preserve `pkg_resources` and ensure `razorpay` imports work correctly",
+        "Created `.python-version` at the root of the repository to explicitly pin the Python runtime to a stable LTS release (`3.11`)",
+        "Updated the entire `docs/api.md` file to thoroughly document all server-side Flask endpoints, including health, sessions, prompting, and checkout endpoints"
     ],
     "in_progress": [],
     "pending": [],
@@ -27,7 +31,9 @@
         "Forwarded update_profile request to Google Sheets App Script API in the background to sync edits to the core sheet database",
         "Used a custom cache buster query parameter for static Javascript imports to bypass standard browser asset cache",
         "Auto-converted Google Drive sharing link formats directly inside the client browser to maximize rendering compatibility",
-        "Converted dynamic server-side pages into a purely client-driven architecture to leverage the high-performance capabilities of Firebase Hosting without backend-dependency"
+        "Converted dynamic server-side pages into a purely client-driven architecture to leverage the high-performance capabilities of Firebase Hosting without backend-dependency",
+        "Pinned setuptools to <81.0.0 to resolve the breaking removal of pkg_resources in setuptools 82.0.0+",
+        "Pinned Python version to 3.11 using .python-version to guarantee stability and reliable dependency building on Render"
     ],
     "blockers": []
 }
