@@ -15,22 +15,24 @@ def handle_options_preflight():
         response = jsonify({'success': True})
         origin = request.headers.get('Origin')
         allowed_origins = ["https://prompt-bazaar.web.app", "http://localhost:5000", "http://127.0.0.1:5000"]
-        if origin in allowed_origins:
-            response.headers.add('Access-Control-Allow-Origin', origin)
-            response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-            response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-            response.headers.add('Access-Control-Allow-Credentials', 'true')
+        if not origin or origin not in allowed_origins:
+            origin = "https://prompt-bazaar.web.app"
+        response.headers['Access-Control-Allow-Origin'] = origin
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+        response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+        response.headers['Access-Control-Allow-Credentials'] = 'true'
         return response
 
 @app.after_request
 def add_cors_headers(response):
     origin = request.headers.get('Origin')
     allowed_origins = ["https://prompt-bazaar.web.app", "http://localhost:5000", "http://127.0.0.1:5000"]
-    if origin in allowed_origins:
-        response.headers.add('Access-Control-Allow-Origin', origin)
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-        response.headers.add('Access-Control-Allow-Credentials', 'true')
+    if not origin or origin not in allowed_origins:
+        origin = "https://prompt-bazaar.web.app"
+    response.headers['Access-Control-Allow-Origin'] = origin
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
+    response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
     return response
 
 UPLOAD_FOLDER = 'static/uploads'
