@@ -36,7 +36,10 @@ def add_cors_headers(response):
     return response
 
 UPLOAD_FOLDER = 'static/uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+try:
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+except Exception as e:
+    print(f"WARNING: Could not create upload folder {UPLOAD_FOLDER}: {e}")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # --- Configuration ---
@@ -80,9 +83,12 @@ def signup():
         return redirect(url_for('index'))
     return render_template('signup.html')
 
-@app.route('/health')
-def health_check():
-    return jsonify({'status': 'ok'})
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "ok",
+        "message": "Prompt Bazaar backend is running"
+    }), 200
 
 @app.route('/login')
 def login():
@@ -200,19 +206,27 @@ import razorpay
 import hmac
 import hashlib
 
-razorpay_client = razorpay.Client(
-    auth=(
-        os.getenv("RAZORPAY_KEY_ID"),
-        os.getenv("RAZORPAY_KEY_SECRET")
-    )
-)
+razorpay_client = None
+try:
+    key_id = os.getenv("RAZORPAY_KEY_ID")
+    key_secret = os.getenv("RAZORPAY_KEY_SECRET")
+    if key_id and key_secret:
+        razorpay_client = razorpay.Client(auth=(key_id, key_secret))
+        print("Razorpay client initialized successfully.")
+    else:
+        print("WARNING: Razorpay credentials missing or incomplete. Razorpay client not initialized.")
+except Exception as e:
+    print(f"ERROR: Failed to initialize Razorpay client: {e}")
 
 PAYMENT_GAS_URL = "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--FmcKBivrsJEGarfEALgf6GLY_S-8y8VvtehVSlSjy7DWs_/exec"
 
 PROMPTS_DB = []
 
 DATA_DIR = 'data'
-os.makedirs(DATA_DIR, exist_ok=True)
+try:
+    os.makedirs(DATA_DIR, exist_ok=True)
+except Exception as e:
+    print(f"WARNING: Could not create data directory {DATA_DIR}: {e}")
 EDITED_USERS_FILE = os.path.join(DATA_DIR, 'edited_users.json')
 DELETED_USERS_FILE = os.path.join(DATA_DIR, 'deleted_users.json')
 PURCHASES_FILE = os.path.join(DATA_DIR, 'purchases.json')
@@ -517,6 +531,8 @@ def report_prompt():
 
 @app.route('/create-order', methods=['POST'])
 def create_order():
+    if not razorpay_client:
+        return jsonify({"success": False, "message": "Razorpay client is not initialized due to missing credentials."}), 500
     try:
         data = request.get_json()
         prompt_id = data.get("prompt_id")
@@ -550,6 +566,8 @@ def create_order():
 
 @app.route('/verify-payment', methods=['POST'])
 def verify_payment():
+    if not razorpay_client:
+        return jsonify({"success": False, "message": "Razorpay client is not initialized due to missing credentials."}), 500
     try:
         data = request.get_json()
         razorpay_payment_id = data.get("razorpay_payment_id")
