@@ -127,10 +127,10 @@
     <!-- Main Content -->
     <main class="admin-main">
         <header class="admin-header" style="display: flex; align-items: center; gap: 12px;">
-            <button class="mobile-menu-btn btn-icon" onclick="toggleAdminSidebar()" style="display: none; border: none; background: transparent; cursor: pointer; color: var(--color-text-primary);">
+            <button class="mobile-menu-btn btn-icon" onclick="toggleAdminSidebar()" style="display: none; border: none; background: transparent; cursor: pointer; color: var(--color-text-primary); margin-right: 8px;">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
-            <h2 class="text-h3 mb-0">Admin Portal</h2>
+            <h2 class="text-h3 mb-0" style="flex: 1;">Admin Portal</h2>
             <div class="user-avatar" style="margin-left: auto;">
                 {% if user and user.photoURL %}
                     <img src="{{ user.photoURL }}" alt="Avatar">
@@ -566,28 +566,20 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}?v={{ range(1, 100000) | random }}"></script>
 <script>
     function toggleAdminSidebar() {
-        const sidebar = document.getElementById('admin-sidebar');
+        const sidebar = document.querySelector('.admin-sidebar');
         if (sidebar) {
             sidebar.classList.toggle('open');
         }
     }
-
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', (e) => {
-        const sidebar = document.getElementById('admin-sidebar');
-        const toggleBtn = document.querySelector('.mobile-menu-btn');
-        if (sidebar && sidebar.classList.contains('open') && !sidebar.contains(e.target) && (!toggleBtn || !toggleBtn.contains(e.target))) {
-            sidebar.classList.remove('open');
-        }
-    });
-
-    // Auto-close sidebar on mobile after clicking tab
+    
+    // Auto-close sidebar drawer when navigating tabs on mobile
     document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.admin-nav-item').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const sidebar = document.getElementById('admin-sidebar');
+        document.querySelectorAll('.admin-nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const sidebar = document.querySelector('.admin-sidebar');
                 if (sidebar && window.innerWidth <= 991) {
                     sidebar.classList.remove('open');
                 }
@@ -595,5 +587,4 @@
         });
     });
 </script>
-<script src="{{ url_for('static', filename='js/admin.js') }}?v={{ range(1, 100000) | random }}"></script>
 {% endblock %}
