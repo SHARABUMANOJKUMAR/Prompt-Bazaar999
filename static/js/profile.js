@@ -406,51 +406,7 @@ if (profileForm) {
                 photoURL = base64Image;
             }
 
-            // 2. Build Payload
-            const gasPayload = {
-                action: "update_profile",
-                user_id: userId,
-                full_name: fullName,
-                mobile_number: mobileNumber,
-                profile_picture: photoURL,
-                password: newPassword || ""
-            };
-
-            // 3. Send POST request to USERS_API_URL
-            let gasResponse;
-            try {
-                gasResponse = await fetch(USERS_API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(gasPayload)
-                });
-            } catch (err) {
-                throw new Error("Unable to connect to server.");
-            }
-
-            const gasResult = await gasResponse.json();
-
-            if (!gasResult.success) {
-                throw new Error(gasResult.message || 'Failed to update profile.');
-            }
-
-            // 4. Update Firebase if user is logged in via Firebase Google Auth
-            const fbUser = auth.currentUser;
-            if (fbUser && (currentUser.login_provider === 'Google' || currentUser.login_method === 'google')) {
-                try {
-                    await updateProfile(fbUser, { displayName: fullName, photoURL: photoURL.startsWith('data:') ? fbUser.photoURL : photoURL });
-                    
-                    const userRef = doc(db, "users", fbUser.uid);
-                    await setDoc(userRef, {
-                        name: fullName,
-                        mobileNumber: mobileNumber,
-                        updatedAt: serverTimestamp()
-                    }, { merge: true });
-                } catch (fbErr) {
-                    console.error("Firebase sync error:", fbErr);
-                }
-            }
-
-            // 5. Update localStorage across ALL possible keys
+            // 2. Build updatedUser object and update localStorage INSTANTLY
             const updatedUser = {
                 ...currentUser,
                 user_id: userId,
@@ -465,34 +421,74 @@ if (profileForm) {
             localStorage.setItem("user", JSON.stringify(updatedUser));
             localStorage.setItem("promptbazaar_user", JSON.stringify(updatedUser));
 
-            // Sync session back to Flask server context
-            try {
-                await fetch(`${API_BASE_URL}/api/session/update`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        displayName: fullName,
-                        photoURL: photoURL
-                    })
-                });
-            } catch (err) {
-                console.error("Failed to sync session with Flask:", err);
-            }
-
-            // 6. Success UI Feedback
-            showToast("✅ Profile updated successfully!");
-            
-            // Immediately refresh all displayed profile fields
+            // 3. Immediately refresh dashboard UI fields so changes show up instantly!
             refreshDashboardUI(updatedUser);
 
-            // Clear password fields
+            // 4. Sync session back to Flask server context in background
+            fetch(`${API_BASE_URL}/api/session/update`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    displayName: fullName,
+                    photoURL: photoURL,
+                    mobileNumber: mobileNumber
+                })
+            }).catch(err => console.warn("Failed to sync session with Flask:", err));
+
+            // 5. Instantly show Success Toast and clear fields
+            showToast("✅ Profile updated successfully!");
             document.getElementById('current-password').value = "";
             document.getElementById('new-password').value = "";
             document.getElementById('confirm-password').value = "";
             selectedAvatarFile = null;
             selectedAvatarUrl = null;
+
+            // 6. Background synchronization with GAS and Firebase/Firestore (NON-BLOCKING!)
+            (async () => {
+                // A. Send POST request to USERS_API_URL
+                const gasPayload = {
+                    action: "update_profile",
+                    user_id: userId,
+                    full_name: fullName,
+                    mobile_number: mobileNumber,
+                    profile_picture: photoURL,
+                    password: newPassword || ""
+                };
+                try {
+                    const gasResponse = await fetch(USERS_API_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(gasPayload)
+                    });
+                    const gasResult = await gasResponse.json();
+                    if (!gasResult.success) {
+                        console.warn("GAS update returned failure:", gasResult.message);
+                    } else {
+                        console.log("GAS update completed successfully.");
+                    }
+                } catch (err) {
+                    console.warn("Unable to sync profile with GAS backend in background:", err);
+                }
+
+                // B. Update Firebase Auth & Firestore
+                const fbUser = auth.currentUser;
+                if (fbUser && (currentUser.login_provider === 'Google' || currentUser.login_method === 'google')) {
+                    try {
+                        await updateProfile(fbUser, { displayName: fullName, photoURL: photoURL.startsWith('data:') ? fbUser.photoURL : photoURL });
+                        
+                        const userRef = doc(db, "users", fbUser.uid);
+                        await setDoc(userRef, {
+                            name: fullName,
+                            mobileNumber: mobileNumber,
+                            updatedAt: serverTimestamp()
+                        }, { merge: true });
+                        console.log("Firebase sync completed successfully.");
+                    } catch (fbErr) {
+                        console.error("Firebase sync error:", fbErr);
+                    }
+                }
+            })();
 
         } catch (error) {
             console.error("Update error:", error);

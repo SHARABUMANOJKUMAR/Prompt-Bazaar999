@@ -220,7 +220,7 @@
                         
                         <div class="form-group">
                             <label class="form-label">Mobile Number</label>
-                            <input class="form-control" type="text" id="edit-mobile-number" value="" placeholder="+91 XXXXX XXXXX">
+                            <input class="form-control" type="text" id="edit-mobile-number" value="{{ user.mobileNumber or user.mobile_number or '' }}" placeholder="+91 XXXXX XXXXX">
                         </div>
 
                         <!-- Password Change Section -->

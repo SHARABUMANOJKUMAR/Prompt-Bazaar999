@@ -186,12 +186,16 @@ def api_update_session():
     data = request.get_json()
     displayName = data.get('displayName')
     photoURL = data.get('photoURL')
+    mobileNumber = data.get('mobileNumber') or data.get('mobile_number')
     
     session_user = session['user']
     if displayName is not None:
         session_user['displayName'] = displayName
     if photoURL is not None:
         session_user['photoURL'] = photoURL
+    if mobileNumber is not None:
+        session_user['mobileNumber'] = mobileNumber
+        session_user['mobile_number'] = mobileNumber
         
     session['user'] = session_user
     session.modified = True
