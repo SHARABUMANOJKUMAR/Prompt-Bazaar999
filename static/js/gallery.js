@@ -104,30 +104,30 @@ const initAuth = async () => {
     }
 
     localUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-    if (localUser && (localUser.login_provider === 'Manual' || localUser.login_method === 'manual')) {
+    if (localUser && localUser.email && (localUser.user_id || localUser.uid)) {
         window.currentUser = {
-            uid: localUser.user_id,
+            uid: localUser.user_id || localUser.uid,
             email: localUser.email,
             name: localUser.full_name || localUser.username
         };
-        return;
+        loadPurchasedPrompts();
     }
 
-    // 2. Check Firebase user
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            const updatedLocalUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-            window.currentUser = {
-                uid: updatedLocalUser.user_id || user.uid,
-                email: user.email,
-                name: updatedLocalUser.full_name || updatedLocalUser.username || user.displayName,
-                mobile_number: updatedLocalUser.mobile_number
-            };
-        } else {
-            window.currentUser = null;
-        }
-        loadPurchasedPrompts();
-    });
+    // 2. Check Firebase user in background
+    if (auth) {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const updatedLocalUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+                window.currentUser = {
+                    uid: updatedLocalUser.user_id || user.uid,
+                    email: user.email,
+                    name: updatedLocalUser.full_name || updatedLocalUser.username || user.displayName,
+                    mobile_number: updatedLocalUser.mobile_number
+                };
+                loadPurchasedPrompts();
+            }
+        });
+    }
 };
 
 async function loadPurchasedPrompts() {

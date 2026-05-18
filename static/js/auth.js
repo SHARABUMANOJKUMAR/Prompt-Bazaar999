@@ -24,9 +24,11 @@ class AuthController {
                 login_provider: "Manual"
             };
             localStorage.setItem("currentUser", JSON.stringify(currentUser));
+            localStorage.setItem("user", JSON.stringify(currentUser));
+            localStorage.setItem("promptbazaar_user", JSON.stringify(currentUser));
 
-            // Inform backend about manual session
-            const response = await fetch(`${API_BASE_URL}/api/sessionLogin`, {
+            // Inform backend about manual session in background
+            fetch(`${API_BASE_URL}/api/sessionLogin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -35,9 +37,9 @@ class AuthController {
                     isManual: true,
                     user: currentUser
                 })
-            });
+            }).catch(err => console.warn("Background session sync failed:", err));
 
-            if (!response.ok) throw new Error('Session login failed');
+            // Instantly redirect!
             window.location.href = '/profile';
         } catch (error) {
             console.error('Manual session error:', error);
@@ -60,8 +62,11 @@ class AuthController {
                 login_provider: "Google"
             };
             localStorage.setItem("currentUser", JSON.stringify(currentUser));
+            localStorage.setItem("user", JSON.stringify(currentUser));
+            localStorage.setItem("promptbazaar_user", JSON.stringify(currentUser));
 
-            const response = await fetch(`${API_BASE_URL}/api/sessionLogin`, {
+            // Inform backend about session in background
+            fetch(`${API_BASE_URL}/api/sessionLogin`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,9 +80,9 @@ class AuthController {
                         photoURL: currentUser.profile_picture
                     }
                 })
-            });
+            }).catch(err => console.warn("Background session sync failed:", err));
 
-            if (!response.ok) throw new Error('Session login failed');
+            // Instantly redirect!
             window.location.href = '/profile';
         } catch (error) {
             console.error('Session error:', error);
@@ -328,8 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem("user", JSON.stringify(currentUser));
                 localStorage.setItem("promptbazaar_user", JSON.stringify(currentUser));
 
-                // Inform Flask backend in parallel
-                await fetch(`${API_BASE_URL}/google-login`, {
+                // Inform Flask backend in background
+                fetch(`${API_BASE_URL}/google-login`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -339,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         name: displayName,
                         email: email
                     })
-                });
+                }).catch(err => console.warn("Background session sync failed:", err));
 
                 // Instantly redirect to the profile page!
                 window.location.href = "/profile";

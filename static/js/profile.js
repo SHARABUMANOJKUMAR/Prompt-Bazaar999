@@ -142,33 +142,35 @@ window.applyAvatarUrl = function() {
 
 // Auth listener
 const initDashboard = async () => {
-    // 1. Check for manual user first via helper
+    // 1. Check for manual or Google cached user first via helper
     let localUser = getCurrentUser();
 
-    // 2. INSTANT CACHE RENDER (Stale-While-Revalidate)
-    // Instantly pull cached wishlist items from localStorage so the user sees them in <10ms
+    // If a user exists in cache, populate and render UI instantly to avoid redirect loops and flashing!
     if (localUser) {
+        console.log("Cached session found. Rendering profile instantly:", localUser);
         const userId = localUser.user_id || localUser.uid;
-        if (userId) {
-            console.log("Instant Cache Load: Rendering wishlist from cache...");
-            const cacheKey = `wishlist_cache_${userId}`;
-            const cachedData = localStorage.getItem(cacheKey);
-            if (cachedData) {
-                try {
-                    const parsed = JSON.parse(cachedData);
-                    // Proactively render wishlist immediately
-                    const container = document.getElementById('wishlistTableBody');
-                    if (container && typeof renderWishlist === 'function') {
-                        renderWishlist(parsed);
-                    }
-                } catch(e) {
-                    console.error("Cache render error:", e);
-                }
-            }
+        window.currentUser = {
+            uid: userId,
+            email: localUser.email,
+            name: localUser.full_name || localUser.username,
+            photoURL: localUser.profile_picture || '',
+            mobile: localUser.mobile_number || ''
+        };
+        
+        // Load UI instantly!
+        await loadUserProfile(null, localUser);
+        await loadUserWishlist(userId);
+        await loadUserPurchases(userId);
+    } else {
+        // No cached user session found - check if we are on a protected page and redirect immediately
+        const protectedPaths = ['/wishlist', '/profile', '/payments', '/copy-history'];
+        if (protectedPaths.some(path => window.location.pathname.includes(path))) {
+            window.location.replace('/login');
+            return;
         }
     }
     
-    // 3. Start Self-healing in background (NON-BLOCKING!)
+    // 2. Start Self-healing in background (NON-BLOCKING!)
     let selfHealingPromise = Promise.resolve();
     if (localUser && localUser.email && (!localUser.user_id || !localUser.user_id.toString().startsWith('USR'))) {
         console.log("Self-healing: Resolving sheet USR ID for:", localUser.email);
@@ -223,81 +225,53 @@ const initDashboard = async () => {
         })();
     }
 
-    localUser = getCurrentUser();
-
-    if (localUser && (localUser.login_provider === 'Manual' || localUser.login_method === 'manual')) {
-        console.log("Manual User detected:", localUser.user_id || localUser.uid);
-        const userId = localUser.user_id || localUser.uid;
-        window.currentUser = {
-            uid: userId,
-            email: localUser.email,
-            name: localUser.full_name || localUser.username,
-            photoURL: localUser.profile_picture,
-            mobile: localUser.mobile_number || ''
-        };
-        // Load UI instantly!
-        await loadUserProfile(null, localUser);
-        await loadUserWishlist(userId);
-        await loadUserPurchases(userId);
-        
-        // Re-sync with healed ID in background without blocking
-        selfHealingPromise.then(async () => {
-            const finalUser = getCurrentUser() || localUser;
-            const finalId = finalUser.user_id || finalUser.uid;
-            if (finalId !== userId) {
-                window.currentUser.uid = finalId;
-                await loadUserWishlist(finalId);
-                await loadUserPurchases(finalId);
+    // 3. Background Firebase Session Verification
+    if (auth) {
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                console.log("Firebase Auth verified session:", user.uid);
+                const initialLocalUser = getCurrentUser() || {};
+                const initialUid = initialLocalUser.user_id || user.uid;
+                
+                window.currentUser = {
+                    uid: initialUid,
+                    email: user.email,
+                    name: initialLocalUser.full_name || initialLocalUser.username || user.displayName,
+                    photoURL: initialLocalUser.profile_picture || user.photoURL,
+                    mobile: initialLocalUser.mobile_number || ''
+                };
+                
+                await loadUserProfile(user, initialLocalUser);
+                
+                // Run self-healing background check asynchronously without blocking
+                selfHealingPromise.then(async () => {
+                    const updatedLocalUser = getCurrentUser() || {};
+                    const updatedUid = updatedLocalUser.user_id || user.uid;
+                    if (updatedUid !== initialUid) {
+                        window.currentUser.uid = updatedUid;
+                        await loadUserProfile(user, updatedLocalUser);
+                        await loadUserWishlist(updatedUid);
+                        await loadUserPurchases(updatedUid);
+                    }
+                });
+            } else {
+                // If Firebase has definitively confirmed there is no user and we do not have a manual localUser session either
+                const currentLocalUser = getCurrentUser();
+                if (!currentLocalUser || (currentLocalUser.login_provider !== 'Manual' && currentLocalUser.login_method !== 'manual')) {
+                    console.log("Definitive Firebase Auth sign-out detected. Clearing cache and redirecting.");
+                    localStorage.removeItem("currentUser");
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("promptbazaar_user");
+                    window.currentUser = null;
+                    const protectedPaths = ['/wishlist', '/profile', '/payments', '/copy-history'];
+                    if (protectedPaths.some(path => window.location.pathname.includes(path))) {
+                        window.location.replace('/login');
+                    }
+                }
             }
         });
-        return; // Skip Firebase check
     }
-
-    // 4. Check for Firebase User
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            console.log("Firebase User UID:", user.uid);
-            
-            const initialLocalUser = getCurrentUser() || {};
-            const initialUid = initialLocalUser.user_id || user.uid;
-            
-            window.currentUser = {
-                uid: initialUid,
-                email: user.email,
-                name: initialLocalUser.full_name || initialLocalUser.username || user.displayName,
-                photoURL: initialLocalUser.profile_picture || user.photoURL,
-                mobile: initialLocalUser.mobile_number || ''
-            };
-            
-            // Load UI instantly!
-            await loadUserProfile(user, initialLocalUser);
-            await loadUserWishlist(initialUid);
-            await loadUserPurchases(initialUid);
-            
-            // Run self-healing background check asynchronously without blocking
-            selfHealingPromise.then(async () => {
-                const updatedLocalUser = getCurrentUser() || {};
-                const updatedUid = updatedLocalUser.user_id || user.uid;
-                if (updatedUid !== initialUid) {
-                    window.currentUser.uid = updatedUid;
-                    await loadUserProfile(user, updatedLocalUser);
-                    await loadUserWishlist(updatedUid);
-                    await loadUserPurchases(updatedUid);
-                }
-            });
-        } else {
-            console.log("No authenticated user found.");
-            window.currentUser = null;
-            // Only redirect if no manual user either
-            if (!localUser || (localUser.login_provider !== 'Manual' && localUser.login_method !== 'manual')) {
-                localStorage.removeItem("currentUser");
-                const protectedPaths = ['/wishlist', '/profile', '/payments', '/copy-history'];
-                if (protectedPaths.some(path => window.location.pathname.includes(path))) {
-                    window.location.href = '/login';
-                }
-            }
-        }
-    });
+};
 };
 
 initDashboard();
