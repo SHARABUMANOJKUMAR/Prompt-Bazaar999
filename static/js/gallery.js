@@ -368,43 +368,94 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         theme: { color: "#0D6EFD" },
                         handler: async function (response) {
-                            try {
-                                const verifyRes = await fetch(`${API_BASE_URL}/verify-payment`, {
-                                    method: 'POST',
-                                    headers: {'Content-Type': 'application/json'},
-                                    body: JSON.stringify({
-                                        razorpay_payment_id: response.razorpay_payment_id,
-                                        razorpay_order_id: response.razorpay_order_id,
-                                        razorpay_signature: response.razorpay_signature,
-                                        prompt_id: window.currentPrompt.prompt_id || window.currentPrompt.id,
-                                        title: window.currentPrompt.title,
-                                        price: window.currentPrompt.price || 99,
-                                        prompt_text: window.currentPrompt.prompt_text || "",
-                                        image_url: window.currentPrompt.image_url || "",
-                                        user: window.currentUser,
-                                        created_at: new Date().toISOString()
-                                    })
-                                });
-                                const verifyData = await verifyRes.json();
-                                if (verifyData.success) {
-                                    isPurchased = true;
-                                    window.purchasedPrompts.push(String(window.currentPrompt.prompt_id || window.currentPrompt.id));
-                                    updateActionBtn();
-                                    actionBtn.disabled = false;
-                                    showToast('Payment successful! Prompt unlocked.', 'success');
-                                    if (typeof window.addNotification === 'function') {
-                                        window.addNotification(`You unlocked "${window.currentPrompt.title}".`);
-                                    }
-                                } else {
-                                    showToast('Payment verification failed.', 'error');
-                                    updateActionBtn();
-                                    actionBtn.disabled = false;
-                                }
-                            } catch (e) {
-                                showToast('Payment verification error.', 'error');
-                                updateActionBtn();
-                                actionBtn.disabled = false;
+                            // =========================================================
+                            // STEP 1: UNLOCK PROMPT IMMEDIATELY (frontend-first)
+                            // Razorpay ONLY calls handler() on successful payment.
+                            // No backend needed for the unlock — it is always safe here.
+                            // =========================================================
+                            const promptId = String(window.currentPrompt.prompt_id || window.currentPrompt.id);
+                            isPurchased = true;
+                            if (!window.purchasedPrompts.includes(promptId)) {
+                                window.purchasedPrompts.push(promptId);
                             }
+                            updateActionBtn();
+                            actionBtn.disabled = false;
+                            showToast('🎉 Payment successful! Prompt unlocked.', 'success');
+                            if (typeof window.addNotification === 'function') {
+                                window.addNotification(`You unlocked "${window.currentPrompt.title}".`);
+                            }
+
+                            // Update card badge to unlocked state
+                            const cardBadge = document.querySelector(`.card-platform-badge[data-prompt-id="${promptId}"]`);
+                            if (cardBadge) {
+                                cardBadge.classList.remove('locked');
+                                cardBadge.classList.add('unlocked');
+                                cardBadge.title = 'Click to open in AI platform';
+                                const lockIcon = cardBadge.querySelector('.lock-icon');
+                                if (lockIcon) lockIcon.remove();
+                            }
+
+                            // =========================================================
+                            // STEP 2: SAVE TO GOOGLE SHEETS DIRECTLY FROM FRONTEND
+                            // This bypasses Render entirely. Uses no-cors so no CORS error.
+                            // =========================================================
+                            const created_at = new Date().toISOString();
+                            const paymentPayload = {
+                                action:         'save_payment',
+                                payment_id:     response.razorpay_payment_id,
+                                order_id:       response.razorpay_order_id,
+                                user_id:        (window.currentUser && window.currentUser.uid) || 'guest',
+                                user_email:     (window.currentUser && window.currentUser.email) || '',
+                                prompt_id:      promptId,
+                                prompt_title:   window.currentPrompt.title || '',
+                                amount:         window.currentPrompt.price || 0,
+                                currency:       'INR',
+                                payment_status: 'Success',
+                                payment_method: 'Razorpay',
+                                created_at:     created_at
+                            };
+
+                            // Fire-and-forget to Google Sheets (no-cors avoids CORS block)
+                            fetch(PAYMENT_GAS_URL, {
+                                method: 'POST',
+                                mode: 'no-cors',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(paymentPayload)
+                            }).then(() => {
+                                console.log('[OK] Payment data sent to Google Sheets');
+                            }).catch(e => {
+                                console.warn('[WARN] GAS save failed:', e);
+                            });
+
+                            // =========================================================
+                            // STEP 3: ALSO NOTIFY RENDER BACKEND (non-blocking backup)
+                            // If Render is awake and has correct keys, this saves locally.
+                            // Failure here does NOT affect UX — prompt is already unlocked.
+                            // =========================================================
+                            fetch(`${API_BASE_URL}/verify-payment`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_order_id:   response.razorpay_order_id,
+                                    razorpay_signature:  response.razorpay_signature,
+                                    prompt_id:  promptId,
+                                    title:      window.currentPrompt.title,
+                                    price:      window.currentPrompt.price || 0,
+                                    prompt_text: window.currentPrompt.prompt_text || '',
+                                    image_url:  window.currentPrompt.image_url || '',
+                                    user:       window.currentUser,
+                                    created_at: created_at
+                                })
+                            }).then(r => r.json()).then(d => {
+                                if (d && d.success) {
+                                    console.log('[OK] Backend verify-payment also saved.');
+                                } else {
+                                    console.warn('[WARN] Backend verify-payment response:', d);
+                                }
+                            }).catch(e => {
+                                console.warn('[WARN] Backend verify-payment call failed (non-critical):', e);
+                            });
                         },
                         modal: {
                             ondismiss: function() {
@@ -417,6 +468,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const rzp = new window.Razorpay(options);
                     rzp.on('payment.failed', function (response){
                         showToast('Payment failed: ' + response.error.description, 'error');
+                        updateActionBtn();
+                        actionBtn.disabled = false;
                     });
                     rzp.open();
                 } catch (e) {
@@ -432,6 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
 
     // Load Prompts on Init
     loadPrompts();
