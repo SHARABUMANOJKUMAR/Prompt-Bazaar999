@@ -38,7 +38,7 @@ class AuthController {
             });
 
             if (!response.ok) throw new Error('Session login failed');
-            window.location.href = '/';
+            window.location.href = '/profile';
         } catch (error) {
             console.error('Manual session error:', error);
             this.showError('Authentication failed. Please try again.');
@@ -78,7 +78,7 @@ class AuthController {
             });
 
             if (!response.ok) throw new Error('Session login failed');
-            window.location.href = '/';
+            window.location.href = '/profile';
         } catch (error) {
             console.error('Session error:', error);
             this.showError('Authentication failed. Please try again.');
@@ -341,8 +341,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                 });
 
-                // Instantly redirect to the gallery/homepage!
-                window.location.href = "/";
+                // Instantly redirect to the profile page!
+                window.location.href = "/profile";
             } catch (error) {
                 console.error("Google Sign-In Error:", error);
                 AuthController.showError(error.message || "Failed to sign in with Google.");
