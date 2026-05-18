@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        // Fast inline redirect for already authenticated users
+        (function() {
+            try {
+                var keys = ["currentUser", "user", "promptbazaar_user"];
+                for (var i = 0; i < keys.length; i++) {
+                    var val = localStorage.getItem(keys[i]);
+                    if (val) {
+                        var parsed = JSON.parse(val);
+                        if (parsed && (parsed.user_id || parsed.uid)) {
+                            window.location.replace("/profile");
+                            break;
+                        }
+                    }
+                }
+            } catch(e) {}
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Prompt Bazaar</title>

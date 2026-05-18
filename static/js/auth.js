@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!auth) throw new Error('Firebase not initialized');
                 
                 // Show loading spinner
-                googleBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:16px; height:16px; border-width:2px; margin-right:8px; vertical-align:middle"></span> Logging in...';
+                googleBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:16px; height:16px; border-width:2px; margin-right:8px; vertical-align:middle"></span> Signing you in...';
                 googleBtn.disabled = true;
 
                 const result = await signInWithPopup(auth, googleProvider);
@@ -369,5 +369,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error logging out:', error);
             }
         });
+    }
+
+    // Check Firebase Auth state for automatic redirection if already authenticated
+    try {
+        if (auth) {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    const currentPath = window.location.pathname;
+                    if (currentPath.includes('login') || currentPath.includes('signup')) {
+                        // Ensure local storage has at least the basic details
+                        if (!localStorage.getItem("currentUser")) {
+                            const currentUser = {
+                                user_id: user.uid,
+                                uid: user.uid,
+                                full_name: user.displayName || user.email.split('@')[0],
+                                email: user.email,
+                                profile_picture: user.photoURL || '',
+                                login_provider: "Google"
+                            };
+                            localStorage.setItem("currentUser", JSON.stringify(currentUser));
+                        }
+                        window.location.replace("/profile");
+                    }
+                }
+            });
+        }
+    } catch(e) {
+        console.error("Auth state redirect listener initialization failed:", e);
     }
 });
