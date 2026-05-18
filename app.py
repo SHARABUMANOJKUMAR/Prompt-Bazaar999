@@ -597,7 +597,10 @@ def verify_payment():
         user_id = user_info.get("uid") or user_info.get("user_id") or "guest"
         user_email = user_info.get("email") or ""
         
-        # Save to Google Apps Script
+        import datetime
+        created_at = datetime.datetime.now().isoformat()
+        
+        # Save to Google Apps Script (Payments Sheet)
         payment_payload = {
             "action": "save_payment",
             "payment_id": razorpay_payment_id,
@@ -609,7 +612,8 @@ def verify_payment():
             "amount": price,
             "currency": "INR",
             "payment_status": "Success",
-            "payment_method": "Razorpay"
+            "payment_method": "Razorpay",
+            "created_at": created_at
         }
         
         try:
@@ -618,7 +622,6 @@ def verify_payment():
             print(f"Error calling GAS for payment: {e}")
             
         # Save to local purchases JSON
-        import datetime
         purchases = load_purchases()
         if str(user_id) not in purchases:
             purchases[str(user_id)] = []
@@ -629,12 +632,17 @@ def verify_payment():
             "price": price,
             "payment_id": razorpay_payment_id,
             "order_id": razorpay_order_id,
+            "user_email": user_email,
             "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "created_at": created_at,
             "prompt_text": prompt_text,
-            "image_url": image_url
+            "image_url": image_url,
+            "payment_status": "Success",
+            "payment_method": "Razorpay"
         }
         purchases[str(user_id)].append(purchase_record)
         save_purchases(purchases)
+
         
         return jsonify({"success": True, "message": "Payment successful."})
         
@@ -656,6 +664,71 @@ def get_user_purchases():
     purchases = load_purchases()
     user_purchases = purchases.get(str(uid), [])
     return jsonify(user_purchases)
+
+# --- Admin: Fetch live payments from Google Sheets ---
+PAYMENTS_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1Ixf1ZqxCBKm8Q1Aq5pO3lO-0PJUQ8SKJ3KyBOQ_KXCE/export?format=csv&sheet=Payments"
+
+@app.route('/api/admin/payments', methods=['GET'])
+@login_required
+def api_get_payments():
+    """Fetch payment records from Google Sheets Payments tab via Apps Script."""
+    try:
+        gas_url = os.getenv("PAYMENT_GAS_URL", PAYMENT_GAS_URL)
+        response = requests.get(f"{gas_url}?action=get_payments", timeout=30)
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                if isinstance(data, list):
+                    return jsonify(data)
+                elif isinstance(data, dict) and 'payments' in data:
+                    return jsonify(data['payments'])
+                elif isinstance(data, dict) and 'data' in data:
+                    return jsonify(data['data'])
+            except Exception:
+                pass
+
+        # Fallback: read purchases.json and return all
+        purchases = load_purchases()
+        all_payments = []
+        import datetime
+        for uid, items in purchases.items():
+            for item in items:
+                all_payments.append({
+                    "payment_id": item.get("payment_id", ""),
+                    "order_id": item.get("order_id", ""),
+                    "user_id": uid,
+                    "user_email": item.get("user_email", ""),
+                    "prompt_id": item.get("prompt_id", ""),
+                    "prompt_title": item.get("title", ""),
+                    "amount": item.get("price", ""),
+                    "currency": "INR",
+                    "payment_status": "Success",
+                    "payment_method": "Razorpay",
+                    "created_at": item.get("date", "")
+                })
+        return jsonify(all_payments)
+    except Exception as e:
+        print(f"Error fetching admin payments: {e}")
+        # Fallback to local purchases.json
+        purchases = load_purchases()
+        all_payments = []
+        for uid, items in purchases.items():
+            for item in items:
+                all_payments.append({
+                    "payment_id": item.get("payment_id", ""),
+                    "order_id": item.get("order_id", ""),
+                    "user_id": uid,
+                    "user_email": item.get("user_email", ""),
+                    "prompt_id": item.get("prompt_id", ""),
+                    "prompt_title": item.get("title", ""),
+                    "amount": item.get("price", ""),
+                    "currency": "INR",
+                    "payment_status": "Success",
+                    "payment_method": "Razorpay",
+                    "created_at": item.get("date", "")
+                })
+        return jsonify(all_payments)
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

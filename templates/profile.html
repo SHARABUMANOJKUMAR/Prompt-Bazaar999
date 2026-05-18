@@ -285,19 +285,16 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
+                                <th>Prompt</th>
                                 <th>Payment ID</th>
                                 <th>Amount</th>
                                 <th>Date</th>
                                 <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>TXN-90210</td>
-                                <td>₹2.00</td>
-                                <td>2024-05-16</td>
-                                <td><span style="color:var(--color-success)">Successful</span></td>
-                            </tr>
+                        <tbody id="paymentsTableBody">
+                            <tr><td colspan="6" class="text-center" style="padding: 40px;">Loading payment history...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -333,17 +330,13 @@
                             <tr>
                                 <th>Prompt Image</th>
                                 <th>Title</th>
+                                <th>Amount</th>
+                                <th>Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><img src="https://picsum.photos/400/600?random=1" class="table-img" alt="Thumbnail"></td>
-                                <td><strong>Cinematic Hero Portrait</strong></td>
-                                <td>
-                                    <button class="btn btn-primary" style="padding: 4px 12px; font-size: 12px;">Copy Text</button>
-                                </td>
-                            </tr>
+                        <tbody id="purchasedTableBody">
+                            <tr><td colspan="5" class="text-center" style="padding: 40px;">Loading purchased prompts...</td></tr>
                         </tbody>
                     </table>
                 </div>

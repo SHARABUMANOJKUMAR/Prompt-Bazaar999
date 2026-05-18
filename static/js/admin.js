@@ -124,6 +124,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- Payments Section Event Listeners ---
+    const refreshPaymentsBtn = document.getElementById('refresh-payments-btn');
+    if (refreshPaymentsBtn) {
+        refreshPaymentsBtn.addEventListener('click', () => {
+            loadPayments(true);
+            showToast('Refreshing payment data...', 'success');
+        });
+    }
+
+    const paymentSearch = document.getElementById('payment-search');
+    if (paymentSearch) {
+        paymentSearch.addEventListener('input', (e) => {
+            filterPaymentTable(e.target.value);
+        });
+    }
+
     // Start auto-refresh
     startAutoRefresh();
 
@@ -146,6 +162,8 @@ function switchSection(sectionName) {
         loadPrompts();
     } else if (sectionName === 'users') {
         fetchUsers();
+    } else if (sectionName === 'payments') {
+        loadPayments();
     }
 }
 
@@ -816,3 +834,115 @@ async function deleteUser(userId) {
         showToast(err.message || 'An error occurred while deleting user.', 'error');
     }
 }
+
+// ===========================================================
+// --- PAYMENTS MANAGEMENT ---
+// ===========================================================
+
+let allPayments = [];
+let filteredPayments = [];
+
+async function loadPayments(forceRefresh = false) {
+    const tbody = document.getElementById('payments-table-body');
+    if (!tbody) return;
+
+    // Show skeleton loader
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 40px;">
+        <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 12px; color: var(--color-secondary);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
+            <span>Loading payment data...</span>
+        </div>
+    </td></tr>`;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/admin/payments`, {
+            cache: forceRefresh ? 'no-cache' : 'default'
+        });
+        if (!response.ok) throw new Error('Failed to fetch payment data');
+
+        const data = await response.json();
+        allPayments = Array.isArray(data) ? data : [];
+        filteredPayments = [...allPayments];
+
+        renderPaymentsTable(filteredPayments);
+        updatePaymentSummaryCards(allPayments);
+
+    } catch (err) {
+        console.error('Error loading payments:', err);
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger" style="padding: 40px;">Unable to load payment data. Please try again.</td></tr>`;
+    }
+}
+
+function renderPaymentsTable(payments) {
+    const tbody = document.getElementById('payments-table-body');
+    if (!tbody) return;
+
+    if (!payments || payments.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 60px; color: var(--color-secondary);">No payments found.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = payments.map(p => {
+        const statusColor = (p.payment_status || '').toLowerCase() === 'success' ? 'var(--color-success)' : '#ef4444';
+        const statusLabel = p.payment_status || 'Unknown';
+        const shortPayId = p.payment_id ? p.payment_id.slice(0, 20) + (p.payment_id.length > 20 ? '…' : '') : 'N/A';
+        const amount = parseFloat(p.amount || 0);
+        const dateStr = p.created_at ? new Date(p.created_at).toLocaleDateString('en-IN', {day: '2-digit', month: 'short', year: 'numeric'}) : (p.date || 'N/A');
+
+        return `
+            <tr>
+                <td style="font-family: monospace; font-size: 0.8rem;">
+                    <code title="${p.payment_id || ''}" style="background: rgba(13,110,253,0.05); padding: 3px 7px; border-radius: 4px; color: var(--color-primary); font-size: 0.78rem;">${shortPayId}</code>
+                </td>
+                <td style="font-size: 0.875rem;">${p.user_email || p.user_id || 'N/A'}</td>
+                <td style="font-size: 0.875rem; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${p.prompt_title || ''}">${p.prompt_title || 'N/A'}</td>
+                <td><strong style="color: var(--color-success);">₹${isNaN(amount) ? p.amount : amount.toFixed(2)}</strong></td>
+                <td><span style="background: rgba(13,110,253,0.08); color: var(--color-primary); padding: 2px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600;">${p.payment_method || 'Razorpay'}</span></td>
+                <td><span style="color: ${statusColor}; font-weight: 600;">${statusLabel}</span></td>
+                <td style="font-size: 0.85rem; color: var(--color-secondary);">${dateStr}</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function updatePaymentSummaryCards(payments) {
+    const totalRevEl = document.getElementById('admin-total-revenue');
+    const totalTxnEl = document.getElementById('admin-total-txns');
+    const avgOrderEl = document.getElementById('admin-avg-order');
+
+    if (!payments || payments.length === 0) {
+        if (totalRevEl) totalRevEl.textContent = '₹0';
+        if (totalTxnEl) totalTxnEl.textContent = '0';
+        if (avgOrderEl) avgOrderEl.textContent = '₹0';
+        return;
+    }
+
+    const totalRevenue = payments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
+    const avgOrder = payments.length > 0 ? totalRevenue / payments.length : 0;
+
+    if (totalRevEl) totalRevEl.textContent = `₹${totalRevenue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    if (totalTxnEl) totalTxnEl.textContent = payments.length.toLocaleString('en-IN');
+    if (avgOrderEl) avgOrderEl.textContent = `₹${avgOrder.toFixed(2)}`;
+
+    // Also update dashboard summary revenue card
+    const summaryRevEl = document.getElementById('summary-total-revenue');
+    if (summaryRevEl) summaryRevEl.textContent = `₹${totalRevenue.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    const summaryTxnEl = document.getElementById('summary-total-sales');
+    if (summaryTxnEl) summaryTxnEl.textContent = payments.length.toLocaleString('en-IN');
+}
+
+function filterPaymentTable(query) {
+    if (!query || !query.trim()) {
+        filteredPayments = [...allPayments];
+    } else {
+        const q = query.toLowerCase();
+        filteredPayments = allPayments.filter(p =>
+            (p.payment_id || '').toLowerCase().includes(q) ||
+            (p.user_email || '').toLowerCase().includes(q) ||
+            (p.prompt_title || '').toLowerCase().includes(q) ||
+            (p.user_id || '').toLowerCase().includes(q)
+        );
+    }
+    renderPaymentsTable(filteredPayments);
+}
+

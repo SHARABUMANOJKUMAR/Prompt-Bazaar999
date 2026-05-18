@@ -4,7 +4,16 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "app.py",
+      "requirements.txt",
+      "*.py",
+      "__pycache__/**",
+      "data/**",
+      ".env",
+      ".python-version",
+      "docs/**",
+      ".ai-session/**"
     ],
     "rewrites": [
       { "source": "/login", "destination": "/login.html" },
@@ -13,6 +22,14 @@
       { "source": "/profile", "destination": "/profile.html" },
       { "source": "/gallery", "destination": "/prompt-gallery.html" },
       { "source": "/admin", "destination": "/admin-dashboard.html" }
+    ],
+    "headers": [
+      {
+        "source": "/static/**",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=31536000" }
+        ]
+      }
     ]
   }
 }

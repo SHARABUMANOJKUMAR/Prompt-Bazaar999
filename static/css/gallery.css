@@ -356,6 +356,43 @@ body {
   z-index: 2;
 }
 
+/* Platform Badge on Cards */
+.card-platform-badge {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  max-width: calc(100% - 32px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-platform-badge.locked {
+  background: rgba(100, 116, 139, 0.18);
+  color: #64748b;
+  border-color: rgba(100, 116, 139, 0.25);
+}
+.card-platform-badge.locked:hover {
+  background: rgba(100, 116, 139, 0.28);
+}
+.card-platform-badge.unlocked {
+  background: rgba(13, 110, 253, 0.12);
+  color: var(--color-primary);
+  border-color: rgba(13, 110, 253, 0.3);
+}
+.card-platform-badge.unlocked:hover {
+  background: rgba(13, 110, 253, 0.22);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
+}
+
 .wishlist-btn {
   position: absolute;
   top: 16px;
@@ -859,3 +896,20 @@ body {
     }
 }
 
+
+/* Btn success - for Copy Prompt state after purchase */
+.btn-success {
+  background: #22C55E !important;
+  color: #fff !important;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.25) !important;
+}
+.btn-success:hover {
+  background: #16a34a !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.35) !important;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

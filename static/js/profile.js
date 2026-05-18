@@ -704,54 +704,84 @@ async function removeFromWishlist(wishlistId) {
 
 // --- Purchases Logic ---
 async function loadUserPurchases(uid) {
-    const purchasesContainer = document.querySelector('#purchased-section tbody');
-    const paymentsContainer = document.querySelector('#payments-section tbody');
-    if (!purchasesContainer || !paymentsContainer) return;
+    const purchasedContainer = document.getElementById('purchasedTableBody');
+    const paymentsContainer = document.getElementById('paymentsTableBody');
+    // Also support the old query selectors as fallback
+    const legacyPurchasedContainer = purchasedContainer || document.querySelector('#purchased-section tbody');
+    const legacyPaymentsContainer = paymentsContainer || document.querySelector('#payments-section tbody');
+
+    if (!legacyPurchasedContainer || !legacyPaymentsContainer) return;
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/user/purchases?uid=${uid}`);
         const purchases = await response.json();
 
-        // Render Purchased Prompts
         if (purchases && purchases.length > 0) {
-            purchasesContainer.innerHTML = purchases.map(item => `
-                <tr>
-                    <td>
-                        <img 
-                            src="${convertDriveLink(item.image_url) || '/static/images/placeholder.png'}" 
-                            class="table-img" 
-                            style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);" 
-                            alt="Thumbnail"
-                            onerror="this.src='/static/images/placeholder.png';"
-                        >
-                    </td>
-                    <td><strong>${item.title || 'Untitled'}</strong></td>
-                    <td>
-                        <button class="btn btn-primary" onclick="copyPromptText(this.dataset.prompt)" data-prompt="${encodeURIComponent(item.prompt_text || '')}" style="padding: 4px 12px; font-size: 12px;">Copy Text</button>
-                    </td>
-                </tr>
-            `).join('');
-            
-            // Render Payment History
-            paymentsContainer.innerHTML = purchases.map(item => `
-                <tr>
-                    <td>${item.payment_id || item.order_id || 'N/A'}</td>
-                    <td>₹${item.price || 0}</td>
-                    <td>${item.date || 'Unknown'}</td>
-                    <td><span style="color:var(--color-success)">Successful</span></td>
-                </tr>
-            `).join('');
-            
+            // --- Render Purchased Prompts Table ---
+            legacyPurchasedContainer.innerHTML = purchases.map(item => {
+                const dateStr = item.date ? new Date(item.date).toLocaleDateString('en-IN', {day: '2-digit', month: 'short', year: 'numeric'}) : 'N/A';
+                const amount = parseFloat(item.price || 0);
+                const imgSrc = convertDriveLink(item.image_url) || 'https://via.placeholder.com/60x60?text=Prompt';
+                const encodedPrompt = encodeURIComponent(item.prompt_text || '');
+                return `
+                    <tr>
+                        <td>
+                            <img 
+                                src="${imgSrc}" 
+                                style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px; border: 1px solid var(--color-border);" 
+                                alt="Thumbnail"
+                                onerror="this.src='https://via.placeholder.com/60x60?text=No+Image';"
+                            >
+                        </td>
+                        <td><strong>${item.title || 'Untitled'}</strong></td>
+                        <td><strong style="color: var(--color-success);">₹${isNaN(amount) ? item.price : amount.toFixed(2)}</strong></td>
+                        <td style="font-size: 0.85rem; color: var(--color-secondary);">${dateStr}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="copyPromptText(decodeURIComponent('${encodedPrompt}'))" style="padding: 6px 14px; font-size: 12px; border-radius: 10px;">
+                                📋 Copy Prompt
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // --- Render Payment History Table ---
+            legacyPaymentsContainer.innerHTML = purchases.map(item => {
+                const dateStr = item.date ? new Date(item.date).toLocaleDateString('en-IN', {day: '2-digit', month: 'short', year: 'numeric'}) : 'N/A';
+                const amount = parseFloat(item.price || 0);
+                const shortPayId = item.payment_id ? item.payment_id.slice(0, 22) + (item.payment_id.length > 22 ? '…' : '') : (item.order_id ? item.order_id.slice(0, 22) + '…' : 'N/A');
+                const status = item.payment_status || 'Success';
+                const statusColor = status.toLowerCase() === 'success' ? 'var(--color-success)' : '#ef4444';
+                const encodedPrompt = encodeURIComponent(item.prompt_text || '');
+                return `
+                    <tr>
+                        <td style="font-size: 0.85rem; color: var(--color-secondary);">${item.title || 'Untitled'}</td>
+                        <td>
+                            <code title="${item.payment_id || ''}" style="font-family: monospace; font-size: 0.78rem; background: rgba(13,110,253,0.05); padding: 3px 7px; border-radius: 4px; color: var(--color-primary);">${shortPayId}</code>
+                        </td>
+                        <td><strong style="color: var(--color-success);">₹${isNaN(amount) ? item.price : amount.toFixed(2)}</strong></td>
+                        <td style="font-size: 0.85rem; color: var(--color-secondary);">${dateStr}</td>
+                        <td><span style="color: ${statusColor}; font-weight: 600;">${status}</span></td>
+                        <td>
+                            <button class="btn btn-primary" onclick="copyPromptText(decodeURIComponent('${encodedPrompt}'))" style="padding: 4px 12px; font-size: 12px; border-radius: 8px;">
+                                📋 Copy
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
         } else {
-            purchasesContainer.innerHTML = '<tr><td colspan="3" class="text-center" style="padding: 40px;">No purchased prompts yet.</td></tr>';
-            paymentsContainer.innerHTML = '<tr><td colspan="4" class="text-center" style="padding: 40px;">No payment history.</td></tr>';
+            legacyPurchasedContainer.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 60px; color: var(--color-secondary);">No purchased prompts yet. <a href="/gallery" style="color: var(--color-primary);">Browse Gallery →</a></td></tr>';
+            legacyPaymentsContainer.innerHTML = '<tr><td colspan="6" class="text-center" style="padding: 60px; color: var(--color-secondary);">No payment history yet.</td></tr>';
         }
     } catch (error) {
         console.error('Error loading purchases:', error);
-        purchasesContainer.innerHTML = '<tr><td colspan="3" class="text-center text-danger" style="padding: 40px;">Unable to load purchased prompts.</td></tr>';
-        paymentsContainer.innerHTML = '<tr><td colspan="4" class="text-center text-danger" style="padding: 40px;">Unable to load payment history.</td></tr>';
+        if (legacyPurchasedContainer) legacyPurchasedContainer.innerHTML = '<tr><td colspan="5" class="text-center text-danger" style="padding: 40px;">Unable to load purchased prompts.</td></tr>';
+        if (legacyPaymentsContainer) legacyPaymentsContainer.innerHTML = '<tr><td colspan="6" class="text-center text-danger" style="padding: 40px;">Unable to load payment history.</td></tr>';
     }
 }
+
 
 // Modal Logic
 const modal = document.getElementById('prompt-modal');

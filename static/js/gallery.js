@@ -6,6 +6,7 @@ const API_BASE_URL = (window.location.hostname === 'localhost' || window.locatio
     : "https://prompt-bazaar999.onrender.com";
 const REPORT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbynN-ZkLfN7XzjIPKCTmZG1pDjUksqZeLfUWAJCSFWrWhIIGkyYjqk81LAw-HVneSz8/exec";
 const WISHLIST_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzeyp93N_8BIW40Qi5isffi5h7FfHvm84_1n3mWMIzYNVVovayy-fL5RNiC6k15i7GL8g/exec";
+const PAYMENT_GAS_URL = "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--FmcKBivrsJEGarfEALgf6GLY_S-8y8VvtehVSlSjy7DWs_/exec";
 
 // Global state
 window.currentUser = null;
@@ -241,13 +242,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const platformName = (prompt.platform || 'Midjourney').toUpperCase();
             modalPlatform.textContent = platformName;
             
-            // Add click listener to open the AI platform with the prompt text
+            // Badge click: only open AI platform AFTER payment
             modalPlatform.onclick = (e) => {
                 e.stopPropagation();
-                // Fallback to description or title if prompt_text is not yet available
-                const textToPaste = prompt.prompt_text || prompt.description || prompt.title;
+                const purchased = window.purchasedPrompts.includes(String(prompt.prompt_id || prompt.id));
+                if (!purchased) {
+                    if (typeof showToast === 'function') {
+                        showToast('🔒 Purchase this prompt to open it in ' + platformName, 'error');
+                    }
+                    return;
+                }
                 
-                // Copy to clipboard for safety, then open URL
+                const textToPaste = prompt.prompt_text || prompt.description || prompt.title;
                 navigator.clipboard.writeText(textToPaste).then(() => {
                     let url = '';
                     if (platformName.includes('CHATGPT')) {
@@ -261,7 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     } else {
                         url = 'https://chatgpt.com/?q=' + encodeURIComponent(textToPaste);
                     }
-                    
                     window.open(url, '_blank');
                     if (typeof showToast === 'function') {
                         showToast('Prompt copied & opened in ' + platformName, 'success');
@@ -376,7 +381,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                         price: window.currentPrompt.price || 99,
                                         prompt_text: window.currentPrompt.prompt_text || "",
                                         image_url: window.currentPrompt.image_url || "",
-                                        user: window.currentUser
+                                        user: window.currentUser,
+                                        created_at: new Date().toISOString()
                                     })
                                 });
                                 const verifyData = await verifyRes.json();
@@ -547,10 +553,26 @@ function createPromptCard(prompt) {
     const imageUrl = convertDriveLink(prompt.image_url) || 'https://via.placeholder.com/400x600?text=No+Image';
     const title = prompt.title || 'Untitled Prompt';
     const price = prompt.price || 2;
+    const platformName = (prompt.platform || '').toUpperCase();
+    const isPurchasedCard = window.purchasedPrompts.includes(String(prompt.prompt_id || prompt.id));
+
+    // Build platform badge label
+    let platformLabel = '';
+    if (platformName.includes('CHATGPT')) platformLabel = 'ChatGPT';
+    else if (platformName.includes('CLAUDE')) platformLabel = 'Claude';
+    else if (platformName.includes('GEMINI')) platformLabel = 'Gemini';
+    else if (platformName.includes('MIDJOURNEY')) platformLabel = 'Midjourney';
+    else if (platformName) platformLabel = prompt.platform;
+
+    const platformBadgeHtml = platformLabel ? `
+        <span class="card-platform-badge ${isPurchasedCard ? 'unlocked' : 'locked'}" data-prompt-id="${prompt.prompt_id || prompt.id}" title="${isPurchasedCard ? 'Click to open in ' + platformLabel : 'Purchase to unlock ' + platformLabel}">
+            ${isPurchasedCard ? '' : '🔒 '}${platformLabel}
+        </span>` : '';
 
         card.innerHTML = `
             <div class="card-image-wrapper">
                 <span class="price-pill">₹${price}</span>
+                ${platformBadgeHtml}
                 <button class="wishlist-btn" aria-label="Favorite">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                 </button>
@@ -574,6 +596,37 @@ function createPromptCard(prompt) {
         heartBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             handleWishlistAction(prompt, heartBtn);
+        });
+    }
+
+    // Platform badge click: gated behind payment
+    const platformBadgeEl = card.querySelector('.card-platform-badge');
+    if (platformBadgeEl) {
+        platformBadgeEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const purchased = window.purchasedPrompts.includes(String(prompt.prompt_id || prompt.id));
+            if (!purchased) {
+                if (typeof showToast === 'function') {
+                    showToast('🔒 Purchase this prompt to open it on the AI platform', 'error');
+                }
+                // Still open the modal so user can buy
+                window.openPromptModal(prompt);
+                return;
+            }
+            const pName = (prompt.platform || '').toUpperCase();
+            const textToPaste = prompt.prompt_text || prompt.description || prompt.title;
+            navigator.clipboard.writeText(textToPaste).then(() => {
+                let url = '';
+                if (pName.includes('CHATGPT')) url = 'https://chatgpt.com/?q=' + encodeURIComponent(textToPaste);
+                else if (pName.includes('CLAUDE')) url = 'https://claude.ai/new?q=' + encodeURIComponent(textToPaste);
+                else if (pName.includes('GEMINI')) url = 'https://gemini.google.com/app?prompt=' + encodeURIComponent(textToPaste);
+                else if (pName.includes('MIDJOURNEY')) url = 'https://www.midjourney.com/';
+                else url = 'https://chatgpt.com/?q=' + encodeURIComponent(textToPaste);
+                window.open(url, '_blank');
+                if (typeof showToast === 'function') showToast('Prompt copied & opened in ' + prompt.platform, 'success');
+            }).catch(() => {
+                if (typeof showToast === 'function') showToast('Failed to copy prompt', 'error');
+            });
         });
     }
 
