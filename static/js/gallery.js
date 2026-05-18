@@ -330,120 +330,82 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = '/login';
                     return;
                 }
-
+                
                 actionBtn.innerHTML = `<div class="spinner"></div>`;
                 actionBtn.disabled = true;
-
+                
                 try {
-                    // =========================================================
-                    // DIRECT RAZORPAY CHECKOUT — No Render backend needed
-                    // Order created on Razorpay's servers via their Checkout SDK
-                    // amount is in paise (₹1 = 100 paise)
-                    // =========================================================
-                    const RAZORPAY_LIVE_KEY = "rzp_live_SqhOppevDijt8N";
-                    const promptPrice = parseFloat(window.currentPrompt.price || 1);
-                    const amountInPaise = Math.round(promptPrice * 100);
-
+                    const res = await fetch(`${API_BASE_URL}/create-order`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            prompt_id: window.currentPrompt.prompt_id || window.currentPrompt.id,
+                            title: window.currentPrompt.title,
+                            price: window.currentPrompt.price || 99
+                        })
+                    });
+                    const orderData = await res.json();
+                    
+                    if (!orderData.success) {
+                        showToast(orderData.message || 'Error creating order', 'error');
+                        updateActionBtn();
+                        actionBtn.disabled = false;
+                        return;
+                    }
+                    
                     const options = {
-                        key: RAZORPAY_LIVE_KEY,
-                        amount: amountInPaise,
-                        currency: "INR",
+                        key: orderData.key,
+                        amount: orderData.amount,
+                        currency: orderData.currency,
                         name: "Prompt Bazaar",
                         description: window.currentPrompt.title,
                         image: "https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png",
+                        order_id: orderData.order_id,
                         prefill: {
-                            name:    (window.currentUser && window.currentUser.name) || "Customer",
-                            email:   (window.currentUser && window.currentUser.email) || "",
-                            contact: (window.currentUser && window.currentUser.mobile_number) || ""
-                        },
-                        notes: {
-                            prompt_id:    String(window.currentPrompt.prompt_id || window.currentPrompt.id),
-                            prompt_title: window.currentPrompt.title,
-                            user_email:   (window.currentUser && window.currentUser.email) || ""
+                            name: window.currentUser.name || "Customer",
+                            email: window.currentUser.email || "",
+                            contact: window.currentUser.mobile_number || ""
                         },
                         theme: { color: "#0D6EFD" },
-
                         handler: async function (response) {
-                            // =========================================================
-                            // STEP 1: UNLOCK PROMPT IMMEDIATELY (Razorpay handler = success)
-                            // =========================================================
-                            const promptId = String(window.currentPrompt.prompt_id || window.currentPrompt.id);
-                            isPurchased = true;
-                            if (!window.purchasedPrompts.includes(promptId)) {
-                                window.purchasedPrompts.push(promptId);
+                            try {
+                                const verifyRes = await fetch(`${API_BASE_URL}/verify-payment`, {
+                                    method: 'POST',
+                                    headers: {'Content-Type': 'application/json'},
+                                    body: JSON.stringify({
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_signature: response.razorpay_signature,
+                                        prompt_id: window.currentPrompt.prompt_id || window.currentPrompt.id,
+                                        title: window.currentPrompt.title,
+                                        price: window.currentPrompt.price || 99,
+                                        prompt_text: window.currentPrompt.prompt_text || "",
+                                        image_url: window.currentPrompt.image_url || "",
+                                        user: window.currentUser,
+                                        created_at: new Date().toISOString()
+                                    })
+                                });
+                                const verifyData = await verifyRes.json();
+                                if (verifyData.success) {
+                                    isPurchased = true;
+                                    window.purchasedPrompts.push(String(window.currentPrompt.prompt_id || window.currentPrompt.id));
+                                    updateActionBtn();
+                                    actionBtn.disabled = false;
+                                    showToast('Payment successful! Prompt unlocked.', 'success');
+                                    if (typeof window.addNotification === 'function') {
+                                        window.addNotification(`You unlocked "${window.currentPrompt.title}".`);
+                                    }
+                                } else {
+                                    showToast('Payment verification failed.', 'error');
+                                    updateActionBtn();
+                                    actionBtn.disabled = false;
+                                }
+                            } catch (e) {
+                                showToast('Payment verification error.', 'error');
+                                updateActionBtn();
+                                actionBtn.disabled = false;
                             }
-                            updateActionBtn();
-                            actionBtn.disabled = false;
-                            showToast('🎉 Payment successful! Prompt unlocked.', 'success');
-                            if (typeof window.addNotification === 'function') {
-                                window.addNotification(`You unlocked "${window.currentPrompt.title}".`);
-                            }
-
-                            // Update card badge to unlocked state immediately
-                            const cardBadge = document.querySelector(`.card-platform-badge[data-prompt-id="${promptId}"]`);
-                            if (cardBadge) {
-                                cardBadge.classList.remove('locked');
-                                cardBadge.classList.add('unlocked');
-                                const lockIcon = cardBadge.querySelector('.lock-icon');
-                                if (lockIcon) lockIcon.remove();
-                            }
-
-                            // =========================================================
-                            // STEP 2: SAVE TO GOOGLE SHEETS DIRECTLY (no-cors, no Render)
-                            // =========================================================
-                            const created_at = new Date().toISOString();
-                            const paymentPayload = {
-                                action:         'save_payment',
-                                payment_id:     response.razorpay_payment_id,
-                                order_id:       response.razorpay_order_id || '',
-                                user_id:        (window.currentUser && window.currentUser.uid) || 'guest',
-                                user_email:     (window.currentUser && window.currentUser.email) || '',
-                                prompt_id:      promptId,
-                                prompt_title:   window.currentPrompt.title || '',
-                                amount:         promptPrice,
-                                currency:       'INR',
-                                payment_status: 'Success',
-                                payment_method: 'Razorpay',
-                                created_at:     created_at
-                            };
-
-                            // Fire-and-forget to Google Sheets (no-cors bypasses CORS block)
-                            fetch(PAYMENT_GAS_URL, {
-                                method:  'POST',
-                                mode:    'no-cors',
-                                headers: { 'Content-Type': 'application/json' },
-                                body:    JSON.stringify(paymentPayload)
-                            }).then(() => {
-                                console.log('[OK] Payment saved to Google Sheets');
-                            }).catch(e => {
-                                console.warn('[WARN] GAS save failed:', e);
-                            });
-
-                            // =========================================================
-                            // STEP 3: ALSO NOTIFY RENDER BACKEND (non-blocking backup)
-                            // =========================================================
-                            fetch(`${API_BASE_URL}/verify-payment`, {
-                                method:  'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    razorpay_payment_id: response.razorpay_payment_id,
-                                    razorpay_order_id:   response.razorpay_order_id || '',
-                                    razorpay_signature:  response.razorpay_signature || '',
-                                    prompt_id:   promptId,
-                                    title:       window.currentPrompt.title,
-                                    price:       promptPrice,
-                                    prompt_text: window.currentPrompt.prompt_text || '',
-                                    image_url:   window.currentPrompt.image_url || '',
-                                    user:        window.currentUser,
-                                    created_at:  created_at
-                                })
-                            }).then(r => r.json()).then(d => {
-                                console.log('[OK] Backend backup save:', d && d.success ? 'saved' : 'skipped');
-                            }).catch(e => {
-                                console.warn('[WARN] Backend verify-payment (non-critical):', e);
-                            });
                         },
-
                         modal: {
                             ondismiss: function() {
                                 updateActionBtn();
@@ -451,22 +413,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         }
                     };
-
+                    
                     const rzp = new window.Razorpay(options);
-                    rzp.on('payment.failed', function (response) {
-                        showToast('Payment failed: ' + (response.error && response.error.description || 'Unknown error'), 'error');
-                        updateActionBtn();
-                        actionBtn.disabled = false;
+                    rzp.on('payment.failed', function (response){
+                        showToast('Payment failed: ' + response.error.description, 'error');
                     });
                     rzp.open();
-
                 } catch (e) {
-                    console.error('Payment init error:', e);
-                    showToast('Failed to initialize payment. Please try again.', 'error');
+                    showToast('Failed to initialize payment.', 'error');
                     updateActionBtn();
                     actionBtn.disabled = false;
                 }
-
             } else if (window.currentPrompt) {
                 const textToCopy = window.currentPrompt.prompt_text || window.currentPrompt.description || window.currentPrompt.title;
                 navigator.clipboard.writeText(textToCopy).then(() => {
@@ -475,7 +432,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
 
     // Load Prompts on Init
     loadPrompts();

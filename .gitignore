@@ -67,7 +67,3 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
-
-# Local data files (purchases, user data)
-data/
-*.json.local
