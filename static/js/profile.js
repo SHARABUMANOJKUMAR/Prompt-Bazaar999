@@ -190,8 +190,8 @@ const initDashboard = async () => {
                 if (gasLoginResult.success && gasLoginResult.user) {
                     localUser.user_id = gasLoginResult.user.user_id;
                     localUser.uid = gasLoginResult.user.user_id;
-                    localUser.full_name = gasLoginResult.user.full_name || localUser.full_name;
-                    localUser.mobile_number = gasLoginResult.user.mobile_number || localUser.mobile_number;
+                    localUser.full_name = localUser.full_name || gasLoginResult.user.full_name;
+                    localUser.mobile_number = localUser.mobile_number || gasLoginResult.user.mobile_number;
                     
                     localStorage.setItem("currentUser", JSON.stringify(localUser));
                     localStorage.setItem("user", JSON.stringify(localUser));
