@@ -579,18 +579,103 @@ section {
 }
 
 @media (max-width: 767px) {
+  html, body {
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
   section {
-    padding: 60px 0;
+    padding: 60px 16px !important;
+  }
+
+  /* Hero Section */
+  .hero {
+    padding-top: 100px !important;
+    text-align: center !important;
+  }
+  .hero-content {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  .text-h1 {
+    font-size: 42px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 1rem !important;
+    text-align: center !important;
+  }
+  .hero-subheadline {
+    font-size: 1rem !important;
+    margin-bottom: 2rem !important;
+    text-align: center !important;
+    max-width: 100% !important;
   }
   .hero-actions {
-    flex-direction: column;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+  .hero-actions .btn {
+    width: 100% !important;
+    min-height: 48px !important;
+    font-size: 16px !important;
+  }
+  .hero-logo-container {
+    margin-top: 40px !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+  }
+  .hero-logo-main {
+    width: 220px !important;
+    height: 220px !important;
+  }
+  .floating-badge {
+    padding: 8px 14px !important;
+    font-size: 11px !important;
+  }
+  .badge-1 { left: -10% !important; top: -10% !important; }
+  .badge-2 { right: -10% !important; top: 40% !important; }
+  .badge-3 { left: -10% !important; bottom: 0% !important; }
+
+  /* Stats Section */
+  .stats-grid {
+    padding: 24px !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    border-radius: 20px !important;
+  }
+
+  /* Features & Steps Grid */
+  .features-grid, .steps-grid, .categories-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  .feature-card {
+    padding: 24px !important;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 60px 16px 30px !important;
   }
   .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+    text-align: center !important;
   }
-  .stats-grid {
-    padding: 30px;
+  .footer-logo {
+    justify-content: center !important;
+    margin-bottom: 16px !important;
+  }
+  .footer-links h4 {
+    margin-bottom: 16px !important;
+  }
+  .footer-links ul {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
   }
 }
 

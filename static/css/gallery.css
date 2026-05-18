@@ -703,3 +703,159 @@ body {
   overflow: hidden;
 }
 
+/* ==========================================
+   MOBILE-ONLY RESPONSIVE OVERRIDES (max-width: 767px)
+   ========================================== */
+@media (max-width: 767px) {
+    html, body {
+        width: 100% !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Page Header */
+    .page-header {
+        padding: 30px 16px 20px !important;
+    }
+    .page-title {
+        font-size: 1.8rem !important;
+    }
+    .page-subtitle {
+        font-size: 0.95rem !important;
+    }
+
+    /* Header / Navbar */
+    .gallery-header {
+        padding: 12px 16px !important;
+    }
+    .header-left {
+        font-size: 1rem !important;
+        gap: 8px !important;
+    }
+    .header-left img {
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    /* Filters & Search */
+    .filters-container {
+        padding: 0 16px !important;
+        margin-bottom: 24px !important;
+    }
+    .search-bar-wrapper {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+    .search-input {
+        padding: 12px 16px 12px 44px !important;
+        font-size: 16px !important;
+    }
+    .sort-select {
+        width: 100% !important;
+        padding: 12px !important;
+        font-size: 16px !important;
+    }
+
+    /* Category Chips / Tabs */
+    .category-chips {
+        display: flex !important;
+        gap: 8px !important;
+        overflow-x: auto !important;
+        padding-bottom: 8px !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    .chip {
+        padding: 6px 12px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* Grid & Prompt Cards */
+    .prompt-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        padding: 0 16px 30px !important;
+    }
+    .prompt-card {
+        width: 100% !important;
+    }
+    .card-image-wrapper {
+        height: 220px !important;
+    }
+    .card-content {
+        padding: 16px !important;
+    }
+    .card-title {
+        font-size: 18px !important;
+        margin-bottom: 6px !important;
+    }
+    .card-desc {
+        font-size: 14px !important;
+        margin-bottom: 12px !important;
+    }
+    .view-prompt-btn {
+        min-height: 48px !important;
+        font-size: 16px !important;
+        width: 100% !important;
+    }
+
+    /* Prompt Preview Modal (Slide from Bottom) */
+    .modal-overlay {
+        width: 100% !important;
+        height: 90vh !important;
+        max-height: 90vh !important;
+        border-radius: 20px 20px 0 0 !important;
+        bottom: 0 !important;
+        top: auto !important;
+        transform: translateY(100%) !important;
+        background: var(--color-bg-primary, #ffffff) !important;
+        z-index: 100000 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+    }
+    .modal-overlay.open {
+        transform: translateY(0) !important;
+    }
+    .modal-image-container {
+        height: auto !important;
+        max-height: 35vh !important;
+        flex: none !important;
+    }
+    .modal-image-container img {
+        height: 100% !important;
+        width: 100% !important;
+        object-fit: cover !important;
+    }
+    .modal-content {
+        flex: 1 !important;
+        overflow-y: auto !important;
+        padding: 24px 16px !important;
+        margin-top: 0 !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+    .modal-actions {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+        margin-bottom: 16px !important;
+    }
+    .action-btn {
+        padding: 10px 4px !important;
+        font-size: 11px !important;
+        border-radius: 12px !important;
+    }
+    #modal-primary-action {
+        width: 100% !important;
+        min-height: 48px !important;
+        font-size: 16px !important;
+        margin-top: 8px !important;
+    }
+
+    /* Skeleton Loading Overrides */
+    .skeleton-img {
+        height: 220px !important;
+    }
+}
+
