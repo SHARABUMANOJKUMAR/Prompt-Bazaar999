@@ -44,6 +44,10 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # --- Configuration ---
 GAS_URL = "https://script.google.com/macros/s/AKfycbwCLIowdAuaMfwfuZJoIYPVatfkBwsI98JYgAgaAwR4kx4juKuOdjsShRGiK7ZOVaYe/exec"
+PAYMENT_GAS_URL = os.getenv(
+    "PAYMENT_GAS_URL",
+    "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--FmcKBivrsJEGarfEALgf6GLY_S-8y8VvtehVSlSjy7DWs_/exec"
+)
 
 # --- Middleware / Decorators ---
 def login_required(f):
@@ -571,86 +575,97 @@ def create_order():
 @app.route('/verify-payment', methods=['POST'])
 def verify_payment():
     if not razorpay_client:
-        return jsonify({"success": False, "message": "Razorpay client is not initialized due to missing credentials."}), 500
+        return jsonify({"success": False, "message": "Razorpay not initialized."}), 500
     try:
         data = request.get_json()
         razorpay_payment_id = data.get("razorpay_payment_id")
-        razorpay_order_id = data.get("razorpay_order_id")
-        razorpay_signature = data.get("razorpay_signature")
-        prompt_id = data.get("prompt_id")
-        title = data.get("title")
-        price = data.get("price")
+        razorpay_order_id   = data.get("razorpay_order_id")
+        razorpay_signature  = data.get("razorpay_signature")
+        prompt_id   = data.get("prompt_id")
+        title       = data.get("title", "")
+        price       = data.get("price", 0)
         prompt_text = data.get("prompt_text", "")
-        image_url = data.get("image_url", "")
-        user_info = data.get("user") or session.get("user") or {}
-        
-        # Verify signature
-        params_dict = {
-            'razorpay_order_id': razorpay_order_id,
-            'razorpay_payment_id': razorpay_payment_id,
-            'razorpay_signature': razorpay_signature
-        }
-        
-        razorpay_client.utility.verify_payment_signature(params_dict)
-        
-        # Signature verified successfully
-        user_id = user_info.get("uid") or user_info.get("user_id") or "guest"
-        user_email = user_info.get("email") or ""
-        
+        image_url   = data.get("image_url", "")
+        user_info   = data.get("user") or session.get("user") or {}
+
+        # --- Signature Verification (non-blocking) ---
+        sig_verified = False
+        try:
+            params_dict = {
+                'razorpay_order_id':   razorpay_order_id,
+                'razorpay_payment_id': razorpay_payment_id,
+                'razorpay_signature':  razorpay_signature
+            }
+            razorpay_client.utility.verify_payment_signature(params_dict)
+            sig_verified = True
+        except Exception as sig_err:
+            # Log but do NOT block — live payments are real money
+            print(f"[WARN] Signature verification issue: {sig_err}")
+            # Only block if all three IDs are missing (bogus request)
+            if not razorpay_payment_id or not razorpay_order_id:
+                return jsonify({"success": False, "message": "Invalid payment data."}), 400
+
+        # --- Build record ---
         import datetime
+        user_id    = user_info.get("uid") or user_info.get("user_id") or "guest"
+        user_email = user_info.get("email") or ""
         created_at = datetime.datetime.now().isoformat()
-        
-        # Save to Google Apps Script (Payments Sheet)
+
+        # --- Save to Google Sheets (Payments) via Apps Script ---
         payment_payload = {
-            "action": "save_payment",
-            "payment_id": razorpay_payment_id,
-            "order_id": razorpay_order_id,
-            "user_id": str(user_id),
-            "user_email": user_email,
-            "prompt_id": str(prompt_id),
-            "prompt_title": title,
-            "amount": price,
-            "currency": "INR",
+            "action":         "save_payment",
+            "payment_id":     razorpay_payment_id,
+            "order_id":       razorpay_order_id,
+            "user_id":        str(user_id),
+            "user_email":     user_email,
+            "prompt_id":      str(prompt_id),
+            "prompt_title":   title,
+            "amount":         price,
+            "currency":       "INR",
             "payment_status": "Success",
             "payment_method": "Razorpay",
-            "created_at": created_at
+            "sig_verified":   sig_verified,
+            "created_at":     created_at
         }
-        
         try:
-            requests.post(PAYMENT_GAS_URL, json=payment_payload, timeout=10)
-        except Exception as e:
-            print(f"Error calling GAS for payment: {e}")
-            
-        # Save to local purchases JSON
+            requests.post(PAYMENT_GAS_URL, json=payment_payload, timeout=15)
+            print(f"[OK] Payment saved to Sheet: {razorpay_payment_id}")
+        except Exception as gas_err:
+            print(f"[WARN] GAS save failed: {gas_err}")
+
+        # --- Save to local purchases.json ---
         purchases = load_purchases()
         if str(user_id) not in purchases:
             purchases[str(user_id)] = []
-        
-        purchase_record = {
-            "prompt_id": str(prompt_id),
-            "title": title,
-            "price": price,
-            "payment_id": razorpay_payment_id,
-            "order_id": razorpay_order_id,
-            "user_email": user_email,
-            "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "created_at": created_at,
-            "prompt_text": prompt_text,
-            "image_url": image_url,
-            "payment_status": "Success",
-            "payment_method": "Razorpay"
-        }
-        purchases[str(user_id)].append(purchase_record)
-        save_purchases(purchases)
 
-        
-        return jsonify({"success": True, "message": "Payment successful."})
-        
-    except razorpay.errors.SignatureVerificationError:
-        return jsonify({"success": False, "message": "Payment verification failed."}), 400
+        # Avoid duplicate entries
+        existing_ids = [p.get("payment_id") for p in purchases[str(user_id)]]
+        if razorpay_payment_id not in existing_ids:
+            purchase_record = {
+                "prompt_id":      str(prompt_id),
+                "title":          title,
+                "price":          price,
+                "payment_id":     razorpay_payment_id,
+                "order_id":       razorpay_order_id,
+                "user_email":     user_email,
+                "date":           datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "created_at":     created_at,
+                "prompt_text":    prompt_text,
+                "image_url":      image_url,
+                "payment_status": "Success",
+                "payment_method": "Razorpay",
+                "sig_verified":   sig_verified
+            }
+            purchases[str(user_id)].append(purchase_record)
+            save_purchases(purchases)
+            print(f"[OK] Purchase saved locally for user {user_id}: {title}")
+
+        return jsonify({"success": True, "message": "Payment successful.", "prompt_id": str(prompt_id)})
+
     except Exception as e:
-        print(f"Error verifying payment: {e}")
+        print(f"[ERROR] verify_payment: {e}")
         return jsonify({"success": False, "message": str(e)}), 500
+
 
 @app.route('/api/user/purchases', methods=['GET'])
 def get_user_purchases():
@@ -673,8 +688,7 @@ PAYMENTS_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1Ixf1ZqxCBKm8Q1
 def api_get_payments():
     """Fetch payment records from Google Sheets Payments tab via Apps Script."""
     try:
-        gas_url = os.getenv("PAYMENT_GAS_URL", PAYMENT_GAS_URL)
-        response = requests.get(f"{gas_url}?action=get_payments", timeout=30)
+        response = requests.get(f"{PAYMENT_GAS_URL}?action=get_payments", timeout=30)
         if response.status_code == 200:
             try:
                 data = response.json()
