@@ -1,7 +1,9 @@
 import { auth } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
-const API_BASE_URL = "https://prompt-bazaar999.onrender.com";
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? window.location.origin
+    : "https://prompt-bazaar999.onrender.com";
 const REPORT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbynN-ZkLfN7XzjIPKCTmZG1pDjUksqZeLfUWAJCSFWrWhIIGkyYjqk81LAw-HVneSz8/exec";
 const WISHLIST_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzeyp93N_8BIW40Qi5isffi5h7FfHvm84_1n3mWMIzYNVVovayy-fL5RNiC6k15i7GL8g/exec";
 

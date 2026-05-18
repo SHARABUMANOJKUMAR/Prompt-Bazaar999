@@ -4,7 +4,9 @@
  */
 
 // --- Configuration ---
-const API_BASE_URL = "https://prompt-bazaar999.onrender.com";
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? window.location.origin
+    : "https://prompt-bazaar999.onrender.com";
 const USERS_API_URL = `${API_BASE_URL}/api/admin/users`;
 const REFRESH_INTERVAL = 60000; // 60 seconds
 const PAGE_SIZE = 10;
