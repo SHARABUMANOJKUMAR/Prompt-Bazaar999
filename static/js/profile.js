@@ -274,7 +274,6 @@ const initDashboard = async () => {
         });
     }
 };
-};
 
 initDashboard();
 
