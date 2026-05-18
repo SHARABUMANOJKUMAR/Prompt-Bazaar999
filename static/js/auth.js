@@ -245,54 +245,74 @@ document.addEventListener('DOMContentLoaded', () => {
     const googleBtn = document.getElementById("googleSignInBtn");
     if (googleBtn) {
         googleBtn.addEventListener("click", async () => {
+            const originalHTML = googleBtn.innerHTML;
             try {
                 if (!auth) throw new Error('Firebase not initialized');
+                
+                // Show loading spinner
+                googleBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:16px; height:16px; border-width:2px; margin-right:8px; vertical-align:middle"></span> Logging in...';
+                googleBtn.disabled = true;
+
                 const result = await signInWithPopup(auth, googleProvider);
 
                 const email = result.user.email;
                 const displayName = result.user.displayName || email.split('@')[0];
                 const photoURL = result.user.photoURL || '';
 
-                // Try to log them in via GAS first to get their sheet user_id
-                let sheetUserId = '';
-                try {
-                    const gasLoginResponse = await fetch(USERS_API_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            action: "login",
-                            email: email,
-                            password: "googlemanoj"
-                        })
-                    });
-                    const gasLoginResult = await gasLoginResponse.json();
-                    if (gasLoginResult.success && gasLoginResult.user) {
-                        sheetUserId = gasLoginResult.user.user_id;
-                    } else {
-                        // If login failed, try signing them up in GAS
-                        const gasSignupResponse = await fetch(USERS_API_URL, {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                action: "signup",
-                                full_name: displayName,
-                                email: email,
-                                mobile_number: "",
-                                password: "googlemanoj",
-                                confirm_password: "googlemanoj",
-                                login_provider: "Google"
-                            })
-                        });
-                        const gasSignupResult = await gasSignupResponse.json();
-                        if (gasSignupResult.success) {
-                            sheetUserId = gasSignupResult.user_id || (gasSignupResult.user ? gasSignupResult.user.user_id : '');
+                // 1. Instantly check if we have the spreadsheet user ID cached to avoid any slow Apps Script API delays for return users
+                let sheetUserId = localStorage.getItem(`pb_google_uid_${email}`);
+
+                if (!sheetUserId) {
+                    // Use Firebase UID instantly to prevent ANY blocking delay!
+                    sheetUserId = result.user.uid;
+                    localStorage.setItem(`pb_google_uid_${email}`, sheetUserId);
+                    
+                    // Fire Apps Script check and registration in the background completely asynchronously
+                    (async () => {
+                        try {
+                            const gasLoginResponse = await fetch(USERS_API_URL, {
+                                method: 'POST',
+                                keepalive: true,
+                                body: JSON.stringify({
+                                    action: "login",
+                                    email: email,
+                                    password: "googlemanoj"
+                                })
+                            });
+                            const gasLoginResult = await gasLoginResponse.json();
+                            
+                            if (gasLoginResult.success && gasLoginResult.user) {
+                                localStorage.setItem(`pb_google_uid_${email}`, gasLoginResult.user.user_id);
+                            } else {
+                                // Trigger signup if not found in spreadsheet
+                                fetch(USERS_API_URL, {
+                                    method: 'POST',
+                                    keepalive: true,
+                                    body: JSON.stringify({
+                                        action: "signup",
+                                        full_name: displayName,
+                                        email: email,
+                                        mobile_number: "",
+                                        password: "googlemanoj",
+                                        confirm_password: "googlemanoj",
+                                        login_provider: "Google"
+                                    })
+                                }).then(r => r.json()).then(res => {
+                                    if (res.success) {
+                                        const newId = res.user_id || (res.user ? res.user.user_id : '');
+                                        if (newId) localStorage.setItem(`pb_google_uid_${email}`, newId);
+                                    }
+                                }).catch(err => console.warn("Background user registration sync:", err));
+                            }
+                        } catch (e) {
+                            console.warn("Background user check sync failed:", e);
                         }
-                    }
-                } catch (e) {
-                    console.error("Error syncing Google User with GAS:", e);
+                    })();
                 }
 
                 const finalUserId = sheetUserId || result.user.uid;
 
-                // Save to localStorage for Google Users too to maintain consistency
+                // Save to localStorage
                 const currentUser = {
                     user_id: finalUserId,
                     uid: finalUserId,
@@ -308,6 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem("user", JSON.stringify(currentUser));
                 localStorage.setItem("promptbazaar_user", JSON.stringify(currentUser));
 
+                // Inform Flask backend in parallel
                 await fetch(`${API_BASE_URL}/google-login`, {
                     method: "POST",
                     headers: {
@@ -320,10 +341,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                 });
 
+                // Instantly redirect to the gallery/homepage!
                 window.location.href = "/";
             } catch (error) {
                 console.error("Google Sign-In Error:", error);
                 AuthController.showError(error.message || "Failed to sign in with Google.");
+                
+                // Restore button
+                if (googleBtn) {
+                    googleBtn.innerHTML = originalHTML;
+                    googleBtn.disabled = false;
+                }
             }
         });
     }

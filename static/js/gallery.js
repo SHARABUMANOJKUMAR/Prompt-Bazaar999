@@ -37,57 +37,70 @@ const initAuth = async () => {
     // 1. Check manual user
     let localUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
     
-    // --- Self-healing: Resolve missing sheet USR ID for Google users ---
+    // --- Self-healing: Resolve missing sheet USR ID for Google users (NON-BLOCKING BACKGROUND PROCESS) ---
     if (localUser && localUser.email && (!localUser.user_id || !localUser.user_id.toString().startsWith('USR'))) {
-        console.log("Self-healing (gallery): Resolving sheet USR ID for:", localUser.email);
-        try {
-            const USERS_API_URL = "https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6hIj1A7ErMlqXwxAyCSXajDO2Zc4x9a9jR-wnU9DQWdUxdMVDtTn/exec";
-            const gasLoginResponse = await fetch(USERS_API_URL, {
-                method: 'POST',
-                body: JSON.stringify({
-                    action: "login",
-                    email: localUser.email,
-                    password: "googlemanoj"
-                })
-            });
-            const gasLoginResult = await gasLoginResponse.json();
-            if (gasLoginResult.success && gasLoginResult.user) {
-                localUser.user_id = gasLoginResult.user.user_id;
-                localUser.uid = gasLoginResult.user.user_id;
-                localUser.full_name = gasLoginResult.user.full_name || localUser.full_name;
-                localUser.mobile_number = gasLoginResult.user.mobile_number || localUser.mobile_number;
-                
-                localStorage.setItem("currentUser", JSON.stringify(localUser));
-                localStorage.setItem("user", JSON.stringify(localUser));
-                localStorage.setItem("promptbazaar_user", JSON.stringify(localUser));
-                console.log("Self-healing successful! USR ID resolved:", localUser.user_id);
-            } else {
-                // Try registering them in GAS
-                const gasSignupResponse = await fetch(USERS_API_URL, {
+        console.log("Self-healing (gallery): Resolving sheet USR ID in background for:", localUser.email);
+        (async () => {
+            try {
+                const USERS_API_URL = "https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6hIj1A7ErMlqXwxAyCSXajDO2Zc4x9a9jR-wnU9DQWdUxdMVDtTn/exec";
+                const gasLoginResponse = await fetch(USERS_API_URL, {
                     method: 'POST',
                     body: JSON.stringify({
-                        action: "signup",
-                        full_name: localUser.full_name || localUser.username || localUser.displayName || 'Google User',
+                        action: "login",
                         email: localUser.email,
-                        mobile_number: "",
-                        password: "googlemanoj",
-                        confirm_password: "googlemanoj",
-                        login_provider: "Google"
+                        password: "googlemanoj"
                     })
                 });
-                const gasSignupResult = await gasSignupResponse.json();
-                if (gasSignupResult.success) {
-                    localUser.user_id = gasSignupResult.user_id || (gasSignupResult.user ? gasSignupResult.user.user_id : '');
-                    localUser.uid = localUser.user_id;
+                const gasLoginResult = await gasLoginResponse.json();
+                if (gasLoginResult.success && gasLoginResult.user) {
+                    localUser.user_id = gasLoginResult.user.user_id;
+                    localUser.uid = gasLoginResult.user.user_id;
+                    localUser.full_name = gasLoginResult.user.full_name || localUser.full_name;
+                    localUser.mobile_number = gasLoginResult.user.mobile_number || localUser.mobile_number;
+                    
                     localStorage.setItem("currentUser", JSON.stringify(localUser));
                     localStorage.setItem("user", JSON.stringify(localUser));
                     localStorage.setItem("promptbazaar_user", JSON.stringify(localUser));
-                    console.log("Self-healing signup successful! USR ID registered:", localUser.user_id);
+                    console.log("Self-healing (gallery) successful! USR ID resolved:", localUser.user_id);
+                    
+                    // Refresh dynamic variables
+                    if (window.currentUser) {
+                        window.currentUser.uid = localUser.user_id;
+                        loadPurchasedPrompts();
+                    }
+                } else {
+                    // Try registering them in GAS
+                    const gasSignupResponse = await fetch(USERS_API_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: "signup",
+                            full_name: localUser.full_name || localUser.username || localUser.displayName || 'Google User',
+                            email: localUser.email,
+                            mobile_number: "",
+                            password: "googlemanoj",
+                            confirm_password: "googlemanoj",
+                            login_provider: "Google"
+                        })
+                    });
+                    const gasSignupResult = await gasSignupResponse.json();
+                    if (gasSignupResult.success) {
+                        localUser.user_id = gasSignupResult.user_id || (gasSignupResult.user ? gasSignupResult.user.user_id : '');
+                        localUser.uid = localUser.user_id;
+                        localStorage.setItem("currentUser", JSON.stringify(localUser));
+                        localStorage.setItem("user", JSON.stringify(localUser));
+                        localStorage.setItem("promptbazaar_user", JSON.stringify(localUser));
+                        console.log("Self-healing (gallery) signup successful! USR ID registered:", localUser.user_id);
+                        
+                        if (window.currentUser) {
+                            window.currentUser.uid = localUser.user_id;
+                            loadPurchasedPrompts();
+                        }
+                    }
                 }
+            } catch (e) {
+                console.error("Self-healing (gallery) error:", e);
             }
-        } catch (e) {
-            console.error("Self-healing error:", e);
-        }
+        })();
     }
 
     localUser = JSON.parse(localStorage.getItem("currentUser") || "{}");

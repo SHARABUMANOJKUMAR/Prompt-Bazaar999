@@ -235,13 +235,21 @@ const initDashboard = async () => {
             photoURL: localUser.profile_picture,
             mobile: localUser.mobile_number || ''
         };
+        // Load UI instantly!
         await loadUserProfile(null, localUser);
+        await loadUserWishlist(userId);
+        await loadUserPurchases(userId);
         
-        // Wait for healing if it was running, otherwise resolves instantly
-        await selfHealingPromise;
-        const finalUser = getCurrentUser() || localUser;
-        await loadUserWishlist(finalUser.user_id || finalUser.uid);
-        await loadUserPurchases(finalUser.user_id || finalUser.uid);
+        // Re-sync with healed ID in background without blocking
+        selfHealingPromise.then(async () => {
+            const finalUser = getCurrentUser() || localUser;
+            const finalId = finalUser.user_id || finalUser.uid;
+            if (finalId !== userId) {
+                window.currentUser.uid = finalId;
+                await loadUserWishlist(finalId);
+                await loadUserPurchases(finalId);
+            }
+        });
         return; // Skip Firebase check
     }
 
@@ -250,21 +258,33 @@ const initDashboard = async () => {
         if (user) {
             console.log("Firebase User UID:", user.uid);
             
-            // Wait for background self-healing to ensure correct sheet ID is stored
-            await selfHealingPromise;
-            const updatedLocalUser = getCurrentUser() || {};
+            const initialLocalUser = getCurrentUser() || {};
+            const initialUid = initialLocalUser.user_id || user.uid;
             
             window.currentUser = {
-                uid: updatedLocalUser.user_id || user.uid,
+                uid: initialUid,
                 email: user.email,
-                name: updatedLocalUser.full_name || updatedLocalUser.username || user.displayName,
-                photoURL: updatedLocalUser.profile_picture || user.photoURL,
-                mobile: updatedLocalUser.mobile_number || ''
+                name: initialLocalUser.full_name || initialLocalUser.username || user.displayName,
+                photoURL: initialLocalUser.profile_picture || user.photoURL,
+                mobile: initialLocalUser.mobile_number || ''
             };
             
-            await loadUserProfile(user, updatedLocalUser);
-            await loadUserWishlist(updatedLocalUser.user_id || user.uid);
-            await loadUserPurchases(updatedLocalUser.user_id || user.uid);
+            // Load UI instantly!
+            await loadUserProfile(user, initialLocalUser);
+            await loadUserWishlist(initialUid);
+            await loadUserPurchases(initialUid);
+            
+            // Run self-healing background check asynchronously without blocking
+            selfHealingPromise.then(async () => {
+                const updatedLocalUser = getCurrentUser() || {};
+                const updatedUid = updatedLocalUser.user_id || user.uid;
+                if (updatedUid !== initialUid) {
+                    window.currentUser.uid = updatedUid;
+                    await loadUserProfile(user, updatedLocalUser);
+                    await loadUserWishlist(updatedUid);
+                    await loadUserPurchases(updatedUid);
+                }
+            });
         } else {
             console.log("No authenticated user found.");
             window.currentUser = null;
