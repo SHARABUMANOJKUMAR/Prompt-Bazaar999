@@ -135,12 +135,66 @@ const initAuth = async () => {
 
 async function loadPurchasedPrompts() {
     if (!window.currentUser) return;
+
+    const uid   = window.currentUser.uid || '';
+    const email = window.currentUser.email || '';
+
+    // Cache keys — dual index mirrors the server dual-index strategy
+    const uidCacheKey   = uid   ? `purchases_cache_${uid}`          : null;
+    const emailCacheKey = email ? `purchases_cache_email:${email}`   : null;
+
+    // 1. Instantly unlock from ANY available localStorage cache
+    function _loadFromCache() {
+        const combined = [];
+        const seenIds  = new Set();
+        [uidCacheKey, emailCacheKey].forEach(key => {
+            if (!key) return;
+            try {
+                const arr = JSON.parse(localStorage.getItem(key) || '[]');
+                arr.forEach(p => {
+                    const pid = p.prompt_id || p;
+                    if (!seenIds.has(String(pid))) {
+                        seenIds.add(String(pid));
+                        combined.push(p);
+                    }
+                });
+            } catch (e) { /* ignore */ }
+        });
+        return combined;
+    }
+
+    const cached = _loadFromCache();
+    if (cached.length > 0) {
+        window.purchasedPrompts = cached.map(p => String(p.prompt_id || p));
+    }
+
+    // 2. Refresh from server using both uid and email params
     try {
-        const res = await fetch(`${API_BASE_URL}/api/user/purchases?uid=${window.currentUser.uid}`);
+        const params = new URLSearchParams();
+        if (uid)   params.set('uid', uid);
+        if (email) params.set('email', email);
+        const res  = await fetch(`${API_BASE_URL}/api/user/purchases?${params.toString()}`);
         const data = await res.json();
-        window.purchasedPrompts = data.map(p => String(p.prompt_id));
+
+        if (data && data.length > 0) {
+            // Merge with local-only items not yet on server
+            const serverIds = new Set(data.map(p => String(p.prompt_id)));
+            const localOnly = cached.filter(p => !serverIds.has(String(p.prompt_id || p)));
+            const merged    = [...data, ...localOnly];
+
+            // Write back to both cache keys
+            if (uidCacheKey)   localStorage.setItem(uidCacheKey,   JSON.stringify(merged));
+            if (emailCacheKey) localStorage.setItem(emailCacheKey, JSON.stringify(merged));
+
+            window.purchasedPrompts = merged.map(p => String(p.prompt_id || p));
+        } else if (data && data.length === 0) {
+            // Server empty — preserve local cache (Render may have restarted)
+            if (cached.length === 0) {
+                window.purchasedPrompts = [];
+            }
+        }
     } catch(e) {
-        console.error(e);
+        console.warn('Server purchases fetch failed, using localStorage cache:', e);
     }
 }
 
@@ -388,20 +442,69 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const verifyData = await verifyRes.json();
                                 if (verifyData.success) {
                                     isPurchased = true;
-                                    window.purchasedPrompts.push(String(window.currentPrompt.prompt_id || window.currentPrompt.id));
+                                    const promptIdStr = String(window.currentPrompt.prompt_id || window.currentPrompt.id);
+                                    window.purchasedPrompts.push(promptIdStr);
+
+                                    // Immediately cache the purchase in localStorage under BOTH uid and email keys.
+                                    // This dual-index ensures prompts stay unlocked even when the UID changes
+                                    // between sessions (Firebase UID → GAS USR ID after self-healing).
+                                    try {
+                                        const uid   = window.currentUser.uid   || '';
+                                        const email = window.currentUser.email || '';
+                                        const purchaseData = verifyData.purchase || {
+                                            prompt_id: promptIdStr,
+                                            title: window.currentPrompt.title,
+                                            price: window.currentPrompt.price || 99,
+                                            payment_id: response.razorpay_payment_id,
+                                            order_id: response.razorpay_order_id,
+                                            prompt_text: window.currentPrompt.prompt_text || '',
+                                            image_url: window.currentPrompt.image_url || '',
+                                            date: new Date().toISOString(),
+                                            payment_status: 'Success',
+                                            payment_method: 'Razorpay'
+                                        };
+
+                                        // Write to uid-keyed cache
+                                        if (uid) {
+                                            const uidKey  = `purchases_cache_${uid}`;
+                                            const uidArr  = JSON.parse(localStorage.getItem(uidKey) || '[]');
+                                            const uidIds  = new Set(uidArr.map(p => p.payment_id));
+                                            if (!uidIds.has(purchaseData.payment_id)) uidArr.push(purchaseData);
+                                            localStorage.setItem(uidKey, JSON.stringify(uidArr));
+                                        }
+                                        // Write to email-keyed cache
+                                        if (email) {
+                                            const emailKey = `purchases_cache_email:${email}`;
+                                            const emailArr = JSON.parse(localStorage.getItem(emailKey) || '[]');
+                                            const emailIds = new Set(emailArr.map(p => p.payment_id));
+                                            if (!emailIds.has(purchaseData.payment_id)) emailArr.push(purchaseData);
+                                            localStorage.setItem(emailKey, JSON.stringify(emailArr));
+                                        }
+                                    } catch (cacheErr) {
+                                        console.warn('Purchases localStorage cache update failed:', cacheErr);
+                                    }
                                     updateActionBtn();
                                     actionBtn.disabled = false;
-                                    showToast('Payment successful! Prompt unlocked.', 'success');
+                                    showToast('Payment successful! Redirecting to success page...', 'success');
                                     if (typeof window.addNotification === 'function') {
                                         window.addNotification(`You unlocked "${window.currentPrompt.title}".`);
                                     }
+                                    setTimeout(() => {
+                                        const queryParams = new URLSearchParams({
+                                            prompt_id: window.currentPrompt.prompt_id || window.currentPrompt.id,
+                                            payment_id: response.razorpay_payment_id || 'N/A',
+                                            price: window.currentPrompt.price || '2',
+                                            title: window.currentPrompt.title
+                                        }).toString();
+                                        window.location.href = `/success?${queryParams}`;
+                                    }, 1500);
                                 } else {
-                                    showToast('Payment verification failed.', 'error');
+                                    showToast(verifyData.message || 'Payment verification failed.', 'error');
                                     updateActionBtn();
                                     actionBtn.disabled = false;
                                 }
                             } catch (e) {
-                                showToast('Payment verification error.', 'error');
+                                showToast('Payment verification error: ' + e.message, 'error');
                                 updateActionBtn();
                                 actionBtn.disabled = false;
                             }

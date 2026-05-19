@@ -85,9 +85,17 @@ def signup():
 
 @app.route("/health")
 def health():
+    key_id = os.getenv("RAZORPAY_KEY_ID", "")
+    key_secret = os.getenv("RAZORPAY_KEY_SECRET", "")
+    gas_url = os.getenv("PAYMENT_GAS_URL", "")
+    
     return jsonify({
         "status": "ok",
-        "message": "Prompt Bazaar backend is running"
+        "message": "Prompt Bazaar backend is running",
+        "razorpay_initialized": razorpay_client is not None,
+        "key_id_preview": f"{key_id[:8]}...{key_id[-4:]}" if len(key_id) > 12 else "INVALID",
+        "key_secret_preview": f"{key_secret[:4]}...{key_secret[-3:]}" if len(key_secret) > 8 else "INVALID",
+        "gas_url_preview": f"{gas_url[:20]}...{gas_url[-10:]}" if len(gas_url) > 30 else "INVALID"
     }), 200
 
 @app.route('/login')
@@ -95,6 +103,10 @@ def login():
     if 'user' in session:
         return redirect(url_for('index'))
     return render_template('login.html')
+
+@app.route('/success')
+def success_page():
+    return render_template('success.html')
 
 @app.route('/logout')
 def logout():
@@ -224,6 +236,34 @@ except Exception as e:
 
 PAYMENT_GAS_URL = "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--FmcKBivrsJEGarfEALgf6GLY_S-8y8VvtehVSlSjy7DWs_/exec"
 
+def post_to_gas(url, payload, timeout=30):
+    """Robust helper to send POST request to Google Apps Script.
+    Handles the 302/307 redirection manually to prevent python-requests
+    from changing the method to GET and discarding the JSON body.
+    """
+    try:
+        response = requests.post(
+            url,
+            json=payload,
+            headers={"Content-Type": "application/json"},
+            timeout=timeout,
+            allow_redirects=False
+        )
+        if response.status_code in [302, 307]:
+            redirect_url = response.headers.get('Location')
+            if redirect_url:
+                # Perform the POST request to the redirected URL with the original payload preserved!
+                response = requests.post(
+                    redirect_url,
+                    json=payload,
+                    headers={"Content-Type": "application/json"},
+                    timeout=timeout
+                )
+        return response
+    except Exception as e:
+        print(f"post_to_gas exception for URL {url}: {e}")
+        raise e
+
 PROMPTS_DB = []
 
 DATA_DIR = 'data'
@@ -350,7 +390,7 @@ def api_edit_user():
                 'mobile_number': data.get('mobile_number'),
                 'account_status': data.get('account_status')
             }
-            requests.post(users_api_url, json=payload, timeout=10)
+            post_to_gas(users_api_url, payload, timeout=15)
         except Exception as e:
             print(f"Error syncing with Google Sheets: {e}")
             
@@ -411,14 +451,7 @@ def add_prompt():
         PROMPTS_DB.append(new_prompt)
 
         # Send POST request
-        response = requests.post(
-            GAS_URL,
-            json=payload,
-            headers={
-                "Content-Type": "application/json"
-            },
-            timeout=30
-        )
+        response = post_to_gas(GAS_URL, payload, timeout=30)
 
         # Raw response text
         raw_text = response.text.strip()
@@ -462,14 +495,7 @@ def api_delete_prompt(prompt_id):
             "prompt_id": pid
         }
         
-        response = requests.post(
-            GAS_URL,
-            json=payload,
-            headers={
-                "Content-Type": "application/json"
-            },
-            timeout=30
-        )
+        response = post_to_gas(GAS_URL, payload, timeout=30)
         
         result = response.json()
         if result.get("success", False):
@@ -520,7 +546,7 @@ def report_prompt():
         }
 
         # Send to GAS
-        response = requests.post(GAS_URL, json=payload, timeout=30)
+        response = post_to_gas(GAS_URL, payload, timeout=30)
         
         return jsonify({
             "success": True,
@@ -583,24 +609,43 @@ def verify_payment():
         prompt_text = data.get("prompt_text", "")
         image_url = data.get("image_url", "")
         user_info = data.get("user") or session.get("user") or {}
-        
-        # Verify signature
+
+        # Verify Razorpay signature
         params_dict = {
             'razorpay_order_id': razorpay_order_id,
             'razorpay_payment_id': razorpay_payment_id,
             'razorpay_signature': razorpay_signature
         }
-        
         razorpay_client.utility.verify_payment_signature(params_dict)
-        
-        # Signature verified successfully
-        user_id = user_info.get("uid") or user_info.get("user_id") or "guest"
+
+        # Signature verified — extract ALL possible user identifiers
+        # ROOT CAUSE FIX: Firebase UID (e.g. "abc123") != GAS USR ID (e.g. "USR123456")
+        # We save under BOTH uid AND email so whichever ID is used at lookup time, we always find the record.
+        user_id    = user_info.get("uid") or user_info.get("user_id") or "guest"
         user_email = user_info.get("email") or ""
-        
+
         import datetime
-        created_at = datetime.datetime.now().isoformat()
-        
-        # Save to Google Apps Script (Payments Sheet)
+        now = datetime.datetime.now()
+        created_at = now.isoformat()
+        date_str = now.strftime("%Y-%m-%d %H:%M:%S")
+
+        purchase_record = {
+            "prompt_id": str(prompt_id),
+            "title": title,
+            "price": price,
+            "payment_id": razorpay_payment_id,
+            "order_id": razorpay_order_id,
+            "user_id": str(user_id),
+            "user_email": user_email,
+            "date": date_str,
+            "created_at": created_at,
+            "prompt_text": prompt_text,
+            "image_url": image_url,
+            "payment_status": "Success",
+            "payment_method": "Razorpay"
+        }
+
+        # 1. Persist to Google Sheets via GAS (primary persistent store — survives Render restarts)
         payment_payload = {
             "action": "save_payment",
             "payment_id": razorpay_payment_id,
@@ -609,61 +654,137 @@ def verify_payment():
             "user_email": user_email,
             "prompt_id": str(prompt_id),
             "prompt_title": title,
+            "prompt_text": prompt_text,
+            "image_url": image_url,
             "amount": price,
             "currency": "INR",
             "payment_status": "Success",
             "payment_method": "Razorpay",
             "created_at": created_at
         }
-        
         try:
-            requests.post(PAYMENT_GAS_URL, json=payment_payload, timeout=10)
+            gas_resp = post_to_gas(PAYMENT_GAS_URL, payment_payload, timeout=25)
+            print(f"GAS payment save response: {gas_resp.status_code} {gas_resp.text[:200]}")
         except Exception as e:
-            print(f"Error calling GAS for payment: {e}")
-            
-        # Save to local purchases JSON
-        purchases = load_purchases()
-        if str(user_id) not in purchases:
-            purchases[str(user_id)] = []
-        
-        purchase_record = {
-            "prompt_id": str(prompt_id),
-            "title": title,
-            "price": price,
-            "payment_id": razorpay_payment_id,
-            "order_id": razorpay_order_id,
-            "user_email": user_email,
-            "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "created_at": created_at,
-            "prompt_text": prompt_text,
-            "image_url": image_url,
-            "payment_status": "Success",
-            "payment_method": "Razorpay"
-        }
-        purchases[str(user_id)].append(purchase_record)
-        save_purchases(purchases)
+            print(f"WARNING: GAS payment save failed (non-fatal): {e}")
 
-        
-        return jsonify({"success": True, "message": "Payment successful."})
-        
+        # 2. Persist to local JSON with DUAL-INDEX (uid key + email key).
+        #    This is the core fix: even if UID changes between sessions, email always matches.
+        try:
+            purchases = load_purchases()
+
+            def _add_to_bucket(key):
+                if not key or key == "guest":
+                    return
+                if key not in purchases:
+                    purchases[key] = []
+                # Deduplicate by payment_id
+                existing_payment_ids = {p.get("payment_id") for p in purchases[key]}
+                if razorpay_payment_id not in existing_payment_ids:
+                    purchases[key].append(purchase_record)
+
+            _add_to_bucket(str(user_id))           # primary uid key
+            _add_to_bucket(f"email:{user_email}")  # stable email key (never changes)
+
+            save_purchases(purchases)
+            print(f"Purchase dual-indexed: uid_key={user_id}, email_key=email:{user_email}")
+        except Exception as e:
+            print(f"WARNING: Local purchases.json dual-index save failed (non-fatal): {e}")
+
+        # 3. Return the full purchase record so the frontend can cache it in localStorage
+        #    This guarantees prompts unlock instantly even if Render restarts between calls.
+        return jsonify({
+            "success": True,
+            "message": "Payment successful.",
+            "purchase": purchase_record
+        })
+
     except razorpay.errors.SignatureVerificationError:
         return jsonify({"success": False, "message": "Payment verification failed."}), 400
     except Exception as e:
         print(f"Error verifying payment: {e}")
         return jsonify({"success": False, "message": str(e)}), 500
 
+
 @app.route('/api/user/purchases', methods=['GET'])
 def get_user_purchases():
-    uid = request.args.get('uid')
+    """Fetch user purchase history.
+    Merges results from uid-key, email-key (dual-indexed at payment time),
+    so Firebase UID vs GAS USR ID mismatches never cause lost purchase records.
+    Primary source: GAS (Google Sheets). Fallback: local purchases.json.
+    """
+    uid   = request.args.get('uid')
+    email = request.args.get('email', '')
+
     if not uid and 'user' in session:
-        uid = session['user'].get('uid')
-        
-    if not uid:
+        uid   = session['user'].get('uid', '')
+        email = email or session['user'].get('email', '')
+
+    if not uid and not email:
         return jsonify([])
-        
-    purchases = load_purchases()
-    user_purchases = purchases.get(str(uid), [])
-    return jsonify(user_purchases)
+
+    # --- Helper: deduplicate purchase list by payment_id ---
+    def _dedup(lst):
+        seen = set()
+        result = []
+        for p in lst:
+            pid = p.get('payment_id') or p.get('order_id')
+            if pid and pid not in seen:
+                seen.add(pid)
+                result.append(p)
+            elif not pid:
+                result.append(p)  # keep records without payment_id (older format)
+        return result
+
+    # --- Primary: Fetch from GAS (try uid first, then email) ---
+    gas_purchases = []
+    try:
+        gas_url = os.getenv("PAYMENT_GAS_URL", PAYMENT_GAS_URL)
+
+        # Try by uid
+        if uid:
+            r = requests.get(f"{gas_url}?action=get_user_purchases&user_id={uid}", timeout=15)
+            if r.status_code == 200:
+                d = r.json()
+                if isinstance(d, list):
+                    gas_purchases.extend(d)
+                elif isinstance(d, dict):
+                    gas_purchases.extend(d.get('purchases') or d.get('data') or [])
+
+        # Try by email as well (catches purchases made under a different uid)
+        if email and not gas_purchases:
+            r2 = requests.get(f"{gas_url}?action=get_user_purchases&user_email={email}", timeout=15)
+            if r2.status_code == 200:
+                d2 = r2.json()
+                if isinstance(d2, list):
+                    gas_purchases.extend(d2)
+                elif isinstance(d2, dict):
+                    gas_purchases.extend(d2.get('purchases') or d2.get('data') or [])
+    except Exception as e:
+        print(f"GAS purchases fetch failed, falling back to local JSON: {e}")
+
+    if gas_purchases:
+        result = _dedup(gas_purchases)
+        # Backfill local cache
+        try:
+            local_purchases = load_purchases()
+            if uid:
+                local_purchases[str(uid)] = result
+            if email:
+                local_purchases[f"email:{email}"] = result
+            save_purchases(local_purchases)
+        except Exception:
+            pass
+        return jsonify(result)
+
+    # --- Fallback: local purchases.json (dual-index merge) ---
+    local_purchases = load_purchases()
+    merged = []
+    if uid:
+        merged.extend(local_purchases.get(str(uid), []))
+    if email:
+        merged.extend(local_purchases.get(f"email:{email}", []))
+    return jsonify(_dedup(merged))
 
 # --- Admin: Fetch live payments from Google Sheets ---
 PAYMENTS_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1Ixf1ZqxCBKm8Q1Aq5pO3lO-0PJUQ8SKJ3KyBOQ_KXCE/export?format=csv&sheet=Payments"

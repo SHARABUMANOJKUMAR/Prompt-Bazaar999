@@ -43,9 +43,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Mobile Menu Toggle
     const mobileToggle = document.querySelector('.mobile-toggle');
-    if (mobileToggle) {
-        mobileToggle.addEventListener('click', () => {
+    const mobileMenu = document.querySelector('.mobile-menu');
+    if (mobileToggle && mobileMenu) {
+        mobileToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
             document.body.classList.toggle('mobile-nav-open');
+        });
+
+        // Close on backdrop click (click on mobileMenu itself)
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target === mobileMenu) {
+                document.body.classList.remove('mobile-nav-open');
+            }
+        });
+
+        // Close on menu item click
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                document.body.classList.remove('mobile-nav-open');
+            });
         });
     }
 

@@ -705,82 +705,135 @@ async function removeFromWishlist(wishlistId) {
 // --- Purchases Logic ---
 async function loadUserPurchases(uid) {
     const purchasedContainer = document.getElementById('purchasedTableBody');
-    const paymentsContainer = document.getElementById('paymentsTableBody');
-    // Also support the old query selectors as fallback
+    const paymentsContainer  = document.getElementById('paymentsTableBody');
     const legacyPurchasedContainer = purchasedContainer || document.querySelector('#purchased-section tbody');
-    const legacyPaymentsContainer = paymentsContainer || document.querySelector('#payments-section tbody');
+    const legacyPaymentsContainer  = paymentsContainer  || document.querySelector('#payments-section tbody');
 
     if (!legacyPurchasedContainer || !legacyPaymentsContainer) return;
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/user/purchases?uid=${uid}`);
-        const purchases = await response.json();
+    // Resolve email from currentUser or localStorage for dual-index lookup
+    const email = (window.currentUser && window.currentUser.email) || '';
+    const uidCacheKey   = uid   ? `purchases_cache_${uid}`         : null;
+    const emailCacheKey = email ? `purchases_cache_email:${email}` : null;
 
-        if (purchases && purchases.length > 0) {
-            // --- Render Purchased Prompts Table ---
-            legacyPurchasedContainer.innerHTML = purchases.map(item => {
-                const dateStr = item.date ? new Date(item.date).toLocaleDateString('en-IN', {day: '2-digit', month: 'short', year: 'numeric'}) : 'N/A';
-                const amount = parseFloat(item.price || 0);
-                const imgSrc = convertDriveLink(item.image_url) || 'https://via.placeholder.com/60x60?text=Prompt';
-                const encodedPrompt = encodeURIComponent(item.prompt_text || '');
-                return `
-                    <tr>
-                        <td>
-                            <img 
-                                src="${imgSrc}" 
-                                style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px; border: 1px solid var(--color-border);" 
-                                alt="Thumbnail"
-                                onerror="this.src='https://via.placeholder.com/60x60?text=No+Image';"
-                            >
-                        </td>
-                        <td><strong>${item.title || 'Untitled'}</strong></td>
-                        <td><strong style="color: var(--color-success);">₹${isNaN(amount) ? item.price : amount.toFixed(2)}</strong></td>
-                        <td style="font-size: 0.85rem; color: var(--color-secondary);">${dateStr}</td>
-                        <td>
-                            <button class="btn btn-primary" onclick="copyPromptText(decodeURIComponent('${encodedPrompt}'))" style="padding: 6px 14px; font-size: 12px; border-radius: 10px;">
-                                📋 Copy Prompt
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+    // Helper: read and merge both cache keys, dedup by payment_id
+    function _loadFromCache() {
+        const combined = [], seenPids = new Set();
+        [uidCacheKey, emailCacheKey].forEach(key => {
+            if (!key) return;
+            try {
+                const arr = JSON.parse(localStorage.getItem(key) || '[]');
+                arr.forEach(p => {
+                    const pid = p.payment_id || p.order_id || p.prompt_id;
+                    if (!seenPids.has(pid)) { seenPids.add(pid); combined.push(p); }
+                });
+            } catch (e) { /* ignore */ }
+        });
+        return combined;
+    }
 
-            // --- Render Payment History Table ---
-            legacyPaymentsContainer.innerHTML = purchases.map(item => {
-                const dateStr = item.date ? new Date(item.date).toLocaleDateString('en-IN', {day: '2-digit', month: 'short', year: 'numeric'}) : 'N/A';
-                const amount = parseFloat(item.price || 0);
-                const shortPayId = item.payment_id ? item.payment_id.slice(0, 22) + (item.payment_id.length > 22 ? '…' : '') : (item.order_id ? item.order_id.slice(0, 22) + '…' : 'N/A');
-                const status = item.payment_status || 'Success';
-                const statusColor = status.toLowerCase() === 'success' ? 'var(--color-success)' : '#ef4444';
-                const encodedPrompt = encodeURIComponent(item.prompt_text || '');
-                return `
-                    <tr>
-                        <td style="font-size: 0.85rem; color: var(--color-secondary);">${item.title || 'Untitled'}</td>
-                        <td>
-                            <code title="${item.payment_id || ''}" style="font-family: monospace; font-size: 0.78rem; background: rgba(13,110,253,0.05); padding: 3px 7px; border-radius: 4px; color: var(--color-primary);">${shortPayId}</code>
-                        </td>
-                        <td><strong style="color: var(--color-success);">₹${isNaN(amount) ? item.price : amount.toFixed(2)}</strong></td>
-                        <td style="font-size: 0.85rem; color: var(--color-secondary);">${dateStr}</td>
-                        <td><span style="color: ${statusColor}; font-weight: 600;">${status}</span></td>
-                        <td>
-                            <button class="btn btn-primary" onclick="copyPromptText(decodeURIComponent('${encodedPrompt}'))" style="padding: 4px 12px; font-size: 12px; border-radius: 8px;">
-                                📋 Copy
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-
-        } else {
+    // Helper: render tables from a purchases array
+    function renderPurchaseTables(purchases) {
+        if (!purchases || purchases.length === 0) {
             legacyPurchasedContainer.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 60px; color: var(--color-secondary);">No purchased prompts yet. <a href="/gallery" style="color: var(--color-primary);">Browse Gallery →</a></td></tr>';
-            legacyPaymentsContainer.innerHTML = '<tr><td colspan="6" class="text-center" style="padding: 60px; color: var(--color-secondary);">No payment history yet.</td></tr>';
+            legacyPaymentsContainer.innerHTML  = '<tr><td colspan="6" class="text-center" style="padding: 60px; color: var(--color-secondary);">No payment history yet.</td></tr>';
+            return;
+        }
+
+        // --- Render Purchased Prompts Table ---
+        legacyPurchasedContainer.innerHTML = purchases.map(item => {
+            const dateStr = item.date ? new Date(item.date).toLocaleDateString('en-IN', {day: '2-digit', month: 'short', year: 'numeric'}) : 'N/A';
+            const amount = parseFloat(item.price || 0);
+            const imgSrc = convertDriveLink(item.image_url) || 'https://via.placeholder.com/60x60?text=Prompt';
+            const encodedPrompt = encodeURIComponent(item.prompt_text || '');
+            return `
+                <tr>
+                    <td>
+                        <img
+                            src="${imgSrc}"
+                            style="width: 60px; height: 60px; object-fit: cover; border-radius: 12px; border: 1px solid var(--color-border);"
+                            alt="Thumbnail"
+                            onerror="this.src='https://via.placeholder.com/60x60?text=No+Image';"
+                        >
+                    </td>
+                    <td><strong>${item.title || 'Untitled'}</strong></td>
+                    <td><strong style="color: var(--color-success);">₹${isNaN(amount) ? item.price : amount.toFixed(2)}</strong></td>
+                    <td style="font-size: 0.85rem; color: var(--color-secondary);">${dateStr}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="copyPromptText(decodeURIComponent('${encodedPrompt}'))" style="padding: 6px 14px; font-size: 12px; border-radius: 10px;">
+                            📋 Copy Prompt
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        // --- Render Payment History Table ---
+        legacyPaymentsContainer.innerHTML = purchases.map(item => {
+            const dateStr = item.date ? new Date(item.date).toLocaleDateString('en-IN', {day: '2-digit', month: 'short', year: 'numeric'}) : 'N/A';
+            const amount = parseFloat(item.price || 0);
+            const shortPayId = item.payment_id ? item.payment_id.slice(0, 22) + (item.payment_id.length > 22 ? '…' : '') : (item.order_id ? item.order_id.slice(0, 22) + '…' : 'N/A');
+            const status = item.payment_status || 'Success';
+            const statusColor = status.toLowerCase() === 'success' ? 'var(--color-success)' : '#ef4444';
+            const encodedPrompt = encodeURIComponent(item.prompt_text || '');
+            return `
+                <tr>
+                    <td style="font-size: 0.85rem; color: var(--color-secondary);">${item.title || 'Untitled'}</td>
+                    <td>
+                        <code title="${item.payment_id || ''}" style="font-family: monospace; font-size: 0.78rem; background: rgba(13,110,253,0.05); padding: 3px 7px; border-radius: 4px; color: var(--color-primary);">${shortPayId}</code>
+                    </td>
+                    <td><strong style="color: var(--color-success);">₹${isNaN(amount) ? item.price : amount.toFixed(2)}</strong></td>
+                    <td style="font-size: 0.85rem; color: var(--color-secondary);">${dateStr}</td>
+                    <td><span style="color: ${statusColor}; font-weight: 600;">${status}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="copyPromptText(decodeURIComponent('${encodedPrompt}'))" style="padding: 4px 12px; font-size: 12px; border-radius: 8px;">
+                            📋 Copy
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // 1. Instant render from dual-index cache (survives Render restarts & UID changes)
+    const cached = _loadFromCache();
+    if (cached.length > 0) {
+        renderPurchaseTables(cached);
+    } else {
+        legacyPurchasedContainer.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 40px;">Loading your purchases...</td></tr>';
+        legacyPaymentsContainer.innerHTML  = '<tr><td colspan="6" class="text-center" style="padding: 40px;">Loading payment history...</td></tr>';
+    }
+
+    // 2. Sync from server using BOTH uid and email params for maximum recall
+    try {
+        const params = new URLSearchParams();
+        if (uid)   params.set('uid',   uid);
+        if (email) params.set('email', email);
+        const response = await fetch(`${API_BASE_URL}/api/user/purchases?${params.toString()}`);
+        const serverPurchases = await response.json();
+
+        if (serverPurchases && serverPurchases.length > 0) {
+            // Merge: keep locally cached items not yet confirmed on server
+            const serverIds = new Set(serverPurchases.map(p => String(p.prompt_id)));
+            const localOnly = cached.filter(p => !serverIds.has(String(p.prompt_id)));
+            const merged    = [...serverPurchases, ...localOnly];
+            // Write back to both cache keys
+            if (uidCacheKey)   localStorage.setItem(uidCacheKey,   JSON.stringify(merged));
+            if (emailCacheKey) localStorage.setItem(emailCacheKey, JSON.stringify(merged));
+            renderPurchaseTables(merged);
+        } else {
+            // Server empty — keep local cache (Render may have restarted)
+            if (cached.length === 0) renderPurchaseTables([]);
         }
     } catch (error) {
-        console.error('Error loading purchases:', error);
-        if (legacyPurchasedContainer) legacyPurchasedContainer.innerHTML = '<tr><td colspan="5" class="text-center text-danger" style="padding: 40px;">Unable to load purchased prompts.</td></tr>';
-        if (legacyPaymentsContainer) legacyPaymentsContainer.innerHTML = '<tr><td colspan="6" class="text-center text-danger" style="padding: 40px;">Unable to load payment history.</td></tr>';
+        console.error('Error fetching purchases from server:', error);
+        if (cached.length === 0) {
+            legacyPurchasedContainer.innerHTML = '<tr><td colspan="5" class="text-center text-danger" style="padding: 40px;">Unable to load purchased prompts.</td></tr>';
+            legacyPaymentsContainer.innerHTML  = '<tr><td colspan="6" class="text-center text-danger" style="padding: 40px;">Unable to load payment history.</td></tr>';
+        }
     }
 }
+
 
 
 // Modal Logic
