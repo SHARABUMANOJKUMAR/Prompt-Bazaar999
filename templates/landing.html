@@ -217,13 +217,13 @@
 
     <!-- Footer -->
     <footer class="footer premium-footer">
-        <div class="container">
+        <div class="container footer-container-premium">
             <div class="footer-grid-premium">
                 <!-- Column 1: Brand -->
                 <div class="footer-col brand-col">
                     <a href="#" class="footer-logo-premium">
-                        <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Prompt Bazaar Logo">
-                        <span>Prompt Bazaar</span>
+                        <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Prompt Bazaar Logo" class="footer-brand-logo">
+                        <span class="footer-brand-name">Prompt Bazaar</span>
                     </a>
                     <p class="footer-tagline-premium">India's Most Powerful AI Prompt Marketplace.</p>
                     <p class="footer-description-premium">Discover, buy, and sell premium AI prompts for ChatGPT, Claude, Gemini, Midjourney, and more.</p>
@@ -270,15 +270,35 @@
                             </a>
                         </li>
                     </ul>
-                    <div class="footer-social-glow-wrap">
-                        <a href="https://www.instagram.com/shaivika_groups?igsh=MTdrcnpva2ZzY3RydQ==" target="_blank" rel="noopener noreferrer" class="social-glow-btn" aria-label="Instagram">
+                    <div class="social-icons-wrap-premium">
+                        <a href="https://www.instagram.com/shaivika_groups?igsh=MTdrcnpva2ZzY3RydQ==" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="Instagram">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                         </a>
-                        <a href="https://wa.me/917013550760" target="_blank" rel="noopener noreferrer" class="social-glow-btn" aria-label="WhatsApp">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone-call"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/><path d="M14.05 2a9 9 0 0 1 8 7.94"/><path d="M14.05 6A5 5 0 0 1 18 10"/></svg>
+                        <a href="https://www.linkedin.com/company/shaivika-groups" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="LinkedIn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+                        </a>
+                        <a href="https://youtube.com/@shaivikagroups" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="YouTube">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-youtube"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17z"/><path d="m10 15 5-3-5-3z"/></svg>
+                        </a>
+                        <a href="https://wa.me/917013550760" target="_blank" rel="noopener noreferrer" class="social-circle-btn" aria-label="WhatsApp">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                         </a>
                     </div>
                 </div>
+
+                <!-- Column 4: Newsletter -->
+                <div class="footer-col newsletter-col">
+                    <h4 class="footer-col-title">Stay Updated</h4>
+                    <p class="newsletter-tagline-premium">Subscribe to our newsletter to receive the latest prompts, updates, and exclusive creator discounts.</p>
+                    <form class="newsletter-form-premium" onsubmit="event.preventDefault(); showToast('Subscription successful!', 'success'); this.reset();">
+                        <input type="email" placeholder="Enter your email" class="newsletter-input-premium" required>
+                        <button type="submit" class="newsletter-btn-premium">
+                            <span class="btn-text">Subscribe</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
 
             <!-- Footer Bottom -->
             <div class="footer-bottom-premium">
