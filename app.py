@@ -6,6 +6,41 @@ from werkzeug.utils import secure_filename
 
 load_dotenv()
 
+import firebase_admin
+from firebase_admin import credentials, firestore, messaging
+import json
+
+# Global Firestore DB reference
+firebase_db = None
+
+# Resilient Firebase Admin Initialization
+try:
+    if not firebase_admin._apps:
+        # 1. Try to load custom service account JSON file from environment path
+        service_account_path = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
+        if service_account_path and os.path.exists(service_account_path):
+            cred = credentials.Certificate(service_account_path)
+            firebase_admin.initialize_app(cred)
+            print("Firebase Admin initialized with service account file ✅")
+        else:
+            # 2. Try to parse service account JSON from direct env string
+            sa_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_CREDENTIALS")
+            if sa_json:
+                cred_dict = json.loads(sa_json)
+                cred = credentials.Certificate(cred_dict)
+                firebase_admin.initialize_app(cred)
+                print("Firebase Admin initialized with environment JSON credentials ✅")
+            else:
+                # 3. Fallback to default application credentials
+                firebase_admin.initialize_app()
+                print("Firebase Admin initialized with default credentials ✅")
+    
+    # Initialize Firestore client
+    firebase_db = firestore.client()
+    print("Firestore DB client connected successfully! ✅")
+except Exception as e:
+    print(f"WARNING: Firebase Admin SDK initialization failed: {e}. The app will continue, but push notifications will run in mock/no-op mode until credentials are set.")
+
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'dev_key')
 
@@ -477,6 +512,103 @@ def add_prompt():
         return jsonify({
             "success": False,
             "message": str(e)
+        }), 500
+
+@app.route('/send-notification', methods=['POST'])
+def send_notification():
+    """Fetches all stored FCM tokens from Firestore and broadcasts a push notification."""
+    if not firebase_db:
+        return jsonify({
+            "success": False,
+            "message": "Firebase Admin SDK / Firestore is not initialized on this server instance."
+        }), 500
+
+    try:
+        data = request.get_json() or {}
+        title = data.get("title", "New Prompt Added!")
+        price = data.get("price", "9")
+        image_url = data.get("image_url", "https://prompt-bazaar.web.app/static/images/logo.png")
+        prompt_id = data.get("prompt_id", "")
+
+        # 1. Fetch all tokens from collection 'notification_tokens'
+        tokens_ref = firebase_db.collection("notification_tokens")
+        docs = tokens_ref.stream()
+
+        tokens = []
+        token_to_doc_id = {} # Map to easily delete invalid tokens
+        for doc in docs:
+            tdata = doc.to_dict()
+            token = tdata.get("token")
+            if token:
+                tokens.append(token)
+                token_to_doc_id[token] = doc.id
+
+        if not tokens:
+            return jsonify({
+                "success": True,
+                "message": "No subscribed users/tokens found. Broadcast skipped.",
+                "sent_count": 0
+            })
+
+        # 2. Build FCM multicast message
+        body_text = f"{title} is now available for just ₹{price}"
+        
+        message = messaging.MulticastMessage(
+            notification=messaging.Notification(
+                title="🔥 New Prompt Added!",
+                body=body_text,
+                image=image_url
+            ),
+            webpush=messaging.WebpushConfig(
+                fcm_options=messaging.WebpushFCMOptions(
+                    link="https://prompt-bazaar.web.app/prompt-gallery"
+                ),
+                headers={
+                    "TTL": "86400" # 24 hours
+                }
+            ),
+            data={
+                "click_action": "https://prompt-bazaar.web.app/prompt-gallery",
+                "prompt_id": str(prompt_id)
+            },
+            tokens=tokens
+        )
+
+        # 3. Send notification to all tokens
+        response = messaging.send_multicast(message)
+        print(f"Successfully sent {response.success_count} notifications out of {len(tokens)}")
+
+        # 4. Clean up invalid/unregistered tokens automatically
+        invalid_tokens_count = 0
+        if response.failure_count > 0:
+            batch = firebase_db.batch()
+            for idx, resp in enumerate(response.responses):
+                if not resp.success:
+                    exc = resp.exception
+                    if exc and (exc.code == 'messaging/invalid-registration-token' or exc.code == 'messaging/registration-token-not-registered'):
+                        bad_token = tokens[idx]
+                        doc_id = token_to_doc_id[bad_token]
+                        doc_ref = tokens_ref.document(doc_id)
+                        batch.delete(doc_ref)
+                        invalid_tokens_count += 1
+            
+            if invalid_tokens_count > 0:
+                batch.commit()
+                print(f"Cleaned up {invalid_tokens_count} invalid/unregistered tokens from Firestore.")
+
+        return jsonify({
+            "success": True,
+            "message": f"Successfully broadcasted to {response.success_count} active devices.",
+            "sent_count": response.success_count,
+            "failure_count": response.failure_count,
+            "cleaned_invalid_tokens": invalid_tokens_count
+        })
+
+    except Exception as e:
+        print(f"Error sending multicast push notifications: {e}")
+        return jsonify({
+            "success": False,
+            "message": f"Push notification broadcasting failed: {str(e)}"
         }), 500
 
 @app.route('/api/admin/prompts', methods=['GET'])

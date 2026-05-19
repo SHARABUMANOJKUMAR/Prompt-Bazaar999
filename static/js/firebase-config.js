@@ -22,6 +22,8 @@ const firebaseConfig = {
     measurementId: "G-G0135DF3B1"
 };
 
+import { getMessaging } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-messaging.js";
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
@@ -29,15 +31,18 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
+const messaging = getMessaging(app);
 
 // Providers
 const googleProvider = new GoogleAuthProvider();
 
 // Export
 export { 
+    app,
     auth, 
     db, 
     storage, 
+    messaging,
     googleProvider, 
     EmailAuthProvider,
     reauthenticateWithCredential,

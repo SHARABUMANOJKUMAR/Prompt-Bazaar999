@@ -57,6 +57,9 @@
 
     {% block content %}{% endblock %}
     
+    <!-- Web Push Notifications -->
+    <script type="module" src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+
     {% block scripts %}{% endblock %}
 </body>
 </html>

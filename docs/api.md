@@ -358,7 +358,7 @@ This document lists and details all API endpoints provided by the PromptVerse ba
 * **Authentication:** None (Supports `uid` query parameter or active session)
 * **Description:** Fetches all purchased prompt records associated with a specific user account.
 * **Request (Query Params):**
-  * `uid`: Unique user identifier (e.g. `/api/user/purchases?uid=USR10001`).
+* `uid`: Unique user identifier (e.g. `/api/user/purchases?uid=USR10001`).
 * **Response (JSON):**
   ```json
   [
@@ -375,3 +375,34 @@ This document lists and details all API endpoints provided by the PromptVerse ba
   ]
   ```
 * **Errors:** None
+
+---
+
+## 6. Real-Time Web Push Notification Endpoints
+
+### Send Push Notification Alert
+* **Endpoint:** `POST /send-notification`
+* **Authentication:** None (Internal admin dashboard authorization suggested)
+* **Description:** Fetches all subscribed browser FCM registration tokens from the Firestore `notification_tokens` collection, constructs a web-optimized multicast push message payload, and broadcasts it in real time using the Firebase Admin SDK. Automatically sweeps and purges any inactive or unregistered tokens from Firestore during execution.
+* **Request (JSON):**
+  ```json
+  {
+    "title": "Cinematic Hero Portrait",
+    "price": "9",
+    "image_url": "https://lh3.googleusercontent.com/d/1xX_YyY",
+    "prompt_id": "PRM1002"
+  }
+  ```
+* **Response (JSON):**
+  ```json
+  {
+    "success": true,
+    "message": "Successfully broadcasted to 4 active devices.",
+    "sent_count": 4,
+    "failure_count": 1,
+    "cleaned_invalid_tokens": 1
+  }
+  ```
+* **Errors:**
+  * `500 Internal Server Error`: Firebase Admin SDK or Firestore database connection has not been initialized on the backend container, or connection/credentials verification failed.
+

@@ -542,6 +542,38 @@ async function submitPromptForm(event) {
             localStorage.removeItem('bazaar_prompts_cache');
             
             showToast(window.editingPromptId ? 'Prompt updated successfully!' : 'Prompt added successfully!', 'success');
+            
+            // If it is a new prompt (not an edit), send a push notification alert!
+            if (!window.editingPromptId) {
+                const title = formData.get('title') || 'New Prompt Added!';
+                const price = formData.get('price') || '9';
+                const image_url = formData.get('image_url') || 'https://prompt-bazaar.web.app/static/images/logo.png';
+                const prompt_id = result.prompt_id || '';
+
+                fetch(`${API_BASE_URL}/send-notification`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        price: price,
+                        image_url: image_url,
+                        prompt_id: prompt_id
+                    })
+                })
+                .then(res => res.json())
+                .then(notifRes => {
+                    console.log("FCM Push notification broadcast result:", notifRes);
+                    if (notifRes.success && notifRes.sent_count > 0) {
+                        showToast(`Push notification broadcasted to ${notifRes.sent_count} active devices!`, 'success');
+                    }
+                })
+                .catch(err => {
+                    console.error("FCM Push notification broadcast failed:", err);
+                });
+            }
+
             form.reset();
             const previewContainer = document.getElementById('image-preview-container');
             if (previewContainer) previewContainer.style.display = 'none';

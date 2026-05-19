@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-05-19T09:42:00Z",
+    "last_updated": "2026-05-19T09:55:00Z",
     "completed": [
         "Removed Newsletter subscription form, header and tagline completely from templates/landing.html and index.html flat files",
         "Cleaned social networks in contact section keeping only Instagram and WhatsApp button links as requested",
@@ -11,16 +11,25 @@
         "Implemented smooth translateX hover slide offsets on all quick links",
         "Engineered smooth entrance animations (footerFadeUp) that trigger when the footer is reached",
         "Created an elegant float-in Back to Top button with scroll visibility handlers and smooth viewport scroll triggers in JavaScript",
-        "Optimized responsive layouts: desktop renders 3 balanced columns, tablet renders 2 columns, and mobile dynamically switches to centered stacked single column"
+        "Optimized responsive layouts: desktop renders 3 balanced columns, tablet renders 2 columns, and mobile dynamically switches to centered stacked single column",
+        "Implemented a real-time web push notification system for Prompt Bazaar using Firebase Cloud Messaging (FCM)",
+        "Initialized and exported messaging service instance in static/js/firebase-config.js",
+        "Created root firebase-messaging-sw.js background service worker with custom click-action focus/redirect handlers",
+        "Created static/js/notifications.js push notification manager handling permissions, Firestore token sync, and premium foreground interactive banners",
+        "Added script links to index.html, prompt-gallery.html, dashboard.html, profile.html, admin-dashboard.html, and base.html template",
+        "Created /send-notification endpoint in app.py utilizing Firebase Admin SDK with automatic invalid token purging",
+        "Integrated asynchronous non-blocking FCM broadcast calls inside submitPromptForm in static/js/admin.js"
     ],
     "in_progress": [],
     "pending": [
-        "Synchronize local git ref head with origin via rebase and push main",
         "Deploy static build to Firebase Hosting"
     ],
     "decisions": [
         "Reduced desktop grid column layout to 3 columns (2fr 1fr 1.2fr) to preserve whitespace and visual balance after newsletter form removal",
-        "Kept only the two direct brand contact networks (Instagram and WhatsApp) to keep focus on key communication channels"
+        "Kept only the two direct brand contact networks (Instagram and WhatsApp) to keep focus on key communication channels",
+        "Used a custom VAPID public key and implemented automatic doc ID merging in Firestore to prevent token duplicates",
+        "Designed FCM notifications to trigger asynchronously from the Admin JS submit handler to keep dashboard responsiveness extremely fast",
+        "Implemented automated invalid/unregistered token purging on the Flask backend during multicast broadcasting to optimize database storage"
     ],
     "blockers": [
         "System command execution (run_command) is constrained by sandboxing limits on this environment host"
