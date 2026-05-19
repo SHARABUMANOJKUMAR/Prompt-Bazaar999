@@ -506,7 +506,7 @@ section {
 
 .footer-grid-premium {
   display: grid;
-  grid-template-columns: 2.2fr 1fr 1.2fr 1.6fr;
+  grid-template-columns: 2fr 1fr 1.2fr;
   gap: 40px;
   margin-bottom: 60px;
 }
