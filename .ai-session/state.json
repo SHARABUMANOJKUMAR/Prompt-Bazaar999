@@ -1,6 +1,7 @@
 {
-    "last_updated": "2026-05-17T12:35:00Z",
+    "last_updated": "2026-05-19T08:30:00Z",
     "completed": [
+        "Added customizable, animated gradient text class `animated-gradient-text` to `landing.css` blending light green (#22C55E), blue (#0D6EFD), and orange (#FF9800) with dynamic, loopable transition animation, and integrated it on both `templates/landing.html` and the flat `index.html` main hero headings",
         "Replaced direct Google Sheets CSV loading with local Flask proxy API endpoint /api/admin/users",
         "Created custom server-side CSV parser in Python Flask inside app.py",
         "Added file-based persistent overrides for editing users in data/edited_users.json",
@@ -22,10 +23,16 @@
         "Identified that Gunicorn exited with status 1 on Render because the builder used a bleeding-edge Python 3.14 environment with setuptools >= 82.0.0, which completely removed `pkg_resources`",
         "Pinned `setuptools` to `<81.0.0` in `requirements.txt` to preserve `pkg_resources` and ensure `razorpay` imports work correctly",
         "Created `.python-version` at the root of the repository to explicitly pin the Python runtime to a stable LTS release (`3.11`)",
-        "Updated the entire `docs/api.md` file to thoroughly document all server-side Flask endpoints, including health, sessions, prompting, and checkout endpoints"
+        "Updated the entire `docs/api.md` file to thoroughly document all server-side Flask endpoints, including health, sessions, prompting, and checkout endpoints",
+        "Verified live Razorpay credentials and backend URL routing across the flat frontend HTML and Javascript files",
+        "Implemented dual-indexing (UID + Email keys) in Flask backend purchases.json and client-side localStorage caching to eliminate Firebase UID vs GAS USR-ID mismatches",
+        "Fixed critical Google Apps Script POST redirection bug where Python requests.post() drops the JSON body on 302 redirect by writing post_to_gas wrapper to manually preserve payloads",
+        "Integrated email query parameters in purchases fetch API calls in both gallery.js and profile.js to ensure robust dual-indexed lookups"
     ],
     "in_progress": [],
-    "pending": [],
+    "pending": [
+        "Deploy frontend to Firebase Hosting using CLI"
+    ],
     "decisions": [
         "Persisted user edits and deletions to local server-side files to ensure changes remain highly stable and persistent even when external Google Sheet CSV is refetched",
         "Forwarded update_profile request to Google Sheets App Script API in the background to sync edits to the core sheet database",
@@ -33,7 +40,11 @@
         "Auto-converted Google Drive sharing link formats directly inside the client browser to maximize rendering compatibility",
         "Converted dynamic server-side pages into a purely client-driven architecture to leverage the high-performance capabilities of Firebase Hosting without backend-dependency",
         "Pinned setuptools to <81.0.0 to resolve the breaking removal of pkg_resources in setuptools 82.0.0+",
-        "Pinned Python version to 3.11 using .python-version to guarantee stability and reliable dependency building on Render"
+        "Pinned Python version to 3.11 using .python-version to guarantee stability and reliable dependency building on Render",
+        "Documented that standard terminal command runner commands cannot execute directly in the model environment due to Windows sandboxing constraints",
+        "Routed all Google Apps Script POST operations in Flask through a manually redirected post_to_gas function to keep request payloads perfectly intact"
     ],
-    "blockers": []
+    "blockers": [
+        "System command execution (run_command) is constrained by sandboxing limits on this environment host"
+    ]
 }

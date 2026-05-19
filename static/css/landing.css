@@ -102,6 +102,35 @@ section {
   color: var(--color-text-main);
 }
 
+.animated-gradient-text {
+  background: linear-gradient(
+    135deg,
+    #22C55E 0%,   /* Light Green */
+    #0D6EFD 35%,  /* Blue */
+    #FF9800 70%,  /* Orange */
+    #0D6EFD 100%  /* Blue loop */
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  animation: textGradientShift 6s ease infinite;
+  display: inline-block;
+}
+
+@keyframes textGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .text-h2 {
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 700;
