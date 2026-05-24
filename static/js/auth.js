@@ -96,6 +96,9 @@ class AuthController {
     static async handleSessionLogout() {
         try {
             localStorage.removeItem("currentUser");
+            localStorage.removeItem("user");
+            localStorage.removeItem("promptbazaar_user");
+            window.currentUser = null;
             await fetch(`${API_BASE_URL}/api/sessionLogout`, { method: 'POST' });
             window.location.href = '/login';
         } catch (error) {
@@ -367,7 +370,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Logout
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', async () => {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
             if (!auth) return AuthController.handleSessionLogout();
             try {
                 await signOut(auth);

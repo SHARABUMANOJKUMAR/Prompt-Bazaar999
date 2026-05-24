@@ -208,7 +208,7 @@ function parseCSV(csvText) {
     });
 }
 
-async function fetchUsers(force = false) {
+async function fetchUsers(force = true) {
     const tbody = document.getElementById('users-table-body');
     if (!tbody) return;
 
@@ -476,7 +476,7 @@ async function loadPrompts() {
     tbody.innerHTML = '<tr><td colspan="8" class="text-center">Loading...</td></tr>';
 
     try {
-        const res = await fetch(`${API_BASE_URL}/api/prompts`);
+        const res = await fetch(`${API_BASE_URL}/api/prompts?cache_bust=${Date.now()}`);
         const prompts = await res.json();
 
         allPrompts = prompts || [];

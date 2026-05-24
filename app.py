@@ -22,6 +22,10 @@ try:
             cred = credentials.Certificate(service_account_path)
             firebase_admin.initialize_app(cred)
             print("Firebase Admin initialized with service account file ✅")
+        elif os.path.exists("firebase-adminsdk.json"):
+            cred = credentials.Certificate("firebase-adminsdk.json")
+            firebase_admin.initialize_app(cred)
+            print("Firebase Admin initialized with local firebase-adminsdk.json ✅")
         else:
             # 2. Try to parse service account JSON from direct env string
             sa_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_CREDENTIALS")
@@ -644,7 +648,7 @@ def api_delete_prompt(prompt_id):
 def api_get_public_prompts():
     try:
         # Fetching prompts from GAS via GET request
-        response = requests.get(f"{GAS_URL}?action=get_prompts", timeout=30)
+        response = requests.get(f"{GAS_URL}?action=get_prompts&cache_bust={uuid.uuid4().hex}", timeout=30)
         
         if response.status_code == 200:
             try:
