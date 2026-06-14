@@ -193,7 +193,7 @@
                             </div>
                             <div class="analytics-info">
                                 <h3>Total Prompts</h3>
-                                <div class="value">142</div>
+                                <div class="value" id="summary-total-prompts">0</div>
                             </div>
                         </div>
                         <div class="analytics-card">
@@ -211,7 +211,7 @@
                             </div>
                             <div class="analytics-info">
                                 <h3>Total Revenue</h3>
-                                <div class="value" id="summary-total-revenue">₹12,450</div>
+                                <div class="value" id="summary-total-revenue">₹0</div>
                             </div>
                         </div>
                         <div class="analytics-card">
@@ -220,7 +220,7 @@
                             </div>
                             <div class="analytics-info">
                                 <h3>Total Sales</h3>
-                                <div class="value" id="summary-total-sales">6,225</div>
+                                <div class="value" id="summary-total-sales">0</div>
                             </div>
                         </div>
                     </div>
@@ -422,23 +422,8 @@
                                     <th>Date</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>PAY-90812</td>
-                                    <td>John Doe</td>
-                                    <td>Cinematic Hero Portrait</td>
-                                    <td>₹2</td>
-                                    <td><span style="color:var(--color-success)">Completed</span></td>
-                                    <td>2024-05-16</td>
-                                </tr>
-                                <tr>
-                                    <td>PAY-90811</td>
-                                    <td>Jane Smith</td>
-                                    <td>LinkedIn Post Generator</td>
-                                    <td>₹2</td>
-                                    <td><span style="color:var(--color-success)">Completed</span></td>
-                                    <td>2024-05-14</td>
-                                </tr>
+                            <tbody id="payments-table-body">
+                                <!-- Populated by JS -->
                             </tbody>
                         </table>
                     </div>
@@ -452,13 +437,13 @@
                         <div class="analytics-card">
                             <div class="analytics-info">
                                 <h3>Monthly Revenue</h3>
-                                <div class="value">₹3,450</div>
+                                <div class="value" id="analytics-monthly-revenue">₹0</div>
                             </div>
                         </div>
                         <div class="analytics-card">
                             <div class="analytics-info">
                                 <h3>Average Order Value</h3>
-                                <div class="value">₹2.00</div>
+                                <div class="value" id="analytics-avg-order-2">₹0.00</div>
                             </div>
                         </div>
                     </div>
@@ -477,17 +462,8 @@
                                     <th>Revenue</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Cinematic Hero Portrait</td>
-                                    <td>340</td>
-                                    <td>₹680</td>
-                                </tr>
-                                <tr>
-                                    <td>LinkedIn Post Generator</td>
-                                    <td>215</td>
-                                    <td>₹430</td>
-                                </tr>
+                            <tbody id="top-prompts-body">
+                                <!-- Populated by JS -->
                             </tbody>
                         </table>
                     </div>

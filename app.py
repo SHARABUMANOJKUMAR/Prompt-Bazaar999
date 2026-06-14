@@ -21,11 +21,11 @@ try:
         if service_account_path and os.path.exists(service_account_path):
             cred = credentials.Certificate(service_account_path)
             firebase_admin.initialize_app(cred)
-            print("Firebase Admin initialized with service account file ✅")
+            print("Firebase Admin initialized with service account file")
         elif os.path.exists("firebase-adminsdk.json"):
             cred = credentials.Certificate("firebase-adminsdk.json")
             firebase_admin.initialize_app(cred)
-            print("Firebase Admin initialized with local firebase-adminsdk.json ✅")
+            print("Firebase Admin initialized with local firebase-adminsdk.json")
         else:
             # 2. Try to parse service account JSON from direct env string
             sa_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_CREDENTIALS")
@@ -33,15 +33,15 @@ try:
                 cred_dict = json.loads(sa_json)
                 cred = credentials.Certificate(cred_dict)
                 firebase_admin.initialize_app(cred)
-                print("Firebase Admin initialized with environment JSON credentials ✅")
+                print("Firebase Admin initialized with environment JSON credentials")
             else:
                 # 3. Fallback to default application credentials
                 firebase_admin.initialize_app()
-                print("Firebase Admin initialized with default credentials ✅")
+                print("Firebase Admin initialized with default credentials")
     
     # Initialize Firestore client
     firebase_db = firestore.client()
-    print("Firestore DB client connected successfully! ✅")
+    print("Firestore DB client connected successfully!")
 except Exception as e:
     print(f"WARNING: Firebase Admin SDK initialization failed: {e}. The app will continue, but push notifications will run in mock/no-op mode until credentials are set.")
 
@@ -82,7 +82,7 @@ except Exception as e:
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # --- Configuration ---
-GAS_URL = "https://script.google.com/macros/s/AKfycbwCLIowdAuaMfwfuZJoIYPVatfkBwsI98JYgAgaAwR4kx4juKuOdjsShRGiK7ZOVaYe/exec"
+GAS_URL = "https://script.google.com/macros/s/AKfycbx17A9cGKQk70Uf1ysoYqBjjBxfDcyMywNtA7-PaAflmff_hFp9C3mQjS4K7qZk_Wsb/exec"
 
 # --- Middleware / Decorators ---
 def login_required(f):
@@ -277,8 +277,9 @@ PAYMENT_GAS_URL = "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--
 
 def post_to_gas(url, payload, timeout=30):
     """Robust helper to send POST request to Google Apps Script.
-    Handles the 302/307 redirection manually to prevent python-requests
-    from changing the method to GET and discarding the JSON body.
+    Google Apps Script responds to POSTs with a 302 redirect to a GET endpoint
+    that contains the actual JSON response. The requests library handles this correctly
+    by default when allow_redirects=True.
     """
     try:
         response = requests.post(
@@ -286,21 +287,11 @@ def post_to_gas(url, payload, timeout=30):
             json=payload,
             headers={"Content-Type": "application/json"},
             timeout=timeout,
-            allow_redirects=False
+            allow_redirects=True
         )
-        if response.status_code in [302, 307]:
-            redirect_url = response.headers.get('Location')
-            if redirect_url:
-                # Perform the POST request to the redirected URL with the original payload preserved!
-                response = requests.post(
-                    redirect_url,
-                    json=payload,
-                    headers={"Content-Type": "application/json"},
-                    timeout=timeout
-                )
         return response
     except Exception as e:
-        print(f"post_to_gas exception for URL {url}: {e}")
+        print(f"Error in post_to_gas: {e}")
         raise e
 
 PROMPTS_DB = []
@@ -464,7 +455,8 @@ def add_prompt():
         title = request.form.get("title", "")
         category = request.form.get("category", "")
         platform = request.form.get("platform", "")
-        price = request.form.get("price", 2)
+        raw_price = request.form.get("price")
+        price = raw_price if raw_price is not None and str(raw_price).strip() != "" else 2
         prompt_text = request.form.get("prompt_text", "")
 
         # Get image URL from request.form
@@ -504,6 +496,26 @@ def add_prompt():
 
         # Parse JSON
         result = response.json()
+
+        # Real-time Firestore Sync for Notifications & Gallery Updates
+        if result.get("success", False) and firebase_db:
+            try:
+                # Use the returned prompt_id or generate a fallback
+                prompt_id_final = result.get("prompt_id", new_prompt['id'])
+                firebase_db.collection("notifications").add({
+                    "prompt_id": prompt_id_final,
+                    "title": title,
+                    "category": category,
+                    "platform": platform,
+                    "price": price,
+                    "image_url": image_url,
+                    "prompt_text": prompt_text,
+                    "timestamp": firestore.SERVER_TIMESTAMP,
+                    "type": "new_prompt"
+                })
+                print(f"Firestore notification created for prompt {prompt_id_final}")
+            except Exception as fe:
+                print(f"Firestore sync failed: {fe}")
 
         # Return success response
         return jsonify({
@@ -631,9 +643,11 @@ def api_delete_prompt(prompt_id):
             "prompt_id": pid
         }
         
+        print(f"[DEBUG] Attempting to delete prompt {pid} at URL: {GAS_URL}")
         response = post_to_gas(GAS_URL, payload, timeout=30)
         
         result = response.json()
+        print(f"[DEBUG] Delete prompt {pid} result: {result}")
         if result.get("success", False):
             global PROMPTS_DB
             PROMPTS_DB = [p for p in PROMPTS_DB if str(p.get('prompt_id') or p.get('id')) != str(prompt_id)]
@@ -642,6 +656,7 @@ def api_delete_prompt(prompt_id):
             return jsonify({'status': 'error', 'message': result.get("message", "Failed to delete from database")}), 400
             
     except Exception as e:
+        print(f"[DEBUG] Exception deleting prompt {prompt_id}: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/api/prompts', methods=['GET'])

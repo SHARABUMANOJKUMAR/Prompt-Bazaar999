@@ -1,5 +1,6 @@
-import { auth } from './firebase-config.js';
+import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
 const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
     ? window.location.origin
@@ -200,6 +201,60 @@ async function loadPurchasedPrompts() {
 
 initAuth();
 
+// --- Real-time Notifications & Prompts Sync ---
+let isFirstSnapshot = true;
+const notificationsRef = collection(db, "notifications");
+const q = query(notificationsRef, orderBy("timestamp", "desc"), limit(1));
+onSnapshot(q, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+        if (change.type === "added") {
+            const data = change.doc.data();
+            
+            // Skip the initial load payload so we don't spam notifications on page refresh
+            if (isFirstSnapshot) return;
+
+            if (data.type === "new_prompt") {
+                // 1. Trigger Notification UI
+                if (typeof window.addNotification === 'function') {
+                    window.addNotification(`🔥 New Prompt Added: "${data.title}"`);
+                }
+                if (typeof showToast === 'function') {
+                    showToast(`New Prompt: ${data.title}`, 'success');
+                }
+
+                // 2. Real-time Prompt Synchronization
+                // Construct the prompt object
+                const newPrompt = {
+                    prompt_id: data.prompt_id,
+                    title: data.title,
+                    category: data.category,
+                    platform: data.platform,
+                    price: data.price,
+                    image_url: data.image_url,
+                    prompt_text: data.prompt_text,
+                    created_at: new Date().toISOString()
+                };
+
+                // Check if it's already in the local array to prevent duplicates
+                const exists = allPrompts.some(p => p.prompt_id === newPrompt.prompt_id);
+                if (!exists) {
+                    // Prepend the new prompt to the beginning
+                    allPrompts.unshift(newPrompt);
+                    
+                    // Update cache
+                    localStorage.setItem('bazaar_prompts_cache', JSON.stringify(allPrompts));
+                    
+                    // Re-render gallery if we are viewing 'All' or matching category
+                    if (currentCategory === "All" || currentCategory.toLowerCase() === data.category.toLowerCase()) {
+                        filterPrompts(currentCategory);
+                    }
+                }
+            }
+        }
+    });
+    isFirstSnapshot = false;
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     // Notification Dropdown Logic
     const notifWrapper = document.querySelector('.notification-wrapper');
@@ -291,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const modalPrice = document.getElementById('modal-price');
         const modalPlatform = document.getElementById('modal-platform');
         
-        if (modalPrice) modalPrice.textContent = `₹${prompt.price || 2}`;
+        if (modalPrice) modalPrice.textContent = `₹${(prompt.price !== undefined && prompt.price !== null && prompt.price !== "") ? prompt.price : 2}`;
         if (modalPlatform) {
             const platformName = (prompt.platform || 'Midjourney').toUpperCase();
             modalPlatform.textContent = platformName;
@@ -395,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         body: JSON.stringify({
                             prompt_id: window.currentPrompt.prompt_id || window.currentPrompt.id,
                             title: window.currentPrompt.title,
-                            price: window.currentPrompt.price || 99
+                            price: (window.currentPrompt.price !== undefined && window.currentPrompt.price !== null && window.currentPrompt.price !== "") ? window.currentPrompt.price : 99
                         })
                     });
                     const orderData = await res.json();
@@ -432,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         razorpay_signature: response.razorpay_signature,
                                         prompt_id: window.currentPrompt.prompt_id || window.currentPrompt.id,
                                         title: window.currentPrompt.title,
-                                        price: window.currentPrompt.price || 99,
+                                        price: (window.currentPrompt.price !== undefined && window.currentPrompt.price !== null && window.currentPrompt.price !== "") ? window.currentPrompt.price : 99,
                                         prompt_text: window.currentPrompt.prompt_text || "",
                                         image_url: window.currentPrompt.image_url || "",
                                         user: window.currentUser,
@@ -454,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         const purchaseData = verifyData.purchase || {
                                             prompt_id: promptIdStr,
                                             title: window.currentPrompt.title,
-                                            price: window.currentPrompt.price || 99,
+                                            price: (window.currentPrompt.price !== undefined && window.currentPrompt.price !== null && window.currentPrompt.price !== "") ? window.currentPrompt.price : 99,
                                             payment_id: response.razorpay_payment_id,
                                             order_id: response.razorpay_order_id,
                                             prompt_text: window.currentPrompt.prompt_text || '',
@@ -493,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         const queryParams = new URLSearchParams({
                                             prompt_id: window.currentPrompt.prompt_id || window.currentPrompt.id,
                                             payment_id: response.razorpay_payment_id || 'N/A',
-                                            price: window.currentPrompt.price || '2',
+                                            price: (window.currentPrompt.price !== undefined && window.currentPrompt.price !== null && window.currentPrompt.price !== "") ? window.currentPrompt.price : '2',
                                             title: window.currentPrompt.title
                                         }).toString();
                                         window.location.href = `/success?${queryParams}`;
@@ -655,7 +710,7 @@ function createPromptCard(prompt) {
 
     const imageUrl = convertDriveLink(prompt.image_url) || 'https://via.placeholder.com/400x600?text=No+Image';
     const title = prompt.title || 'Untitled Prompt';
-    const price = prompt.price || 2;
+    const price = (prompt.price !== undefined && prompt.price !== null && prompt.price !== "") ? prompt.price : 2;
     const platformName = (prompt.platform || '').toUpperCase();
     const isPurchasedCard = window.purchasedPrompts.includes(String(prompt.prompt_id || prompt.id));
 

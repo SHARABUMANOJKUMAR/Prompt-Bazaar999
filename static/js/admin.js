@@ -13,7 +13,7 @@ const GAS_USERS_URL = "https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6h
 const GAS_PAYMENTS_URL = "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--FmcKBivrsJEGarfEALgf6GLY_S-8y8VvtehVSlSjy7DWs_/exec";
 
 const CACHE_TTL = 60 * 1000; // 60 seconds
-const REFRESH_INTERVAL = 30 * 1000; // 30 seconds
+const REFRESH_INTERVAL = 60 * 1000; // 60 seconds
 const PAGE_SIZE = 10;
 
 // --- Global State ---
@@ -475,7 +475,8 @@ async function submitPromptForm(event) {
             // If it is a new prompt (not an edit), send a push notification alert!
             if (!window.editingPromptId) {
                 const title = formData.get('title') || 'New Prompt Added!';
-                const price = formData.get('price') || '9';
+                const priceValue = formData.get('price');
+                const price = (priceValue !== null && priceValue !== '') ? priceValue : '9';
                 const image_url = formData.get('image_url') || 'https://prompt-bazaar.web.app/static/images/logo.png';
                 const prompt_id = result.prompt_id || '';
 
@@ -521,6 +522,9 @@ async function submitPromptForm(event) {
                     n.classList.add('active');
                 }
             });
+
+            // Force refresh admin data to show the newly added prompt immediately
+            syncAdminData(true);
         } else {
             showToast(result.message || 'Failed to save prompt', 'error');
             if (btnText) btnText.textContent = originalText;
@@ -541,7 +545,7 @@ window.editPrompt = function(id) {
     document.getElementById('title').value = prompt.title || '';
     document.getElementById('category').value = prompt.category || 'Men';
     document.getElementById('platform').value = prompt.platform || 'ChatGPT';
-    document.getElementById('price').value = prompt.price || 2;
+    document.getElementById('price').value = (prompt.price !== undefined && prompt.price !== null && prompt.price !== "") ? prompt.price : 2;
     
     const imageUrlInput = document.getElementById('image_url');
     if (imageUrlInput) {
@@ -574,7 +578,7 @@ window.editPrompt = function(id) {
     });
 };
 
-async function deletePrompt(id) {
+window.deletePrompt = async function(id) {
     if (!confirm('Are you sure?')) return;
     try {
         const res = await fetch(`${API_BASE_URL}/api/admin/prompts/${id}`, { method: 'DELETE' });
@@ -1016,12 +1020,31 @@ function renderAnalyticsCharts() {
                     label: 'Revenue (₹)',
                     data: revenueByDay,
                     borderColor: '#0ea5e9',
-                    backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                    backgroundColor: 'rgba(14, 165, 233, 0.15)',
+                    borderWidth: 3,
                     tension: 0.4,
-                    fill: true
+                    fill: true,
+                    pointBackgroundColor: '#0ea5e9',
+                    pointBorderColor: '#ffffff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { 
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.05)', borderDash: [5, 5] }
+                    }
+                }
+            }
         });
     }
 
@@ -1038,10 +1061,19 @@ function renderAnalyticsCharts() {
                 labels: ['Success', 'Failed'],
                 datasets: [{
                     data: [successCount, failCount],
-                    backgroundColor: ['#10b981', '#ef4444']
+                    backgroundColor: ['#10b981', '#ef4444'],
+                    borderWidth: 0,
+                    hoverOffset: 4
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, cutout: '75%' }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false, 
+                cutout: '75%',
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+                }
+            }
         });
     }
 
@@ -1080,10 +1112,23 @@ function renderAnalyticsCharts() {
                 datasets: [{
                     label: 'Sales',
                     data: catData.length > 0 ? catData : [0, 0, 0, 0, 0],
-                    backgroundColor: '#8b5cf6'
+                    backgroundColor: '#8b5cf6',
+                    borderRadius: 6,
+                    borderSkipped: false
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false }
+            options: { 
+                responsive: true, 
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { 
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.05)', borderDash: [5, 5] }
+                    }
+                }
+            }
         });
     }
     
@@ -1104,19 +1149,74 @@ function renderAnalyticsCharts() {
         }
     }
 
-    // 4. Update Analytics Stats
+    // Dynamic Analytics Calculations
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+    
+    let currentMonthRev = 0;
+    let prevMonthRev = 0;
+    const uniqueBuyers = new Set();
+    
+    allPayments.forEach(p => {
+        if ((p.payment_status||'').toLowerCase() === 'success') {
+            const amt = parseFloat(p.amount || 0);
+            const pDateStr = p.created_at || p.date;
+            if (!pDateStr) return;
+            const pDate = new Date(pDateStr);
+            
+            // Monthly revenue
+            if (pDate.getFullYear() === currentYear) {
+                if (pDate.getMonth() === currentMonth) {
+                    currentMonthRev += amt;
+                } else if (pDate.getMonth() === currentMonth - 1) {
+                    prevMonthRev += amt;
+                }
+            } else if (currentMonth === 0 && pDate.getFullYear() === currentYear - 1 && pDate.getMonth() === 11) {
+                // Handle Jan vs Dec
+                prevMonthRev += amt;
+            }
+            
+            // Buyers
+            if (p.user_email || p.user_id) {
+                uniqueBuyers.add(p.user_email || p.user_id);
+            }
+        }
+    });
+    
+    // Update Monthly Revenue UI
+    const monthlyRevEl = document.getElementById('analytics-monthly-revenue');
+    if (monthlyRevEl) monthlyRevEl.textContent = `₹${currentMonthRev.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    
+    // Revenue Growth
+    const revGrowthEl = document.getElementById('analytics-revenue-growth');
+    if (revGrowthEl) {
+        if (prevMonthRev === 0) {
+            revGrowthEl.textContent = currentMonthRev > 0 ? '+100%' : '0%';
+        } else {
+            const growth = ((currentMonthRev - prevMonthRev) / prevMonthRev) * 100;
+            revGrowthEl.textContent = `${growth >= 0 ? '+' : ''}${growth.toFixed(1)}%`;
+            if (growth < 0) {
+                revGrowthEl.style.color = 'var(--color-error)';
+            } else {
+                revGrowthEl.style.color = 'var(--color-success)';
+            }
+        }
+    }
+    
+    // Average Order Value
     const totalRev = allPayments.reduce((sum, p) => sum + parseFloat(p.amount||0), 0);
     const avgOrder = allPayments.length > 0 ? totalRev / allPayments.length : 0;
-    
     const avgOrderEl = document.getElementById('analytics-avg-order-2');
     if (avgOrderEl) avgOrderEl.textContent = `₹${avgOrder.toFixed(2)}`;
     
-    // Mock growth for now
-    const revGrowthEl = document.getElementById('analytics-revenue-growth');
-    if (revGrowthEl) revGrowthEl.textContent = '+14.5%';
-    
+    // Conversion Rate (Buyers / Total Users)
     const convRateEl = document.getElementById('analytics-conversion-rate');
-    if (convRateEl) convRateEl.textContent = '3.2%';
+    if (convRateEl) {
+        const totalUsers = allUsers.length || 1; // avoid div by 0
+        const rate = (uniqueBuyers.size / totalUsers) * 100;
+        convRateEl.textContent = `${rate.toFixed(1)}%`;
+    }
 }
 
 function renderPromptsTable() {
@@ -1129,27 +1229,106 @@ function renderPromptsTable() {
             const tr = document.createElement('tr');
             const promptTextRaw = prompt.prompt_text || '';
             const preview = promptTextRaw.length > 80 ? promptTextRaw.substring(0, 80) + '...' : promptTextRaw;
+            const pId = prompt.prompt_id || prompt.id;
 
             tr.innerHTML = `
+                <td><input type="checkbox" class="prompt-select-cb" value="${pId}" onchange="updateBulkDeleteButton()"></td>
                 <td><img src="${convertDriveLink(prompt.image_url) || 'https://via.placeholder.com/40'}" class="table-img" alt="Thumbnail"></td>
                 <td><strong>${sanitize(prompt.title)}</strong></td>
                 <td>${sanitize(prompt.category)}</td>
                 <td>${sanitize(prompt.platform)}</td>
-                <td><span class="price-badge" style="position:static">₹${prompt.price}</span></td>
+                <td><span class="price-badge" style="position:static">₹${(prompt.price !== undefined && prompt.price !== null && prompt.price !== "") ? prompt.price : 2}</span></td>
                 <td class="text-secondary" style="font-size: 0.85rem; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     ${sanitize(preview)}
                 </td>
                 <td>${prompt.created_at || new Date().toLocaleDateString()}</td>
                 <td>
                     <div class="action-group">
-                        <button class="btn-icon" onclick="editPrompt('${prompt.prompt_id || prompt.id}')" title="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg></button>
-                        <button class="btn-icon delete" onclick="deletePrompt('${prompt.prompt_id || prompt.id}')" title="Delete"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                        <button class="btn-icon" onclick="editPrompt('${pId}')" title="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg></button>
+                        <button class="btn-icon delete" onclick="deletePrompt('${pId}')" title="Delete"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
                     </div>
                 </td>
             `;
             tbody.appendChild(tr);
         });
     } else {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-secondary">No prompts found</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center text-secondary">No prompts found</td></tr>';
     }
+    updateBulkDeleteButton();
 }
+
+window.toggleSelectAllPrompts = function(checkbox) {
+    const checkboxes = document.querySelectorAll('.prompt-select-cb');
+    checkboxes.forEach(cb => cb.checked = checkbox.checked);
+    updateBulkDeleteButton();
+};
+
+window.updateBulkDeleteButton = function() {
+    const checkedBoxes = document.querySelectorAll('.prompt-select-cb:checked');
+    const bulkDeleteBtn = document.getElementById('bulk-delete-prompts');
+    const countSpan = document.getElementById('selected-prompts-count');
+    
+    if (bulkDeleteBtn && countSpan) {
+        if (checkedBoxes.length > 0) {
+            bulkDeleteBtn.style.display = 'inline-flex';
+            countSpan.textContent = checkedBoxes.length;
+        } else {
+            bulkDeleteBtn.style.display = 'none';
+        }
+    }
+};
+
+window.bulkDeletePrompts = async function() {
+    const checkedBoxes = document.querySelectorAll('.prompt-select-cb:checked');
+    if (checkedBoxes.length === 0) return;
+    
+    if (!confirm(`Are you sure you want to delete ${checkedBoxes.length} prompt(s)?`)) return;
+    
+    const bulkDeleteBtn = document.getElementById('bulk-delete-prompts');
+    const originalText = bulkDeleteBtn.innerHTML;
+    bulkDeleteBtn.innerHTML = 'Deleting...';
+    bulkDeleteBtn.disabled = true;
+    
+    let successCount = 0;
+    let errorCount = 0;
+    
+    try {
+        const deletePromises = Array.from(checkedBoxes).map(async (cb) => {
+            const id = cb.value;
+            const res = await fetch(`${API_BASE_URL}/api/admin/prompts/${id}`, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Delete failed');
+            successCount++;
+        });
+        
+        // Execute sequentially to avoid GAS rate limits or concurrently with Promise.allSettled
+        // We'll use Promise.allSettled to ensure all run even if one fails
+        const results = await Promise.allSettled(deletePromises);
+        
+        results.forEach(result => {
+            if(result.status === 'rejected') errorCount++;
+        });
+        
+        localStorage.removeItem('bazaar_prompts_cache');
+        
+        if (errorCount > 0) {
+            showToast(`Deleted ${successCount} prompts. Failed to delete ${errorCount} prompts.`, 'error');
+        } else {
+            showToast(`Successfully deleted ${successCount} prompts!`, 'success');
+        }
+        
+        // Uncheck 'select all'
+        const selectAll = document.getElementById('select-all-prompts');
+        if (selectAll) selectAll.checked = false;
+        
+        // Reload data
+        document.getElementById('prompts').click(); // Refresh tab
+        syncAdminData(true);
+        
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        bulkDeleteBtn.innerHTML = originalText;
+        bulkDeleteBtn.disabled = false;
+        updateBulkDeleteButton();
+    }
+};

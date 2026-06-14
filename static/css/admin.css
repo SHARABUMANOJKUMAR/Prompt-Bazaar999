@@ -665,3 +665,44 @@ textarea.form-control {
   border-radius: 50%;
   background-color: var(--color-success);
 }
+
+/* Analytics Chart Responsive Grid */
+.analytics-charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-6);
+}
+
+.card-panel {
+  background: var(--color-bg-primary);
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+
+.chart-wrapper {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+.pie-chart-wrapper {
+  height: 300px;
+}
+
+.bar-chart-wrapper {
+  height: 250px;
+}
+
+@media (max-width: 991px) {
+  .analytics-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 767px) {
+  .chart-wrapper, .pie-chart-wrapper, .bar-chart-wrapper {
+    height: 250px;
+  }
+}

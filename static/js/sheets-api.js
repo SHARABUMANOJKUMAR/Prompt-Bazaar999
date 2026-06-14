@@ -26,7 +26,7 @@ const SHEETS_CONFIG = {
   }
 };
 
-const CACHE_TTL = 20_000; // 20 seconds
+const CACHE_TTL = 30_000; // 30 seconds
 
 // In-memory cache — survives tab navigation without hitting network
 const _cache = {};
@@ -108,6 +108,26 @@ function normalizeKeys(obj) {
 }
 
 // =====================================================================
+// FETCH WITH RETRY HELPER
+// =====================================================================
+async function fetchWithRetry(url, options = {}, retries = 2) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 8000 + (i * 2000));
+      const res = await fetch(url, { ...options, signal: ctrl.signal });
+      clearTimeout(tid);
+      if (res.ok) return res;
+      throw new Error(`HTTP ${res.status}`);
+    } catch (err) {
+      if (i === retries) throw err;
+      // Exponential backoff: 500ms, 1000ms
+      await new Promise(r => setTimeout(r, 500 * Math.pow(2, i)));
+    }
+  }
+}
+
+// =====================================================================
 // FETCH WITH FALLBACK  (WebApp JSON → CSV)
 // =====================================================================
 async function fetchSource(key) {
@@ -123,21 +143,15 @@ async function fetchSource(key) {
 
   // 1. Try WebApp (returns JSON)
   try {
-    const ctrl = new AbortController();
-    const tid = setTimeout(() => ctrl.abort(), 8000);
-    const res = await fetch(`${webapp}?t=${Date.now()}`, { signal: ctrl.signal });
-    clearTimeout(tid);
-
-    if (res.ok) {
-      const text = await res.text();
-      try {
-        const json = JSON.parse(text);
-        data = normalizeWebAppResponse(json).map(normalizeKeys);
-      } catch {
-        // WebApp returned plain text / CSV-formatted response
-        if (text.includes(',') && text.includes('\n')) {
-          data = parseCSV(text);
-        }
+    const res = await fetchWithRetry(`${webapp}?t=${Date.now()}`, {}, 2);
+    const text = await res.text();
+    try {
+      const json = JSON.parse(text);
+      data = normalizeWebAppResponse(json).map(normalizeKeys);
+    } catch {
+      // WebApp returned plain text / CSV-formatted response
+      if (text.includes(',') && text.includes('\n')) {
+        data = parseCSV(text);
       }
     }
   } catch (err) {
@@ -147,13 +161,8 @@ async function fetchSource(key) {
   // 2. CSV fallback
   if (data.length === 0) {
     try {
-      const ctrl = new AbortController();
-      const tid = setTimeout(() => ctrl.abort(), 12000);
-      const res = await fetch(`${csv}&t=${Date.now()}`, { signal: ctrl.signal });
-      clearTimeout(tid);
-      if (res.ok) {
-        data = parseCSV(await res.text());
-      }
+      const res = await fetchWithRetry(`${csv}&t=${Date.now()}`, {}, 2);
+      data = parseCSV(await res.text());
     } catch (err) {
       console.error(`[SheetsAPI] CSV also failed for "${key}":`, err.message || err);
     }
