@@ -177,8 +177,12 @@ class NotificationManager {
 }
 
 // Automatically Initialize on Page Load
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        NotificationManager.init();
+    });
+} else {
     NotificationManager.init();
-});
+}
 
 export default NotificationManager;
