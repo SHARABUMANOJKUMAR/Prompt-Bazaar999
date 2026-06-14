@@ -877,24 +877,9 @@ function filterPaymentTable(query) {
     renderPaymentsTable(filteredPayments);
 }
 
-
-
 // ===========================================================
-// --- DATA SYNC FRAMEWORK (PROMISE.ALL & RETRY) ---
+// --- DATA SYNC FRAMEWORK ---
 // ===========================================================
-
-async function fetchWithRetry(url, retries = 3) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return await response.json();
-        } catch (err) {
-            if (i === retries - 1) throw err;
-            await new Promise(r => setTimeout(r, 1000 * (i + 1))); // Exponential backoff
-        }
-    }
-}
 
 async function initRealtimeSync() {
     // 1. Try to load from cache first
@@ -932,15 +917,13 @@ async function syncAdminData(showLoader = false) {
     }
 
     try {
-        const [usersData, promptsData, paymentsData] = await Promise.all([
-            fetchWithRetry(GAS_USERS_URL),
-            fetchWithRetry(GAS_PROMPTS_URL),
-            fetchWithRetry(GAS_PAYMENTS_URL)
-        ]);
+        // Dynamically import the centralized sheets API module to handle fallbacks
+        const { fetchAllData } = await import('/static/js/sheets-api.js');
+        const data = await fetchAllData(showLoader);
 
-        allUsers = usersData || [];
-        allPrompts = promptsData || [];
-        allPayments = Array.isArray(paymentsData) ? paymentsData : [];
+        allUsers = data.users || [];
+        allPrompts = data.prompts || [];
+        allPayments = data.payments || [];
         
         filteredUsers = [...allUsers];
         filteredPayments = [...allPayments];
