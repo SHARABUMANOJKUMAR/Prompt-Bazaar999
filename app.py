@@ -345,7 +345,6 @@ def save_deleted_users(data):
         json.dump(data, f, indent=4)
 
 @app.route('/api/admin/users', methods=['GET'])
-@login_required
 def api_get_users():
     try:
         users_csv_url = "https://docs.google.com/spreadsheets/d/1JsulLVYcmUrH3MwAV5l0nr4fwXRXVqHcjsz_b8IrQqI/export?format=csv"
@@ -391,7 +390,6 @@ def api_get_users():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/admin/users/edit', methods=['POST'])
-@login_required
 def api_edit_user():
     try:
         data = request.get_json()
@@ -429,7 +427,6 @@ def api_edit_user():
         return jsonify({'success': False, 'message': str(e)}), 500
 
 @app.route('/api/admin/users/delete/<user_id>', methods=['DELETE'])
-@login_required
 def api_delete_user(user_id):
     try:
         deleted = load_deleted_users()
@@ -618,12 +615,10 @@ def send_notification():
         }), 500
 
 @app.route('/api/admin/prompts', methods=['GET'])
-@login_required
 def api_get_prompts():
     return jsonify({'prompts': PROMPTS_DB})
 
 @app.route('/api/admin/prompts/<prompt_id>', methods=['DELETE'])
-@login_required
 def api_delete_prompt(prompt_id):
     try:
         pid = int(prompt_id) if prompt_id.isdigit() else prompt_id
@@ -931,7 +926,6 @@ def get_user_purchases():
 PAYMENTS_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1Ixf1ZqxCBKm8Q1Aq5pO3lO-0PJUQ8SKJ3KyBOQ_KXCE/export?format=csv&sheet=Payments"
 
 @app.route('/api/admin/payments', methods=['GET'])
-@login_required
 def api_get_payments():
     """Fetch payment records from Google Sheets Payments tab via Apps Script."""
     try:

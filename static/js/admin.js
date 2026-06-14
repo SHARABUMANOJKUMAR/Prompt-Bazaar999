@@ -1321,7 +1321,6 @@ window.bulkDeletePrompts = async function() {
         if (selectAll) selectAll.checked = false;
         
         // Reload data
-        document.getElementById('prompts').click(); // Refresh tab
         syncAdminData(true);
         
     } catch (err) {
