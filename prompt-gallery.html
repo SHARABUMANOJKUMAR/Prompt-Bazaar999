@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt Gallery - Prompt Bazaar</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Prompt Gallery - Prompt Bazaar | India's AI Creator Platform</title>
+    <meta name="description" content="Discover trending AI prompts for ChatGPT, Midjourney, LinkedIn, YouTube, coding, and business. India's largest free AI asset discovery platform.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/gallery.css">
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
-    
-<link rel="stylesheet" href="/static/css/gallery.css">
-
     
     <script>
         window.FIREBASE_CONFIG = {"apiKey": "YOUR_FIREBASE_API_KEY", "appId": "YOUR_FIREBASE_APP_ID", "authDomain": "YOUR_FIREBASE_AUTH_DOMAIN", "messagingSenderId": "YOUR_FIREBASE_MESSAGING_SENDER_ID", "projectId": "YOUR_FIREBASE_PROJECT_ID", "storageBucket": "YOUR_FIREBASE_STORAGE_BUCKET"};
@@ -33,38 +31,43 @@
         </div>
         <div class="modal-content">
             <h2 id="modal-title" class="text-h3 mb-2">Prompt Title</h2>
-            <div id="modal-price" class="price-badge mb-4" style="position:static; display:inline-block">₹2</div>
+            <div id="modal-price" class="price-badge mb-4" style="position:static; display:inline-block">Free</div>
             
             <div class="modal-actions">
                 <button class="action-btn" id="modal-wishlist">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                    <span>Wishlist</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Save</span>
                 </button>
                 <button class="action-btn" id="modal-share" onclick="sharePrompt(currentPrompt)">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
                     <span>Share</span>
                 </button>
                 <button class="action-btn" id="modal-report" onclick="openReportModal(currentPrompt)">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
                     <span>Report</span>
                 </button>
             </div>
             
             <button id="modal-primary-action" class="btn btn-primary mt-2">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                <span class="btn-text">🔒 UNLOCK PROMPT</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span class="btn-text">📋 COPY PROMPT</span>
             </button>
+
+            <!-- Similar Prompts Section (injected by JS) -->
+            <div id="similar-prompts-section" class="similar-prompts-row" style="display:none;">
+                <h4>✨ Similar Prompts</h4>
+                <div id="similar-prompts-scroll" class="similar-scroll"></div>
+            </div>
         </div>
     </div>
 
-    
 <div class="gallery-layout">
     <!-- Top Navbar -->
     <header class="gallery-header">
-        <div class="header-left">
+        <a href="/" class="header-left">
             <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
             Prompt Bazaar
-        </div>
+        </a>
         <div class="header-right">
             <div class="notification-wrapper" style="position: relative;">
                 <button class="icon-btn" id="notificationBtn" aria-label="Notifications">
@@ -78,48 +81,67 @@
                     </ul>
                 </div>
             </div>
-            <a href="/profile" class="user-avatar" title="Profile">
-                
-                    U
-                
+            <a href="/profile" class="user-avatar" title="Profile" id="userAvatar">
+                U
             </a>
         </div>
     </header>
 
-    <!-- Page Header -->
-    <div class="page-header">
-        <h1 class="page-title">Prompt Gallery</h1>
-        <p class="page-subtitle">Discover high-converting AI prompts for ChatGPT, Midjourney, LinkedIn, YouTube, coding, and business.</p>
-    </div>
-
-    <!-- Search Bar -->
-    <div class="filters-container">
-        <div class="search-bar-wrapper">
-            <div class="search-input-container">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" class="search-input" id="promptSearch" placeholder="Search prompts, creators, or categories...">
+    <!-- Hero Section -->
+    <section class="gallery-hero">
+        <div class="hero-badge">🚀 India's AI Creator Platform</div>
+        <h1 class="hero-title">Discover AI Assets<br>That Drive Results</h1>
+        <p class="hero-subtitle">Find trending AI prompts, posters, and creative assets for ChatGPT, Midjourney, LinkedIn, YouTube, and more.</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value" id="stat-total-assets">0</div>
+                <div class="hero-stat-label">Total Assets</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value" id="stat-categories">8+</div>
+                <div class="hero-stat-label">Categories</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">Free</div>
+                <div class="hero-stat-label">For Everyone</div>
             </div>
         </div>
-        
-        <div class="category-chips">
-            <button class="chip active" data-category="All">All</button>
-            <button class="chip" data-category="Couple">Couple</button>
-            <button class="chip" data-category="Kids">Kids</button>
-            <button class="chip" data-category="Men">Men</button>
-            <button class="chip" data-category="Women">Women</button>
-            <button class="chip" data-category="Business">Business</button>
-            <button class="chip" data-category="LinkedIn">LinkedIn</button>
-            <button class="chip" data-category="YouTube">YouTube</button>
+    </section>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+        <div class="search-input-container">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" class="search-input" id="promptSearch" placeholder="Search prompts, creators, or categories...">
         </div>
     </div>
 
-    <!-- Prompt Cards Grid -->
-    <main id="promptGrid" class="prompt-grid">
+    <!-- Category Chips -->
+    <div class="filters-container">
+        <div class="category-chips">
+            <button class="chip active" data-category="All">All</button>
+            <button class="chip" data-category="Couple">💑 Couple</button>
+            <button class="chip" data-category="Kids">👶 Kids</button>
+            <button class="chip" data-category="Men">👨 Men</button>
+            <button class="chip" data-category="Women">👩 Women</button>
+            <button class="chip" data-category="Business">💼 Business</button>
+            <button class="chip" data-category="LinkedIn">🔗 LinkedIn</button>
+            <button class="chip" data-category="YouTube">▶️ YouTube</button>
+        </div>
+    </div>
+
+    <!-- Netflix-Style Sectioned Gallery -->
+    <div class="gallery-sections" id="gallerySections">
+        <!-- Sections injected by JS (Trending, New Arrivals, Recommended, Categories, Most Saved) -->
+    </div>
+
+    <!-- Fallback Grid (shown when filtering by category or search) -->
+    <main id="promptGrid" class="prompt-grid" style="display: none;">
         <!-- Cards injected by JS -->
     </main>
 
     <!-- Pagination -->
-    <div class="pagination-container">
+    <div class="pagination-container" style="display: none;">
         <button class="load-more-btn" id="loadMoreBtn">Load More Prompts</button>
     </div>
 </div>
@@ -131,26 +153,21 @@
 <div id="reportModal" class="modal">
   <div class="modal-content report-modal-content">
     <button class="close-btn" style="position: absolute; top: 1rem; right: 1rem;" onclick="closeReportModal()">×</button>
-
-    <h2 style="color: var(--color-text-primary);">Report Prompt</h2>
-    <p style="color: var(--color-text-secondary);">Please tell us why you are reporting this prompt.</p>
-
+    <h2 style="color: var(--pb-text-primary);">Report Prompt</h2>
+    <p style="color: var(--pb-text-secondary);">Please tell us why you are reporting this prompt.</p>
     <form id="reportForm" class="report-form">
         <input type="hidden" id="reportPromptId" name="prompt_id">
-
         <div class="report-form-group">
-            <label for="reportUserName" style="color: var(--color-text-main);">Your Name</label>
-            <input type="text" id="reportUserName" name="user_name" placeholder="Enter your full name" required style="background: var(--color-bg-primary); color: var(--color-text-main); border: 1px solid var(--color-border);">
+            <label for="reportUserName">Your Name</label>
+            <input type="text" id="reportUserName" name="user_name" placeholder="Enter your full name" required>
         </div>
-
         <div class="report-form-group">
-            <label for="reportUserEmail" style="color: var(--color-text-main);">Your Email</label>
-            <input type="email" id="reportUserEmail" name="user_email" placeholder="Enter your email address" required style="background: var(--color-bg-primary); color: var(--color-text-main); border: 1px solid var(--color-border);">
+            <label for="reportUserEmail">Your Email</label>
+            <input type="email" id="reportUserEmail" name="user_email" placeholder="Enter your email address" required>
         </div>
-
         <div class="report-form-group">
-            <label for="reportReason" style="color: var(--color-text-main);">Reason</label>
-            <select id="reportReason" name="reason" required style="background: var(--color-bg-primary); color: var(--color-text-main); border: 1px solid var(--color-border);">
+            <label for="reportReason">Reason</label>
+            <select id="reportReason" name="reason" required>
                 <option value="">Select a reason</option>
                 <option value="Inappropriate Content">Inappropriate Content</option>
                 <option value="Spam">Spam</option>
@@ -160,26 +177,17 @@
                 <option value="Other">Other</option>
             </select>
         </div>
-
         <div class="report-form-group">
-            <label for="reportDetails" style="color: var(--color-text-main);">Additional Details</label>
-            <textarea id="reportDetails" name="details" placeholder="Explain the issue..." style="background: var(--color-bg-primary); color: var(--color-text-main); border: 1px solid var(--color-border);"></textarea>
+            <label for="reportDetails">Additional Details</label>
+            <textarea id="reportDetails" name="details" placeholder="Explain the issue..."></textarea>
         </div>
-
-        <button type="submit" class="report-submit-btn" style="background: var(--gradient-primary);">
-            Submit Report
-        </button>
+        <button type="submit" class="report-submit-btn">Submit Report</button>
     </form>
   </div>
 </div>
 
-
-    
     <!-- Web Push Notifications -->
-    <script type="module" src="/static/js/notifications.js?v=2"></script>
-
-    
-<script type="module" src="/static/js/gallery.js"></script>
-
+    <script type="module" src="/static/js/notifications.js?v=3"></script>
+    <script type="module" src="/static/js/gallery.js?v=3"></script>
 </body>
 </html>
