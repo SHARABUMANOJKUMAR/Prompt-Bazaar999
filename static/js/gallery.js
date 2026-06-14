@@ -276,6 +276,22 @@ document.addEventListener('DOMContentLoaded', () => {
                             showToast(`New Prompt: ${data.title}`, 'success');
                         }
 
+                        // Trigger Native OS-level Web Push Notification (Foreground)
+                        if ('Notification' in window && Notification.permission === 'granted') {
+                            try {
+                                const notif = new Notification(`🔥 New Prompt: ${data.title}`, {
+                                    body: data.prompt_text ? (data.prompt_text.substring(0, 50) + '...') : "A new premium prompt is available!",
+                                    icon: data.image_url || '/static/images/logo.png'
+                                });
+                                notif.onclick = function() {
+                                    window.focus();
+                                    this.close();
+                                };
+                            } catch (e) {
+                                console.error("Native notification failed:", e);
+                            }
+                        }
+
                         // Real-time Prompt Synchronization
                         const newPrompt = {
                             prompt_id: data.prompt_id,

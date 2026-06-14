@@ -479,6 +479,28 @@ async function submitPromptForm(event) {
                 const price = (priceValue !== null && priceValue !== '') ? priceValue : '9';
                 const image_url = formData.get('image_url') || 'https://prompt-bazaar.web.app/static/images/logo.png';
                 const prompt_id = result.prompt_id || '';
+                const prompt_text = formData.get('prompt_text') || '';
+                const category = formData.get('category') || '';
+                const platform = formData.get('platform') || '';
+
+                // Write directly to Firestore to guarantee real-time updates for active users
+                // Bypasses the Render backend which lacks firebase-adminsdk.json
+                try {
+                    await addDoc(collection(db, "notifications"), {
+                        prompt_id: prompt_id,
+                        title: title,
+                        category: category,
+                        platform: platform,
+                        price: price,
+                        image_url: image_url,
+                        prompt_text: prompt_text,
+                        timestamp: serverTimestamp(),
+                        type: "new_prompt"
+                    });
+                    console.log("Successfully wrote notification to Firestore client-side.");
+                } catch(err) {
+                    console.error("Error writing notification to Firestore:", err);
+                }
 
                 fetch(`${API_BASE_URL}/send-notification`, {
                     method: 'POST',
