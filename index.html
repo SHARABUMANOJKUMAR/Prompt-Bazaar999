@@ -2,24 +2,6 @@
 <html lang="en">
 
 <head>
-    <script>
-        // Inline fast redirect for authenticated users
-        (function() {
-            try {
-                var keys = ["currentUser", "user", "promptbazaar_user"];
-                for (var i = 0; i < keys.length; i++) {
-                    var val = localStorage.getItem(keys[i]);
-                    if (val) {
-                        var parsed = JSON.parse(val);
-                        if (parsed && (parsed.user_id || parsed.uid)) {
-                            window.location.replace("/profile");
-                            break;
-                        }
-                    }
-                }
-            } catch(e) {}
-        })();
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prompt Bazaar – Premium AI Prompt Marketplace</title>
@@ -39,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="static/css/landing.css">
+    <link rel="stylesheet" href="/static/css/landing.css">
 </head>
 
 <body>
@@ -335,9 +317,7 @@
     </button>
 
     <!-- Custom JS -->
-    <script src="static/js/landing.js"></script>
-    <!-- Web Push Notifications -->
-    <script type="module" src="static/js/notifications.js"></script>
+    <script src="/static/js/landing.js"></script>
 </body>
 
 </html>
