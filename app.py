@@ -28,7 +28,7 @@ try:
             print("Firebase Admin initialized with local firebase-adminsdk.json")
         else:
             # 2. Try to parse service account JSON from direct env string
-            sa_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_CREDENTIALS")
+            sa_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_CREDENTIALS") or os.getenv("FIREBASE_ADMIN_SDK_JSON")
             if sa_json:
                 cred_dict = json.loads(sa_json)
                 cred = credentials.Certificate(cred_dict)
