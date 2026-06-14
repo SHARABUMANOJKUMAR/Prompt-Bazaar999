@@ -7,8 +7,13 @@
 const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
     ? window.location.origin
     : "https://prompt-bazaar999.onrender.com";
-const USERS_API_URL = `${API_BASE_URL}/api/admin/users`;
-const REFRESH_INTERVAL = 60000; // 60 seconds
+
+const GAS_PROMPTS_URL = "https://script.google.com/macros/s/AKfycbx17A9cGKQk70Uf1ysoYqBjjBxfDcyMywNtA7-PaAflmff_hFp9C3mQjS4K7qZk_Wsb/exec";
+const GAS_USERS_URL = "https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6hIj1A7ErMlqXwxAyCSXajDO2Zc4x9a9jR-wnU9DQWdUxdMVDtTn/exec";
+const GAS_PAYMENTS_URL = "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--FmcKBivrsJEGarfEALgf6GLY_S-8y8VvtehVSlSjy7DWs_/exec";
+
+const CACHE_TTL = 60 * 1000; // 60 seconds
+const REFRESH_INTERVAL = 30 * 1000; // 30 seconds
 const PAGE_SIZE = 10;
 
 // --- Global State ---
@@ -18,7 +23,13 @@ let currentPage = 1;
 let sortConfig = { key: 'created_at', direction: 'desc' };
 let refreshTimer = null;
 let allPrompts = [];
+
 window.editingPromptId = null;
+
+// Charts instances
+let revenueChartInstance = null;
+let categoryChartInstance = null;
+let paymentChartInstance = null;
 
 function convertDriveLink(url) {
     if (!url) return '';
@@ -140,11 +151,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Start auto-refresh
-    startAutoRefresh();
-
-    // Initial data fetch for summary stats
-    fetchUsers();
+    // Start Real-time sync
+    initRealtimeSync();
 });
 
 // --- Core Logic ---
@@ -208,42 +216,7 @@ function parseCSV(csvText) {
     });
 }
 
-async function fetchUsers(force = true) {
-    const tbody = document.getElementById('users-table-body');
-    if (!tbody) return;
-
-    // Check Cache
-    const cachedData = localStorage.getItem('pb_users_cache');
-    if (cachedData && !force) {
-        allUsers = JSON.parse(cachedData);
-        processAndRenderUsers();
-    }
-
-    // Show Skeletons if no data
-    if (allUsers.length === 0) {
-        renderSkeletons(tbody);
-    }
-
-    try {
-        const response = await fetch(`${USERS_API_URL}?cache_bust=${Date.now()}`);
-        if (!response.ok) throw new Error('Network response was not ok');
-        
-        const parsedData = await response.json();
-        
-        // Check if data changed
-        if (JSON.stringify(parsedData) !== JSON.stringify(allUsers)) {
-            allUsers = parsedData;
-            localStorage.setItem('pb_users_cache', JSON.stringify(allUsers));
-            processAndRenderUsers();
-        }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        if (allUsers.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="9" class="text-center text-danger">Failed to load users: ${error.message}</td></tr>`;
-        }
-        showToast('Failed to refresh user data', 'error');
-    }
-}
+function fetchUsers(force = true) { syncAdminData(force); }
 
 function processAndRenderUsers() {
     applyFilters();
@@ -469,51 +442,7 @@ function updateUserStats() {
 
 // --- Prompts Management ---
 
-async function loadPrompts() {
-    const tbody = document.getElementById('prompts-table-body');
-    if (!tbody) return;
-
-    tbody.innerHTML = '<tr><td colspan="8" class="text-center">Loading...</td></tr>';
-
-    try {
-        const res = await fetch(`${API_BASE_URL}/api/prompts?cache_bust=${Date.now()}`);
-        const prompts = await res.json();
-
-        allPrompts = prompts || [];
-
-        if (prompts && prompts.length > 0) {
-            tbody.innerHTML = '';
-            prompts.forEach(prompt => {
-                const tr = document.createElement('tr');
-                const promptTextRaw = prompt.prompt_text || '';
-                const preview = promptTextRaw.length > 80 ? promptTextRaw.substring(0, 80) + '...' : promptTextRaw;
-
-                tr.innerHTML = `
-                    <td><img src="${convertDriveLink(prompt.image_url) || 'https://via.placeholder.com/40'}" class="table-img" alt="Thumbnail"></td>
-                    <td><strong>${sanitize(prompt.title)}</strong></td>
-                    <td>${sanitize(prompt.category)}</td>
-                    <td>${sanitize(prompt.platform)}</td>
-                    <td><span class="price-badge" style="position:static">₹${prompt.price}</span></td>
-                    <td class="text-secondary" style="font-size: 0.85rem; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        ${sanitize(preview)}
-                    </td>
-                    <td>${prompt.created_at || new Date().toLocaleDateString()}</td>
-                    <td>
-                        <div class="action-group">
-                            <button class="btn-icon" onclick="editPrompt('${prompt.prompt_id || prompt.id}')" title="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg></button>
-                            <button class="btn-icon delete" onclick="deletePrompt('${prompt.prompt_id || prompt.id}')" title="Delete"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        } else {
-            tbody.innerHTML = '<tr><td colspan="8" class="text-center text-secondary">No prompts found</td></tr>';
-        }
-    } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="8" class="text-center text-danger">Error loading prompts: ${err.message}</td></tr>`;
-    }
-}
+function loadPrompts() { renderPromptsTable(); }
 
 async function submitPromptForm(event) {
     event.preventDefault();
@@ -871,39 +800,9 @@ async function deleteUser(userId) {
 // --- PAYMENTS MANAGEMENT ---
 // ===========================================================
 
-let allPayments = [];
-let filteredPayments = [];
 
-async function loadPayments(forceRefresh = false) {
-    const tbody = document.getElementById('payments-table-body');
-    if (!tbody) return;
 
-    // Show skeleton loader
-    tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding: 40px;">
-        <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 12px; color: var(--color-secondary);">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;"><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
-            <span>Loading payment data...</span>
-        </div>
-    </td></tr>`;
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/admin/payments`, {
-            cache: forceRefresh ? 'no-cache' : 'default'
-        });
-        if (!response.ok) throw new Error('Failed to fetch payment data');
-
-        const data = await response.json();
-        allPayments = Array.isArray(data) ? data : [];
-        filteredPayments = [...allPayments];
-
-        renderPaymentsTable(filteredPayments);
-        updatePaymentSummaryCards(allPayments);
-
-    } catch (err) {
-        console.error('Error loading payments:', err);
-        tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger" style="padding: 40px;">Unable to load payment data. Please try again.</td></tr>`;
-    }
-}
+function loadPayments(forceRefresh = false) { syncAdminData(forceRefresh); }
 
 function renderPaymentsTable(payments) {
     const tbody = document.getElementById('payments-table-body');
@@ -978,3 +877,296 @@ function filterPaymentTable(query) {
     renderPaymentsTable(filteredPayments);
 }
 
+
+
+// ===========================================================
+// --- DATA SYNC FRAMEWORK (PROMISE.ALL & RETRY) ---
+// ===========================================================
+
+async function fetchWithRetry(url, retries = 3) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return await response.json();
+        } catch (err) {
+            if (i === retries - 1) throw err;
+            await new Promise(r => setTimeout(r, 1000 * (i + 1))); // Exponential backoff
+        }
+    }
+}
+
+async function initRealtimeSync() {
+    // 1. Try to load from cache first
+    const cachedData = localStorage.getItem('admin_portal_cache');
+    const cacheTime = localStorage.getItem('admin_portal_cache_time');
+    
+    if (cachedData && cacheTime && (Date.now() - parseInt(cacheTime)) < CACHE_TTL) {
+        const data = JSON.parse(cachedData);
+        allUsers = data.users || [];
+        allPrompts = data.prompts || [];
+        allPayments = data.payments || [];
+        
+        filteredUsers = [...allUsers];
+        filteredPayments = [...allPayments];
+        
+        updateAllUI();
+        updateLastSyncTime(parseInt(cacheTime));
+    }
+
+    // 2. Fetch fresh data in background
+    await syncAdminData();
+
+    // 3. Start 30s polling
+    setInterval(() => syncAdminData(false), REFRESH_INTERVAL);
+}
+
+async function syncAdminData(showLoader = false) {
+    const syncBadge = document.getElementById('sync-badge');
+    if (syncBadge) syncBadge.style.opacity = '1';
+
+    if (showLoader) {
+        renderSkeletons(document.getElementById('users-table-body'));
+        document.getElementById('prompts-table-body').innerHTML = '<tr><td colspan="8" class="text-center">Syncing data...</td></tr>';
+        document.getElementById('payments-table-body').innerHTML = '<tr><td colspan="7" class="text-center">Syncing data...</td></tr>';
+    }
+
+    try {
+        const [usersData, promptsData, paymentsData] = await Promise.all([
+            fetchWithRetry(GAS_USERS_URL),
+            fetchWithRetry(GAS_PROMPTS_URL),
+            fetchWithRetry(GAS_PAYMENTS_URL)
+        ]);
+
+        allUsers = usersData || [];
+        allPrompts = promptsData || [];
+        allPayments = Array.isArray(paymentsData) ? paymentsData : [];
+        
+        filteredUsers = [...allUsers];
+        filteredPayments = [...allPayments];
+
+        // Cache the data
+        localStorage.setItem('admin_portal_cache', JSON.stringify({
+            users: allUsers,
+            prompts: allPrompts,
+            payments: allPayments
+        }));
+        localStorage.setItem('admin_portal_cache_time', Date.now().toString());
+
+        updateAllUI();
+        updateLastSyncTime(Date.now());
+        
+    } catch (err) {
+        console.error('Real-time sync failed:', err);
+        showToast(`Failed to refresh data: ${err.message}`, 'error');
+    } finally {
+        if (syncBadge) syncBadge.style.opacity = '0';
+    }
+}
+
+function updateLastSyncTime(timestamp) {
+    const el = document.getElementById('last-updated-time');
+    if (el) {
+        const d = new Date(timestamp);
+        el.textContent = `Last Updated: ${d.toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit', second:'2-digit'})}`;
+    }
+}
+
+function updateAllUI() {
+    // 1. Users UI
+    processAndRenderUsers();
+    
+    // 2. Prompts UI
+    renderPromptsTable();
+    
+    // 3. Payments UI
+    renderPaymentsTable(filteredPayments);
+    updatePaymentSummaryCards(allPayments);
+    
+    // 4. Dashboard KPIs & Analytics
+    updateDashboardKPIs();
+    renderAnalyticsCharts();
+}
+
+// ===========================================================
+// --- DASHBOARD & ANALYTICS ---
+// ===========================================================
+
+function updateDashboardKPIs() {
+    const totalPrompts = allPrompts.length;
+    animateValue('summary-total-prompts', totalPrompts);
+}
+
+function renderAnalyticsCharts() {
+    if (typeof Chart === 'undefined') return;
+
+    // 1. Revenue Trend Data (Last 7 Days)
+    const last7Days = Array.from({length: 7}, (_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - (6 - i));
+        return d.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
+    });
+    
+    // Group payments by day for real data
+    const revenueByDay = new Array(7).fill(0);
+    const todayStr = new Date().toDateString();
+    allPayments.forEach(p => {
+        if (!p.created_at && !p.date) return;
+        const pDate = new Date(p.created_at || p.date);
+        const diffTime = Math.abs(new Date() - pDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        if (diffDays <= 7 && diffDays >= 1) {
+            revenueByDay[7 - diffDays] += parseFloat(p.amount || 0);
+        } else if (pDate.toDateString() === todayStr) {
+            revenueByDay[6] += parseFloat(p.amount || 0);
+        }
+    });
+
+    const ctxTrend = document.getElementById('revenueTrendChart');
+    if (ctxTrend) {
+        if (revenueChartInstance) revenueChartInstance.destroy();
+        revenueChartInstance = new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: last7Days,
+                datasets: [{
+                    label: 'Revenue (₹)',
+                    data: revenueByDay,
+                    borderColor: '#0ea5e9',
+                    backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+
+    // 2. Payment Success Rate
+    const ctxStatus = document.getElementById('paymentStatusChart');
+    if (ctxStatus) {
+        const successCount = allPayments.filter(p => (p.payment_status||'').toLowerCase() === 'success').length;
+        const failCount = allPayments.length - successCount;
+        
+        if (paymentChartInstance) paymentChartInstance.destroy();
+        paymentChartInstance = new Chart(ctxStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['Success', 'Failed'],
+                datasets: [{
+                    data: [successCount, failCount],
+                    backgroundColor: ['#10b981', '#ef4444']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, cutout: '75%' }
+        });
+    }
+
+    // 3. Category Sales & Top Prompts
+    const categorySales = {};
+    const promptSales = {};
+
+    allPayments.forEach(p => {
+        if ((p.payment_status||'').toLowerCase() === 'success') {
+            const amount = parseFloat(p.amount || 0);
+            
+            // Map prompt title to category
+            const prompt = allPrompts.find(pr => pr.title === p.prompt_title);
+            const category = prompt ? prompt.category : 'Other';
+            categorySales[category] = (categorySales[category] || 0) + 1;
+
+            // Track prompt revenue
+            if (p.prompt_title) {
+                if (!promptSales[p.prompt_title]) promptSales[p.prompt_title] = { count: 0, rev: 0 };
+                promptSales[p.prompt_title].count += 1;
+                promptSales[p.prompt_title].rev += amount;
+            }
+        }
+    });
+
+    const categories = Object.keys(categorySales);
+    const catData = Object.values(categorySales);
+
+    const ctxCategory = document.getElementById('categorySalesChart');
+    if (ctxCategory) {
+        if (categoryChartInstance) categoryChartInstance.destroy();
+        categoryChartInstance = new Chart(ctxCategory, {
+            type: 'bar',
+            data: {
+                labels: categories.length > 0 ? categories : ['Men', 'Women', 'Business', 'Midjourney', 'ChatGPT'],
+                datasets: [{
+                    label: 'Sales',
+                    data: catData.length > 0 ? catData : [0, 0, 0, 0, 0],
+                    backgroundColor: '#8b5cf6'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    }
+    
+    // Top Selling Prompts Table
+    const topPromptsBody = document.getElementById('top-prompts-body');
+    if (topPromptsBody) {
+        const sortedPrompts = Object.entries(promptSales).sort((a, b) => b[1].rev - a[1].rev).slice(0, 5);
+        if (sortedPrompts.length > 0) {
+            topPromptsBody.innerHTML = sortedPrompts.map(([title, stats]) => `
+                <tr>
+                    <td><strong>${sanitize(title)}</strong></td>
+                    <td><span class="badge" style="background:rgba(139, 92, 246, 0.1); color:#8b5cf6;">${stats.count}</span></td>
+                    <td><strong style="color:var(--color-success)">₹${stats.rev.toFixed(2)}</strong></td>
+                </tr>
+            `).join('');
+        } else {
+            topPromptsBody.innerHTML = '<tr><td colspan="3" class="text-center text-secondary">No successful sales yet.</td></tr>';
+        }
+    }
+
+    // 4. Update Analytics Stats
+    const totalRev = allPayments.reduce((sum, p) => sum + parseFloat(p.amount||0), 0);
+    const avgOrder = allPayments.length > 0 ? totalRev / allPayments.length : 0;
+    
+    const avgOrderEl = document.getElementById('analytics-avg-order-2');
+    if (avgOrderEl) avgOrderEl.textContent = `₹${avgOrder.toFixed(2)}`;
+    
+    // Mock growth for now
+    const revGrowthEl = document.getElementById('analytics-revenue-growth');
+    if (revGrowthEl) revGrowthEl.textContent = '+14.5%';
+    
+    const convRateEl = document.getElementById('analytics-conversion-rate');
+    if (convRateEl) convRateEl.textContent = '3.2%';
+}
+
+function renderPromptsTable() {
+    const tbody = document.getElementById('prompts-table-body');
+    if (!tbody) return;
+
+    if (allPrompts.length > 0) {
+        tbody.innerHTML = '';
+        allPrompts.forEach(prompt => {
+            const tr = document.createElement('tr');
+            const promptTextRaw = prompt.prompt_text || '';
+            const preview = promptTextRaw.length > 80 ? promptTextRaw.substring(0, 80) + '...' : promptTextRaw;
+
+            tr.innerHTML = `
+                <td><img src="${convertDriveLink(prompt.image_url) || 'https://via.placeholder.com/40'}" class="table-img" alt="Thumbnail"></td>
+                <td><strong>${sanitize(prompt.title)}</strong></td>
+                <td>${sanitize(prompt.category)}</td>
+                <td>${sanitize(prompt.platform)}</td>
+                <td><span class="price-badge" style="position:static">₹${prompt.price}</span></td>
+                <td class="text-secondary" style="font-size: 0.85rem; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    ${sanitize(preview)}
+                </td>
+                <td>${prompt.created_at || new Date().toLocaleDateString()}</td>
+                <td>
+                    <div class="action-group">
+                        <button class="btn-icon" onclick="editPrompt('${prompt.prompt_id || prompt.id}')" title="Edit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg></button>
+                        <button class="btn-icon delete" onclick="deletePrompt('${prompt.prompt_id || prompt.id}')" title="Delete"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } else {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-secondary">No prompts found</td></tr>';
+    }
+}

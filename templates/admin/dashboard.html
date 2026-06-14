@@ -3,6 +3,7 @@
 {% block title %}Admin Dashboard - Prompt Bazaar{% endblock %}
 
 {% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 <style>
 /* Modal Overlay Styling */
@@ -130,7 +131,14 @@
             <button class="mobile-menu-btn btn-icon" onclick="toggleAdminSidebar()" style="display: none; border: none; background: transparent; cursor: pointer; color: var(--color-text-primary); margin-right: 8px;">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </button>
-            <h2 class="text-h3 mb-0" style="flex: 1;">Admin Portal</h2>
+            <h2 class="text-h3 mb-0" style="flex: 1; display: flex; align-items: center; gap: 12px;">
+                Admin Portal
+                <span class="badge" id="sync-badge" style="font-size: 0.75rem; background: rgba(16, 185, 129, 0.1); color: var(--color-success); padding: 4px 8px; border-radius: 4px; display: flex; align-items: center; gap: 4px; opacity: 0; transition: opacity 0.3s ease;">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--color-success); display: inline-block; animation: pulse 2s infinite;"></span>
+                    Live Syncing
+                </span>
+                <span id="last-updated-time" style="font-size: 0.75rem; color: var(--color-secondary); font-weight: normal; margin-left: auto; margin-right: 12px;"></span>
+            </h2>
             <div class="user-avatar" style="margin-left: auto;">
                 {% if user and user.photoURL %}
                     <img src="{{ user.photoURL }}" alt="Avatar">
@@ -152,7 +160,7 @@
                         </div>
                         <div class="analytics-info">
                             <h3>Total Prompts</h3>
-                            <div class="value">142</div>
+                            <div class="value" id="summary-total-prompts">0</div>
                         </div>
                     </div>
                     <div class="analytics-card">
@@ -438,30 +446,54 @@
             
             <!-- Analytics Section -->
             <section id="analytics" class="admin-section">
-                <h2 class="text-h2 mb-6">Advanced Analytics</h2>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+                    <h2 class="text-h2 mb-0">Advanced Analytics</h2>
+                    <button class="btn btn-outline btn-sm" id="refresh-analytics-btn" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                        Refresh Data
+                    </button>
+                </div>
                 
-                <div class="analytics-grid">
+                <div class="analytics-grid mb-6">
                     <div class="analytics-card">
                         <div class="analytics-info">
-                            <h3>Monthly Revenue</h3>
-                            <div class="value">₹3,450</div>
+                            <h3>Revenue Growth</h3>
+                            <div class="value" id="analytics-revenue-growth">0%</div>
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <div class="analytics-info">
+                            <h3>Conversion Rate</h3>
+                            <div class="value" id="analytics-conversion-rate">0%</div>
                         </div>
                     </div>
                     <div class="analytics-card">
                         <div class="analytics-info">
                             <h3>Average Order Value</h3>
-                            <div class="value">₹2.00</div>
+                            <div class="value" id="analytics-avg-order-2">₹0</div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="chart-area" style="display: flex; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.02); border: 2px dashed var(--color-border); border-radius: var(--radius-lg); min-height: 300px; color: var(--color-text-secondary);">
-                    📈 Advanced Revenue Charts will appear here as sales data grows.
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <div class="chart-container" style="background: var(--color-bg-primary); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                        <h3 class="text-h4 mb-4">Revenue & Sales Trend</h3>
+                        <canvas id="revenueTrendChart" height="120"></canvas>
+                    </div>
+                    <div class="chart-container" style="background: var(--color-bg-primary); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                        <h3 class="text-h4 mb-4">Payment Success Rate</h3>
+                        <canvas id="paymentStatusChart" height="200"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container mb-6" style="background: var(--color-bg-primary); padding: 20px; border-radius: var(--radius-lg); border: 1px solid var(--color-border); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <h3 class="text-h4 mb-4">Sales by Category</h3>
+                    <canvas id="categorySalesChart" height="80"></canvas>
                 </div>
                 
                 <h3 class="text-h3 mt-6 mb-4">Top Selling Prompts</h3>
                 <div class="admin-table-container">
-                    <table class="admin-table">
+                    <table class="admin-table" id="top-prompts-table">
                         <thead>
                             <tr>
                                 <th>Prompt Title</th>
@@ -469,17 +501,8 @@
                                 <th>Revenue</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Cinematic Hero Portrait</td>
-                                <td>340</td>
-                                <td>₹680</td>
-                            </tr>
-                            <tr>
-                                <td>LinkedIn Post Generator</td>
-                                <td>215</td>
-                                <td>₹430</td>
-                            </tr>
+                        <tbody id="top-prompts-body">
+                            <tr><td colspan="3" class="text-center">Loading data...</td></tr>
                         </tbody>
                     </table>
                 </div>
