@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const modalPrice = document.getElementById('modal-price');
         const modalPlatform = document.getElementById('modal-platform');
         
-        if (modalPrice) modalPrice.textContent = `₹${(prompt.price !== undefined && prompt.price !== null && prompt.price !== "") ? prompt.price : 2}`;
+        if (modalPrice) modalPrice.textContent = `Free`;
         if (modalPlatform) {
             const platformName = (prompt.platform || 'Midjourney').toUpperCase();
             modalPlatform.textContent = platformName;
@@ -354,7 +354,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Badge click: only open AI platform AFTER payment
             modalPlatform.onclick = (e) => {
                 e.stopPropagation();
-                const purchased = window.purchasedPrompts.includes(String(prompt.prompt_id || prompt.id));
+                // Bypass payment: Treat all prompts as purchased for free access
+                const purchased = true; // window.purchasedPrompts.includes(String(prompt.prompt_id || prompt.id));
                 if (!purchased) {
                     if (typeof showToast === 'function') {
                         showToast('🔒 Purchase this prompt to open it in ' + platformName, 'error');
@@ -386,7 +387,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
-        isPurchased = window.purchasedPrompts.includes(String(prompt.prompt_id || prompt.id));
+        isPurchased = true; // window.purchasedPrompts.includes(String(prompt.prompt_id || prompt.id));
         updateActionBtn();
         
         // Reset wishlist button state in modal
@@ -729,7 +730,7 @@ function createPromptCard(prompt) {
 
         card.innerHTML = `
             <div class="card-image-wrapper">
-                <span class="price-pill">₹${price}</span>
+                
                 ${platformBadgeHtml}
                 <button class="wishlist-btn" aria-label="Favorite">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
