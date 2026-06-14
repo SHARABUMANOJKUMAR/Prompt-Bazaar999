@@ -517,6 +517,35 @@ def add_prompt():
             "message": str(e)
         }), 500
 
+@app.route('/save-token', methods=['POST', 'OPTIONS'])
+def save_token():
+    if request.method == 'OPTIONS':
+        return jsonify({'success': True}), 200
+
+    if not firebase_db:
+        return jsonify({"success": False, "message": "Firebase DB not initialized."}), 500
+
+    try:
+        data = request.get_json() or {}
+        token = data.get("token")
+        email = data.get("email", "guest")
+        name = data.get("name", "Anonymous")
+
+        if not token:
+            return jsonify({"success": False, "message": "No token provided."}), 400
+
+        # Save to Firestore bypassing rules
+        firebase_db.collection("notification_tokens").document(token).set({
+            "token": token,
+            "user_email": email,
+            "user_name": name,
+            "created_at": firestore.SERVER_TIMESTAMP
+        }, merge=True)
+
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
 @app.route('/send-notification', methods=['POST'])
 def send_notification():
     """Fetches all stored FCM tokens from Firestore and broadcasts a push notification."""

@@ -85,25 +85,24 @@ class NotificationManager {
 
     static async saveTokenToFirestore(token, user) {
         try {
-            const tokensRef = collection(db, "notification_tokens");
-            const q = query(tokensRef, where("token", "==", token));
-            const querySnapshot = await getDocs(q);
-
             const email = user ? user.email : (localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser")).email : "guest");
             const name = user ? (user.displayName || email.split('@')[0]) : (localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser")).full_name : "Anonymous");
 
-            // Use token as document ID to naturally prevent duplicates
-            const tokenDocRef = doc(db, "notification_tokens", token);
-            await setDoc(tokenDocRef, {
-                token: token,
-                user_email: email,
-                user_name: name,
-                created_at: serverTimestamp()
-            }, { merge: true });
+            // Post the token to the Render backend to bypass client-side Firestore Rules
+            const API_BASE_URL = window.API_BASE_URL || 'https://prompt-bazaar999.onrender.com';
+            const response = await fetch(`${API_BASE_URL}/save-token`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, email, name })
+            });
 
-            console.log("FCM Token successfully synced/saved to Firestore for:", email);
+            if (response.ok) {
+                console.log("FCM Token successfully synced to Backend for:", email);
+            } else {
+                console.error("Failed to sync FCM Token to Backend.");
+            }
         } catch (error) {
-            console.error("Error saving token to Firestore:", error);
+            console.error("Error saving token to backend:", error);
         }
     }
 
