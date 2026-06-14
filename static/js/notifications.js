@@ -13,7 +13,7 @@ import {
 
 // VAPID Public Key for Web Push Certificates (configured in Firebase Console)
 // Default placeholder - can be overridden by window.FCM_VAPID_KEY if needed.
-const VAPID_KEY = window.FCM_VAPID_KEY || "BPEg3-NeeY6c9-FmQ62NlKq7TfTOWn4lD386gXh8R9T7C8y9p6lV3N8K9o7C8y9p6lV3N8K9o7C8y9p6lV3N8A"; 
+const VAPID_KEY = window.FCM_VAPID_KEY || "BFO4CLZGt_ocJn1eHem_dsXPiYhc93tg8LEX9XCVjBWdsC1KhU4Ftc1psrYFiM24WIrMU53ALTl7EqBiJKRcgig"; 
 
 class NotificationManager {
     static async init() {
