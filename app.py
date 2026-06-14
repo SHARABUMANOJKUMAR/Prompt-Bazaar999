@@ -477,53 +477,43 @@ def add_prompt():
 
         # Keep in memory for instant local UI update if needed
         import uuid
+        import threading
         new_prompt = payload.copy()
         new_prompt['id'] = str(uuid.uuid4())[:8]
         PROMPTS_DB.append(new_prompt)
 
-        # Send POST request
-        response = post_to_gas(GAS_URL, payload, timeout=30)
-
-        # Raw response text
-        raw_text = response.text.strip()
-
-        # Ensure response is not empty
-        if not raw_text:
-            return jsonify({
-                "success": False,
-                "message": "Empty response from Google Apps Script."
-            }), 500
-
-        # Parse JSON
-        result = response.json()
-
-        # Real-time Firestore Sync for Notifications & Gallery Updates
-        if result.get("success", False) and firebase_db:
+        def bg_task(p_load, p_id):
             try:
-                # Use the returned prompt_id or generate a fallback
-                prompt_id_final = result.get("prompt_id", new_prompt['id'])
-                firebase_db.collection("notifications").add({
-                    "prompt_id": prompt_id_final,
-                    "title": title,
-                    "category": category,
-                    "platform": platform,
-                    "price": price,
-                    "image_url": image_url,
-                    "prompt_text": prompt_text,
-                    "timestamp": firestore.SERVER_TIMESTAMP,
-                    "type": "new_prompt"
-                })
-                print(f"Firestore notification created for prompt {prompt_id_final}")
-            except Exception as fe:
-                print(f"Firestore sync failed: {fe}")
+                response = post_to_gas(GAS_URL, p_load, timeout=30)
+                result = response.json() if response.text.strip() else {}
+                prompt_id_final = result.get("prompt_id", p_id)
+                
+                # Real-time Firestore Sync for Notifications & Gallery Updates
+                if firebase_db:
+                    firebase_db.collection("notifications").add({
+                        "prompt_id": prompt_id_final,
+                        "title": title,
+                        "category": category,
+                        "platform": platform,
+                        "price": price,
+                        "image_url": image_url,
+                        "prompt_text": prompt_text,
+                        "timestamp": firestore.SERVER_TIMESTAMP,
+                        "type": "new_prompt"
+                    })
+                    print(f"Firestore notification created for prompt {prompt_id_final}")
+            except Exception as e:
+                print("Async GAS or Firestore upload failed:", e)
 
-        # Return success response
+        # Run background task
+        threading.Thread(target=bg_task, args=(payload, new_prompt['id'])).start()
+
+        # Return success response immediately!
         return jsonify({
-            "success": result.get("success", False),
-            "message": result.get("message", "Unknown response"),
-            "prompt_id": result.get("prompt_id")
+            "success": True,
+            "message": "Prompt added successfully (processing in background)",
+            "prompt_id": new_prompt['id']
         })
-
     except Exception as e:
         return jsonify({
             "success": False,

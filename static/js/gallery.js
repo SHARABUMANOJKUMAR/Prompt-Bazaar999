@@ -201,60 +201,7 @@ async function loadPurchasedPrompts() {
 
 initAuth();
 
-// --- Real-time Notifications & Prompts Sync ---
-let isFirstSnapshot = true;
-const notificationsRef = collection(db, "notifications");
-const q = query(notificationsRef, orderBy("timestamp", "desc"), limit(1));
-onSnapshot(q, (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-        if (change.type === "added") {
-            const data = change.doc.data();
-            
-            // Skip the initial load payload so we don't spam notifications on page refresh
-            if (isFirstSnapshot) return;
-
-            if (data.type === "new_prompt") {
-                // 1. Trigger Notification UI
-                if (typeof window.addNotification === 'function') {
-                    window.addNotification(`🔥 New Prompt Added: "${data.title}"`);
-                }
-                if (typeof showToast === 'function') {
-                    showToast(`New Prompt: ${data.title}`, 'success');
-                }
-
-                // 2. Real-time Prompt Synchronization
-                // Construct the prompt object
-                const newPrompt = {
-                    prompt_id: data.prompt_id,
-                    title: data.title,
-                    category: data.category,
-                    platform: data.platform,
-                    price: data.price,
-                    image_url: data.image_url,
-                    prompt_text: data.prompt_text,
-                    created_at: new Date().toISOString()
-                };
-
-                // Check if it's already in the local array to prevent duplicates
-                const exists = allPrompts.some(p => p.prompt_id === newPrompt.prompt_id);
-                if (!exists) {
-                    // Prepend the new prompt to the beginning
-                    allPrompts.unshift(newPrompt);
-                    
-                    // Update cache
-                    localStorage.setItem('bazaar_prompts_cache', JSON.stringify(allPrompts));
-                    
-                    // Re-render gallery if we are viewing 'All' or matching category
-                    if (currentCategory === "All" || currentCategory.toLowerCase() === data.category.toLowerCase()) {
-                        filterPrompts(currentCategory);
-                    }
-                }
-            }
-        }
-    });
-    isFirstSnapshot = false;
-});
-
+// Real-time Notifications & Prompts Sync is moved inside DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
     // Notification Dropdown Logic
     const notifWrapper = document.querySelector('.notification-wrapper');
@@ -284,21 +231,77 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    window.addNotification = function(message) {
+    window.addNotification = function(message, silent = false) {
         if (!notifList) return;
         const emptyState = notifList.querySelector('.empty-notif');
         if (emptyState) emptyState.remove();
 
         const li = document.createElement('li');
         li.innerHTML = `<strong style="color: var(--color-primary);">New Update</strong><span style="color: var(--color-text-main);">${message}</span>`;
+        // Prepend so newest is at the top
         notifList.prepend(li);
         
         notifCount++;
-        if (notifBadge && !notifWrapper.classList.contains('open')) {
+        // Only show red badge if not silent and dropdown is closed
+        if (!silent && notifBadge && !notifWrapper.classList.contains('open')) {
             notifBadge.style.display = 'flex';
             notifBadge.textContent = notifCount;
         }
     };
+
+    // --- Real-time Notifications & Prompts Sync ---
+    let isFirstSnapshot = true;
+    const notificationsRef = collection(db, "notifications");
+    // Fetch last 10 notifications to populate history
+    const q = query(notificationsRef, orderBy("timestamp", "desc"), limit(10));
+    onSnapshot(q, (snapshot) => {
+        // Reverse so we prepend in correct chronological order
+        const changes = snapshot.docChanges().reverse();
+        changes.forEach((change) => {
+            if (change.type === "added") {
+                const data = change.doc.data();
+                
+                if (data.type === "new_prompt") {
+                    // If it's the first load, add silently to history without toast
+                    if (isFirstSnapshot) {
+                        if (typeof window.addNotification === 'function') {
+                            window.addNotification(`🔥 New Prompt Added: "${data.title}"`, true);
+                        }
+                    } else {
+                        // New prompt added while user is active on page
+                        if (typeof window.addNotification === 'function') {
+                            window.addNotification(`🔥 New Prompt Added: "${data.title}"`, false);
+                        }
+                        if (typeof showToast === 'function') {
+                            showToast(`New Prompt: ${data.title}`, 'success');
+                        }
+
+                        // Real-time Prompt Synchronization
+                        const newPrompt = {
+                            prompt_id: data.prompt_id,
+                            title: data.title,
+                            category: data.category,
+                            platform: data.platform,
+                            price: data.price,
+                            image_url: data.image_url,
+                            prompt_text: data.prompt_text,
+                            created_at: new Date().toISOString()
+                        };
+
+                        const exists = allPrompts.some(p => p.prompt_id === newPrompt.prompt_id);
+                        if (!exists) {
+                            allPrompts.unshift(newPrompt);
+                            localStorage.setItem('bazaar_prompts_cache', JSON.stringify(allPrompts));
+                            if (currentCategory === "All" || currentCategory.toLowerCase() === data.category.toLowerCase()) {
+                                filterPrompts(currentCategory);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        isFirstSnapshot = false;
+    });
 
     // Toast Notification System
     const toastContainer = document.getElementById('toast-container');
