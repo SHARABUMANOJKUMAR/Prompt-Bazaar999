@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }).catch(err => console.warn("Background session sync failed:", err));
 
                 // Instantly redirect to the profile page!
-                window.location.href = "/profile";
+                window.location.href = "/gallery";
             } catch (error) {
                 console.error("Google Sign-In Error:", error);
                 AuthController.showError(error.message || "Failed to sign in with Google.");
@@ -401,7 +401,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             };
                             localStorage.setItem("currentUser", JSON.stringify(currentUser));
                         }
-                        window.location.replace("/profile");
+                        window.location.replace("/gallery");
                     }
                 }
             });
