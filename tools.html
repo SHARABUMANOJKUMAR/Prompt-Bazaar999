@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Prompt Bazaar Labs — Developer Tools{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools.css') }}">
+<meta name="description" content="Prompt Bazaar Labs — Free AI prompt tools, developer utilities, text converters, and design tools. All running locally in your browser.">
+<!-- QR Code Library for QR Studio -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="tools-page">
+    <!-- Top Navbar (matches gallery) -->
+    <header class="gallery-header">
+        <div class="header-left">
+            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <a href="/gallery" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;">
+                <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+                Prompt Bazaar
+            </a>
+        </div>
+        <div class="header-right">
+            <a href="/gallery" class="tool-btn" style="width:auto;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
+                Gallery
+            </a>
+            <a href="{{ url_for('profile') }}" class="user-avatar" title="Profile">
+                {% if user and user.photoURL %}
+                    <img src="{{ user.photoURL }}" alt="Avatar">
+                {% else %}
+                    {{ user.displayName[0] | upper if user else 'U' }}
+                {% endif %}
+            </a>
+        </div>
+    </header>
+
+    <!-- Sidebar Drawer -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar-drawer" id="sidebarDrawer">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-left">
+                <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+                Prompt Bazaar
+            </div>
+            <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
+        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
+        <a href="/tools" class="sidebar-nav-item active"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
+    </nav>
+        <div class="sidebar-footer">
+            © 2025 Prompt Bazaar. All rights reserved.
+        </div>
+    </aside>
+
+    <!-- Hero Section -->
+    <section class="tools-hero" id="toolsHero">
+        <div class="tools-hero-badge">🧪 Labs</div>
+        <h1>Prompt Bazaar Labs</h1>
+        <p>A professional suite of free AI prompt tools, developer utilities, and design helpers — all running instantly in your browser. No API keys needed.</p>
+    </section>
+
+    <!-- Search & Filter Controls -->
+    <div class="tools-controls" id="toolsControls">
+        <div class="tools-search-wrapper">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" class="tools-search-input" id="toolsSearchInput" placeholder="Search tools...">
+        </div>
+        <div class="tools-category-chips" id="toolsCategoryChips">
+            <button class="tools-chip active" data-category="all">All Tools</button>
+            <button class="tools-chip" data-category="prompt">📝 Prompt</button>
+            <button class="tools-chip" data-category="dev">💻 Developer</button>
+            <button class="tools-chip" data-category="text">✍️ Text</button>
+            <button class="tools-chip" data-category="design">🎨 Design</button>
+            <button class="tools-chip" data-category="security">🔒 Security</button>
+        </div>
+    </div>
+
+    <!-- Tools Grid (shows all tools, hidden when a tool is open) -->
+    <div class="tools-grid-container" id="toolsGridContainer"></div>
+
+    <!-- Active Tool View (hidden until a tool is clicked) -->
+    <div class="tool-view" id="toolView" style="display:none;"></div>
+</div>
+
+<!-- Toast Container -->
+<div class="tools-toast-container" id="toolsToastContainer"></div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/tools.js') }}"></script>
+{% endblock %}
