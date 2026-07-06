@@ -20,6 +20,8 @@
       { "source": "/signup", "destination": "/signup.html" },
       { "source": "/dashboard", "destination": "/dashboard.html" },
       { "source": "/profile", "destination": "/profile.html" },
+      { "source": "/wishlist", "destination": "/profile.html" },
+      { "source": "/payments", "destination": "/profile.html" },
       { "source": "/gallery", "destination": "/prompt-gallery.html" },
       { "source": "/admin", "destination": "/admin-dashboard.html" },
       { "source": "/success", "destination": "/success.html" }
