@@ -164,6 +164,11 @@ def logout():
     session.pop('user', None)
     return redirect(url_for('login'))
 
+@app.route('/tools')
+def tools():
+    user = session.get('user')
+    return render_template('tools.html', user=user)
+
 @app.route('/profile')
 @login_required
 def profile():

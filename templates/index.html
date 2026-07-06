@@ -4,13 +4,38 @@
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools.css') }}">
 {% endblock %}
 
 {% block content %}
+<!-- Sidebar Drawer (shared) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar-drawer" id="sidebarDrawer">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-left">
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+            Prompt Bazaar
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
+        <a href="/gallery" class="sidebar-nav-item active"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
+        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
+    </nav>
+    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+</aside>
+
 <div class="gallery-layout">
     <!-- Top Navbar -->
     <header class="gallery-header">
         <div class="header-left">
+            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
             <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
             Prompt Bazaar
         </div>
@@ -128,4 +153,19 @@
 
 {% block scripts %}
 <script type="module" src="{{ url_for('static', filename='js/gallery.js') }}"></script>
+<script>
+(function() {
+    var btn = document.getElementById('menuToggleBtn');
+    var drawer = document.getElementById('sidebarDrawer');
+    var overlay = document.getElementById('sidebarOverlay');
+    var closeBtn = document.getElementById('sidebarCloseBtn');
+    if (!btn || !drawer) return;
+    function open() { drawer.classList.add('open'); if (overlay) overlay.classList.add('open'); }
+    function close() { drawer.classList.remove('open'); if (overlay) overlay.classList.remove('open'); }
+    btn.addEventListener('click', open);
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (overlay) overlay.addEventListener('click', close);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+})();
+</script>
 {% endblock %}

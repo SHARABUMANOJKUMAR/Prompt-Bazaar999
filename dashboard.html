@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Prompt Bazaar</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="static/css/style.css">
-    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
-    
+    <link rel="icon" type="image/png"
+        href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
+
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
+
 <body>
     <!-- Global Modal Backdrop -->
     <div id="modal-backdrop" class="modal-backdrop"></div>
@@ -17,7 +20,8 @@
     <div class="dashboard-layout">
         <header class="header">
             <div class="container nav-container">
-                <div class="logo" style="font-weight: bold; font-size: 1.5rem; color: var(--color-primary);">Prompt Bazaar</div>
+                <div class="logo" style="font-weight: bold; font-size: 1.5rem; color: var(--color-primary);">Prompt
+                    Bazaar</div>
                 <button id="logout-btn" class="btn btn-outline w-auto">
                     Logout
                 </button>
@@ -30,12 +34,15 @@
                 <p class="text-secondary text-body mb-6">
                     You have successfully logged in to Prompt Bazaar. This is your protected dashboard.
                 </p>
-                
+
                 <div class="p-4 bg-tertiary rounded-md">
                     <h3 class="text-h3 mb-2">Account Details</h3>
-                    <p class="text-secondary"><strong class="text-primary">Name:</strong> <span id="dash-full-name">Loading...</span></p>
-                    <p class="text-secondary"><strong class="text-primary">Email:</strong> <span id="dash-email">Loading...</span></p>
-                    <p class="text-secondary"><strong class="text-primary">User ID:</strong> <span class="font-mono text-sm" id="dash-uid">Loading...</span></p>
+                    <p class="text-secondary"><strong class="text-primary">Name:</strong> <span
+                            id="dash-full-name">Loading...</span></p>
+                    <p class="text-secondary"><strong class="text-primary">Email:</strong> <span
+                            id="dash-email">Loading...</span></p>
+                    <p class="text-secondary"><strong class="text-primary">User ID:</strong> <span
+                            class="font-mono text-sm" id="dash-uid">Loading...</span></p>
                 </div>
             </div>
         </main>
@@ -58,4 +65,5 @@
     <script type="module" src="static/js/auth.js"></script>
     <script type="module" src="static/js/notifications.js?v=2"></script>
 </body>
+
 </html>
