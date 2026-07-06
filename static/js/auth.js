@@ -42,7 +42,7 @@ class AuthController {
             }).catch(err => console.warn("Background session sync failed:", err));
 
             // Instantly redirect!
-            window.location.href = '/profile';
+            window.location.href = '/gallery';
         } catch (error) {
             console.error('Manual session error:', error);
             this.showError('Authentication failed. Please try again.');
@@ -85,7 +85,7 @@ class AuthController {
             }).catch(err => console.warn("Background session sync failed:", err));
 
             // Instantly redirect!
-            window.location.href = '/profile';
+            window.location.href = '/gallery';
         } catch (error) {
             console.error('Session error:', error);
             this.showError('Authentication failed. Please try again.');
