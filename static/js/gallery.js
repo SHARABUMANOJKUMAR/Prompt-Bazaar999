@@ -629,29 +629,44 @@ async function loadPrompts() {
 
     // 1. Instant Cache Load (SWR Pattern)
     const cacheKey = 'bazaar_prompts_cache';
-    const cachedData = localStorage.getItem(cacheKey);
+    let cachedData = localStorage.getItem(cacheKey);
+    let loadedFromCache = false;
+
     if (cachedData) {
         try {
             const parsed = JSON.parse(cachedData);
             allPrompts = parsed || [];
-            // Render the cached list instantly
             filterPrompts(currentCategory);
+            loadedFromCache = true;
         } catch (e) {
             console.error("Cache load error:", e);
         }
-    } else {
-        // Show premium skeleton loading state instead of plain text loader
-        grid.innerHTML = Array(6).fill(0).map(() => `
-            <div class="prompt-card skeleton">
-                <div class="skeleton-img"></div>
-                <div class="skeleton-content">
-                    <div class="skeleton-line" style="width: 80%;"></div>
-                    <div class="skeleton-line" style="width: 95%;"></div>
-                    <div class="skeleton-line" style="width: 60%;"></div>
-                    <div class="skeleton-btn"></div>
+    } 
+    
+    if (!loadedFromCache) {
+        try {
+            // Fetch lightning-fast static JSON for first-time visitors
+            const staticRes = await fetch('/static/prompts.json');
+            const staticPrompts = await staticRes.json();
+            if (staticPrompts && staticPrompts.length > 0) {
+                allPrompts = staticPrompts;
+                filterPrompts(currentCategory);
+                loadedFromCache = true;
+            }
+        } catch (e) {
+            // Show premium skeleton loading state if static file fails
+            grid.innerHTML = Array(6).fill(0).map(() => `
+                <div class="prompt-card skeleton">
+                    <div class="skeleton-img"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-line" style="width: 80%;"></div>
+                        <div class="skeleton-line" style="width: 95%;"></div>
+                        <div class="skeleton-line" style="width: 60%;"></div>
+                        <div class="skeleton-btn"></div>
+                    </div>
                 </div>
-            </div>
-        `).join('');
+            `).join('');
+        }
     }
 
     // 2. Fetch fresh data in parallel
