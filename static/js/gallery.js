@@ -621,6 +621,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+const PROMPTS_GAS_URL = "https://script.google.com/macros/s/AKfycbx17A9cGKQk70Uf1ysoYqBjjBxfDcyMywNtA7-PaAflmff_hFp9C3mQjS4K7qZk_Wsb/exec";
+
 async function loadPrompts() {
     const grid = document.getElementById('promptGrid');
     if (!grid) return;
@@ -654,24 +656,44 @@ async function loadPrompts() {
 
     // 2. Fetch fresh data in parallel
     try {
-        const response = await fetch(`${API_BASE_URL}/api/prompts`);
-        const prompts = await response.json();
+        // Try direct GAS fetch first to bypass Render cold start
+        const response = await fetch(`${PROMPTS_GAS_URL}?action=get_prompts`);
+        let prompts = await response.json();
+        
+        // Handle potential object wrapping from GAS
+        if (prompts && !Array.isArray(prompts) && prompts.prompts) {
+            prompts = prompts.prompts;
+        }
 
         if (prompts && prompts.length > 0) {
             allPrompts = prompts;
-            // Update localStorage cache
             localStorage.setItem(cacheKey, JSON.stringify(prompts));
-            // Seamlessly render fresh prompts
             filterPrompts(currentCategory);
         }
     } catch (error) {
-        console.error('Error loading prompts:', error);
-        if (!allPrompts || allPrompts.length === 0) {
-            grid.innerHTML = `
-                <div style="color: red; padding: 40px; font-size: 18px; text-align: center; width: 100%;">
-                    Failed to load prompts.
-                </div>
-            `;
+        console.warn('Direct GAS fetch failed, falling back to Render API:', error);
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/prompts`);
+            let prompts = await response.json();
+            
+            if (prompts && !Array.isArray(prompts) && prompts.prompts) {
+                prompts = prompts.prompts;
+            }
+
+            if (prompts && prompts.length > 0) {
+                allPrompts = prompts;
+                localStorage.setItem(cacheKey, JSON.stringify(prompts));
+                filterPrompts(currentCategory);
+            }
+        } catch (fallbackError) {
+            console.error('Error loading prompts from fallback:', fallbackError);
+            if (!allPrompts || allPrompts.length === 0) {
+                grid.innerHTML = `
+                    <div style="color: red; padding: 40px; font-size: 18px; text-align: center; width: 100%;">
+                        Failed to load prompts.
+                    </div>
+                `;
+            }
         }
     }
 }

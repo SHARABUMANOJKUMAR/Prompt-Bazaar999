@@ -440,7 +440,19 @@
         const targetSection = document.getElementById(`${tabName}-section`);
         if (targetSection) {
             targetSection.classList.add('active');
-            if (event) event.currentTarget.classList.add('active');
+            if (event) {
+                event.currentTarget.classList.add('active');
+            } else {
+                // Find and activate the correct nav item manually
+                document.querySelectorAll('.admin-nav-item').forEach(el => {
+                    const href = el.getAttribute('href');
+                    if ((tabName === 'wishlist' && href === '/wishlist') ||
+                        (tabName === 'payments' && href === '/payments') ||
+                        (tabName === 'account' && href === '/profile')) {
+                        el.classList.add('active');
+                    }
+                });
+            }
         }
         // Auto-close sidebar on mobile after clicking tab
         const sidebar = document.getElementById('admin-sidebar');
@@ -448,6 +460,17 @@
             sidebar.classList.remove('open');
         }
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const path = window.location.pathname;
+        if (path.includes('/wishlist')) {
+            switchProfileTab('wishlist');
+        } else if (path.includes('/payments')) {
+            switchProfileTab('payments');
+        } else {
+            switchProfileTab('account');
+        }
+    });
 
     function toggleAdminSidebar() {
         const sidebar = document.getElementById('admin-sidebar');
