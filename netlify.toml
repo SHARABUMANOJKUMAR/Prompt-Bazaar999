@@ -1,0 +1,44 @@
+[[redirects]]
+  from = "/gallery"
+  to = "/prompt-gallery.html"
+  status = 200
+
+[[redirects]]
+  from = "/login"
+  to = "/login.html"
+  status = 200
+
+[[redirects]]
+  from = "/signup"
+  to = "/signup.html"
+  status = 200
+
+[[redirects]]
+  from = "/tools"
+  to = "/tools.html"
+  status = 200
+
+[[redirects]]
+  from = "/profile"
+  to = "/profile.html"
+  status = 200
+
+[[redirects]]
+  from = "/wishlist"
+  to = "/profile.html"
+  status = 200
+
+[[redirects]]
+  from = "/payments"
+  to = "/profile.html"
+  status = 200
+
+[[redirects]]
+  from = "/success"
+  to = "/success.html"
+  status = 200
+
+[[redirects]]
+  from = "/admin/dashboard"
+  to = "/admin-dashboard.html"
+  status = 200
