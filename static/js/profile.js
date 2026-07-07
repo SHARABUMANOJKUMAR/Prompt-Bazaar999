@@ -9,6 +9,8 @@ const API_BASE_URL = (window.location.hostname === 'localhost' || window.locatio
     : "https://prompt-bazaar999.onrender.com";
 const USERS_API_URL = "https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6hIj1A7ErMlqXwxAyCSXajDO2Zc4x9a9jR-wnU9DQWdUxdMVDtTn/exec";
 const WISHLIST_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzeyp93N_8BIW40Qi5isffi5h7FfHvm84_1n3mWMIzYNVVovayy-fL5RNiC6k15i7GL8g/exec";
+const PAYMENT_GAS_URL = "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--FmcKBivrsJEGarfEALgf6GLY_S-8y8VvtehVSlSjy7DWs_/exec";
+
 
 // Global state
 window.currentUser = null;
@@ -806,11 +808,36 @@ async function loadUserPurchases(uid) {
 
     // 2. Sync from server using BOTH uid and email params for maximum recall
     try {
-        const params = new URLSearchParams();
-        if (uid)   params.set('uid',   uid);
-        if (email) params.set('email', email);
-        const response = await fetch(`${API_BASE_URL}/api/user/purchases?${params.toString()}`);
-        const serverPurchases = await response.json();
+        let serverPurchases = [];
+        
+        // Fetch from GAS directly
+        if (uid) {
+            const uidResponse = await fetch(`${PAYMENT_GAS_URL}?action=get_user_purchases&user_id=${uid}`);
+            if (uidResponse.ok) {
+                const uidResult = await uidResponse.json();
+                if (Array.isArray(uidResult)) serverPurchases.push(...uidResult);
+                else if (uidResult.data) serverPurchases.push(...uidResult.data);
+                else if (uidResult.purchases) serverPurchases.push(...uidResult.purchases);
+            }
+        }
+        
+        if (email) {
+            const emailResponse = await fetch(`${PAYMENT_GAS_URL}?action=get_user_purchases&user_email=${email}`);
+            if (emailResponse.ok) {
+                const emailResult = await emailResponse.json();
+                let emailPurchases = [];
+                if (Array.isArray(emailResult)) emailPurchases = emailResult;
+                else if (emailResult.data) emailPurchases = emailResult.data;
+                else if (emailResult.purchases) emailPurchases = emailResult.purchases;
+                
+                const existingIds = new Set(serverPurchases.map(p => p.payment_id || p.order_id));
+                emailPurchases.forEach(p => {
+                    if (!existingIds.has(p.payment_id || p.order_id)) {
+                        serverPurchases.push(p);
+                    }
+                });
+            }
+        }
 
         if (serverPurchases && serverPurchases.length > 0) {
             // Merge: keep locally cached items not yet confirmed on server
