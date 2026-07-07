@@ -171,11 +171,36 @@ async function loadPurchasedPrompts() {
 
     // 2. Refresh from server using both uid and email params
     try {
-        const params = new URLSearchParams();
-        if (uid)   params.set('uid', uid);
-        if (email) params.set('email', email);
-        const res  = await fetch(`${API_BASE_URL}/api/user/purchases?${params.toString()}`);
-        const data = await res.json();
+        let data = [];
+        
+        // Fetch from GAS directly
+        if (uid) {
+            const uidResponse = await fetch(`${PAYMENT_GAS_URL}?action=get_user_purchases&user_id=${uid}`);
+            if (uidResponse.ok) {
+                const uidResult = await uidResponse.json();
+                if (Array.isArray(uidResult)) data.push(...uidResult);
+                else if (uidResult.data) data.push(...uidResult.data);
+                else if (uidResult.purchases) data.push(...uidResult.purchases);
+            }
+        }
+        
+        if (email) {
+            const emailResponse = await fetch(`${PAYMENT_GAS_URL}?action=get_user_purchases&user_email=${email}`);
+            if (emailResponse.ok) {
+                const emailResult = await emailResponse.json();
+                let emailPurchases = [];
+                if (Array.isArray(emailResult)) emailPurchases = emailResult;
+                else if (emailResult.data) emailPurchases = emailResult.data;
+                else if (emailResult.purchases) emailPurchases = emailResult.purchases;
+                
+                const existingIds = new Set(data.map(p => String(p.payment_id || p.order_id)));
+                emailPurchases.forEach(p => {
+                    if (!existingIds.has(String(p.payment_id || p.order_id))) {
+                        data.push(p);
+                    }
+                });
+            }
+        }
 
         if (data && data.length > 0) {
             // Merge with local-only items not yet on server
