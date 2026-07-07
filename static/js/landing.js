@@ -41,29 +41,61 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Mobile Menu Toggle
+    // Mobile Drawer Toggle
     const mobileToggle = document.querySelector('.mobile-toggle');
-    const mobileMenu = document.querySelector('.mobile-menu');
-    if (mobileToggle && mobileMenu) {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileBackdrop = document.getElementById('mobileMenuBackdrop');
+    const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+
+    function openDrawer() {
+        document.body.classList.add('mobile-nav-open');
+    }
+
+    function closeDrawer() {
+        document.body.classList.remove('mobile-nav-open');
+    }
+
+    if (mobileToggle && mobileMenu && mobileBackdrop) {
         mobileToggle.addEventListener('click', (e) => {
             e.stopPropagation();
-            document.body.classList.toggle('mobile-nav-open');
+            openDrawer();
         });
 
-        // Close on backdrop click (click on mobileMenu itself)
-        mobileMenu.addEventListener('click', (e) => {
-            if (e.target === mobileMenu) {
-                document.body.classList.remove('mobile-nav-open');
+        closeDrawerBtn?.addEventListener('click', closeDrawer);
+        mobileBackdrop.addEventListener('click', closeDrawer);
+
+        // Close on menu item click
+        const mobileMenuLinks = mobileMenu.querySelectorAll('.mobile-menu-links a:not(.btn-dark-mode)');
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', closeDrawer);
+        });
+
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.body.classList.contains('mobile-nav-open')) {
+                closeDrawer();
             }
         });
 
-        // Close on menu item click
-        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                document.body.classList.remove('mobile-nav-open');
-            });
-        });
+        // Close on swipe right
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        mobileMenu.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        mobileMenu.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            // If swiped right by more than 50px
+            if (touchEndX - touchStartX > 50) {
+                closeDrawer();
+            }
+        }
     }
 
     // Smooth Scroll for Anchor Links
