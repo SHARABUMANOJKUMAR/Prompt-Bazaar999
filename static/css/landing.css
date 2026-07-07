@@ -327,6 +327,10 @@ section {
   box-shadow: var(--shadow-sm);
 }
 
+.stats-card-premium {
+  width: 100%;
+}
+
 .stat-item {
   text-align: center;
 }
@@ -422,7 +426,7 @@ section {
 }
 
 /* --- Steps --- */
-.steps-grid {
+.steps-grid, .steps-timeline {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 40px;
@@ -433,7 +437,7 @@ section {
   text-align: center;
 }
 
-.step-number {
+.step-number, .step-circle {
   font-size: 5rem;
   font-weight: 900;
   color: rgba(15, 23, 42, 0.05);
@@ -442,6 +446,14 @@ section {
   left: 50%;
   transform: translateX(-50%);
   z-index: -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-content {
+  position: relative;
+  z-index: 1;
 }
 
 /* --- FAQ --- */
@@ -957,6 +969,9 @@ section {
     height: 64px !important;
     display: flex !important;
     align-items: center !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(10px) !important;
   }
   .nav-container {
     display: flex !important;
@@ -970,11 +985,11 @@ section {
   .nav-logo {
     display: flex !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 12px !important;
   }
   .nav-logo img {
-    width: 40px !important;
-    height: 40px !important;
+    width: 48px !important;
+    height: 48px !important;
   }
   .nav-logo span {
     font-size: 20px !important;
@@ -1193,15 +1208,15 @@ section {
   }
 
   .text-h1 {
-    font-size: 36px !important;
+    font-size: 26px !important;
     line-height: 1.2 !important;
     font-weight: 800 !important;
     letter-spacing: -0.5px !important;
     margin-bottom: 16px !important;
     text-align: center !important;
-    max-width: 90% !important;
+    max-width: 100% !important;
     overflow: visible !important;
-    text-wrap: balance !important; /* Auto-balance line breaks */
+    text-wrap: balance !important;
     order: 1 !important;
   }
 
@@ -1219,24 +1234,25 @@ section {
   /* 4. CTA BUTTONS MOBILE FIX */
   .hero-actions {
     display: flex !important;
-    flex-direction: column !important;
+    flex-direction: row !important;
     width: 100% !important;
-    max-width: 300px !important;
+    max-width: 100% !important;
     margin-top: 24px !important;
-    gap: 16px !important;
+    gap: 12px !important;
     order: 3 !important;
   }
   
   .hero-actions .btn {
-    width: 100% !important;
-    height: 52px !important;
+    flex: 1 !important;
+    height: 56px !important;
     font-size: 16px !important;
-    border-radius: 9999px !important;
+    border-radius: 16px !important;
     margin: 0 !important;
-    display: inline-flex !important;
+    display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     transition: all 0.3s ease !important;
+    padding: 0 8px !important;
   }
 
   .hero-actions .btn:active {
@@ -1259,11 +1275,11 @@ section {
   .hero-logo-main {
     order: 1 !important;
     width: 100% !important;
-    max-width: 240px !important;
+    max-width: 280px !important;
     height: auto !important;
     margin: 0 auto !important;
     display: block !important;
-    animation: none !important; /* reduce heavy animations */
+    animation: none !important;
   }
 
   /* Responsive Badges Container */
@@ -1271,38 +1287,68 @@ section {
     display: flex !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
-    gap: 8px !important;
+    gap: 12px !important;
     order: 2 !important;
     width: 100% !important;
+    margin-top: 16px !important;
   }
 
   .floating-badge {
     position: static !important;
-    display: inline-flex !important;
+    display: flex !important;
+    flex: 1 1 30% !important; /* Ensure equal width in row */
     align-items: center !important;
     justify-content: center !important;
     animation: none !important;
-    font-size: 14px !important;
-    padding: 8px 16px !important;
-    border-radius: 9999px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 12px 8px !important;
+    border-radius: 12px !important;
     margin: 0 !important;
-    background: var(--glass-bg) !important;
+    background: var(--color-white) !important;
     border: 1px solid var(--glass-border) !important;
+    box-shadow: var(--shadow-sm) !important;
+    text-align: center !important;
   }
 
   .floating-badge.badge-1,
   .floating-badge.badge-2,
   .floating-badge.badge-3 {
-    display: inline-flex !important;
+    display: flex !important;
     order: unset !important;
+    transform: none !important;
   }
 
   /* Stats Section */
+  .stats-card-premium {
+    background: var(--color-white) !important;
+    border-radius: 20px !important;
+    padding: 24px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid var(--glass-border) !important;
+    margin-top: 32px !important;
+  }
   .stats-grid {
-    padding: 24px 16px !important;
+    padding: 0 !important;
     grid-template-columns: 1fr 1fr !important;
-    gap: 16px !important;
-    border-radius: 16px !important;
+    gap: 24px 16px !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .stat-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+  .stat-number {
+    font-size: 24px !important;
+    line-height: 1.2 !important;
+  }
+  .stat-label {
+    font-size: 12px !important;
   }
 
   /* Back to top */
@@ -1313,10 +1359,10 @@ section {
 
   /* 4. FEATURES SECTION MOBILE */
   .features {
-    padding: 32px 16px !important;
+    padding: 48px 16px !important;
   }
   .features .text-h2 {
-    font-size: 32px !important;
+    font-size: 24px !important;
     margin-bottom: 24px !important;
   }
   .features-grid {
@@ -1325,135 +1371,209 @@ section {
     width: 100% !important;
   }
   .feature-card {
-    padding: 16px !important;
-    border-radius: 16px !important;
+    padding: 24px !important;
+    border-radius: 20px !important;
     margin-bottom: 0 !important;
     width: 100% !important;
     box-sizing: border-box !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .feature-icon {
+    width: 56px !important;
+    height: 56px !important;
+    margin-bottom: 16px !important;
+    font-size: 24px !important;
   }
   .feature-card h3 {
-    font-size: 18px !important;
+    font-size: 20px !important;
     margin-bottom: 8px !important;
   }
   .feature-card p {
-    font-size: 14px !important;
-    line-height: 1.5 !important;
+    font-size: 16px !important;
+    line-height: 1.6 !important;
   }
 
-  /* 5. FAQ SECTION MOBILE */
+  /* 5. TIMELINE / HOW IT WORKS MOBILE */
   .steps {
-    padding: 32px 16px !important;
+    padding: 48px 16px !important;
   }
-  .steps-grid {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
+  .steps .text-h2 {
+    font-size: 24px !important;
+    margin-bottom: 32px !important;
+    text-align: center !important;
+  }
+  .steps-timeline {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 32px !important;
+    position: relative !important;
+    padding-left: 16px !important; /* Space for the line */
+  }
+  .steps-timeline::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 24px !important;
+    bottom: 24px !important;
+    left: 36px !important; /* Center of the circle (16px padding + 20px radius) */
+    width: 2px !important;
+    background: var(--glass-border) !important;
+    z-index: 0 !important;
   }
   .step-item {
-    padding: 20px 16px !important;
-    border-radius: 16px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 24px !important;
+    text-align: left !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+  .step-circle {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 50% !important;
+    background: var(--color-white) !important;
+    border: 2px solid var(--color-primary) !important;
+    color: var(--color-primary) !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.15) !important;
+    z-index: 2 !important;
+  }
+  .step-content {
+    flex: 1 !important;
+  }
+  .step-content h3 {
+    font-size: 20px !important;
+    margin-bottom: 8px !important;
+    margin-top: 6px !important;
+  }
+  .step-content p {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+
+  /* 6. FAQ SECTION MOBILE */
+  .faq {
+    padding: 48px 16px !important;
   }
   .faq-accordion, .faq-container {
     width: 100% !important;
     max-width: 100% !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 12px !important;
+    gap: 16px !important;
   }
   .faq-item {
     width: 100% !important;
-    border-radius: 12px !important;
+    border-radius: 20px !important;
     margin-bottom: 0 !important;
     box-sizing: border-box !important;
   }
   .faq-question {
-    padding: 12px 16px !important;
-    font-size: 16px !important;
-    min-height: 48px !important;
+    padding: 20px 24px !important;
+    font-size: 18px !important;
+    min-height: 64px !important; /* Large touch targets */
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
   }
   .faq-answer {
-    padding: 0 16px !important;
-    font-size: 14px !important;
+    padding: 0 24px !important;
+    font-size: 16px !important;
     line-height: 1.6 !important;
   }
   .faq-item.active .faq-answer {
-    padding-bottom: 16px !important;
+    padding-bottom: 24px !important;
   }
 
   /* 9. FOOTER MOBILE STYLING */
   .footer-container-premium {
-    padding: 40px 16px calc(env(safe-area-inset-bottom, 24px) + 24px) 16px !important;
+    padding: 48px 16px calc(env(safe-area-inset-bottom, 24px) + 24px) 16px !important;
   }
   .footer-grid-premium {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 32px 16px !important;
-    text-align: left !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 40px !important;
+    text-align: center !important;
+    align-items: center !important;
   }
   .footer-col {
-    align-items: flex-start !important;
-    text-align: left !important;
+    align-items: center !important;
+    text-align: center !important;
     gap: 16px !important;
-  }
-  .brand-col, .newsletter-col {
-    grid-column: 1 / -1 !important;
+    width: 100% !important;
   }
   .footer-logo-premium {
-    justify-content: flex-start !important;
-    font-size: 20px !important;
-    gap: 8px !important;
+    justify-content: center !important;
+    font-size: 24px !important;
+    gap: 12px !important;
   }
   .footer-brand-logo {
-    max-width: 40px !important;
+    max-width: 48px !important;
     height: auto !important;
   }
   .footer-tagline-premium, .footer-description-premium {
-    font-size: 14px !important;
+    font-size: 16px !important;
     line-height: 1.6 !important;
+    max-width: 100% !important;
   }
   .footer-trust-badges {
-    justify-content: flex-start !important;
-    gap: 8px !important;
+    justify-content: center !important;
+    gap: 12px !important;
     flex-wrap: wrap !important;
+    margin-top: 12px !important;
   }
   .trust-badge {
     font-size: 12px !important;
-    padding: 6px 12px !important;
+    padding: 8px 16px !important;
   }
   .footer-contact-list {
-    align-items: flex-start !important;
-    gap: 12px !important;
+    align-items: center !important;
+    gap: 16px !important;
+    width: 100% !important;
   }
   .footer-contact-link-item {
-    justify-content: flex-start !important;
-    gap: 8px !important;
-    min-height: 44px !important;
-    font-size: 14px !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    min-height: 48px !important;
+    font-size: 16px !important;
   }
   .contact-icon {
-    width: 20px !important;
-    height: 20px !important;
+    width: 24px !important;
+    height: 24px !important;
   }
   .social-icons-wrap-premium {
-    justify-content: flex-start !important;
-    gap: 12px !important;
-    margin-top: 8px !important;
+    justify-content: center !important;
+    gap: 16px !important;
+    margin-top: 16px !important;
   }
   .social-circle-btn {
-    width: 44px !important;
-    height: 44px !important;
+    width: 48px !important;
+    height: 48px !important;
   }
   .newsletter-form-premium {
     max-width: 100% !important;
-    margin: 0 !important;
+    width: 100% !important;
+    margin: 0 auto !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 12px !important;
+    gap: 16px !important;
   }
   .newsletter-input-premium, .newsletter-btn-premium {
     width: 100% !important;
-    height: 48px !important;
+    height: 56px !important;
+    font-size: 16px !important;
+    border-radius: 16px !important;
   }
   .newsletter-btn-premium {
     justify-content: center !important;
