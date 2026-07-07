@@ -77,6 +77,7 @@
 
   // ── Tool Registry ───────────────────────────────────────────
   var TOOLS = [
+    { id:'prompt-enhancer', name:'Prompt Enhancer Pro', desc:'Premium rule-based prompt enhancement engine.', icon:'🚀', cat:'prompt', tag:'Premium' },
     { id:'prompt-formatter', name:'Prompt Formatter', desc:'Clean, format, and beautify your AI prompts.', icon:'📝', cat:'prompt', tag:'Prompt' },
     { id:'ai-prompt-wizard', name:'AI Prompt Wizard', desc:'Create professional AI prompts in less than 30 seconds without writing prompts yourself.', icon:'✨', cat:'prompt', tag:'Prompt' },
     { id:'prompt-json-converter', name:'Prompt to JSON Converter', desc:'Convert text prompts to JSON and vice-versa.', icon:'🔄', cat:'prompt', tag:'Prompt' },
@@ -1537,6 +1538,132 @@
       '</div>';
 
     renderStep();
+  };
+
+  // 15. Prompt Enhancer Pro
+  TOOL_RENDERERS['prompt-enhancer'] = function (el) {
+    el.innerHTML = makeBackBtn() +
+      '<div class="tool-header"><h2>🚀 Prompt Enhancer Pro</h2><p>Upgrade your prompts automatically with our local AI rule engine.</p></div>' +
+      '<div class="pe-split-layout">' +
+      
+      // Left Column (Input)
+      '<div class="pe-left-panel">' +
+      '<div class="tool-panel" style="margin-bottom:0;">' +
+      '<div class="tool-panel-header"><span class="tool-panel-title">Original Prompt</span></div>' +
+      '<textarea class="tool-textarea" id="peInput" placeholder="Paste your raw prompt here..." style="min-height:300px;"></textarea>' +
+      '<div class="tool-actions">' +
+      '<button class="tool-btn primary" id="peEnhance" style="width:100%; justify-content:center;">✨ Enhance Prompt</button>' +
+      '</div></div></div>' +
+
+      // Right Column (Output)
+      '<div class="pe-right-panel" id="peRightPanel" style="display:none;">' +
+      '<div class="pe-score-container" id="peScoreContainer"></div>' +
+      
+      '<div class="tool-panel">' +
+      '<div class="tool-panel-header"><span class="tool-panel-title">Enhanced Prompt</span></div>' +
+      '<textarea class="tool-textarea" id="peOutput" style="min-height:200px; background:var(--color-bg-alt);" readonly></textarea>' +
+      '<div class="tool-actions">' +
+      '<button class="tool-btn primary" id="peCopy">📋 Copy</button>' +
+      '<button class="tool-btn" id="peDownload">💾 Download</button>' +
+      '</div></div>' +
+
+      '<div class="tool-panel">' +
+      '<div class="pe-section-title">What Changed</div>' +
+      '<ul class="pe-diff-list" id="peDiffList"></ul>' +
+      
+      '<div class="pe-section-title" style="margin-top:24px;">Recommended Models</div>' +
+      '<div class="pe-chip-container" id="peModelContainer"></div>' +
+      '</div>' +
+      
+      '</div>' + // End Right Panel
+      '</div>';
+
+    $('#peEnhance').addEventListener('click', function () {
+      var input = $('#peInput').value.trim();
+      if (!input) {
+        showToast('Please enter a prompt to enhance.', 'error');
+        return;
+      }
+      
+      // Show loading state (simulate a slight delay for scanning effect)
+      var btn = $('#peEnhance');
+      btn.innerHTML = 'Scanning...';
+      btn.disabled = true;
+
+      setTimeout(function() {
+        var engine = window.PromptEnhancerEngine;
+        if (!engine) {
+          showToast('Engine failed to load.', 'error');
+          btn.innerHTML = '✨ Enhance Prompt';
+          btn.disabled = false;
+          return;
+        }
+
+        var result = engine.enhance(input);
+        if (!result) {
+          btn.innerHTML = '✨ Enhance Prompt';
+          btn.disabled = false;
+          return;
+        }
+
+        // Render UI
+        $('#peRightPanel').style.display = 'block';
+        $('#peOutput').value = result.enhanced;
+        
+        // Score UI
+        var s = result.score;
+        var scoreClass = s.overall > 80 ? '#10B981' : (s.overall > 50 ? '#F59E0B' : '#EF4444');
+        var sHtml = '<div class="pe-score-overall"><span>Quality Score</span><span class="pe-score-overall-val" style="color:' + scoreClass + ';">' + s.overall + '/100</span></div>';
+        
+        var renderMetric = function(name, val) {
+          return '<div class="pe-metric"><div class="pe-metric-name">' + name + '</div><div class="pe-metric-bar-bg"><div class="pe-metric-bar-fill" style="width:' + val + '%; background:' + (val > 70 ? 'var(--color-primary)' : (val > 40 ? '#F59E0B' : '#EF4444')) + ';"></div></div><div class="pe-metric-val">' + val + '</div></div>';
+        };
+
+        sHtml += renderMetric('Clarity', s.clarity);
+        sHtml += renderMetric('Context', s.context);
+        sHtml += renderMetric('Structure', s.structure);
+        sHtml += renderMetric('Specificity', s.specificity);
+        sHtml += renderMetric('Actionability', s.actionability);
+        
+        $('#peScoreContainer').innerHTML = sHtml;
+
+        // Diff List
+        var dHtml = '';
+        result.changes.forEach(function(c) {
+          dHtml += '<li>' + escapeHtml(c) + '</li>';
+        });
+        $('#peDiffList').innerHTML = dHtml;
+
+        // Missing Context Chips (if any)
+        if (result.missingContext.length > 0) {
+           dHtml += '<div style="margin-top:12px; font-size:0.8rem; color:var(--color-text-muted);"><strong>Missing:</strong> ' + result.missingContext.join(', ') + '</div>';
+           $('#peDiffList').innerHTML = dHtml;
+        }
+
+        // Models
+        var mHtml = '';
+        result.recommendedModels.forEach(function(m) {
+          mHtml += '<span class="pe-chip model">' + escapeHtml(m) + '</span>';
+        });
+        $('#peModelContainer').innerHTML = mHtml;
+
+        btn.innerHTML = '✨ Enhance Prompt';
+        btn.disabled = false;
+        
+        // Scroll right panel into view on mobile
+        if (window.innerWidth < 900) {
+          $('#peRightPanel').scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 400); // Small artificial delay
+    });
+
+    $('#peCopy').addEventListener('click', function () { 
+      copyText($('#peOutput').value); 
+    });
+    
+    $('#peDownload').addEventListener('click', function () { 
+      downloadFile('enhanced-prompt.md', $('#peOutput').value); 
+    });
   };
 
   // ── Initialize ──────────────────────────────────────────────
