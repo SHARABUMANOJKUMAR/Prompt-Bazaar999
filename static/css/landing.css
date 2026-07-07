@@ -951,8 +951,10 @@ section {
 
   /* 1. HEADER / NAVBAR MOBILE FIX */
   .navbar, .navbar.scrolled {
-    padding: 12px 16px !important;
-    height: auto !important;
+    padding: 0 16px !important;
+    height: 64px !important;
+    display: flex !important;
+    align-items: center !important;
   }
   .nav-container {
     display: flex !important;
@@ -961,6 +963,7 @@ section {
     align-items: center !important;
     justify-content: space-between !important;
     width: 100% !important;
+    height: 100% !important;
   }
   .nav-logo {
     display: flex !important;
@@ -968,11 +971,11 @@ section {
     gap: 8px !important;
   }
   .nav-logo img {
-    width: 48px !important;
-    height: 48px !important;
+    width: 40px !important;
+    height: 40px !important;
   }
   .nav-logo span {
-    font-size: 1.6rem !important;
+    font-size: 20px !important;
     font-weight: 700 !important;
     white-space: nowrap !important;
     overflow: visible !important;
@@ -1188,7 +1191,7 @@ section {
   }
 
   .text-h1 {
-    font-size: 2.25rem !important; /* 36px for mobile */
+    font-size: 36px !important;
     line-height: 1.2 !important;
     font-weight: 800 !important;
     letter-spacing: -0.5px !important;
@@ -1201,13 +1204,13 @@ section {
   }
 
   .hero-subheadline {
-    font-size: 1rem !important; /* min body 16px */
-    line-height: 1.5 !important;
+    font-size: 16px !important;
+    line-height: 1.6 !important;
     color: #475569 !important;
     margin-top: 16px !important;
     margin-bottom: 0 !important;
     text-align: center !important;
-    max-width: 95% !important;
+    max-width: 340px !important;
     order: 2 !important;
   }
 
@@ -1216,7 +1219,7 @@ section {
     display: flex !important;
     flex-direction: column !important;
     width: 100% !important;
-    max-width: 320px !important;
+    max-width: 300px !important;
     margin-top: 24px !important;
     gap: 16px !important;
     order: 3 !important;
@@ -1254,7 +1257,7 @@ section {
   .hero-logo-main {
     order: 1 !important;
     width: 100% !important;
-    max-width: 260px !important;
+    max-width: 240px !important;
     height: auto !important;
     margin: 0 auto !important;
     display: block !important;
@@ -1298,6 +1301,12 @@ section {
     grid-template-columns: 1fr !important;
     gap: 20px !important;
     border-radius: 20px !important;
+  }
+
+  /* Back to top */
+  .back-to-top-btn {
+    bottom: 24px !important;
+    right: 24px !important;
   }
 
   /* 4. FEATURES SECTION MOBILE */
@@ -1425,4 +1434,26 @@ section {
 [data-reveal].revealed {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* --- Typography & Specific Breakpoints --- */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .text-h1 {
+    font-size: 60px !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .text-h1 {
+    font-size: 48px !important;
+  }
+  .hero-logo-main {
+    max-width: 340px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .text-h1 {
+    font-size: 32px !important;
+  }
 }
