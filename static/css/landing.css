@@ -58,7 +58,7 @@ body {
 }
 
 section {
-  padding: 100px 0;
+  padding: 48px 0;
   position: relative;
 }
 
@@ -250,10 +250,12 @@ section {
 /* --- Hero Section --- */
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: auto;
+  height: auto;
   display: flex;
   align-items: center;
-  padding-top: 120px;
+  padding-top: 48px;
+  padding-bottom: 48px;
   background: radial-gradient(circle at 80% 20%, rgba(13, 110, 253, 0.05) 0%, transparent 40%),
               radial-gradient(circle at 10% 80%, rgba(255, 152, 0, 0.05) 0%, transparent 40%);
 }
@@ -277,7 +279,7 @@ section {
 }
 
 .hero-logo-container {
-    margin-top: 50px;
+    margin-top: 24px;
     position: relative;
     display: inline-block;
 }
@@ -304,9 +306,9 @@ section {
     animation: float 4s ease-in-out infinite;
 }
 
-.badge-1 { top: 0%; left: -50%; animation-delay: 0s; }
-.badge-2 { top: 40%; right: -60%; animation-delay: 1s; }
-.badge-3 { bottom: 10%; left: -40%; animation-delay: 2s; }
+.badge-1 { top: 0%; left: -20px; animation-delay: 0s; }
+.badge-2 { top: 40%; right: -20px; animation-delay: 1s; }
+.badge-3 { bottom: 10%; left: -20px; animation-delay: 2s; }
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
@@ -1494,11 +1496,22 @@ section {
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
+  .hero {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+  }
   .text-h1 {
     font-size: 48px !important;
   }
   .hero-logo-main {
     max-width: 340px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
   }
 }
 
