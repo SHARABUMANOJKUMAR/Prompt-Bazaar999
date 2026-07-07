@@ -99,10 +99,11 @@ class AuthController {
             localStorage.removeItem("user");
             localStorage.removeItem("promptbazaar_user");
             window.currentUser = null;
-            await fetch(`${API_BASE_URL}/api/sessionLogout`, { method: 'POST' });
-            window.location.href = '/login';
+            await fetch(`${API_BASE_URL}/api/sessionLogout`, { method: 'POST' }).catch(err => console.warn("Background session logout failed", err));
         } catch (error) {
             console.error('Logout error:', error);
+        } finally {
+            window.location.href = '/login';
         }
     }
 
