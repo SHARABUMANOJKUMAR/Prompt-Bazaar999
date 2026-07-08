@@ -572,19 +572,19 @@ a:hover {
 .report-form-group label {
     font-size: 14px;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--color-text-primary);
 }
 
 .report-form-group input,
 .report-form-group select,
 .report-form-group textarea {
     width: 100%;
-    background: #1a1b2e;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
     padding: 14px 16px;
     font-size: 15px;
-    color: #ffffff;
+    color: var(--color-text-primary);
     outline: none;
     transition: all 0.3s ease;
     box-sizing: border-box;
@@ -592,7 +592,7 @@ a:hover {
 
 .report-form-group input::placeholder,
 .report-form-group textarea::placeholder {
-    color: rgba(255, 255, 255, 0.45);
+    color: var(--color-text-secondary);
 }
 
 .report-form-group textarea {
@@ -603,16 +603,16 @@ a:hover {
 .report-form-group input:focus,
 .report-form-group select:focus,
 .report-form-group textarea:focus {
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
 }
 
 .report-submit-btn {
     width: 100%;
-    background: linear-gradient(90deg, #6366f1, #a855f7);
+    background: linear-gradient(135deg, var(--color-primary), #0052CC);
     color: white;
     border: none;
-    border-radius: 14px;
+    border-radius: var(--radius-md);
     padding: 15px;
     font-size: 16px;
     font-weight: 700;

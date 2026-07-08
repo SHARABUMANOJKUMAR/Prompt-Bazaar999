@@ -24,6 +24,8 @@ body.admin-body {
   bottom: 0;
   left: 0;
   z-index: 40;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .admin-brand {
@@ -393,50 +395,53 @@ html, body {
   width: 100%;
   overflow-x: hidden;
 }
-.admin-main {
-  width: 100%;
-  margin-left: 0;
-}
-.admin-header {
-  padding: 0 16px;
-}
-.admin-sidebar {
-  width: 260px;
-  z-index: 100000;
-  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-}
-.form-row {
-  flex-direction: column;
-  gap: 16px;
-}
-.admin-form-card {
-  width: 100%;
-  max-width: 100%;
-  padding: 16px;
-  margin: 0;
-}
-.form-control, .btn, .btn-gradient {
-  width: 100%;
-  min-height: 56px;
-  font-size: 16px;
-}
-.admin-table-container {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius-md);
-}
-.admin-table th, .admin-table td {
-  padding: 10px;
-  white-space: nowrap;
-}
-.analytics-grid {
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-.analytics-card {
-  padding: 16px;
+
+@media (max-width: 991px) {
+  .admin-main {
+    width: 100%;
+    margin-left: 0;
+  }
+  .admin-header {
+    padding: 0 16px;
+  }
+  .admin-sidebar {
+    width: 260px;
+    z-index: 100000;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+  }
+  .form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .admin-form-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 16px;
+    margin: 0;
+  }
+  .form-control, .btn, .btn-gradient {
+    width: 100%;
+    min-height: 56px;
+    font-size: 16px;
+  }
+  .admin-table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-md);
+  }
+  .admin-table th, .admin-table td {
+    padding: 10px;
+    white-space: nowrap;
+  }
+  .analytics-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .analytics-card {
+    padding: 16px;
+  }
 }
 
 /* --- TABLET & DESKTOP ENHANCEMENTS --- */
@@ -450,9 +455,6 @@ html, body {
   .admin-form-card {
     padding: var(--space-8);
     max-width: 600px;
-  }
-  .form-control, .btn, .btn-gradient {
-    width: auto;
   }
   .analytics-grid {
     grid-template-columns: repeat(2, 1fr);
