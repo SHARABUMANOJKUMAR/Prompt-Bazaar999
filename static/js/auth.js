@@ -1,4 +1,4 @@
-import { auth, googleProvider } from './firebase-config.js';
+import { auth, googleProvider } from './firebase-config.js?v=2';
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,

@@ -1,6 +1,6 @@
 // Push Notification Manager using Firebase Cloud Messaging (FCM)
-import { messaging, db, auth } from './firebase-config.js';
-import { getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-messaging.js";
+import { app, db, auth } from './firebase-config.js?v=2';
+import { getMessaging, isSupported, getToken, onMessage } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-messaging.js";
 import { 
     collection, 
     query, 
@@ -15,10 +15,24 @@ import {
 // Default placeholder - can be overridden by window.FCM_VAPID_KEY if needed.
 const VAPID_KEY = window.FCM_VAPID_KEY || "BFO4CLZGt_ocJn1eHem_dsXPiYhc93tg8LEX9XCVjBWdsC1KhU4Ftc1psrYFiM24WIrMU53ALTl7EqBiJKRcgig"; 
 
+let messaging = null; 
+
 class NotificationManager {
     static async init() {
         if (!('Notification' in window)) {
             console.warn("This browser does not support desktop notifications.");
+            return;
+        }
+
+        try {
+            const supported = await isSupported();
+            if (!supported) {
+                console.warn("Firebase Messaging is not supported in this environment/browser.");
+                return;
+            }
+            messaging = getMessaging(app);
+        } catch (e) {
+            console.warn("Failed to initialize Firebase Messaging:", e);
             return;
         }
 
@@ -43,16 +57,64 @@ class NotificationManager {
         }
 
         // Handle foreground notifications (when page is open)
-        onMessage(messaging, (payload) => {
-            console.log("Foreground notification received:", payload);
-            this.showInAppNotification(payload);
-        });
+        if (messaging) {
+            onMessage(messaging, (payload) => {
+                console.log("Foreground notification received:", payload);
+                this.showInAppNotification(payload);
+            });
+        }
     }
 
     static showPermissionPrompt(registration, user) {
-        // Automatically ask for permission after a short, non-intrusive delay of 2.5 seconds
-        setTimeout(async () => {
+        // Create an organic "Enable Notifications" toast UI (Premium SaaS style)
+        // This avoids aggressive browser auto-prompts and stays compliant with modern web standards.
+        const toastId = 'push-permission-toast';
+        if (document.getElementById(toastId)) return;
+
+        const toast = document.createElement('div');
+        toast.id = toastId;
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-family: 'Inter', sans-serif;
+            max-width: 360px;
+            animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        `;
+        toast.innerHTML = `
+            <div style="font-size: 28px;">🔔</div>
+            <div style="flex-grow: 1;">
+                <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: #0f172a;">Enable Notifications</h4>
+                <p style="margin: 4px 0 0; font-size: 12px; color: #64748b; line-height: 1.4;">Never miss out on top-tier premium prompts and exclusive updates.</p>
+            </div>
+            <button id="enableNotifsBtn" style="background: #3b82f6; color: white; border: none; padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Enable</button>
+            <button id="dismissNotifsBtn" style="background: transparent; color: #94a3b8; border: none; font-size: 20px; cursor: pointer; padding: 4px; line-height: 1;">&times;</button>
+        `;
+
+        // Inject keyframes if not present
+        if (!document.getElementById('notif-animations')) {
+            const style = document.createElement('style');
+            style.id = 'notif-animations';
+            style.innerHTML = `
+                @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            `;
+            document.head.appendChild(style);
+        }
+
+        document.body.appendChild(toast);
+
+        document.getElementById('enableNotifsBtn').addEventListener('click', async () => {
             try {
+                // Now tied to a direct user action - browsers will allow this prompt!
                 const permission = await Notification.requestPermission();
                 if (permission === 'granted') {
                     console.log("Notification permission granted!");
@@ -61,7 +123,12 @@ class NotificationManager {
             } catch (err) {
                 console.error("Error requesting notification permission:", err);
             }
-        }, 2500);
+            toast.remove();
+        });
+
+        document.getElementById('dismissNotifsBtn').addEventListener('click', () => {
+            toast.remove();
+        });
     }
 
     static async requestAndSaveToken(registration, user) {

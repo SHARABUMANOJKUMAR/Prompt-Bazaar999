@@ -1,7 +1,7 @@
 import { 
     auth, db, storage, doc, getDoc, setDoc, updateDoc, serverTimestamp, ref, uploadBytes, getDownloadURL,
     EmailAuthProvider, reauthenticateWithCredential, updatePassword, updateProfile 
-} from './firebase-config.js';
+} from './firebase-config.js?v=2';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
