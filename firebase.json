@@ -1,16 +1,15 @@
 {
   "hosting": {
-    "public": "static",
+    "public": ".",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "function": "app"
-      }
+      "**/node_modules/**",
+      "services/**",
+      "app.py",
+      "requirements.txt",
+      "render.yaml",
+      "netlify.toml"
     ]
   }
 }
