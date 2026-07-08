@@ -2428,9 +2428,4 @@ textarea.form-control-premium {
   background: var(--color-border);
 }
 
-/* Hide duplicate category emoji icon on mobile */
-@media (max-width: 767px) {
-  .tools-category-icon {
-    display: none !important;
-  }
-}
+
