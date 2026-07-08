@@ -1584,15 +1584,19 @@
       '<p style="max-width:280px; text-align:center; font-size:0.95rem; margin-top:8px;">Enter your prompt on the left to activate the intelligence pipeline.</p>' +
       '</div>' +
 
-      // Pipeline State
+      // Pipeline State — 10 Agents
       '<div id="pePipeline" class="pe-v5-pipeline" style="display:none;">' +
-      '<h3 style="margin-bottom:32px; font-weight:700; color:#0f172a;">AI Intelligence Pipeline</h3>' +
-      '<div class="pe-v5-pipe-step" id="pipe1"><div class="pe-v5-pipe-icon"><i class="fas fa-spinner"></i></div><div class="pe-v5-pipe-label">Intent Analysis</div></div>' +
-      '<div class="pe-v5-pipe-step" id="pipe2"><div class="pe-v5-pipe-icon"><i class="fas fa-spinner"></i></div><div class="pe-v5-pipe-label">Context Intelligence</div></div>' +
-      '<div class="pe-v5-pipe-step" id="pipe3"><div class="pe-v5-pipe-icon"><i class="fas fa-spinner"></i></div><div class="pe-v5-pipe-label">Domain Detection</div></div>' +
-      '<div class="pe-v5-pipe-step" id="pipe4"><div class="pe-v5-pipe-icon"><i class="fas fa-spinner"></i></div><div class="pe-v5-pipe-label">Expert Selection</div></div>' +
-      '<div class="pe-v5-pipe-step" id="pipe5"><div class="pe-v5-pipe-icon"><i class="fas fa-spinner"></i></div><div class="pe-v5-pipe-label">Prompt Optimization</div></div>' +
-      '<div class="pe-v5-pipe-step" id="pipe6"><div class="pe-v5-pipe-icon"><i class="fas fa-spinner"></i></div><div class="pe-v5-pipe-label">Quality Validation</div></div>' +
+      '<h3 style="margin-bottom:28px; font-weight:700; color:#0f172a;">Running 10-Agent Intelligence Pipeline</h3>' +
+      '<div class="pe-v5-pipe-step" id="pipe1"><div class="pe-v5-pipe-icon"><i class="fas fa-brain"></i></div><div class="pe-v5-pipe-label">A1 · Intent Intelligence</div></div>' +
+      '<div class="pe-v5-pipe-step" id="pipe2"><div class="pe-v5-pipe-icon"><i class="fas fa-sitemap"></i></div><div class="pe-v5-pipe-label">A2 · Domain Classifier</div></div>' +
+      '<div class="pe-v5-pipe-step" id="pipe3"><div class="pe-v5-pipe-icon"><i class="fas fa-project-diagram"></i></div><div class="pe-v5-pipe-label">A3 · Knowledge Graph</div></div>' +
+      '<div class="pe-v5-pipe-step" id="pipe4"><div class="pe-v5-pipe-icon"><i class="fas fa-users"></i></div><div class="pe-v5-pipe-label">A4 · Expert Personas</div></div>' +
+      '<div class="pe-v5-pipe-step" id="pipe5"><div class="pe-v5-pipe-icon"><i class="fas fa-chart-line"></i></div><div class="pe-v5-pipe-label">A5 · Business Intelligence</div></div>' +
+      '<div class="pe-v5-pipe-step" id="pipe6"><div class="pe-v5-pipe-icon"><i class="fas fa-expand-alt"></i></div><div class="pe-v5-pipe-label">A6 · Requirement Expansion</div></div>' +
+      '<div class="pe-v5-pipe-step" id="pipe7"><div class="pe-v5-pipe-icon"><i class="fas fa-cogs"></i></div><div class="pe-v5-pipe-label">A7 · Reasoning Engine</div></div>' +
+      '<div class="pe-v5-pipe-step" id="pipe8"><div class="pe-v5-pipe-icon"><i class="fas fa-pen-fancy"></i></div><div class="pe-v5-pipe-label">A8 · Prompt Composer</div></div>' +
+      '<div class="pe-v5-pipe-step" id="pipe9"><div class="pe-v5-pipe-icon"><i class="fas fa-rocket"></i></div><div class="pe-v5-pipe-label">A9 · AI Optimization</div></div>' +
+      '<div class="pe-v5-pipe-step" id="pipe10"><div class="pe-v5-pipe-icon"><i class="fas fa-shield-alt"></i></div><div class="pe-v5-pipe-label">A10 · Quality Validation</div></div>' +
       '</div>' +
 
       // Result State
@@ -1634,7 +1638,7 @@
 
     var _currentResult = null;
 
-    // Real-time Stats
+    // Real-time Stats (V4 API)
     $("#peInput").addEventListener("input", function() {
         var val = this.value;
         if(window.PromptEnhancerEngine) {
@@ -1642,13 +1646,15 @@
             $("#statChars").textContent = stats.chars;
             $("#statWords").textContent = stats.words;
             $("#statTokens").textContent = stats.tokens;
-            
             if(val.length > 20) {
                 var intent = window.PromptEnhancerEngine.detectIntent(val);
                 var domains = window.PromptEnhancerEngine.detectDomains(val);
-                $("#metaDomain").innerHTML = '<i class="fas fa-layer-group"></i> ' + domains[0];
-                $("#metaIntent").innerHTML = '<i class="fas fa-bullseye"></i> ' + intent.action;
-                $("#metaComplexity").innerHTML = '<i class="fas fa-tachometer-alt"></i> ' + intent.complexity;
+                // V4: domains is an array of {domain, confidence} objects
+                var d0 = (domains && domains[0]) ? domains[0].domain : 'General';
+                var conf = (domains && domains[0] && domains[0].confidence) ? domains[0].confidence + '%' : '';
+                $("#metaDomain").innerHTML = '<i class="fas fa-layer-group"></i> ' + d0 + ' ' + conf;
+                $("#metaIntent").innerHTML = '<i class="fas fa-bullseye"></i> ' + (intent.primary_intent || intent.primaryAction || intent.action || 'Create');
+                $("#metaComplexity").innerHTML = '<i class="fas fa-tachometer-alt"></i> ' + (intent.complexity || 'Standard');
                 $("#peMetaTags").style.opacity = "1";
             } else {
                 $("#peMetaTags").style.opacity = "0";
@@ -1665,29 +1671,52 @@
         _currentResult = null;
     });
 
-    // Semantic Parser for Preview Tab
+    // Semantic Parser for Preview Tab — V4 Enhanced
     function renderPreview(md) {
+        if (!md) return '<div style="padding:20px;text-align:center;">No preview available.</div>';
         let parts = md.split(/(?=## )/g);
         let html = '<div class="pe-doc-container" style="padding-bottom:100px;">';
+        const iconMap = {
+            'EXPERT': '👤', 'TEAM': '👤', 'ROLE': '👤', 'PERSONA': '👥',
+            'OBJECTIVE': '🎯', 'GOAL': '🎯', 'VISION': '🎯', 'MISSION': '🎯',
+            'CONTEXT': '🧠', 'INTEL': '🧠', 'BUSINESS': '🧠', 'ANALYSIS': '🧠', 'STRATEGY': '🧠',
+            'REQUIRE': '⚙️', 'FUNCTIONAL': '⚙️', 'TECHNICAL': '⚙️', 'ARCHITECTURE': '⚙️',
+            'CONSTRAINT': '🛡️', 'SECURITY': '🛡️', 'COMPLI': '🛡️', 'STANDARD': '🛡️', 'PRIVACY': '🛡️',
+            'DELIVER': '✅', 'RESULT': '✅', 'OUTPUT': '✅', 'SUCCESS': '✅',
+            'AUDIENCE': '👥', 'CUSTOMER': '👥', 'TARGET': '👥', 'PATIENT': '👥',
+            'SEO': '🔍', 'MARKETING': '📣', 'CHANNEL': '📣', 'CAMPAIGN': '📣',
+            'COMPOSITION': '🎨', 'LIGHTING': '💡', 'CAMERA': '📷', 'COLOR': '🎨',
+            'NEGATIVE': '⛔', 'PLATFORM': '🚀', 'DEPLOY': '🚀', 'DEVOPS': '🚀',
+            'DATA': '📊', 'MODEL': '🤖', 'ML': '🤖', 'AI': '🤖', 'AGENT': '🤖',
+            'SUBJECT': '🖼️', 'CREATIVE': '✨', 'STYLE': '✨', 'MOOD': '✨', 'VISUAL': '✨',
+            'MEASURE': '📈', 'KPI': '📈', 'METRIC': '📈', 'ETHIC': '⚖️',
+            'AI RESPONSE': '💬', 'OPTIM': '💬', 'WORKFLOW': '🔄', 'CODE': '💻'
+        };
         parts.forEach(p => {
-            if (!p.trim()) return;
+            if (!p || !p.trim()) return;
             let lines = p.trim().split('\n');
             let headerMatch = lines[0].match(/## (.*)/);
             if (headerMatch) {
                 let headerText = headerMatch[1].trim();
-                let icon = "📝";
-                if(headerText.includes("ROLE")) icon = "👤";
-                if(headerText.includes("OBJECTIVE")) icon = "🎯";
-                if(headerText.includes("CONTEXT")) icon = "🧠";
-                if(headerText.includes("REQUIREMENTS")) icon = "⚙️";
-                if(headerText.includes("CONSTRAINTS") || headerText.includes("PRACTICES")) icon = "🛡️";
-                if(headerText.includes("RESULT") || headerText.includes("DELIVERABLE")) icon = "✅";
+                let icon = '📝';
+                for (const [key, ico] of Object.entries(iconMap)) {
+                    if (headerText.toUpperCase().includes(key)) { icon = ico; break; }
+                }
                 let contentBody = lines.slice(1).join('\n').trim();
+                if(!contentBody || contentBody === 'undefined' || contentBody === 'null') return;
+                
+                // Process markdown formatting
                 contentBody = contentBody.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                contentBody = contentBody.replace(/- (.*)/g, '<li>$1</li>');
-                contentBody = contentBody.replace(/(<li>.*<\/li>\n?)+/g, match => `<ul>${match}</ul>`);
+                contentBody = contentBody.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+                contentBody = contentBody.replace(/`([^`]+)`/g, '<code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:0.85em;">$1</code>');
+                // Convert bullet chars (•, -, *) at line start
+                contentBody = contentBody.replace(/^[•\-\*] (.+)$/gm, '<li>$1</li>');
+                contentBody = contentBody.replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`);
+                // Wrap remaining paragraphs
                 contentBody = contentBody.split('\n\n').map(c => {
-                    if(!c.startsWith('<ul')) return `<p>${c}</p>`; return c;
+                    c = c.trim();
+                    if (!c || c.startsWith('<ul') || c.startsWith('<li')) return c;
+                    return `<p>${c}</p>`;
                 }).join('');
                 html += `<div class="pe-doc-section"><div class="pe-doc-section-header">${icon} ${headerText}</div><div class="pe-doc-section-content">${contentBody}</div></div>`;
             }
@@ -1696,121 +1725,119 @@
         return html;
     }
 
-    function renderInsights(scoreObj) {
-        // V3: quality object from Agent 9
-        const q = scoreObj;
-        const m = q.metrics ? q.metrics.enhanced : {};
-        const orig = q.metrics ? q.metrics.original : {};
-        const renderBar = (name, val, origVal) => {
-            let color = val > 7 ? "#10b981" : (val > 4 ? "#f59e0b" : "#ef4444");
-            const improvement = origVal !== undefined ? ` <span style="font-size:0.75rem; color:#10b981; font-weight:600;">+${val - origVal}</span>` : '';
-            return `<div class="pe-v5-metric-card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div class="pe-v5-metric-name">${name}</div>
-                    <div style="font-weight:700; color:${color};">${val}/10${improvement}</div>
-                </div>
-                <div class="pe-v5-metric-bar-bg"><div class="pe-v5-metric-bar-fill" style="width:${val*10}%; background:${color};"></div></div>
-            </div>`;
-        };
-
+    function renderInsights(insights) {
+        if (!insights) return '<div style="padding:20px;text-align:center;">No insights generated.</div>';
+        const escapeHtml = (unsafe) => (unsafe || '').toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        
         let h = `<div style="display:flex; gap:24px; margin-bottom:24px; flex-wrap:wrap; align-items:center;">
             <div style="text-align:center;">
-                <div style="font-size:3rem; font-weight:800; color:#0f172a; line-height:1;">${q.enhancedScore || 99}<span style="font-size:1.5rem; color:#94a3b8;">/100</span></div>
-                <div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b; margin-top:4px;">V3 Quality Score</div>
+                <div style="font-size:3rem; font-weight:800; color:#0f172a; line-height:1;">${insights.overallScore || 99}<span style="font-size:1.5rem; color:#94a3b8;">/100</span></div>
+                <div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b; margin-top:4px;">Enterprise Quality Score</div>
             </div>
-            <div style="flex:1; min-width:200px;">
-                <div style="margin-bottom:8px;"><span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b;">Detected Domain</span><br><strong>${(q.detectedDomains||[]).join(' + ')}</strong></div>
-                <div style="margin-bottom:8px;"><span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b;">Estimated AI Performance Gain</span><br><strong style="color:#10b981;">${q.estimatedPerformanceGain || '400%'}</strong></div>
-                <div><span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b;">Confidence</span><br><strong>${q.confidence || '97%'}</strong></div>
+            <div style="flex:1; min-width:200px; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                <div><span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b;">Detected Intent</span><br><strong style="color:#2563eb;">${escapeHtml(insights.detectedIntent)}</strong></div>
+                <div><span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b;">Complexity</span><br><strong>${escapeHtml(insights.estimatedComplexity)}</strong></div>
+                <div><span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b;">Confidence</span><br><strong style="color:#10b981;">${escapeHtml(insights.confidenceLevel)}</strong></div>
+                <div><span style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b;">Readiness</span><br><strong style="color:#8b5cf6;">${escapeHtml(insights.estimatedPromptReadiness)}</strong></div>
             </div>
         </div>`;
 
-        // Expert Personas
-        if (q.expertPersonas && q.expertPersonas.length > 0) {
-            h += `<div style="margin-bottom:16px;"><div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:8px;">Expert Team Assigned</div>
-            <div style="display:flex; flex-wrap:wrap; gap:6px;">${q.expertPersonas.map(e => `<span style="background:#e0e7ff; color:#3730a3; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:600;">${escapeHtml(e)}</span>`).join('')}</div></div>`;
+        // Domains
+        if (insights.detectedDomains && Array.isArray(insights.detectedDomains) && insights.detectedDomains.length > 0) {
+            h += `<div style="margin-bottom:16px;"><div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:8px;">Detected Domains (Multi-Classification)</div>
+            <div style="display:flex; flex-wrap:wrap; gap:6px;">${insights.detectedDomains.map(d => `<span style="background:#f1f5f9; color:#0f172a; padding:6px 12px; border-radius:8px; font-size:0.85rem; font-weight:600; border:1px solid #e2e8f0;">${escapeHtml(d.domain || d)} <span style="color:#64748b;font-weight:400;margin-left:4px;">${d.confidence ? d.confidence + '%' : ''}</span></span>`).join('')}</div></div>`;
         }
 
-        h += `<div class="pe-v5-metric-grid">`;
-        h += renderBar("Intent Clarity", m.IntentClarity||10, orig.IntentClarity);
-        h += renderBar("Domain Accuracy", m.DomainAccuracy||10, orig.DomainAccuracy);
-        h += renderBar("Context Depth", m.ContextDepth||10, orig.ContextDepth);
-        h += renderBar("Expert Persona Quality", m.ExpertPersonaQuality||10, orig.ExpertPersonaQuality);
-        h += renderBar("Requirement Expansion", m.RequirementExpansion||10, orig.RequirementExpansion);
-        h += renderBar("Constraint Quality", m.ConstraintQuality||10, orig.ConstraintQuality);
-        h += renderBar("Specificity", m.Specificity||10, orig.Specificity);
-        h += renderBar("Professionalism", m.Professionalism||10, orig.Professionalism);
-        h += renderBar("Technical Accuracy", m.TechnicalAccuracy||10, orig.TechnicalAccuracy);
-        h += renderBar("Actionability", m.Actionability||10, orig.Actionability);
-        h += renderBar("Prompt Engineering", m.PromptEngineering||10, orig.PromptEngineering);
-        h += `</div>`;
-
-        // Strengths
-        if (q.strengths && q.strengths.length > 0) {
-            h += `<div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:16px; border-radius:12px; margin-bottom:12px;">
-                <strong style="color:#166534;"><i class="fas fa-check-circle"></i> Strengths:</strong>
-                <ul style="color:#15803d; margin:8px 0 0 20px;">${q.strengths.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
-            </div>`;
+        // Knowledge Packs
+        if (insights.knowledgePacks && insights.knowledgePacks.length > 0) {
+            h += `<div style="margin-bottom:16px;"><div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:8px;">Knowledge Packs Utilized</div>
+            <div style="display:flex; flex-wrap:wrap; gap:6px;">${insights.knowledgePacks.map(k => `<span style="background:#dcfce7; color:#166534; padding:6px 12px; border-radius:8px; font-size:0.85rem; font-weight:600; border:1px solid #bbf7d0;"><i class="fas fa-database" style="margin-right:6px;"></i>${escapeHtml(k)}</span>`).join('')}</div></div>`;
         }
 
-        // Weaknesses (of original)
-        if (q.weaknesses && q.weaknesses.length > 0) {
-            h += `<div style="background:#fef2f2; border:1px solid #fecaca; padding:16px; border-radius:12px; margin-bottom:12px;">
-                <strong style="color:#991b1b;"><i class="fas fa-exclamation-circle"></i> Issues Found in Original & Fixed:</strong>
-                <ul style="color:#b91c1c; margin:8px 0 0 20px;">${q.weaknesses.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
-            </div>`;
+        // Expert Team
+        if (insights.expertTeam && insights.expertTeam.length > 0) {
+            h += `<div style="margin-bottom:24px;"><div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:8px;">Assigned Expert Task Force</div>
+            <div style="display:flex; flex-wrap:wrap; gap:6px;">${insights.expertTeam.map(e => `<span style="background:#e0e7ff; color:#3730a3; padding:6px 12px; border-radius:8px; font-size:0.85rem; font-weight:600; border:1px solid #c7d2fe;"><i class="fas fa-user-tie" style="margin-right:6px;"></i>${escapeHtml(e)}</span>`).join('')}</div></div>`;
         }
 
-        // Improvements
-        if (q.improvements && q.improvements.length > 0) {
+        // Value Add Metrics
+        h += `<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin-bottom:24px;">
+            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; text-align:center;">
+                <div style="font-size:2rem; font-weight:700; color:#2563eb; margin-bottom:4px;">${insights.businessContextInferred || 0}</div>
+                <div style="font-size:0.8rem; font-weight:600; color:#64748b; text-transform:uppercase;">Context Rules Inferred</div>
+            </div>
+            <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:16px; text-align:center;">
+                <div style="font-size:2rem; font-weight:700; color:#10b981; margin-bottom:4px;">${insights.requirementsAdded || 0}</div>
+                <div style="font-size:0.8rem; font-weight:600; color:#64748b; text-transform:uppercase;">Requirements Expanded</div>
+            </div>
+        </div>`;
+
+        // Optimization Summary
+        if (insights.optimizationSummary) {
             h += `<div style="background:#eff6ff; border:1px solid #bfdbfe; padding:16px; border-radius:12px; margin-bottom:12px;">
-                <strong style="color:#1d4ed8;"><i class="fas fa-lightbulb"></i> Suggestions:</strong>
-                <ul style="color:#1e40af; margin:8px 0 0 20px;">${q.improvements.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
+                <strong style="color:#1d4ed8;"><i class="fas fa-bolt"></i> Optimization Summary:</strong>
+                <p style="color:#1e40af; margin:8px 0 0 0; font-size:0.95rem;">${escapeHtml(insights.optimizationSummary)}</p>
             </div>`;
-        }
-
-        // Supported Models
-        if (q.supportedModels && q.supportedModels.length > 0) {
-            h += `<div style="margin-top:16px;"><div style="font-size:0.8rem; font-weight:700; text-transform:uppercase; color:#64748b; margin-bottom:8px;">Optimized For</div>
-            <div style="display:flex; flex-wrap:wrap; gap:6px;">${q.supportedModels.map(m => `<span style="background:#f1f5f9; color:#334155; padding:4px 10px; border-radius:20px; font-size:0.8rem; font-weight:600;">✓ ${escapeHtml(m)}</span>`).join('')}</div></div>`;
         }
 
         return h;
     }
 
-    $("#peEnhance").addEventListener("click", function () {
+    $("#peEnhance").addEventListener("click", async function () {
         var input = $("#peInput").value.trim();
         if (!input) { showToast("Please enter a prompt.", "error"); return; }
-        
-        var result = window.PromptEnhancerEngine.enhance(input);
-        if (!result) return;
-        
+
+        var btn = this;
+        var originalBtnContent = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+        btn.disabled = true;
+
+        // Start loading UI immediately
         $("#peEmptyState").style.display = "none";
         $("#peResult").style.display = "none";
         $("#pePipeline").style.display = "flex";
         
-        var btn = this;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-        btn.disabled = true;
-
+        var agentIcons = ['fa-brain','fa-sitemap','fa-project-diagram','fa-users','fa-chart-line','fa-expand-alt','fa-cogs','fa-pen-fancy','fa-rocket','fa-shield-alt'];
         var steps = [];
-        for(var i=1; i<=6; i++) steps.push($("#pipe"+i));
-        steps.forEach(s => { s.className = "pe-v5-pipe-step"; s.querySelector('.pe-v5-pipe-icon').innerHTML = '<i class="fas fa-spinner"></i>'; });
+        for(var i = 1; i <= 10; i++) {
+            var el2 = $("#pipe" + i);
+            if (el2) steps.push({el: el2, icon: agentIcons[i-1]});
+        }
+        steps.forEach(s => {
+            s.el.className = "pe-v5-pipe-step";
+            s.el.querySelector('.pe-v5-pipe-icon').innerHTML = '<i class="fas ' + s.icon + '"></i>';
+        });
         
-        let stepIdx = 0;
-        let interval = setInterval(function() {
-            if (stepIdx > 0) {
-                steps[stepIdx-1].className = "pe-v5-pipe-step done";
-                steps[stepIdx-1].querySelector('.pe-v5-pipe-icon').innerHTML = '<i class="fas fa-check"></i>';
+        // Show the first agent is active while waiting for API
+        if (steps[0]) steps[0].el.className = "pe-v5-pipe-step active";
+
+        // Call the V7 API
+        var result = await window.PromptEnhancerEngine.enhance(input);
+        
+        if (!result) { 
+            showToast("Enhancement failed. Please try again.", "error"); 
+            btn.innerHTML = originalBtnContent;
+            btn.disabled = false;
+            $("#pePipeline").style.display = "none";
+            $("#peEmptyState").style.display = "flex";
+            return; 
+        }
+
+        // Run the rest of the pipeline animation quickly
+        var stepIdx = 0;
+        var interval = setInterval(function() {
+            if (stepIdx > 0 && steps[stepIdx-1]) {
+                steps[stepIdx-1].el.className = "pe-v5-pipe-step done";
+                steps[stepIdx-1].el.querySelector('.pe-v5-pipe-icon').innerHTML = '<i class="fas fa-check"></i>';
             }
             if (stepIdx < steps.length) {
-                steps[stepIdx].className = "pe-v5-pipe-step active";
+                steps[stepIdx].el.className = "pe-v5-pipe-step active";
                 stepIdx++;
             } else {
                 clearInterval(interval);
                 finishEnhance(result, btn);
             }
-        }, 300); // Fast 300ms pipelining
+        }, 150);
     });
 
     function finishEnhance(result, btn) {
@@ -1820,12 +1847,31 @@
         btn.innerHTML = '<i class="fas fa-magic"></i> Generate Intelligence';
         btn.disabled = false;
 
-        // Render Tabs — V3 engine uses result.quality instead of result.score
+        var el_container = document.querySelector(".pe-v5-container"); // Handle context issues with el if needed
+        var tabsToClear = document.querySelectorAll(".pe-v5-tab");
+        var contentToClear = document.querySelectorAll(".pe-v5-content");
+        
+        if (tabsToClear.length > 0) {
+            tabsToClear.forEach(t => t.classList.remove("active"));
+            contentToClear.forEach(c => c.classList.remove("active"));
+            var previewTab = document.querySelector(".pe-v5-tab[data-tab='tPreview']");
+            if (previewTab) previewTab.classList.add("active");
+            var previewContent = $("#tPreview");
+            if (previewContent) previewContent.classList.add("active");
+        }
+
         $("#tPreview").innerHTML = renderPreview(result.enhanced);
         $("#codeMarkdown").textContent = result.enhanced;
-        $("#codePlain").textContent = result.enhanced.replace(/\*\*/g, '').replace(/## /g, '').replace(/##/g, '');
-        $("#codeJSON").textContent = result.jsonStr;
-        $("#insightsContainer").innerHTML = renderInsights(result.quality || result.score || {});
+        $("#codePlain").textContent = result.enhanced
+            .replace(/\*\*/g, '').replace(/\*/g, '')
+            .replace(/## /g, '').replace(/##/g, '')
+            .replace(/---/g, '─────────────');
+        $("#codeJSON").textContent = JSON.stringify({
+            prompt: result.enhanced,
+            insights: result.insights,
+            rawContext: result.raw
+        }, null, 2);
+        $("#insightsContainer").innerHTML = renderInsights(result.insights || {});
     }
 
     // Tabs Logic
@@ -1842,7 +1888,7 @@
 
     // Export Logic
     $("#btnCopyMD").addEventListener("click", function() { if(_currentResult) copyText(_currentResult.enhanced); });
-    $("#btnCopyJSON").addEventListener("click", function() { if(_currentResult) copyText(_currentResult.jsonStr); });
+    $("#btnCopyJSON").addEventListener("click", function() { if(_currentResult) copyText($("#codeJSON").textContent); });
     $("#btnCopyPlain").addEventListener("click", function() { if(_currentResult) copyText($("#codePlain").textContent); });
     
     $("#btnDownloadTXT").addEventListener("click", function() { if(_currentResult) downloadFile("prompt.txt", $("#codePlain").textContent); });

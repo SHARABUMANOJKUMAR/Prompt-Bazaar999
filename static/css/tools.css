@@ -476,6 +476,9 @@
   background: var(--color-bg-main, #F8FAFC);
   transition: border-color 0.2s, box-shadow 0.2s;
   box-sizing: border-box;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: auto;
 }
 .tool-textarea:focus {
   outline: none;
@@ -576,8 +579,14 @@
 /* Split view (for markdown, text compare) */
 .tool-split {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 20px;
+}
+
+@media (min-width: 992px) {
+  .tool-split {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 /* Tool option toggles */

@@ -1079,5 +1079,40 @@ def share_viewer(share_id):
     return render_template('share_viewer.html', prompt_data=data)
 
 
+# =============================================================================
+# V7 MULTI-AGENT PROMPT INTELLIGENCE API
+# =============================================================================
+
+@app.route('/api/v7/enhance', methods=['POST'])
+def enhance_prompt_v7():
+    """
+    V7 Multi-Agent Prompt Intelligence endpoint.
+    Runs the full 7-agent pipeline to transform user input
+    into a production-ready prompt.
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"error": "Request body must be JSON."}), 400
+
+        user_input = data.get("input", "").strip()
+        if not user_input:
+            return jsonify({"error": "Input text is required."}), 400
+
+        if len(user_input) > 10000:
+            return jsonify({"error": "Input too long. Maximum 10,000 characters."}), 400
+
+        from services.agents.orchestrator import get_orchestrator
+        orchestrator = get_orchestrator()
+        result = orchestrator.run(user_input)
+
+        return jsonify(result), 200
+
+    except Exception as e:
+        logging.error(f"V7 Enhance API error: {e}", exc_info=True)
+        return jsonify({"error": "Internal server error during prompt enhancement."}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
