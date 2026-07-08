@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Bazaar - Shared Prompt</title>
+    
+    <!-- Using the same CSS base as the rest of the site -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg-primary: #F8FAFC;
+            --color-bg-secondary: #FFFFFF;
+            --color-primary: #3B82F6;
+            --color-primary-hover: #2563EB;
+            --color-text-primary: #1E293B;
+            --color-text-secondary: #475569;
+            --color-border: #E2E8F0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--color-bg-secondary);
+            border-bottom: 1px solid var(--color-border);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 24px;
+            flex: 1;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .share-card {
+            background: var(--color-bg-secondary);
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--color-border);
+            padding: 40px;
+            margin-bottom: 32px;
+        }
+
+        .prompt-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .prompt-meta {
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .badge {
+            background: #EFF6FF;
+            color: var(--color-primary);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .prompt-content {
+            background: #1E293B;
+            color: #F8FAFC;
+            padding: 24px;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            margin-bottom: 32px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #F1F5F9;
+            color: var(--color-text-primary);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: #E2E8F0;
+        }
+
+        .cta-box {
+            text-align: center;
+            padding: 32px;
+            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+
+        .cta-box h3 {
+            margin: 0 0 12px 0;
+            font-size: 1.5rem;
+        }
+
+        .cta-box p {
+            color: var(--color-text-secondary);
+            margin: 0 0 24px 0;
+        }
+
+        @media (max-width: 768px) {
+            .share-card {
+                padding: 24px;
+            }
+            .actions {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">🚀 Prompt Bazaar</a>
+        <a href="/tools" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">Enhance a Prompt</a>
+    </header>
+
+    <main class="container">
+        <div class="share-card">
+            <h1 class="prompt-title">Enhanced Prompt</h1>
+            <div class="prompt-meta">
+                <span class="badge">{{ prompt_data.intent if prompt_data.intent else 'General' }}</span>
+                <span>Quality Score: <strong>{{ prompt_data.score.overall if prompt_data.score else 'N/A' }} / 100</strong></span>
+            </div>
+
+            <div class="prompt-content" id="promptText">{{ prompt_data.enhanced }}</div>
+
+            <div class="actions">
+                <button class="btn btn-primary" onclick="copyPrompt()">
+                    📋 Copy Prompt
+                </button>
+                <button class="btn btn-secondary" onclick="openChatGPT()">
+                    🤖 Open in ChatGPT
+                </button>
+                <button class="btn btn-secondary" onclick="downloadTxt()">
+                    💾 Download TXT
+                </button>
+            </div>
+        </div>
+
+        <div class="cta-box">
+            <h3>Want to engineer prompts like a pro?</h3>
+            <p>Use our local AI engine to transform simple statements into highly optimized, context-rich prompts instantly.</p>
+            <a href="/tools" class="btn btn-primary">Try Prompt Enhancer Pro for Free</a>
+        </div>
+    </main>
+
+    <script>
+        const promptText = `{{ prompt_data.enhanced | replace('`', '\\`') | safe }}`;
+
+        function copyPrompt() {
+            navigator.clipboard.writeText(promptText).then(() => {
+                const btn = document.querySelector('.btn-primary');
+                const orig = btn.innerHTML;
+                btn.innerHTML = '✅ Copied!';
+                setTimeout(() => { btn.innerHTML = orig; }, 2000);
+            });
+        }
+
+        function openChatGPT() {
+            const encoded = encodeURIComponent(promptText);
+            window.open(`https://chatgpt.com/?q=${encoded}`, '_blank');
+        }
+
+        function downloadTxt() {
+            const blob = new Blob([promptText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'enhanced-prompt.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

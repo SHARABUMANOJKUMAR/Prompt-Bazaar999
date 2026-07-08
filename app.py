@@ -1032,5 +1032,52 @@ def api_get_payments():
         return jsonify(all_payments)
 
 
+
+# ==========================================
+# SHARED PROMPTS API
+# ==========================================
+import uuid
+
+@app.route('/api/share_prompt', methods=['POST'])
+def api_share_prompt():
+    if not firebase_db:
+        return jsonify({"success": False, "error": "Firebase DB not initialized"}), 500
+        
+    data = request.json
+    if not data or 'enhanced' not in data:
+        return jsonify({"success": False, "error": "Missing prompt data"}), 400
+        
+    share_id = str(uuid.uuid4())[:8] # short id
+    
+    doc_data = {
+        "share_id": share_id,
+        "original": data.get("original", ""),
+        "enhanced": data.get("enhanced", ""),
+        "intent": data.get("intent", ""),
+        "score": data.get("score", {}),
+        "created_at": firestore.SERVER_TIMESTAMP
+    }
+    
+    try:
+        firebase_db.collection("shared_prompts").document(share_id).set(doc_data)
+        # Use production domain for QR scanning
+        share_url = f"https://promptbazaar.in/share/{share_id}"
+        return jsonify({"success": True, "shareId": share_id, "shareUrl": share_url})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/share/<share_id>')
+def share_viewer(share_id):
+    if not firebase_db:
+        return "Database error", 500
+        
+    doc = firebase_db.collection("shared_prompts").document(share_id).get()
+    if not doc.exists:
+        return "Prompt not found or link expired.", 404
+        
+    data = doc.to_dict()
+    return render_template('share_viewer.html', prompt_data=data)
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
