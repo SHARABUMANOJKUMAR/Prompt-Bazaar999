@@ -1,38 +1,15 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "static",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      "app.py",
-      "requirements.txt",
-      "*.py",
-      "__pycache__/**",
-      "data/**",
-      ".env",
-      ".python-version",
-      "docs/**",
-      ".ai-session/**"
+      "**/node_modules/**"
     ],
     "rewrites": [
-      { "source": "/login", "destination": "/login.html" },
-      { "source": "/signup", "destination": "/signup.html" },
-      { "source": "/dashboard", "destination": "/dashboard.html" },
-      { "source": "/profile", "destination": "/profile.html" },
-      { "source": "/wishlist", "destination": "/profile.html" },
-      { "source": "/payments", "destination": "/profile.html" },
-      { "source": "/gallery", "destination": "/prompt-gallery.html" },
-      { "source": "/admin", "destination": "/admin-dashboard.html" },
-      { "source": "/tools", "destination": "/tools.html" },
-      { "source": "/success", "destination": "/success.html" }
-    ],
-    "headers": [
       {
-        "source": "/static/**",
-        "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=31536000" }
-        ]
+        "source": "**",
+        "function": "app"
       }
     ]
   }
