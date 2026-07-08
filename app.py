@@ -51,15 +51,12 @@ app.secret_key = os.getenv('SECRET_KEY', 'dev_key')
 import logging
 logging.basicConfig(level=logging.INFO)
 
-@app.route('/health')
-def health_check():
-    """Lightweight endpoint for keep-alive ping."""
-    logging.info("Health Check Request Received. Responding HTTP 200 OK.")
-    return jsonify({
-        "status": "ok",
-        "service": "Prompt Bazaar",
-        "uptime": True
-    }), 200
+@app.route("/health")
+def health():
+    return {
+        "status": "healthy",
+        "service": "Prompt Bazaar API"
+    }, 200
 @app.before_request
 def handle_options_preflight():
     if request.method == 'OPTIONS':
