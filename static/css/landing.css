@@ -37,6 +37,72 @@ section {
   position: relative;
 }
 
+/* =======================================
+   Base Styles (Mobile First: < 768px)
+   ======================================= */
+.container {
+  width: 100%;
+  padding-left: clamp(16px, 4vw, 24px);
+  padding-right: clamp(16px, 4vw, 24px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =======================================
+   Tablet Styles (min-width: 768px)
+   ======================================= */
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+    padding-left: clamp(24px, 4vw, 32px);
+    padding-right: clamp(24px, 4vw, 32px);
+  }
+}
+
+/* =======================================
+   Small Laptop / Tablet Landscape (min-width: 1024px)
+   ======================================= */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 960px;
+    padding-left: clamp(16px, 2vw, 24px);
+    padding-right: clamp(16px, 2vw, 24px);
+  }
+}
+
+/* =======================================
+   Standard Laptop / Small Desktop (min-width: 1280px)
+   ======================================= */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1140px;
+    padding-left: clamp(24px, 2vw, 32px);
+    padding-right: clamp(24px, 2vw, 32px);
+  }
+}
+
+/* =======================================
+   Large Desktop / Full HD (min-width: 1440px)
+   ======================================= */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1360px;
+    padding-left: clamp(32px, 3vw, 48px);
+    padding-right: clamp(32px, 3vw, 48px);
+  }
+}
+
+/* =======================================
+   Extra Large / 4K Displays (min-width: 1920px)
+   ======================================= */
+@media (min-width: 1920px) {
+  .container {
+    max-width: 1600px;
+    padding-left: clamp(64px, 4vw, 120px);
+    padding-right: clamp(64px, 4vw, 120px);
+  }
+}
+
 /* --- Floating Background Decorations --- */
 .bg-decorations {
   position: fixed;
