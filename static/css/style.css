@@ -889,3 +889,18 @@ img {
         min-height: 80px;
     }
 }
+
+/* =======================================
+   Auth Card Desktop Fixes
+   ======================================= */
+@media (min-width: 768px) {
+  .card-auth .btn {
+    width: 100% !important;
+  }
+  .card-auth .divider {
+    margin: 24px 0 !important;
+  }
+  .card-auth p.text-center {
+    margin-top: 24px !important;
+  }
+}
