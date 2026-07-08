@@ -296,14 +296,9 @@ body {
   box-shadow: 0 4px 12px rgba(13, 110, 253, 0.2);
 }
 
-/* PROMPT GRID */
+/* PROMPT GRID (Relies on global .responsive-grid) */
 .prompt-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 24px 60px;
+  padding-bottom: 60px;
 }
 
 /* PROMPT CARD */
@@ -567,39 +562,7 @@ body {
   box-shadow: var(--shadow-md);
 }
 
-/* ==========================================================================
-   RESPONSIVE BREAKPOINTS (MOBILE-FIRST & FLUID)
-   ========================================================================== */
-.prompt-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* Mobile: 1 column */
-  gap: 16px;
-  padding: 0 16px 30px;
-}
-
-/* Tablet (768px+) */
-@media (min-width: 768px) {
-  .prompt-grid {
-    grid-template-columns: repeat(2, 1fr); /* Tablet: 2 columns */
-    padding: 0 24px 40px;
-  }
-}
-
-/* Laptop (1024px+) */
-@media (min-width: 1024px) {
-  .prompt-grid {
-    grid-template-columns: repeat(3, 1fr); /* Laptop: 3 columns */
-  }
-}
-
-/* Desktop Extra Large (1440px+) */
-@media (min-width: 1440px) {
-  .prompt-grid {
-    grid-template-columns: repeat(4, 1fr); /* Desktop XL: 4 columns */
-    max-width: 1600px;
-    margin: 0 auto;
-  }
-}
+/* Removed duplicate grid media queries, relying on style.css .responsive-grid */
 
 /* Slide Up Modal for Mobile */
 @media (max-width: 991px) {

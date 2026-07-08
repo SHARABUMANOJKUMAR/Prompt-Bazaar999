@@ -316,11 +316,7 @@
   border-radius: 999px;
 }
 
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
-}
+/* Removed .tools-grid, using global .responsive-grid instead */
 
 /* Tool Card */
 .tool-card {
@@ -576,16 +572,18 @@
   margin-top: 2px;
 }
 
-/* Split view (for markdown, text compare) */
+/* Split view (Editor vs Output) */
 .tool-split {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: var(--space-lg);
 }
 
-@media (min-width: 992px) {
+/* Tablet and Desktop: 60% Editor / 40% Output */
+@media (min-width: 768px) {
   .tool-split {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 6fr 4fr;
+    gap: var(--space-xl);
   }
 }
 
@@ -754,7 +752,8 @@
   font-size: 0.82rem;
   line-height: 1.6;
   overflow-x: auto;
-  white-space: pre;
+  white-space: pre-wrap;
+  word-break: break-word;
   color: var(--color-text-main, #0F172A);
 }
 .json-error {
