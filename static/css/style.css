@@ -258,6 +258,7 @@ a:hover {
 .card-auth {
   width: 100%;
   max-width: 440px;
+  height: auto; /* Override .card height: 100% */
   margin: 0 auto;
   border-radius: 20px;
   box-shadow:
