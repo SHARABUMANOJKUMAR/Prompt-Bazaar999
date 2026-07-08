@@ -148,7 +148,7 @@
       html += '<span class="tools-category-title">' + cat.label + '</span>';
       html += '<span class="tools-category-count">' + tools.length + ' tool' + (tools.length > 1 ? 's' : '') + '</span>';
       html += '</div>';
-      html += '<div class="responsive-grid">';
+      html += '<div class="tools-grid">';
       tools.forEach(function (t) {
         html += '<div class="tool-card" data-tool="' + t.id + '">';
         html += '<div class="tool-card-icon ' + t.cat + '">' + t.icon + '</div>';

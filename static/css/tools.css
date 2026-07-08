@@ -316,7 +316,11 @@
   border-radius: 999px;
 }
 
-/* Removed .tools-grid, using global .responsive-grid instead */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
 
 /* Tool Card */
 .tool-card {
@@ -572,18 +576,16 @@
   margin-top: 2px;
 }
 
-/* Split view (Editor vs Output) */
+/* Split view (for markdown, text compare) */
 .tool-split {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--space-lg);
+  gap: 20px;
 }
 
-/* Tablet and Desktop: 60% Editor / 40% Output */
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .tool-split {
-    grid-template-columns: 6fr 4fr;
-    gap: var(--space-xl);
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -752,8 +754,7 @@
   font-size: 0.82rem;
   line-height: 1.6;
   overflow-x: auto;
-  white-space: pre-wrap;
-  word-break: break-word;
+  white-space: pre;
   color: var(--color-text-main, #0F172A);
 }
 .json-error {
