@@ -95,11 +95,11 @@
   ];
 
   var CATEGORIES = [
-    { id:'prompt', label:'Prompt Tools', icon:'📝' },
-    { id:'dev', label:'Developer Tools', icon:'💻' },
-    { id:'text', label:'Text Tools', icon:'✍️' },
-    { id:'design', label:'Design Tools', icon:'🎨' },
-    { id:'security', label:'Security Tools', icon:'🔒' }
+    { id:'prompt', label:'📝 Prompt Tools', icon:'📝' },
+    { id:'dev', label:'💻 Developer Tools', icon:'💻' },
+    { id:'text', label:'✍️ Text Tools', icon:'✍️' },
+    { id:'design', label:'🎨 Design Tools', icon:'🎨' },
+    { id:'security', label:'🔒 Security Tools', icon:'🔒' }
   ];
 
   // ── Sidebar Logic ───────────────────────────────────────────
