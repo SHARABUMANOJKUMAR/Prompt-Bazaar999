@@ -906,17 +906,13 @@ img {
 }
 
 /* =======================================
-   Auth Card Laptop & Desktop Padding
+   Auth Card Laptop & Desktop Styling
    ======================================= */
 @media (min-width: 1024px) {
   .card-auth {
-    padding: 40px !important; /* Laptop padding */
-    max-width: 480px; /* Slightly wider for laptop/desktop */
-  }
-}
-@media (min-width: 1200px) {
-  .card-auth {
-    padding: 48px 64px !important; /* Premium Desktop padding */
-    max-width: 520px; /* Give it more room on large screens */
+    width: 100% !important;
+    max-width: 440px !important;
+    margin: 0 auto !important;
+    padding: clamp(32px, 4vw, 48px) !important;
   }
 }
