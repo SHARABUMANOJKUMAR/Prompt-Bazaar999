@@ -635,6 +635,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/auth.js') }}"></script>
 <script src="{{ url_for('static', filename='js/admin.js') }}?v={{ range(1, 100000) | random }}"></script>
 <script>
     function toggleAdminSidebar() {
