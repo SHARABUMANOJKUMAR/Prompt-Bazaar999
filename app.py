@@ -51,12 +51,7 @@ app.secret_key = os.getenv('SECRET_KEY', 'dev_key')
 import logging
 logging.basicConfig(level=logging.INFO)
 
-@app.route("/health")
-def health():
-    return {
-        "status": "healthy",
-        "service": "Prompt Bazaar API"
-    }, 200
+
 @app.before_request
 def handle_options_preflight():
     if request.method == 'OPTIONS':
