@@ -4,6 +4,9 @@
    ============================================================================ */
 'use strict';
 (function () {
+  const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+      ? 'http://127.0.0.1:5000' 
+      : 'https://prompt-bazaar999.onrender.com';
 
   /* ══════════════════════════════════════════════════════════════════════════
      LOCAL UTILITIES — Stats and lightweight preview detection
@@ -100,7 +103,7 @@
     if (!input || !input.trim()) return null;
 
     try {
-      var response = await fetch('/api/v7/enhance', {
+      var response = await fetch(`${API_BASE_URL}/api/v7/enhance`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ input: input.trim() })
