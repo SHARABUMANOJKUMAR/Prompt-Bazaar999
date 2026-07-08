@@ -62,7 +62,13 @@ def handle_options_preflight():
     if request.method == 'OPTIONS':
         response = jsonify({'success': True})
         origin = request.headers.get('Origin')
-        allowed_origins = ["https://prompt-bazaar.web.app", "http://localhost:5000", "http://127.0.0.1:5000"]
+        allowed_origins = [
+            "https://prompt-bazaar.web.app", 
+            "https://promptbazzar.netlify.app",
+            "https://prompt-bazaar.netlify.app",
+            "http://localhost:5000", 
+            "http://127.0.0.1:5000"
+        ]
         if not origin or origin not in allowed_origins:
             origin = "https://prompt-bazaar.web.app"
         response.headers['Access-Control-Allow-Origin'] = origin
@@ -74,7 +80,13 @@ def handle_options_preflight():
 @app.after_request
 def add_cors_headers(response):
     origin = request.headers.get('Origin')
-    allowed_origins = ["https://prompt-bazaar.web.app", "http://localhost:5000", "http://127.0.0.1:5000"]
+    allowed_origins = [
+        "https://prompt-bazaar.web.app", 
+        "https://promptbazzar.netlify.app",
+        "https://prompt-bazaar.netlify.app",
+        "http://localhost:5000", 
+        "http://127.0.0.1:5000"
+    ]
     if not origin or origin not in allowed_origins:
         origin = "https://prompt-bazaar.web.app"
     response.headers['Access-Control-Allow-Origin'] = origin
