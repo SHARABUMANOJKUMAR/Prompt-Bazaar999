@@ -852,8 +852,20 @@ section {
   transition: color 0.3s ease;
 }
 
-.developed-link-premium:hover {
-  color: #60a5fa !important;
+.footer-watermark-premium {
+  display: inline-block;
+  margin: 2px 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.35) !important;
+  text-decoration: none;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.footer-watermark-premium:hover {
+  color: rgba(96, 165, 250, 0.8) !important;
+  opacity: 1;
 }
 
 /* Back to Top button styling */
