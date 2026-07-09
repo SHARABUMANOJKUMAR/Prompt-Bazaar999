@@ -82,6 +82,7 @@
     { id:'ai-prompt-wizard', name:'AI Prompt Wizard', desc:'Create professional AI prompts in less than 30 seconds without writing prompts yourself.', icon:'✨', cat:'prompt', tag:'Prompt' },
     { id:'prompt-json-converter', name:'Prompt to JSON Converter', desc:'Convert text prompts to JSON and vice-versa.', icon:'🔄', cat:'prompt', tag:'Prompt' },
     { id:'token-estimator', name:'Token Estimator', desc:'Estimate GPT tokens, reading & speaking time.', icon:'🔢', cat:'prompt', tag:'Prompt' },
+    { id:'portfolio-builder', name:'Portfolio Builder Pro', desc:'Build a stunning, ATS-friendly portfolio website in minutes — no code required. Choose themes, upload projects, and get a live URL.', icon:'💼', cat:'prompt', tag:'New' },
     { id:'json-formatter', name:'JSON Formatter', desc:'Beautify, minify, and validate JSON with line numbers.', icon:'{ }', cat:'dev', tag:'Developer' },
     { id:'regex-tester', name:'Regex Tester', desc:'Test regex patterns with live match highlighting.', icon:'.*', cat:'dev', tag:'Developer' },
     { id:'base64', name:'Base64 Encoder/Decoder', desc:'Encode and decode Base64 strings and files.', icon:'🔐', cat:'dev', tag:'Developer' },
@@ -1919,7 +1920,169 @@
   };
 
 
+
+  // ── Portfolio Builder Pro ────────────────────────────────────
+  TOOL_RENDERERS['portfolio-builder'] = function (el) {
+    el.innerHTML = [
+      '<div class="tool-header">',
+      '  <button class="tool-back-btn" id="pbBackBtn">',
+      '    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>',
+      '  </button>',
+      '  <div class="tool-title-group">',
+      '    <div class="tool-title">💼 Portfolio Builder Pro</div>',
+      '    <div class="tool-subtitle">AI-powered portfolio generator for students & professionals</div>',
+      '  </div>',
+      '  <span class="tool-card-tag" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;">COMING SOON</span>',
+      '</div>',
+
+      '<div style="max-width:760px;margin:0 auto;padding:0 0 40px;">',
+
+      // Hero banner
+      '<div style="background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%);border-radius:20px;padding:48px 40px;text-align:center;margin-bottom:32px;position:relative;overflow:hidden;">',
+      '  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(99,102,241,0.2) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(139,92,246,0.15) 0%,transparent 60%);"></div>',
+      '  <div style="position:relative;z-index:1;">',
+      '    <div style="font-size:56px;margin-bottom:16px;">💼</div>',
+      '    <h2 style="font-size:28px;font-weight:800;color:#fff;margin:0 0 12px;letter-spacing:-0.5px;">Portfolio Builder Pro</h2>',
+      '    <p style="font-size:16px;color:#a5b4fc;margin:0 0 28px;line-height:1.6;max-width:520px;margin-left:auto;margin-right:auto;">Build a stunning, ATS-friendly portfolio website in under 10 minutes — zero code required. Professional themes, AI-powered content, instant deployment.</p>',
+      '    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">',
+      '      <div style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);border-radius:100px;padding:8px 20px;color:#c7d2fe;font-size:13px;font-weight:600;">✅ Zero Code</div>',
+      '      <div style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);border-radius:100px;padding:8px 20px;color:#c7d2fe;font-size:13px;font-weight:600;">✅ ATS Friendly</div>',
+      '      <div style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);border-radius:100px;padding:8px 20px;color:#c7d2fe;font-size:13px;font-weight:600;">✅ 5 Pro Themes</div>',
+      '      <div style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);border-radius:100px;padding:8px 20px;color:#c7d2fe;font-size:13px;font-weight:600;">✅ Instant URL</div>',
+      '    </div>',
+      '  </div>',
+      '</div>',
+
+      // 10-step workflow
+      '<div style="background:var(--color-bg-secondary,#f8fafc);border:1px solid var(--color-border,#e2e8f0);border-radius:16px;padding:32px;margin-bottom:28px;">',
+      '  <h3 style="font-size:16px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 24px;display:flex;align-items:center;gap:8px;">📋 10-Step Portfolio Builder Workflow</h3>',
+      '  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">',
+      ...[
+        ['1','Basic Info','Name, role, photo, headline'],
+        ['2','Summary','Professional bio & about'],
+        ['3','Skills','Tech, soft, tools, languages'],
+        ['4','Education','Degrees with CGPA & years'],
+        ['5','Projects','GitHub, live URL, screenshots'],
+        ['6','Experience','Companies, roles, dates'],
+        ['7','Certificates','Issuer, credential URL'],
+        ['8','Social Links','GitHub, LinkedIn, LeetCode'],
+        ['9','Theme & Colors','5 themes, 12 palettes, fonts'],
+        ['10','Preview & Deploy','Live URL in seconds'],
+      ].map(function(s) {
+        return [
+          '<div style="background:var(--color-bg-primary,#fff);border:1px solid var(--color-border,#e2e8f0);border-radius:12px;padding:16px;display:flex;align-items:flex-start;gap:12px;">',
+          '  <div style="width:28px;height:28px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0;">' + s[0] + '</div>',
+          '  <div>',
+          '    <div style="font-size:13px;font-weight:700;color:var(--color-text-primary,#0f172a);margin-bottom:2px;">' + s[1] + '</div>',
+          '    <div style="font-size:11px;color:var(--color-text-secondary,#64748b);">' + s[2] + '</div>',
+          '  </div>',
+          '</div>',
+        ].join('');
+      }),
+      '  </div>',
+      '</div>',
+
+      // Tech stack & themes
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;">',
+
+      // Tech Stack
+      '<div style="background:var(--color-bg-secondary,#f8fafc);border:1px solid var(--color-border,#e2e8f0);border-radius:16px;padding:24px;">',
+      '  <h3 style="font-size:14px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 16px;">🛠️ Tech Stack</h3>',
+      '  <div style="display:flex;flex-direction:column;gap:10px;">',
+      ...[
+        ['Frontend','React + TypeScript + Tailwind CSS'],
+        ['Backend','Google Apps Script (MVP)'],
+        ['Database','Google Sheets (11 sheets)'],
+        ['Storage','Google Drive (structured folders)'],
+        ['Hosting','Firebase + Netlify Preview'],
+      ].map(function(r) {
+        return '<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;"><span style="font-weight:600;color:var(--color-text-secondary,#64748b);">' + r[0] + '</span><span style="color:var(--color-text-primary,#0f172a);font-weight:500;">' + r[1] + '</span></div>';
+      }),
+      '  </div>',
+      '</div>',
+
+      // Themes
+      '<div style="background:var(--color-bg-secondary,#f8fafc);border:1px solid var(--color-border,#e2e8f0);border-radius:16px;padding:24px;">',
+      '  <h3 style="font-size:14px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 16px;">🎨 5 Portfolio Themes</h3>',
+      '  <div style="display:flex;flex-direction:column;gap:10px;">',
+      ...[
+        ['🤍','Minimal','Clean, typography-focused'],
+        ['🖤','Dark Pro','Dark mode, neon accents'],
+        ['🌈','Gradient','Colorful & modern'],
+        ['🪟','Glassmorphism','Glass cards, blur effects'],
+        ['💻','Terminal','Developer / hacker aesthetic'],
+      ].map(function(t) {
+        return '<div style="display:flex;align-items:center;gap:10px;font-size:12px;"><span>' + t[0] + '</span><div><div style="font-weight:600;color:var(--color-text-primary,#0f172a);">' + t[1] + '</div><div style="color:var(--color-text-secondary,#64748b);">' + t[2] + '</div></div></div>';
+      }),
+      '  </div>',
+      '</div>',
+
+      '</div>',
+
+      // DB Stats
+      '<div style="background:var(--color-bg-secondary,#f8fafc);border:1px solid var(--color-border,#e2e8f0);border-radius:16px;padding:24px;margin-bottom:28px;">',
+      '  <h3 style="font-size:14px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 16px;">🗄️ Database Architecture — 11 Google Sheets</h3>',
+      '  <div style="display:flex;flex-wrap:wrap;gap:8px;">',
+      ...[
+        'Users','Education','Projects','Experience','Skills',
+        'Certificates','Achievements','SocialLinks','PortfolioSettings','Themes','Deployments',
+      ].map(function(s) {
+        return '<span style="background:var(--color-bg-primary,#fff);border:1px solid var(--color-border,#e2e8f0);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--color-text-primary,#0f172a);">' + s + '</span>';
+      }),
+      '  </div>',
+      '</div>',
+
+      // Target users
+      '<div style="background:var(--color-bg-secondary,#f8fafc);border:1px solid var(--color-border,#e2e8f0);border-radius:16px;padding:24px;margin-bottom:28px;">',
+      '  <h3 style="font-size:14px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 16px;">👥 Who Is This For?</h3>',
+      '  <div style="display:flex;flex-wrap:wrap;gap:8px;">',
+      ...[
+        '🎓 UG Students','🚀 Freshers','💻 Software Engineers','🤖 AI Engineers',
+        '📊 Data Scientists','🎨 UI/UX Designers','🌐 Full Stack Devs','💼 Freelancers',
+        '📱 Digital Marketers','Anyone needing a portfolio',
+      ].map(function(u) {
+        return '<span style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:100px;padding:6px 14px;font-size:12px;font-weight:500;color:#6366f1;">' + u + '</span>';
+      }),
+      '  </div>',
+      '</div>',
+
+      // Roadmap
+      '<div style="background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(139,92,246,0.06));border:1px solid rgba(99,102,241,0.2);border-radius:16px;padding:24px;">',
+      '  <h3 style="font-size:14px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 16px;">🗺️ Development Roadmap</h3>',
+      '  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;">',
+      ...[
+        ['Phase 1','Foundation','✅ Complete','Architecture, PRD, DB Schema'],
+        ['Phase 2','Generator','🔨 Next','Template engine, theme rendering'],
+        ['Phase 3','AI Features','🔮 Planned','AI summary, skills, ATS score'],
+        ['Phase 4','Deployment','🔮 Planned','One-click deploy, custom domain'],
+        ['Phase 5','Pro Features','🔮 Future','Analytics, contact form, PDF'],
+        ['Phase 6','Community','🔮 Future','Portfolio gallery, marketplace'],
+      ].map(function(p) {
+        return [
+          '<div style="background:var(--color-bg-primary,#fff);border:1px solid var(--color-border,#e2e8f0);border-radius:12px;padding:14px;">',
+          '  <div style="font-size:10px;font-weight:700;color:#6366f1;letter-spacing:0.5px;margin-bottom:4px;">' + p[0] + ' · ' + p[1] + '</div>',
+          '  <div style="font-size:13px;font-weight:600;color:var(--color-text-primary,#0f172a);margin-bottom:2px;">' + p[2] + '</div>',
+          '  <div style="font-size:11px;color:var(--color-text-secondary,#64748b);">' + p[3] + '</div>',
+          '</div>',
+        ].join('');
+      }),
+      '  </div>',
+      '</div>',
+
+      '</div>', // end max-width wrapper
+    ].join('');
+
+    var backBtn = el.querySelector('#pbBackBtn');
+    if (backBtn) {
+      backBtn.addEventListener('click', function () {
+        document.getElementById('toolView').style.display = 'none';
+        document.getElementById('toolsGridContainer').style.display = '';
+      });
+    }
+  };
+
   // ── Initialize ──────────────────────────────────────────────
+
   document.addEventListener('DOMContentLoaded', function () {
     initSidebar();
     initControls();
