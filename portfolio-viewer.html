@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Viewer | PromptVerse</title>
+</head>
+<body>
+<script>
+    (function() {
+        var params = new URLSearchParams(window.location.search);
+        var u = params.get('u');
+        var html = null;
+        if (u && localStorage.getItem('portfolio_html_' + u)) {
+            html = localStorage.getItem('portfolio_html_' + u);
+        } else if (localStorage.getItem('portfolio_latest_html')) {
+            html = localStorage.getItem('portfolio_latest_html');
+        }
+        if (html) {
+            document.open();
+            document.write(html);
+            document.close();
+        } else {
+            document.body.innerHTML = '<div style="font-family:sans-serif;text-align:center;padding:80px 20px;"><h2>Portfolio Not Found</h2><p>Please return to <a href="/tools.html">Portfolio Builder Pro</a> to generate your portfolio.</p></div>';
+        }
+    })();
+</script>
+</body>
+</html>

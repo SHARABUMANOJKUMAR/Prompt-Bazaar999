@@ -16,7 +16,8 @@
       { "source": "/gallery", "destination": "/prompt-gallery.html" },
       { "source": "/wishlist", "destination": "/profile.html" },
       { "source": "/payments", "destination": "/profile.html" },
-      { "source": "/admin/dashboard", "destination": "/admin-dashboard.html" }
+      { "source": "/admin/dashboard", "destination": "/admin-dashboard.html" },
+      { "source": "/p/**", "destination": "/portfolio-viewer.html" }
     ]
   }
 }
