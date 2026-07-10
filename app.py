@@ -9,9 +9,11 @@ load_dotenv()
 import firebase_admin
 from firebase_admin import credentials, firestore, messaging
 import json
+import uuid
 
-# Global Firestore DB reference
+# Global Firestore DB reference & local portfolio cache
 firebase_db = None
+PORTFOLIO_CACHE = {}
 
 # Resilient Firebase Admin Initialization
 try:
@@ -1115,6 +1117,109 @@ def enhance_prompt_v7():
     except Exception as e:
         logging.error(f"V7 Enhance API error: {e}", exc_info=True)
         return jsonify({"error": "Internal server error during prompt enhancement."}), 500
+
+
+
+# =============================================================================
+# PORTFOLIO BUILDER PRO API & PREVIEWS
+# =============================================================================
+
+@app.route('/preview_portfolio')
+@app.route('/portfolio/preview')
+def preview_portfolio_page():
+    preview_path = os.path.join(os.path.dirname(__file__), 'preview_portfolio.html')
+    if os.path.exists(preview_path):
+        with open(preview_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    return "Preview not found", 404
+
+@app.route('/preview_portfolio_v2')
+def preview_portfolio_v2_page():
+    preview_path = os.path.join(os.path.dirname(__file__), 'preview_portfolio_v2.html')
+    if os.path.exists(preview_path):
+        with open(preview_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    return "Preview v2 not found", 404
+
+@app.route('/api/tools/portfolio/generate', methods=['POST'])
+def generate_portfolio():
+    data = request.json
+    if not data or 'data' not in data:
+        return jsonify({"success": False, "message": "Missing portfolio data"}), 400
+        
+    user_id = data.get('user_id', 'guest')
+    username = data.get('username') or f'user_{uuid.uuid4().hex[:6]}'
+    portfolio_state = data.get('data')
+    
+    from services.portfolio_agents.orchestrator import PortfolioOrchestrator
+    orchestrator = PortfolioOrchestrator()
+    result = orchestrator.generate(user_id, username, portfolio_state)
+    
+    if result.get("success") and result.get("html"):
+        html_content = result["html"]
+        # 1. Save in memory cache
+        PORTFOLIO_CACHE[username] = html_content
+        
+        # 2. Save to local disk fallback
+        try:
+            portfolios_dir = os.path.join(os.path.dirname(__file__), "static", "portfolios")
+            os.makedirs(portfolios_dir, exist_ok=True)
+            with open(os.path.join(portfolios_dir, f"{username}.html"), "w", encoding="utf-8") as f:
+                f.write(html_content)
+        except Exception as e:
+            logging.error(f"Error saving portfolio locally to disk: {e}")
+
+        # 3. Store in Firebase for serving dynamically
+        try:
+            if firebase_db:
+                firebase_db.collection("portfolios").document(username).set({
+                    "user_id": user_id,
+                    "username": username,
+                    "html": html_content,
+                    "created_at": firestore.SERVER_TIMESTAMP
+                })
+        except Exception as e:
+            logging.error(f"Error saving portfolio to Firebase: {e}")
+            
+    return jsonify(result)
+
+@app.route('/p/<username>')
+def serve_portfolio(username):
+    # 1. Check in-memory cache first
+    if username in PORTFOLIO_CACHE:
+        return PORTFOLIO_CACHE[username]
+
+    # 2. Check local filesystem cache
+    local_path = os.path.join(os.path.dirname(__file__), "static", "portfolios", f"{username}.html")
+    if os.path.exists(local_path):
+        try:
+            with open(local_path, "r", encoding="utf-8") as f:
+                html_content = f.read()
+                PORTFOLIO_CACHE[username] = html_content
+                return html_content
+        except Exception as e:
+            logging.error(f"Error reading local portfolio file: {e}")
+
+    # 3. Check Firebase Firestore
+    if firebase_db:
+        try:
+            doc = firebase_db.collection("portfolios").document(username).get()
+            if doc.exists:
+                data = doc.to_dict()
+                html_content = data.get("html", "<h1>Empty Portfolio</h1>")
+                PORTFOLIO_CACHE[username] = html_content
+                return html_content
+        except Exception as e:
+            logging.error(f"Error fetching portfolio from Firebase: {e}")
+
+    # 4. Fallback for preview/demo usernames
+    if username in ['preview', 'demo', 'sample']:
+        preview_path = os.path.join(os.path.dirname(__file__), 'preview_portfolio.html')
+        if os.path.exists(preview_path):
+            with open(preview_path, 'r', encoding='utf-8') as f:
+                return f.read()
+
+    return "Portfolio not found. Make sure you have generated one first.", 404
 
 
 if __name__ == '__main__':

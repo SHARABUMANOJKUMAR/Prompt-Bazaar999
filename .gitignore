@@ -68,3 +68,7 @@ node_modules/
 # dataconnect generated files
 .dataconnect
 firebase-adminsdk.json
+
+# Python
+__pycache__/
+*.pyc

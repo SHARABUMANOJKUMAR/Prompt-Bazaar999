@@ -1923,162 +1923,330 @@
 
   // ── Portfolio Builder Pro ────────────────────────────────────
   TOOL_RENDERERS['portfolio-builder'] = function (el) {
-    el.innerHTML = [
-      '<div class="tool-header">',
-      '  <button class="tool-back-btn" id="pbBackBtn">',
-      '    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>',
-      '  </button>',
-      '  <div class="tool-title-group">',
-      '    <div class="tool-title">💼 Portfolio Builder Pro</div>',
-      '    <div class="tool-subtitle">AI-powered portfolio generator for students & professionals</div>',
-      '  </div>',
-      '  <span class="tool-card-tag" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;">COMING SOON</span>',
-      '</div>',
+    el.innerHTML = `
+      <div class="tool-header" style="margin-bottom: 24px; display:flex; align-items:center; gap:14px;">
+        <button class="tool-back-btn" id="pbBackBtn" style="display:flex; align-items:center; gap:6px; font-weight:600; padding: 6px 12px; border-radius: 8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          Go Back
+        </button>
+        <div class="tool-title-group">
+          <div class="tool-title" style="font-weight:800; font-size:1.55rem; color:#0f172a;">💼 Portfolio Builder Pro</div>
+          <div class="tool-subtitle">AI-powered portfolio generator for students & professionals</div>
+        </div>
+      </div>
+      
+      <div class="wizard-layout">
+        <div class="wizard-main">
+          <div class="tool-panel" id="pbStepContainer" style="padding: 32px 24px;"></div>
+        </div>
+        <div class="wizard-preview-panel">
+          <div style="font-weight:700;margin-bottom:12px;font-size:0.9rem;">Generation Status</div>
+          <div class="live-preview-box" id="pbStatusText">
+            Fill out the form to generate your AI portfolio.
+          </div>
+          <div class="preview-actions">
+            <button class="tool-btn primary" style="width:100%;justify-content:center;display:none;" id="pbOpenUrl">🌐 Open Portfolio</button>
+          </div>
+        </div>
+      </div>
+    `;
 
-      '<div style="max-width:760px;margin:0 auto;padding:0 0 40px;">',
+    var state = {
+      step: 1,
+      personal: { firstName: '', lastName: '', role: '', email: '', phone: '', headline: '', photoUrl: '', resumeUrl: '' },
+      summary: '',
+      skills: '',
+      education: [],
+      experience: [],
+      projects: [],
+      certificates: [],
+      achievements: '',
+      socials: { github: '', linkedin: '' },
+      theme: 'Minimal',
+      colorPalette: '#0D6EFD',
+      font: 'Inter'
+    };
 
-      // Hero banner
-      '<div style="background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%);border-radius:20px;padding:48px 40px;text-align:center;margin-bottom:32px;position:relative;overflow:hidden;">',
-      '  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(99,102,241,0.2) 0%,transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(139,92,246,0.15) 0%,transparent 60%);"></div>',
-      '  <div style="position:relative;z-index:1;">',
-      '    <div style="font-size:56px;margin-bottom:16px;">💼</div>',
-      '    <h2 style="font-size:28px;font-weight:800;color:#fff;margin:0 0 12px;letter-spacing:-0.5px;">Portfolio Builder Pro</h2>',
-      '    <p style="font-size:16px;color:#a5b4fc;margin:0 0 28px;line-height:1.6;max-width:520px;margin-left:auto;margin-right:auto;">Build a stunning, ATS-friendly portfolio website in under 10 minutes — zero code required. Professional themes, AI-powered content, instant deployment.</p>',
-      '    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">',
-      '      <div style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);border-radius:100px;padding:8px 20px;color:#c7d2fe;font-size:13px;font-weight:600;">✅ Zero Code</div>',
-      '      <div style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);border-radius:100px;padding:8px 20px;color:#c7d2fe;font-size:13px;font-weight:600;">✅ ATS Friendly</div>',
-      '      <div style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);border-radius:100px;padding:8px 20px;color:#c7d2fe;font-size:13px;font-weight:600;">✅ 5 Pro Themes</div>',
-      '      <div style="background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);border-radius:100px;padding:8px 20px;color:#c7d2fe;font-size:13px;font-weight:600;">✅ Instant URL</div>',
-      '    </div>',
-      '  </div>',
-      '</div>',
+    var THEMES = ['Minimal', 'Dark Pro', 'Gradient', 'Glassmorphism', 'Terminal'];
+    var COLORS = [
+      {name: 'Ocean Blue', val: '#0D6EFD'}, 
+      {name: 'Emerald Green', val: '#10B981'},
+      {name: 'Purple Haze', val: '#8B5CF6'},
+      {name: 'Crimson Red', val: '#E11D48'},
+      {name: 'Sunset Orange', val: '#F97316'},
+      {name: 'Slate Gray', val: '#475569'}
+    ];
+    var FONTS = ['Inter', 'Outfit', 'Roboto', 'Poppins', 'Playfair Display'];
 
-      // 10-step workflow
-      '<div style="background:var(--color-bg-secondary,#f8fafc);border:1px solid var(--color-border,#e2e8f0);border-radius:16px;padding:32px;margin-bottom:28px;">',
-      '  <h3 style="font-size:16px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 24px;display:flex;align-items:center;gap:8px;">📋 10-Step Portfolio Builder Workflow</h3>',
-      '  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;">',
-      ...[
-        ['1','Basic Info','Name, role, photo, headline'],
-        ['2','Summary','Professional bio & about'],
-        ['3','Skills','Tech, soft, tools, languages'],
-        ['4','Education','Degrees with CGPA & years'],
-        ['5','Projects','GitHub, live URL, screenshots'],
-        ['6','Experience','Companies, roles, dates'],
-        ['7','Certificates','Issuer, credential URL'],
-        ['8','Social Links','GitHub, LinkedIn, LeetCode'],
-        ['9','Theme & Colors','5 themes, 12 palettes, fonts'],
-        ['10','Preview & Deploy','Live URL in seconds'],
-      ].map(function(s) {
-        return [
-          '<div style="background:var(--color-bg-primary,#fff);border:1px solid var(--color-border,#e2e8f0);border-radius:12px;padding:16px;display:flex;align-items:flex-start;gap:12px;">',
-          '  <div style="width:28px;height:28px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0;">' + s[0] + '</div>',
-          '  <div>',
-          '    <div style="font-size:13px;font-weight:700;color:var(--color-text-primary,#0f172a);margin-bottom:2px;">' + s[1] + '</div>',
-          '    <div style="font-size:11px;color:var(--color-text-secondary,#64748b);">' + s[2] + '</div>',
-          '  </div>',
-          '</div>',
-        ].join('');
-      }),
-      '  </div>',
-      '</div>',
+    function renderStep() {
+      var html = '';
+      if (state.step === 1) {
+        html += '<h3>Personal Information</h3>';
+        html += '<div style="display:flex; gap:12px;">';
+        html += '<div class="wizard-form-group" style="flex:1"><label>First Name</label><input class="tool-input" id="pbFirstName" value="'+state.personal.firstName+'"></div>';
+        html += '<div class="wizard-form-group" style="flex:1"><label>Last Name</label><input class="tool-input" id="pbLastName" value="'+state.personal.lastName+'"></div>';
+        html += '</div>';
+        html += '<div class="wizard-form-group"><label>Professional Role / Headline</label><input class="tool-input" id="pbRole" value="'+state.personal.role+'"></div>';
+        html += '<div class="wizard-form-group"><label>Email</label><input type="email" class="tool-input" id="pbEmail" value="'+state.personal.email+'"></div>';
+        html += '<div class="wizard-form-group"><label>Phone</label><input class="tool-input" id="pbPhone" value="'+state.personal.phone+'"></div>';
+        html += '<div class="wizard-form-group"><label>Profile Photo URL</label><input class="tool-input" id="pbPhotoUrl" value="'+state.personal.photoUrl+'"></div>';
+        html += '<div class="wizard-form-group"><label>Resume/CV URL</label><input class="tool-input" id="pbResumeUrl" value="'+state.personal.resumeUrl+'"></div>';
+      } else if (state.step === 2) {
+        html += '<h3>Professional Summary & Skills</h3>';
+        html += '<div class="wizard-form-group"><label>Summary</label><textarea class="tool-textarea" id="pbSummary" style="min-height:120px;" placeholder="Write a brief summary about yourself.">'+state.summary+'</textarea></div>';
+        html += '<div class="wizard-form-group"><label>Core Skills (comma separated)</label><textarea class="tool-textarea" id="pbSkills" style="min-height:80px;" placeholder="e.g. React, Python, UI/UX Design, Agile">'+state.skills+'</textarea></div>';
+      } else if (state.step === 3) {
+        html += '<h3>Experience & Education</h3>';
+        html += '<h4>Experience</h4><div id="pbExpList"></div>';
+        html += '<button class="tool-btn" id="pbAddExp" style="margin-bottom:24px;">+ Add Experience</button>';
+        html += '<h4>Education</h4><div id="pbEduList"></div>';
+        html += '<button class="tool-btn" id="pbAddEdu">+ Add Education</button>';
+      } else if (state.step === 4) {
+        html += '<h3>Projects, Certificates & Achievements</h3>';
+        html += '<h4>Projects</h4><div id="pbProjList"></div>';
+        html += '<button class="tool-btn" id="pbAddProj" style="margin-bottom:24px;">+ Add Project</button>';
+        html += '<h4>Certificates</h4><div id="pbCertList"></div>';
+        html += '<button class="tool-btn" id="pbAddCert" style="margin-bottom:24px;">+ Add Certificate</button>';
+        html += '<h4>Achievements</h4>';
+        html += '<div class="wizard-form-group"><textarea class="tool-textarea" id="pbAchievements" style="min-height:80px;" placeholder="Key awards or recognitions...">'+state.achievements+'</textarea></div>';
+      } else if (state.step === 5) {
+        html += '<h3>Design & Socials</h3>';
+        html += '<div style="display:flex; gap:12px;">';
+        html += '<div class="wizard-form-group" style="flex:1"><label>LinkedIn URL</label><input class="tool-input" id="pbLinkedin" value="'+state.socials.linkedin+'"></div>';
+        html += '<div class="wizard-form-group" style="flex:1"><label>GitHub URL</label><input class="tool-input" id="pbGithub" value="'+state.socials.github+'"></div>';
+        html += '</div>';
+        
+        html += '<h4>Theme Selection</h4><div class="wizard-grid">';
+        THEMES.forEach(function(t) {
+          html += '<div class="wizard-card '+(state.theme === t ? 'active' : '')+'" data-type="theme" data-val="'+t+'"><div class="wizard-card-label" style="margin-top:10px;">'+t+'</div></div>';
+        });
+        html += '</div>';
 
-      // Tech stack & themes
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;">',
+        html += '<h4>Color Palette</h4><div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 20px;">';
+        COLORS.forEach(function(c) {
+          html += '<div class="wizard-card '+(state.colorPalette === c.val ? 'active' : '')+'" data-type="color" data-val="'+c.val+'" style="width:auto; padding:10px; min-height:auto; display:flex; align-items:center; gap:8px;">';
+          html += '<div style="width:20px; height:20px; border-radius:50%; background:'+c.val+';"></div><span>'+c.name+'</span></div>';
+        });
+        html += '</div>';
 
-      // Tech Stack
-      '<div style="background:var(--color-bg-secondary,#f8fafc);border:1px solid var(--color-border,#e2e8f0);border-radius:16px;padding:24px;">',
-      '  <h3 style="font-size:14px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 16px;">🛠️ Tech Stack</h3>',
-      '  <div style="display:flex;flex-direction:column;gap:10px;">',
-      ...[
-        ['Frontend','React + TypeScript + Tailwind CSS'],
-        ['Backend','Google Apps Script (MVP)'],
-        ['Database','Google Sheets (11 sheets)'],
-        ['Storage','Google Drive (structured folders)'],
-        ['Hosting','Firebase + Netlify Preview'],
-      ].map(function(r) {
-        return '<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;"><span style="font-weight:600;color:var(--color-text-secondary,#64748b);">' + r[0] + '</span><span style="color:var(--color-text-primary,#0f172a);font-weight:500;">' + r[1] + '</span></div>';
-      }),
-      '  </div>',
-      '</div>',
+        html += '<h4>Typography Font</h4><div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 20px;">';
+        FONTS.forEach(function(f) {
+          html += '<div class="wizard-card '+(state.font === f ? 'active' : '')+'" data-type="font" data-val="'+f+'" style="width:auto; padding:10px; min-height:auto;">'+f+'</div>';
+        });
+        html += '</div>';
+      }
 
-      // Themes
-      '<div style="background:var(--color-bg-secondary,#f8fafc);border:1px solid var(--color-border,#e2e8f0);border-radius:16px;padding:24px;">',
-      '  <h3 style="font-size:14px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 16px;">🎨 5 Portfolio Themes</h3>',
-      '  <div style="display:flex;flex-direction:column;gap:10px;">',
-      ...[
-        ['🤍','Minimal','Clean, typography-focused'],
-        ['🖤','Dark Pro','Dark mode, neon accents'],
-        ['🌈','Gradient','Colorful & modern'],
-        ['🪟','Glassmorphism','Glass cards, blur effects'],
-        ['💻','Terminal','Developer / hacker aesthetic'],
-      ].map(function(t) {
-        return '<div style="display:flex;align-items:center;gap:10px;font-size:12px;"><span>' + t[0] + '</span><div><div style="font-weight:600;color:var(--color-text-primary,#0f172a);">' + t[1] + '</div><div style="color:var(--color-text-secondary,#64748b);">' + t[2] + '</div></div></div>';
-      }),
-      '  </div>',
-      '</div>',
+      var totalSteps = 5;
+      var stepHTML = '<div class="wizard-progress"><div class="wizard-progress-bar" style="width:' + ((state.step-1)/(totalSteps-1) * 100) + '%;"></div>';
+      for(var i=1; i<=totalSteps; i++) {
+        var cls = (i < state.step) ? 'completed' : (i === state.step ? 'active' : '');
+        stepHTML += '<div class="wizard-step-node ' + cls + '"><div class="wizard-step-circle">' + (i < state.step ? '✓' : i) + '</div><div class="wizard-step-label">Step ' + i + '</div></div>';
+      }
+      stepHTML += '</div>';
 
-      '</div>',
+      var buttonsHTML = '<div class="tool-actions" style="margin-top:24px;">' +
+        (state.step > 1 ? '<button class="tool-btn" id="pbPrev">← Back</button>' : '<div></div>') +
+        (state.step < totalSteps ? '<button class="tool-btn primary" id="pbNext">Next Step →</button>' : '<button class="tool-btn primary" id="pbGenerate" style="background:#10b981;border-color:#059669;color:#fff;">🚀 Generate Portfolio</button>') +
+        '</div>';
 
-      // DB Stats
-      '<div style="background:var(--color-bg-secondary,#f8fafc);border:1px solid var(--color-border,#e2e8f0);border-radius:16px;padding:24px;margin-bottom:28px;">',
-      '  <h3 style="font-size:14px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 16px;">🗄️ Database Architecture — 11 Google Sheets</h3>',
-      '  <div style="display:flex;flex-wrap:wrap;gap:8px;">',
-      ...[
-        'Users','Education','Projects','Experience','Skills',
-        'Certificates','Achievements','SocialLinks','PortfolioSettings','Themes','Deployments',
-      ].map(function(s) {
-        return '<span style="background:var(--color-bg-primary,#fff);border:1px solid var(--color-border,#e2e8f0);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--color-text-primary,#0f172a);">' + s + '</span>';
-      }),
-      '  </div>',
-      '</div>',
+      document.getElementById('pbStepContainer').innerHTML = stepHTML + html + buttonsHTML;
 
-      // Target users
-      '<div style="background:var(--color-bg-secondary,#f8fafc);border:1px solid var(--color-border,#e2e8f0);border-radius:16px;padding:24px;margin-bottom:28px;">',
-      '  <h3 style="font-size:14px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 16px;">👥 Who Is This For?</h3>',
-      '  <div style="display:flex;flex-wrap:wrap;gap:8px;">',
-      ...[
-        '🎓 UG Students','🚀 Freshers','💻 Software Engineers','🤖 AI Engineers',
-        '📊 Data Scientists','🎨 UI/UX Designers','🌐 Full Stack Devs','💼 Freelancers',
-        '📱 Digital Marketers','Anyone needing a portfolio',
-      ].map(function(u) {
-        return '<span style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:100px;padding:6px 14px;font-size:12px;font-weight:500;color:#6366f1;">' + u + '</span>';
-      }),
-      '  </div>',
-      '</div>',
+      // Event Listeners
+      if (document.getElementById('pbNext')) document.getElementById('pbNext').addEventListener('click', function() { saveCurrentStep(); state.step++; renderStep(); });
+      if (document.getElementById('pbPrev')) document.getElementById('pbPrev').addEventListener('click', function() { saveCurrentStep(); state.step--; renderStep(); });
+      if (document.getElementById('pbGenerate')) document.getElementById('pbGenerate').addEventListener('click', generatePortfolio);
 
-      // Roadmap
-      '<div style="background:linear-gradient(135deg,rgba(99,102,241,0.06),rgba(139,92,246,0.06));border:1px solid rgba(99,102,241,0.2);border-radius:16px;padding:24px;">',
-      '  <h3 style="font-size:14px;font-weight:700;color:var(--color-text-primary,#0f172a);margin:0 0 16px;">🗺️ Development Roadmap</h3>',
-      '  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;">',
-      ...[
-        ['Phase 1','Foundation','✅ Complete','Architecture, PRD, DB Schema'],
-        ['Phase 2','Generator','🔨 Next','Template engine, theme rendering'],
-        ['Phase 3','AI Features','🔮 Planned','AI summary, skills, ATS score'],
-        ['Phase 4','Deployment','🔮 Planned','One-click deploy, custom domain'],
-        ['Phase 5','Pro Features','🔮 Future','Analytics, contact form, PDF'],
-        ['Phase 6','Community','🔮 Future','Portfolio gallery, marketplace'],
-      ].map(function(p) {
-        return [
-          '<div style="background:var(--color-bg-primary,#fff);border:1px solid var(--color-border,#e2e8f0);border-radius:12px;padding:14px;">',
-          '  <div style="font-size:10px;font-weight:700;color:#6366f1;letter-spacing:0.5px;margin-bottom:4px;">' + p[0] + ' · ' + p[1] + '</div>',
-          '  <div style="font-size:13px;font-weight:600;color:var(--color-text-primary,#0f172a);margin-bottom:2px;">' + p[2] + '</div>',
-          '  <div style="font-size:11px;color:var(--color-text-secondary,#64748b);">' + p[3] + '</div>',
-          '</div>',
-        ].join('');
-      }),
-      '  </div>',
-      '</div>',
+      if (document.getElementById('pbAddExp')) {
+        renderRepeater('pbExpList', state.experience, ['Company', 'Role', 'Duration', 'Description (Key achievements)']);
+        document.getElementById('pbAddExp').addEventListener('click', function() {
+          saveCurrentStep();
+          state.experience.push({company: '', role: '', duration: '', description: ''});
+          renderStep();
+        });
+      }
+      if (document.getElementById('pbAddEdu')) {
+        renderRepeater('pbEduList', state.education, ['Institution', 'Degree', 'Year']);
+        document.getElementById('pbAddEdu').addEventListener('click', function() {
+          saveCurrentStep();
+          state.education.push({institution: '', degree: '', year: ''});
+          renderStep();
+        });
+      }
+      if (document.getElementById('pbAddProj')) {
+        renderRepeater('pbProjList', state.projects, ['Project Title', 'Description', 'Demo/Repo Link', 'Project Image URL']);
+        document.getElementById('pbAddProj').addEventListener('click', function() {
+          saveCurrentStep();
+          state.projects.push({title: '', description: '', link: '', imageUrl: ''});
+          renderStep();
+        });
+      }
+      if (document.getElementById('pbAddCert')) {
+        renderRepeater('pbCertList', state.certificates, ['Certificate Name', 'Issuer', 'Year', 'Certificate Image URL']);
+        document.getElementById('pbAddCert').addEventListener('click', function() {
+          saveCurrentStep();
+          state.certificates.push({name: '', issuer: '', year: '', imageUrl: ''});
+          renderStep();
+        });
+      }
 
-      '</div>', // end max-width wrapper
-    ].join('');
+      document.querySelectorAll('.wizard-card').forEach(function(c) {
+        c.addEventListener('click', function() {
+          if (c.getAttribute('data-type') === 'theme') state.theme = c.getAttribute('data-val');
+          if (c.getAttribute('data-type') === 'color') state.colorPalette = c.getAttribute('data-val');
+          if (c.getAttribute('data-type') === 'font') state.font = c.getAttribute('data-val');
+          renderStep();
+        });
+      });
+      
+      var backBtn = el.querySelector('#pbBackBtn');
+      if (backBtn) {
+        backBtn.addEventListener('click', function () {
+          document.getElementById('toolView').style.display = 'none';
+          document.getElementById('toolsGridContainer').style.display = '';
+        });
+      }
+    }
 
-    var backBtn = el.querySelector('#pbBackBtn');
-    if (backBtn) {
-      backBtn.addEventListener('click', function () {
-        document.getElementById('toolView').style.display = 'none';
-        document.getElementById('toolsGridContainer').style.display = '';
+    function saveCurrentStep() {
+      if (state.step === 1) {
+        state.personal.firstName = document.getElementById('pbFirstName').value;
+        state.personal.lastName = document.getElementById('pbLastName').value;
+        state.personal.role = document.getElementById('pbRole').value;
+        state.personal.email = document.getElementById('pbEmail').value;
+        state.personal.phone = document.getElementById('pbPhone').value;
+        state.personal.photoUrl = document.getElementById('pbPhotoUrl').value;
+        state.personal.resumeUrl = document.getElementById('pbResumeUrl').value;
+        state.personal.name = state.personal.firstName + ' ' + state.personal.lastName;
+      } else if (state.step === 2) {
+        state.summary = document.getElementById('pbSummary').value;
+        state.skills = document.getElementById('pbSkills').value;
+      } else if (state.step === 3) {
+        var elist = document.getElementById('pbExpList').children;
+        state.experience = [];
+        for(var i=0; i<elist.length; i++) {
+          var einputs = elist[i].querySelectorAll('input');
+          state.experience.push({
+            company: einputs[0] ? einputs[0].value : '',
+            role: einputs[1] ? einputs[1].value : '',
+            duration: einputs[2] ? einputs[2].value : '',
+            description: einputs[3] ? einputs[3].value : ''
+          });
+        }
+        var edlist = document.getElementById('pbEduList').children;
+        state.education = [];
+        for(var i=0; i<edlist.length; i++) {
+          var edinputs = edlist[i].querySelectorAll('input');
+          state.education.push({
+            institution: edinputs[0] ? edinputs[0].value : '',
+            degree: edinputs[1] ? edinputs[1].value : '',
+            year: edinputs[2] ? edinputs[2].value : ''
+          });
+        }
+      } else if (state.step === 4) {
+        var plist = document.getElementById('pbProjList').children;
+        state.projects = [];
+        for(var i=0; i<plist.length; i++) {
+          var pinputs = plist[i].querySelectorAll('input');
+          state.projects.push({
+            title: pinputs[0] ? pinputs[0].value : '',
+            description: pinputs[1] ? pinputs[1].value : '',
+            link: pinputs[2] ? pinputs[2].value : '',
+            imageUrl: pinputs[3] ? pinputs[3].value : ''
+          });
+        }
+        var clist = document.getElementById('pbCertList').children;
+        state.certificates = [];
+        for(var i=0; i<clist.length; i++) {
+          var cinputs = clist[i].querySelectorAll('input');
+          state.certificates.push({
+            name: cinputs[0] ? cinputs[0].value : '',
+            issuer: cinputs[1] ? cinputs[1].value : '',
+            year: cinputs[2] ? cinputs[2].value : '',
+            imageUrl: cinputs[3] ? cinputs[3].value : ''
+          });
+        }
+        state.achievements = document.getElementById('pbAchievements').value;
+      } else if (state.step === 5) {
+        state.socials.linkedin = document.getElementById('pbLinkedin').value;
+        state.socials.github = document.getElementById('pbGithub').value;
+      }
+    }
+
+    function renderRepeater(containerId, dataArray, placeholders) {
+      var html = '';
+      dataArray.forEach(function(item, idx) {
+        html += '<div style="background:#f8fafc;padding:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:12px;">';
+        html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><strong>Item '+(idx+1)+'</strong><span style="color:#ef4444;cursor:pointer;font-size:12px;" onclick="window.pbRemoveItem(\\\'' + containerId + '\\\', '+idx+')">Remove</span></div>';
+        var keys = Object.keys(item);
+        keys.forEach(function(k, kIdx) {
+          html += '<input class="tool-input" style="margin-bottom:8px;" placeholder="'+placeholders[kIdx]+'" value="'+item[k]+'">';
+        });
+        html += '</div>';
+      });
+      document.getElementById(containerId).innerHTML = html;
+    }
+    
+    window.pbRemoveItem = function(type, idx) {
+      saveCurrentStep();
+      if (type === 'pbExpList') state.experience.splice(idx, 1);
+      if (type === 'pbEduList') state.education.splice(idx, 1);
+      if (type === 'pbProjList') state.projects.splice(idx, 1);
+      if (type === 'pbCertList') state.certificates.splice(idx, 1);
+      renderStep();
+    };
+
+    function generatePortfolio() {
+      saveCurrentStep();
+      if (document.getElementById('pbPhotoUrl')) state.personal.photoUrl = document.getElementById('pbPhotoUrl').value.trim();
+      if (document.getElementById('pbFirstName')) state.personal.firstName = document.getElementById('pbFirstName').value.trim();
+      if (document.getElementById('pbLastName')) state.personal.lastName = document.getElementById('pbLastName').value.trim();
+      if (document.getElementById('pbRole')) state.personal.role = document.getElementById('pbRole').value.trim();
+      if (document.getElementById('pbEmail')) state.personal.email = document.getElementById('pbEmail').value.trim();
+      if (document.getElementById('pbPhone')) state.personal.phone = document.getElementById('pbPhone').value.trim();
+      if (document.getElementById('pbResumeUrl')) state.personal.resumeUrl = document.getElementById('pbResumeUrl').value.trim();
+      state.personal.name = (state.personal.firstName + ' ' + state.personal.lastName).trim();
+
+      var statusText = document.getElementById('pbStatusText');
+      statusText.innerHTML = 'Submitting to AI Agents...<br><span style="color:#6366f1;">Agent 1 (Validator): Checking inputs...</span>';
+      
+      // Need a unique username for subdomain format
+      var username = state.personal.name ? state.personal.name.toLowerCase().replace(/[^a-z0-9]/g, '') : 'user' + Math.floor(Math.random()*1000);
+      if(!username) username = 'user' + Math.floor(Math.random()*1000);
+      
+      var payload = {
+        user_id: (window.sessionUser ? window.sessionUser.uid : 'guest'),
+        username: username,
+        data: state
+      };
+      
+      fetch('/api/tools/portfolio/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          statusText.innerHTML = '<div style="background:#ecfdf5;border:1px solid #10b981;border-radius:12px;padding:16px;text-align:center;">' +
+            '<div style="font-size:1.1rem;font-weight:700;color:#065f46;margin-bottom:8px;">🎉 Your Real Custom Portfolio is Ready!</div>' +
+            '<p style="font-size:0.9rem;color:#047857;margin-bottom:12px;">Built using your exact form data, images &amp; animations.</p>' +
+            '<a href="'+data.url+'" target="_blank" style="display:inline-block;background:#10b981;color:#fff;padding:10px 20px;border-radius:8px;font-weight:600;text-decoration:none;box-shadow:0 4px 12px rgba(16,185,129,0.3);">🌐 Open Your Real Portfolio Now</a>' +
+            '<div style="margin-top:12px;font-size:0.85rem;color:#065f46;">Live URL: <a href="'+data.url+'" target="_blank" style="color:#059669;font-weight:700;text-decoration:underline;">'+window.location.origin+data.url+'</a></div>' +
+            '</div>';
+          var btn = document.getElementById('pbOpenUrl');
+          btn.style.display = 'flex';
+          btn.onclick = () => window.open(data.url, '_blank');
+          showToast('Portfolio Generated successfully!', 'success');
+        } else {
+          statusText.innerHTML = '❌ Generation Failed:<br>' + (data.message || 'Unknown error');
+        }
+      })
+      .catch(err => {
+        statusText.innerHTML = '❌ Network Error:<br>' + err.message;
       });
     }
+
+    renderStep();
   };
 
   // ── Initialize ──────────────────────────────────────────────
