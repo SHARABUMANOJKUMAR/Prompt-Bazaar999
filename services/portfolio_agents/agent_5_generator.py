@@ -372,45 +372,28 @@ class PortfolioGenerationAgent:
             color: #ffffff;
             transform: translateY(-2px) scale(1.05);
         }}
-        
-        @media (max-width: 768px) {{
-            .navbar .nav-inner {{
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }}
-            .nav-links {{
-                justify-content: center;
-                gap: 14px;
-            }}
-            .hero {{
-                flex-direction: column-reverse;
-                text-align: center;
-                gap: 28px;
-                padding: 40px 0;
-            }}
-            .social-links {{
-                justify-content: center;
-            }}
-            .grid {{
-                grid-template-columns: 1fr;
-            }}
-            .glass-card {{
-                padding: 20px;
-                border-radius: 16px;
-            }}
+        /* Responsive Breakpoints matching Device Categories */
+        @media (max-width: 479px) {{
+            .navbar {{ padding: 14px 16px; }}
+            .container {{ width: 100%; max-width: 100%; padding: 0 14px; margin: 0 auto; }}
+            .hero {{ flex-direction: column-reverse; text-align: center; gap: 24px; padding: 36px 0; }}
+            .hero h1 {{ font-size: 2.1rem; }}
+            .hero-img {{ width: 130px; height: 130px; }}
+            .social-links {{ justify-content: center; gap: 10px; }}
+            .grid {{ grid-template-columns: 1fr; gap: 16px; }}
+            .glass-card {{ padding: 20px; border-radius: 16px; }}
         }}
-        @media (max-width: 480px) {{
-            .container {{
-                padding: 0 16px;
-            }}
-            .hero-img {{
-                width: 150px;
-                height: 150px;
-            }}
-            .social-links {{
-                gap: 8px;
-            }}
+        @media (min-width: 480px) and (max-width: 767px) {{
+            .navbar {{ padding: 16px 20px; }}
+            .container {{ width: 100%; max-width: 460px; padding: 0 16px; margin: 0 auto; }}
+            .hero {{ flex-direction: column-reverse; text-align: center; gap: 28px; padding: 48px 0; }}
+            .grid {{ grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; }}
+            .glass-card {{ padding: 22px; }}
+        }}
+        @media (min-width: 768px) and (max-width: 1023px) {{
+            .navbar {{ padding: 16px 32px; }}
+            .container {{ width: 100%; max-width: 750px; padding: 0 24px; margin: 0 auto; }}
+            .grid {{ grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }}
         }}
     </style>
 </head>

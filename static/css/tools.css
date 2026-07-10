@@ -2428,4 +2428,117 @@ textarea.form-control-premium {
   background: var(--color-border);
 }
 
+/* ============================================================
+   PORTFOLIO BUILDER PRO & TOOLKIT RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
+/* 1. Mobile Portrait (Phones): max-width: 479px (and min-width: 320px) */
+@media (max-width: 479px) {
+  #toolView,
+  .wizard-layout,
+  .tool-panel,
+  #pbStepContainer {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-top: 18px !important;
+    padding-bottom: 18px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .wizard-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  .wizard-main,
+  .wizard-preview-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .wizard-grid,
+  div[style*="display:flex; gap:12px"],
+  div[style*="display:flex; gap:14px"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .tool-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .tool-title {
+    font-size: 1.3rem !important;
+  }
+
+  .wizard-progress {
+    overflow-x: auto;
+    padding-bottom: 8px;
+    gap: 6px;
+  }
+
+  .wizard-step-node {
+    font-size: 0.75rem !important;
+  }
+}
+
+/* 2. Mobile Landscape (Large Phones): min-width: 480px and max-width: 767px */
+@media (min-width: 480px) and (max-width: 767px) {
+  #toolView,
+  .wizard-layout,
+  #pbStepContainer {
+    max-width: 460px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  .wizard-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 18px !important;
+  }
+
+  .wizard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px !important;
+  }
+}
+
+/* 3. Tablet Portrait (Vertical Tablets): min-width: 768px and max-width: 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+  #toolView,
+  .wizard-layout {
+    max-width: 750px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  .wizard-layout {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .wizard-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 16px !important;
+  }
+}
+
 
