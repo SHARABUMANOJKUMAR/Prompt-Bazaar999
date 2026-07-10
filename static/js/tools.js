@@ -2204,6 +2204,9 @@
       if (document.getElementById('pbEmail')) state.personal.email = document.getElementById('pbEmail').value.trim();
       if (document.getElementById('pbPhone')) state.personal.phone = document.getElementById('pbPhone').value.trim();
       if (document.getElementById('pbResumeUrl')) state.personal.resumeUrl = document.getElementById('pbResumeUrl').value.trim();
+      if (document.getElementById('pbAchievements')) state.achievements = document.getElementById('pbAchievements').value.trim();
+      if (document.getElementById('pbSummary')) state.summary = document.getElementById('pbSummary').value.trim();
+      if (document.getElementById('pbSkills')) state.skills = document.getElementById('pbSkills').value.trim();
       state.personal.name = (state.personal.firstName + ' ' + state.personal.lastName).trim();
 
       var statusText = document.getElementById('pbStatusText');
@@ -2303,6 +2306,17 @@
             html += '<h3>'+(c.name||'Certificate')+'</h3><div class="sub"><i class="fas fa-award"></i> '+(c.issuer||'')+' | '+(c.year||'')+'</div></div>';
           });
           html += '</div></div>';
+        }
+        var achievementsText = (state.achievements || '').trim();
+        if (achievementsText) {
+          var achievementLines = achievementsText.split('\n').map(s => s.trim()).filter(Boolean);
+          if (achievementLines.length > 0) {
+            html += '<div class="section"><h2 class="section-title">Honors &amp; Achievements</h2><div class="grid">';
+            achievementLines.forEach(function(item) {
+              html += '<div class="card" style="display:flex;align-items:flex-start;gap:14px;"><i class="fas fa-trophy" style="color:#f59e0b;font-size:1.5rem;margin-top:2px;"></i><div><h3 style="margin-bottom:4px;">Achievement</h3><p style="color:var(--text-muted);font-size:0.95rem;">'+item+'</p></div></div>';
+            });
+            html += '</div></div>';
+          }
         }
         html += '<footer>&copy; '+name+' &bull; Powered by AI Portfolio Builder Pro</footer></body></html>';
         return html;
