@@ -1,0 +1,44 @@
+name: Portfolio Builder Pro - CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate-and-test:
+    name: Build, Validate & Test Multi-Agent Pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Compile Python Syntax Check
+      run: |
+        python -m py_compile app.py
+        python -m py_compile services/portfolio_agents/*.py
+
+    - name: Run Multi-Agent Portfolio Test Suite
+      run: |
+        python -m unittest tests/test_portfolio_builder.py
+
+    - name: Validate Core Static & Template Files Exist
+      run: |
+        test -f index.html
+        test -f static/js/tools.js
+        test -f preview_portfolio.html
+        test -f preview_portfolio_v2.html
+        echo "All core UI & engine assets verified successfully."

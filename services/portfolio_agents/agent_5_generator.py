@@ -27,8 +27,11 @@ class PortfolioGenerationAgent:
         certificates = data.get('certificates', [])
         achievements = data.get('achievements', '')
         
-        skills_str = data.get('skills', '')
-        skills = [s.strip() for s in skills_str.split(',') if s.strip()] if skills_str else []
+        skills_raw = data.get('skills', '')
+        if isinstance(skills_raw, list):
+            skills = [str(s).strip() for s in skills_raw if str(s).strip()]
+        else:
+            skills = [s.strip() for s in str(skills_raw).split(',') if s.strip()] if skills_raw else []
         socials = data.get('socials', {})
         
         primary = data.get('colorPalette', '#0D6EFD')
