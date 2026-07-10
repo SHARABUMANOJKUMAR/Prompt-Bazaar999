@@ -2361,13 +2361,16 @@
         }
       })
       .catch(err => {
-        // Automatically build & deploy client-side when hosted on Firebase / Netlify static CDN
         var htmlContent = buildClientSidePortfolioHtml(username, state);
         try {
           localStorage.setItem('portfolio_html_' + username, htmlContent);
           localStorage.setItem('portfolio_latest_html', htmlContent);
         } catch(e){}
-        var targetUrl = '/portfolio-viewer.html?u=' + encodeURIComponent(username);
+        var encodedStateParam = '';
+        try {
+          encodedStateParam = '&d=' + encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(state)))));
+        } catch(e) {}
+        var targetUrl = '/portfolio-viewer?u=' + encodeURIComponent(username) + encodedStateParam;
         renderSuccessUI(targetUrl);
       });
     }
