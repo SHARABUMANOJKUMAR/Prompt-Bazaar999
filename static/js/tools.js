@@ -1118,14 +1118,19 @@
       if (t === 'wa') return i.to ? 'https://wa.me/' + i.to.replace(/\D/g,'') + '?text=' + encodeURIComponent(i.msg) : '';
       if (t === 'wifi') return i.ssid ? 'WIFI:T:' + i.enc + ';S:' + i.ssid + ';P:' + i.pass + ';' + (i.hidden ? 'H:true' : '') + ';;' : '';
       if (t === 'vcard') {
-        if (!i.fn) return '';
-        var vc = 'BEGIN:VCARD\nVERSION:3.0\nFN:' + i.fn + '\n';
-        if (i.org) vc += 'ORG:' + i.org + '\n';
-        if (i.title) vc += 'TITLE:' + i.title + '\n';
-        if (i.tel) vc += 'TEL:' + i.tel + '\n';
-        if (i.email) vc += 'EMAIL:' + i.email + '\n';
-        if (i.url) vc += 'URL:' + i.url + '\n';
-        vc += 'END:VCARD'; return vc;
+        if (!i.fn && !i.org && !i.tel && !i.email && !i.url && !i.title) return '';
+        var name = i.fn || i.org || 'Contact';
+        var parts = name.split(' ');
+        var lastName = parts.length > 1 ? parts.slice(1).join(' ') : '';
+        var firstName = parts[0] || '';
+        var vc = 'BEGIN:VCARD\r\nVERSION:3.0\r\nN:' + lastName + ';' + firstName + ';;;\r\nFN:' + name + '\r\n';
+        if (i.org) vc += 'ORG:' + i.org + '\r\n';
+        if (i.title) vc += 'TITLE:' + i.title + '\r\n';
+        if (i.tel) vc += 'TEL;TYPE=CELL:' + i.tel + '\r\n';
+        if (i.email) vc += 'EMAIL;TYPE=INTERNET:' + i.email + '\r\n';
+        if (i.url) vc += 'URL:' + (i.url.startsWith('http') ? i.url : 'https://' + i.url) + '\r\n';
+        vc += 'END:VCARD\r\n';
+        return vc;
       }
       if (t === 'geo') return (i.lat && i.lng) ? 'geo:' + i.lat + ',' + i.lng : '';
       if (t === 'cal') {
