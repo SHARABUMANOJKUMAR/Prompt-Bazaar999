@@ -790,13 +790,16 @@
         var lookup = params.get('u') || params.get('username') || params.get('id');
         if (!lookup && window.location.pathname.indexOf('/p/') !== -1) {
             lookup = window.location.pathname.split('/p/')[1];
+
+        if (!lookup) {
+            var path = window.location.pathname;
+            if (path && path !== '/' && path.indexOf('portfolio') === -1) {
+                lookup = decodeURIComponent(path.replace(/^\/+|\/+$/g, ''));
+            }
         }
-        if (!lookup && window.location.pathname.indexOf('/u/') !== -1) {
-            lookup = window.location.pathname.split('/u/')[1];
-        }
-        if (!lookup && window.location.pathname !== '/' && window.location.pathname !== '/portfolio-viewer' && window.location.pathname !== '/portfolio-viewer.html') {
-            lookup = window.location.pathname.split('/').filter(Boolean).pop();
-        }
+        
+        // Normalize lookup to handle spaces or casing issues in URLs
+        var cleanLookup = lookup ? lookup.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') : '';
 
         // 1. If base64 data parameter is still passed (legacy links), decode & render
         var d = params.get('d') || params.get('data');
@@ -811,18 +814,20 @@
         // 2. Fast check in local storage state if present (0ms instant render)
         if (lookup) {
             try {
-                var cachedState = localStorage.getItem('portfolio_state_' + lookup);
+                var cachedState = localStorage.getItem('portfolio_state_' + lookup) || (cleanLookup && localStorage.getItem('portfolio_state_' + cleanLookup));
                 if (cachedState) {
                     renderPortfolio(lookup, JSON.parse(cachedState));
                     return;
                 }
                 var allPortfolios = JSON.parse(localStorage.getItem('pb_user_portfolios') || '[]');
-                var matched = allPortfolios.find(function(item) { return item.username === lookup || item.id === lookup; });
+                var matched = allPortfolios.find(function(item) { 
+                    return item.username === lookup || item.id === lookup || (cleanLookup && (item.username === cleanLookup || item.id === cleanLookup)); 
+                });
                 if (matched && matched.data) {
                     renderPortfolio(lookup, matched.data);
                     return;
                 }
-                var cachedHtml = localStorage.getItem('portfolio_html_' + lookup);
+                var cachedHtml = localStorage.getItem('portfolio_html_' + lookup) || (cleanLookup && localStorage.getItem('portfolio_html_' + cleanLookup));
                 if (cachedHtml) {
                     document.open();
                     document.write(cachedHtml);
@@ -846,7 +851,7 @@
 
         // 3. Ultra-Fast Parallel Fetch: Check Google Apps Script directly (and fallback local API)
         var APPS_SCRIPT_API = 'https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec';
-        var apiUrl = APPS_SCRIPT_API + '?action=get_portfolio&username=' + encodeURIComponent(lookup);
+        var apiUrl = APPS_SCRIPT_API + '?action=get_portfolio&username=' + encodeURIComponent(cleanLookup || lookup);
         
         fetch(apiUrl)
         .then(function(res) { return res.json(); })
