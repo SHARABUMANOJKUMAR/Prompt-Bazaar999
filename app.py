@@ -50,12 +50,57 @@ except Exception as e:
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'dev_key')
 
+# ── Enterprise Security & Performance Layer ─────────────────────────────
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB payload limit
+
 import logging
 logging.basicConfig(level=logging.INFO)
+
+# Security Shield — input scanning + hardened headers
+try:
+    from services.security.shield import SecurityShieldMiddleware
+    security_shield = SecurityShieldMiddleware(app)
+    logging.info("SecurityShieldMiddleware ACTIVE")
+except Exception as e:
+    security_shield = None
+    logging.warning("SecurityShieldMiddleware could not be loaded: %s", e)
+
+# High-Concurrency Cache — 100K keys, 5-min TTL
+try:
+    from services.security.cache_manager import HighConcurrencyCache
+    app_cache = HighConcurrencyCache(max_keys=100_000, default_ttl=300.0)
+    logging.info("HighConcurrencyCache ACTIVE (100K keys, 300s TTL)")
+except Exception as e:
+    app_cache = None
+    logging.warning("HighConcurrencyCache could not be loaded: %s", e)
+
+# Rate Limiter — 60 burst/IP, 5000 global RPS, auto-ban after 500 violations
+try:
+    from services.security.rate_limiter import RateLimiter
+    rate_limiter = RateLimiter(
+        per_ip_capacity=60.0,
+        per_ip_refill_rate=10.0,
+        global_rps_limit=5000.0,
+        ban_threshold=500,
+        ban_duration=300.0,
+    )
+    logging.info("RateLimiter ACTIVE (60 burst/IP, 5000 global RPS)")
+except Exception as e:
+    rate_limiter = None
+    logging.warning("RateLimiter could not be loaded: %s", e)
 
 
 @app.before_request
 def handle_options_preflight():
+    # Rate-limit check (skip OPTIONS preflight)
+    if request.method != 'OPTIONS' and rate_limiter is not None:
+        allowed, retry_after = rate_limiter.check(request.remote_addr or '127.0.0.1')
+        if not allowed:
+            resp = jsonify({"error": "Rate limit exceeded. Please slow down.", "retry_after": round(retry_after, 1)})
+            resp.status_code = 429
+            resp.headers['Retry-After'] = str(int(retry_after) + 1)
+            return resp
+
     if request.method == 'OPTIONS':
         response = jsonify({'success': True})
         origin = request.headers.get('Origin')
@@ -1239,6 +1284,20 @@ def serve_portfolio(username):
     return "Portfolio not found. Make sure you have generated one first.", 404
 
 
+# ── Health & Diagnostics Endpoint ───────────────────────────────────────
+@app.route('/api/health')
+def health_check():
+    """Returns system health, cache stats, rate-limiter stats, and shield stats."""
+    health = {
+        "status": "healthy",
+        "version": "3.1.0",
+        "firebase_connected": firebase_db is not None,
+        "security_shield": security_shield.stats if security_shield else "disabled",
+        "cache": app_cache.stats if app_cache else "disabled",
+        "rate_limiter": rate_limiter.stats if rate_limiter else "disabled",
+    }
+    return jsonify(health), 200
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-
