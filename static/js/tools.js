@@ -2728,31 +2728,10 @@
         localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory.slice(0, 50)));
       } catch(e){}
 
-      fetch('/api/tools/portfolio/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(res => {
-        var ct = res.headers.get('content-type') || '';
-        if (!res.ok || !ct.includes('application/json')) {
-          throw new Error('StaticServerFallback');
-        }
-        return res.json();
-      })
-      .then(data => {
-        if (data && data.success) {
-          renderSuccessUI(data.url);
-        } else {
-          throw new Error('FallbackToClientEngine');
-        }
-      })
-      .catch(err => {
-
-        // PHASE 6 CLEAN URL ARCHITECTURE: Never expose base64 encoded JSON in URL
+      // Phase 6 Clean URL Architecture: Fully serverless processing
+      setTimeout(() => {
         var targetUrl = '/' + encodeURIComponent(username);
 
-        // Also save portfolio data to Google Sheets via Apps Script webhook & user history
         try {
           var livePortfolioUrl = 'https://promptbazzar.netlify.app/' + encodeURIComponent(username);
           var liveSubdomain = 'https://' + username + '.promptbazzar.netlify.app/';
@@ -2779,10 +2758,11 @@
             localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory));
           } catch(historyErr) {}
 
+          // Async Google Sheets submission
           fetch('https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec', {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify({
               action: 'save_portfolio',
               user_id: userId,
@@ -2796,7 +2776,7 @@
         } catch(e){}
 
         renderSuccessUI(targetUrl);
-      });
+      }, 800); // Small 800ms delay to let the UI show the loading spinner smoothly
     }
 
     renderStep();
