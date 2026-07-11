@@ -612,11 +612,33 @@ class PortfolioGenerationAgent:
             </div>
         </section>"""
 
+        animation_style = data.get('animation', '3D Tilt & Glow')
         html += f"""
         <footer style="text-align:center; padding: 60px 0 40px; opacity: 0.7; font-size:0.92rem;">
             <p>&copy; {name} &bull; Powered by AI Portfolio Builder Pro</p>
         </footer>
     </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {{
+        var anim = "{animation_style}";
+        if (anim === '3D Tilt & Glow') {{
+            document.querySelectorAll('.glass-card').forEach(function(card) {{
+                card.style.transformStyle = 'preserve-3d';
+                card.style.transition = 'transform 0.15s ease-out, box-shadow 0.3s ease';
+                card.addEventListener('mousemove', function(e) {{
+                    var rect = card.getBoundingClientRect();
+                    var x = e.clientX - rect.left, y = e.clientY - rect.top;
+                    var rotateX = ((y - rect.height/2) / (rect.height/2)) * -6;
+                    var rotateY = ((x - rect.width/2) / (rect.width/2)) * 6;
+                    card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale3d(1.02,1.02,1.02)';
+                }});
+                card.addEventListener('mouseleave', function() {{
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
+                }});
+            }});
+        }}
+    }});
+    </script>
 </body>
 </html>"""
         return {

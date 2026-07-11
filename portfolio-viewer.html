@@ -526,6 +526,10 @@
             var resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
             var photoUrl = (state.personal && (state.personal.photoUrl || state.personal.photo)) || state.photo;
             var primary = state.colorPalette || '#0D6EFD';
+            var font = state.font || 'Inter';
+            var theme = state.theme || 'Minimal';
+            var linkedin = (state.socials && state.socials.linkedin) || state.linkedin || '';
+            var github = (state.socials && state.socials.github) || state.github || '';
             var summary = state.summary || 'Welcome to my professional portfolio showcasing key technical projects, expertise, and measurable achievements.';
             var skillsRaw = typeof state.skills === 'string' ? state.skills.split(/[,\n]+/) : (state.skills || []);
             var skills = skillsRaw.map(function(s){ return typeof s === 'string' ? s.trim() : s; }).filter(Boolean);
@@ -539,8 +543,20 @@
 
             var html = '';
 
-            // Apply custom primary color to root
-            html += '<style>:root { --primary: ' + primary + '; }</style>';
+            // Apply custom styling, theme & typography
+            html += '<style>:root { --primary: ' + primary + '; } body { font-family: "' + font + '", sans-serif; }';
+            if (theme === 'Dark Pro') {
+                html += 'body { background: #0A0E1A !important; } .card, .contact-card { background: #111827 !important; border-color: #1F2937 !important; }';
+            } else if (theme === 'Futuristic Cyber') {
+                html += 'body { background: #05070F !important; } .card { background: rgba(13,110,253,0.06) !important; border: 1px solid rgba(13,110,253,0.35) !important; box-shadow: 0 0 25px rgba(13,110,253,0.12) !important; }';
+            } else if (theme === 'Executive SaaS') {
+                html += 'body { background: #090D16 !important; } .card { background: rgba(18,24,38,0.75) !important; border: 1px solid rgba(255,255,255,0.12) !important; border-radius: 14px !important; }';
+            } else if (theme === 'Bento Grid Pro') {
+                html += '.card-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important; gap: 20px !important; } .card { border-radius: 28px !important; background: rgba(255,255,255,0.05) !important; }';
+            } else if (theme === 'Aurora Glass') {
+                html += 'body { background: #070913 !important; background-image: radial-gradient(circle at 20% 30%, rgba(139,92,246,0.22), transparent 50%), radial-gradient(circle at 80% 70%, rgba(16,185,129,0.18), transparent 50%) !important; } .card { backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; background: rgba(255,255,255,0.06) !important; }';
+            }
+            html += '</style>';
 
             // NAVBAR
             html += '<nav class="navbar"><div class="container nav-inner">';
@@ -557,6 +573,12 @@
             html += '<div class="hero-actions">';
             if (resumeUrl && /^https?:\/\//i.test(resumeUrl)) {
                 html += '<a href="' + resumeUrl + '" target="_blank" class="btn-primary"><i class="fas fa-file-alt"></i> View Resume</a>';
+            }
+            if (linkedin && /^https?:\/\//i.test(linkedin)) {
+                html += '<a href="' + linkedin + '" target="_blank" class="btn-primary" style="background:#0A66C2;border-color:#0A66C2;color:#fff;"><i class="fab fa-linkedin"></i> LinkedIn</a>';
+            }
+            if (github && /^https?:\/\//i.test(github)) {
+                html += '<a href="' + github + '" target="_blank" class="btn-primary" style="background:#24292E;border-color:#24292E;color:#fff;"><i class="fab fa-github"></i> GitHub</a>';
             }
             html += '<a href="#contact" class="btn-outline"><i class="fas fa-paper-plane"></i> Contact Me</a>';
             html += '</div></div></section>';
@@ -674,6 +696,12 @@
             if (phone) {
                 html += '<a href="tel:' + phone + '" class="btn-primary" style="background:rgba(255,255,255,0.18);color:#ffffff;"><i class="fas fa-phone"></i> ' + phone + '</a>';
             }
+            if (linkedin && /^https?:\/\//i.test(linkedin)) {
+                html += '<a href="' + linkedin + '" target="_blank" class="btn-primary" style="background:#0A66C2;color:#fff;"><i class="fab fa-linkedin"></i> LinkedIn</a>';
+            }
+            if (github && /^https?:\/\//i.test(github)) {
+                html += '<a href="' + github + '" target="_blank" class="btn-primary" style="background:#24292E;color:#fff;"><i class="fab fa-github"></i> GitHub</a>';
+            }
             html += '</div></div></div></section>';
 
             // FOOTER ↓
@@ -698,10 +726,52 @@
             }
         }
 
+        function init3DInteractiveAnimations(animation) {
+            if (animation === '3D Tilt & Glow') {
+                document.querySelectorAll('.card, .contact-card').forEach(function(card) {
+                    card.style.transformStyle = 'preserve-3d';
+                    card.style.transition = 'transform 0.15s ease-out, box-shadow 0.3s ease';
+                    card.addEventListener('mousemove', function(e) {
+                        var rect = card.getBoundingClientRect();
+                        var x = e.clientX - rect.left, y = e.clientY - rect.top;
+                        var rotateX = ((y - rect.height/2) / (rect.height/2)) * -6;
+                        var rotateY = ((x - rect.width/2) / (rect.width/2)) * 6;
+                        card.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale3d(1.02,1.02,1.02)';
+                    });
+                    card.addEventListener('mouseleave', function() {
+                        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
+                    });
+                });
+            } else if (animation === 'Floating Hologram') {
+                var wrap = document.querySelector('.avatar-wrap');
+                if (wrap) {
+                    wrap.style.transition = 'transform 3s ease-in-out infinite alternate';
+                    var flip = false;
+                    setInterval(function() {
+                        flip = !flip;
+                        wrap.style.transform = flip ? 'translateY(-14px) scale(1.03)' : 'translateY(0px) scale(1)';
+                    }, 1500);
+                }
+            } else if (animation === 'Magnetic Interactive') {
+                document.querySelectorAll('.btn-primary, .btn-outline').forEach(function(btn) {
+                    btn.addEventListener('mousemove', function(e) {
+                        var r = btn.getBoundingClientRect();
+                        var dx = (e.clientX - (r.left + r.width/2)) * 0.25;
+                        var dy = (e.clientY - (r.top + r.height/2)) * 0.25;
+                        btn.style.transform = 'translate(' + dx + 'px, ' + dy + 'px)';
+                    });
+                    btn.addEventListener('mouseleave', function() {
+                        btn.style.transform = 'translate(0, 0)';
+                    });
+                });
+            }
+        }
+
         function renderPortfolio(username, state) {
             var app = document.getElementById('app');
             app.innerHTML = buildPortfolioMarkup(username, state);
             initScrollAnimations();
+            init3DInteractiveAnimations(state.animation || '3D Tilt & Glow');
         }
 
         function showNotFound(msg) {

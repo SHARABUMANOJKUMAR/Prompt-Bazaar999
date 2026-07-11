@@ -1987,10 +1987,10 @@
     ];
     var FONTS = ['Inter', 'Outfit', 'Roboto', 'Poppins', 'Playfair Display'];
     var ANIMATIONS = [
-      {name: '3D Tilt & Glow', desc: 'Interactive cursor 3D tilt tracking with lighting glare'},
-      {name: 'Smooth Reveal', desc: 'Professional staggered viewport scroll fade-in'},
-      {name: 'Floating Hologram', desc: 'Continuous floating 3D parallax & levitation'},
-      {name: 'Magnetic Interactive', desc: 'Buttons & interactive cards pull toward cursor'}
+      {name: '3D Tilt & Glow', icon: 'fa-cube', color: '#6366F1', desc: 'Interactive cursor 3D perspective tilt tracking with lighting glare'},
+      {name: 'Smooth Reveal', icon: 'fa-layer-group', color: '#10B981', desc: 'Professional staggered viewport scroll fade-in transitions'},
+      {name: 'Floating Hologram', icon: 'fa-atom', color: '#8B5CF6', desc: 'Continuous floating 3D parallax & levitation physics'},
+      {name: 'Magnetic Interactive', icon: 'fa-magnet', color: '#F59E0B', desc: 'Buttons & interactive cards pull smoothly toward cursor'}
     ];
 
     function renderStep() {
@@ -2052,17 +2052,23 @@
         });
         html += '</div>';
 
-        html += '<h4>Typography Font</h4><div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 20px;">';
+        html += '<h4>Typography Font</h4><div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom: 24px;">';
         FONTS.forEach(function(f) {
-          html += '<div class="wizard-card '+(state.font === f ? 'active' : '')+'" data-type="font" data-val="'+f+'" style="width:auto; padding:10px; min-height:auto;">'+f+'</div>';
+          var isAct = state.font === f;
+          html += '<div class="wizard-card '+(isAct ? 'active' : '')+'" data-type="font" data-val="'+f+'" style="width:auto; padding:12px 18px; min-height:auto; font-family:\\\''+f+'\\\', sans-serif; font-size:1.05rem; border:'+(isAct?'2px solid var(--primary)':'1px solid rgba(255,255,255,0.15)')+'; background:'+(isAct?'rgba(13,110,253,0.18)':'rgba(255,255,255,0.04)')+'; display:flex; align-items:center; gap:8px;">';
+          html += '<i class="fas '+(isAct?'fa-check-circle':'fa-font')+'" style="color:'+(isAct?'var(--primary)':'#94a3b8')+';"></i> '+f+'</div>';
         });
         html += '</div>';
 
-        html += '<h4>3D Professional Animation Style</h4><div class="wizard-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px;">';
+        html += '<h4>3D Professional Animation Style</h4><div class="wizard-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 24px;">';
         ANIMATIONS.forEach(function(anim) {
-          html += '<div class="wizard-card '+(state.animation === anim.name ? 'active' : '')+'" data-type="animation" data-val="'+anim.name+'" style="text-align:left; padding:16px;">';
-          html += '<div style="font-weight:700; color:#fff; margin-bottom:4px;"><i class="fas fa-cube" style="color:var(--primary); margin-right:6px;"></i>'+anim.name+'</div>';
-          html += '<div style="font-size:0.8rem; color:#94a3b8;">'+anim.desc+'</div>';
+          var isAct = state.animation === anim.name;
+          html += '<div class="wizard-card '+(isAct ? 'active' : '')+'" data-type="animation" data-val="'+anim.name+'" style="text-align:left; padding:18px; border:'+(isAct?'2px solid '+anim.color:'1px solid rgba(255,255,255,0.12)')+'; background:'+(isAct?'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))':'rgba(255,255,255,0.03)')+'; box-shadow:'+(isAct?'0 0 20px '+anim.color+'33':'none')+'; position:relative;">';
+          html += '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">';
+          html += '<span style="font-weight:700; color:#fff; font-size:1rem; display:flex; align-items:center; gap:8px;"><i class="fas '+anim.icon+'" style="color:'+anim.color+'; font-size:1.15rem;"></i> '+anim.name+'</span>';
+          if (isAct) html += '<span style="background:'+anim.color+'; color:#fff; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:9999px;">ACTIVE</span>';
+          html += '</div>';
+          html += '<div style="font-size:0.84rem; color:#a1a1aa; line-height:1.5;">'+anim.desc+'</div>';
           html += '</div>';
         });
         html += '</div>';
@@ -2153,6 +2159,7 @@
 
       document.querySelectorAll('.wizard-card').forEach(function(c) {
         c.addEventListener('click', function() {
+          saveCurrentStep();
           if (c.getAttribute('data-type') === 'theme') state.theme = c.getAttribute('data-val');
           if (c.getAttribute('data-type') === 'color') state.colorPalette = c.getAttribute('data-val');
           if (c.getAttribute('data-type') === 'font') state.font = c.getAttribute('data-val');
@@ -2270,6 +2277,8 @@
       if (document.getElementById('pbAchievements')) state.achievements = document.getElementById('pbAchievements').value.trim();
       if (document.getElementById('pbSummary')) state.summary = document.getElementById('pbSummary').value.trim();
       if (document.getElementById('pbSkills')) state.skills = document.getElementById('pbSkills').value.trim();
+      if (document.getElementById('pbLinkedin')) state.socials.linkedin = document.getElementById('pbLinkedin').value.trim();
+      if (document.getElementById('pbGithub')) state.socials.github = document.getElementById('pbGithub').value.trim();
       state.personal.name = (state.personal.firstName + ' ' + state.personal.lastName).trim();
 
       var statusText = document.getElementById('pbStatusText');
@@ -2341,6 +2350,8 @@
         var font = state.font || 'Inter';
         var summary = state.summary || 'Welcome to my professional portfolio.';
         var skills = (typeof state.skills === 'string' ? state.skills.split(',') : (state.skills || [])).map(function(s){return typeof s === 'string' ? s.trim() : s;}).filter(Boolean);
+        var linkedin = (state.socials && state.socials.linkedin) || state.linkedin || '';
+        var github = (state.socials && state.socials.github) || state.github || '';
 
         var fallbackAvatar = getFallbackAvatarSvg(name, primary);
 
@@ -2429,6 +2440,12 @@
         html += '<div class="hero-actions">';
         if (resumeUrl && /^https?:\/\//i.test(resumeUrl)) {
           html += '<a href="'+resumeUrl+'" target="_blank" class="btn-primary"><i class="fas fa-file-alt"></i> View Resume</a>';
+        }
+        if (linkedin && /^https?:\/\//i.test(linkedin)) {
+          html += '<a href="'+linkedin+'" target="_blank" class="btn-primary" style="background:#0A66C2;border-color:#0A66C2;color:#fff;"><i class="fab fa-linkedin"></i> LinkedIn</a>';
+        }
+        if (github && /^https?:\/\//i.test(github)) {
+          html += '<a href="'+github+'" target="_blank" class="btn-primary" style="background:#24292E;border-color:#24292E;color:#fff;"><i class="fab fa-github"></i> GitHub</a>';
         }
         html += '<a href="#contact" class="btn-outline"><i class="fas fa-paper-plane"></i> Contact Me</a>';
         html += '</div></div></section>';
@@ -2538,6 +2555,12 @@
         }
         if (phone) {
           html += '<a href="tel:'+phone+'" class="btn-primary" style="background:rgba(255,255,255,0.15);color:#fff;"><i class="fas fa-phone"></i> '+phone+'</a>';
+        }
+        if (linkedin && /^https?:\/\//i.test(linkedin)) {
+          html += '<a href="'+linkedin+'" target="_blank" class="btn-primary" style="background:#0A66C2;color:#fff;"><i class="fab fa-linkedin"></i> LinkedIn</a>';
+        }
+        if (github && /^https?:\/\//i.test(github)) {
+          html += '<a href="'+github+'" target="_blank" class="btn-primary" style="background:#24292E;color:#fff;"><i class="fab fa-github"></i> GitHub</a>';
         }
         html += '</div></div></div></section>';
 
