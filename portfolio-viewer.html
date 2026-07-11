@@ -790,6 +790,7 @@
         var lookup = params.get('u') || params.get('username') || params.get('id');
         if (!lookup && window.location.pathname.indexOf('/p/') !== -1) {
             lookup = window.location.pathname.split('/p/')[1];
+        }
 
         if (!lookup) {
             var path = window.location.pathname;
