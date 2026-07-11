@@ -2647,10 +2647,11 @@
         html += '</div></div></div></section>';
 
         // 3D & Interactive Animation Engine Script
+        var animationStyle = state.animation || '3D Tilt & Glow';
         html += '<script>';
         html += 'document.addEventListener("DOMContentLoaded", function() {';
         html += '  if (window.matchMedia && window.matchMedia("(hover: none)").matches) return;';
-        if (animation === '3D Tilt & Glow') {
+        if (animationStyle === '3D Tilt & Glow') {
           html += '  var cards = document.querySelectorAll(".card, .contact-card");';
           html += '  cards.forEach(function(card) {';
           html += '    card.style.transformStyle = "preserve-3d";';
