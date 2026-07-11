@@ -14,10 +14,13 @@
     ],
     "rewrites": [
       { "source": "/gallery", "destination": "/prompt-gallery.html" },
+      { "source": "/profile", "destination": "/profile.html" },
       { "source": "/wishlist", "destination": "/profile.html" },
       { "source": "/payments", "destination": "/profile.html" },
       { "source": "/admin/dashboard", "destination": "/admin-dashboard.html" },
-      { "source": "/p/**", "destination": "/portfolio-viewer.html" }
+      { "source": "/p/**", "destination": "/portfolio-viewer.html" },
+      { "source": "/u/**", "destination": "/portfolio-viewer.html" },
+      { "source": "/portfolio/**", "destination": "/portfolio-viewer.html" }
     ]
   }
 }

@@ -384,6 +384,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Update navbar avatar across all pages
+    function updateNavbarProfileAvatar(userObj) {
+        let u = userObj;
+        if (!u) {
+            try {
+                u = JSON.parse(localStorage.getItem("currentUser") || localStorage.getItem("user") || "null");
+            } catch(e) {}
+        }
+        const avatarEl = document.querySelector('.user-avatar') || document.querySelector('a[href="/profile"]');
+        if (!avatarEl) return;
+
+        if (u && (u.email || u.uid || u.user_id)) {
+            avatarEl.href = "/profile";
+            avatarEl.title = `${u.full_name || u.username || u.displayName || u.email || 'My Profile'} - Open Dashboard`;
+            const photo = u.profile_picture || u.photoURL;
+            const name = u.full_name || u.username || u.displayName || u.email || "U";
+            const initial = name.charAt(0).toUpperCase();
+
+            if (photo && photo.startsWith('http')) {
+                avatarEl.innerHTML = `<img src="${photo}" alt="${initial}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                avatarEl.textContent = initial;
+            }
+        } else {
+            avatarEl.href = "/login";
+            avatarEl.title = "Login to your account";
+        }
+    }
+    updateNavbarProfileAvatar();
+
     // Check Firebase Auth state for automatic redirection if already authenticated
     try {
         if (auth) {
@@ -404,6 +434,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             localStorage.setItem("currentUser", JSON.stringify(currentUser));
                         }
                         window.location.replace("/gallery");
+                    } else {
+                        updateNavbarProfileAvatar(user);
                     }
                 }
             });

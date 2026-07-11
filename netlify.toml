@@ -43,6 +43,21 @@
   to = "/admin-dashboard.html"
   status = 200
 
+[[redirects]]
+  from = "/p/*"
+  to = "/portfolio-viewer.html"
+  status = 200
+
+[[redirects]]
+  from = "/u/*"
+  to = "/portfolio-viewer.html"
+  status = 200
+
+[[redirects]]
+  from = "/portfolio/*"
+  to = "/portfolio-viewer.html"
+  status = 200
+
 [build]
   command = "echo 'Netlify static deploy'"
   publish = "."

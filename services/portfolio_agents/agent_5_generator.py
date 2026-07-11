@@ -12,7 +12,7 @@ class PortfolioGenerationAgent:
         gdrive_match = re.search(r'drive\.google\.com/.*(?:file/d/|id=)([a-zA-Z0-9_-]+)', url)
         if gdrive_match:
             file_id = gdrive_match.group(1)
-            primary_url = f"https://lh3.googleusercontent.com/d/{file_id}"
+            primary_url = f"https://drive.google.com/uc?export=view&id={file_id}"
             fallback_url = f"https://drive.google.com/thumbnail?id={file_id}&sz=w1000"
             return primary_url, fallback_url
         if 'dropbox.com' in url and '?dl=0' in url:
@@ -174,9 +174,27 @@ class PortfolioGenerationAgent:
             transform: translateY(-1px);
         }}
         .container {{
-            max-width: 1200px;
+            width: 100%;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 16px;
+        }}
+        @media (min-width: 768px) {{
+            .container {{
+                max-width: 720px;
+                padding: 0 24px;
+            }}
+        }}
+        @media (min-width: 1024px) {{
+            .container {{
+                max-width: 960px;
+                padding: 0 32px;
+            }}
+        }}
+        @media (min-width: 1280px) {{
+            .container {{
+                max-width: 1200px;
+                padding: 0 48px;
+            }}
         }}
         
         /* Hero Section */

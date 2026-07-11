@@ -166,12 +166,7 @@ const initDashboard = async () => {
         await loadUserWishlist(userId);
         await loadUserPurchases(userId);
     } else {
-        // No cached user session found - check if we are on a protected page and redirect immediately
-        const protectedPaths = ['/wishlist', '/profile', '/payments', '/copy-history'];
-        if (protectedPaths.some(path => window.location.pathname.includes(path))) {
-            window.location.replace('/login');
-            return;
-        }
+        console.log("No initial cached session. Waiting for Firebase Auth confirmation before redirecting...");
     }
     
     // 2. Start Self-healing in background (NON-BLOCKING!)
@@ -278,6 +273,16 @@ const initDashboard = async () => {
 };
 
 initDashboard();
+
+setTimeout(() => {
+    const currentLocalUser = getCurrentUser();
+    if (!currentLocalUser && !window.currentUser) {
+        const protectedPaths = ['/wishlist', '/profile', '/payments', '/copy-history'];
+        if (protectedPaths.some(path => window.location.pathname.includes(path))) {
+            window.location.replace('/login');
+        }
+    }
+}, 1800);
 
 // --- Profile Editing Logic ---
 

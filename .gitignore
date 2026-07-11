@@ -72,3 +72,6 @@ firebase-adminsdk.json
 # Python
 __pycache__/
 *.pyc
+
+# Local Generated Portfolios
+static/portfolios/*.html

@@ -1119,17 +1119,17 @@
       if (t === 'wifi') return i.ssid ? 'WIFI:T:' + i.enc + ';S:' + i.ssid + ';P:' + i.pass + ';' + (i.hidden ? 'H:true' : '') + ';;' : '';
       if (t === 'vcard') {
         if (!i.fn && !i.org && !i.tel && !i.email && !i.url && !i.title) return '';
-        var name = i.fn || i.org || 'Contact';
+        var name = (i.fn || i.org || 'Contact').trim();
         var parts = name.split(' ');
         var lastName = parts.length > 1 ? parts.slice(1).join(' ') : '';
         var firstName = parts[0] || '';
-        var vc = 'BEGIN:VCARD\r\nVERSION:3.0\r\nN:' + lastName + ';' + firstName + ';;;\r\nFN:' + name + '\r\n';
-        if (i.org) vc += 'ORG:' + i.org + '\r\n';
-        if (i.title) vc += 'TITLE:' + i.title + '\r\n';
-        if (i.tel) vc += 'TEL;TYPE=CELL:' + i.tel + '\r\n';
-        if (i.email) vc += 'EMAIL;TYPE=INTERNET:' + i.email + '\r\n';
-        if (i.url) vc += 'URL:' + (i.url.startsWith('http') ? i.url : 'https://' + i.url) + '\r\n';
-        vc += 'END:VCARD\r\n';
+        var vc = 'BEGIN:VCARD\nVERSION:3.0\nN:' + lastName + ';' + firstName + ';;;\nFN:' + name + '\n';
+        if (i.org) vc += 'ORG:' + i.org + '\n';
+        if (i.title) vc += 'TITLE:' + i.title + '\n';
+        if (i.tel) vc += 'TEL;TYPE=CELL,VOICE:' + i.tel + '\n';
+        if (i.email) vc += 'EMAIL;TYPE=INTERNET:' + i.email + '\n';
+        if (i.url) vc += 'URL:' + (i.url.startsWith('http') ? i.url : 'https://' + i.url) + '\n';
+        vc += 'END:VCARD';
         return vc;
       }
       if (t === 'geo') return (i.lat && i.lng) ? 'geo:' + i.lat + ',' + i.lng : '';
@@ -2217,22 +2217,38 @@
       var statusText = document.getElementById('pbStatusText');
       statusText.innerHTML = 'Submitting to AI Agents...<br><span style="color:#6366f1;">Agent 1 (Validator): Checking inputs...</span>';
       
-      // Need a unique username for subdomain format
-      var username = state.personal.name ? state.personal.name.toLowerCase().replace(/[^a-z0-9]/g, '') : 'user' + Math.floor(Math.random()*1000);
-      if(!username) username = 'user' + Math.floor(Math.random()*1000);
-      
+      function getOrGenerateUserId() {
+        if (window.sessionUser && window.sessionUser.uid) return window.sessionUser.uid;
+        var existing = localStorage.getItem('pb_user_uuid');
+        if (existing) return existing;
+        var newUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+        localStorage.setItem('pb_user_uuid', newUuid);
+        return newUuid;
+      }
+
+      var userId = getOrGenerateUserId();
+      var cleanSlug = state.personal.name ? state.personal.name.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'user';
+      cleanSlug = cleanSlug.replace(/-+/g, '-').replace(/^-|-$/g, '');
+      var username = cleanSlug || ('user-' + Math.floor(100 + Math.random()*900));
+
+      state.user_id = userId;
+      state.username = username;
+
       var payload = {
-        user_id: (window.sessionUser ? window.sessionUser.uid : 'guest'),
+        user_id: userId,
         username: username,
         data: state
       };
-      
+
       function normalizeImageUrl(url) {
-        if (!url) return '';
+        if (!url || typeof url !== 'string') return '';
         url = url.trim().replace(/^['"]|['"]$/g, '');
-        var gdriveMatch = url.match(/drive\.google\.com\/.*(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/);
+        var gdriveMatch = url.match(/drive\.google\.com\/.*(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/i);
         if (gdriveMatch && gdriveMatch[1]) {
-          return 'https://lh3.googleusercontent.com/d/' + gdriveMatch[1];
+          return 'https://drive.google.com/uc?export=view&id=' + gdriveMatch[1];
         }
         if (url.indexOf('dropbox.com') !== -1) {
           return url.replace('dl=0', 'raw=1');
@@ -2240,90 +2256,212 @@
         return url;
       }
 
+      function getFallbackAvatarSvg(name, color) {
+        var initials = (name || 'PB').trim().split(/\s+/).slice(0, 2).map(function(p){return p.charAt(0).toUpperCase();}).join('');
+        var c = encodeURIComponent(color || '#0D6EFD');
+        return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="' + c + '"/><stop offset="100%" stop-color="%236366F1"/></linearGradient></defs><rect width="240" height="240" fill="url(%23g)" rx="120"/><text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" font-family="Inter, -apple-system, sans-serif" font-size="86" font-weight="800" fill="white">' + initials + '</text></svg>';
+      }
+
       function buildClientSidePortfolioHtml(username, state) {
-        var name = state.personal.name || 'My Portfolio';
-        var role = state.personal.role || 'Professional';
-        var photoUrl = normalizeImageUrl(state.personal.photoUrl || state.personal.photo);
+        var name = (state.personal && state.personal.name) || state.name || 'My Portfolio';
+        var role = (state.personal && state.personal.role) || state.role || 'Professional';
+        var email = (state.personal && state.personal.email) || state.email || '';
+        var phone = (state.personal && state.personal.phone) || state.phone || '';
+        var resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
+        var photoUrl = normalizeImageUrl((state.personal && (state.personal.photoUrl || state.personal.photo)) || state.photo);
         var primary = state.colorPalette || '#0D6EFD';
         var font = state.font || 'Inter';
         var summary = state.summary || 'Welcome to my professional portfolio.';
-        var skills = (state.skills || '').split(',').map(s=>s.trim()).filter(Boolean);
+        var skills = (typeof state.skills === 'string' ? state.skills.split(',') : (state.skills || [])).map(function(s){return typeof s === 'string' ? s.trim() : s;}).filter(Boolean);
 
-        var validExp = (state.experience || []).filter(e => (e.company||'').trim() || (e.role||'').trim() || (e.description||'').trim());
-        var validProj = (state.projects || []).filter(p => (p.title||'').trim() || (p.description||'').trim() || (p.imageUrl||'').trim() || (p.link||'').trim());
-        var validEdu = (state.education || []).filter(ed => (ed.institution||'').trim() || (ed.degree||'').trim() || (ed.year||'').trim());
-        var validCert = (state.certificates || []).filter(c => (c.name||'').trim() || (c.issuer||'').trim() || (c.imageUrl||'').trim());
+        var fallbackAvatar = getFallbackAvatarSvg(name, primary);
+
+        var validExp = (state.experience || []).filter(function(e){ return (e.company||'').trim() || (e.role||'').trim() || (e.description||'').trim(); });
+        var validProj = (state.projects || []).filter(function(p){ return (p.title||'').trim() || (p.description||'').trim() || (p.imageUrl||'').trim() || (p.link||'').trim(); });
+        var validEdu = (state.education || []).filter(function(ed){ return (ed.institution||'').trim() || (ed.degree||'').trim() || (ed.year||'').trim(); });
+        var validCert = (state.certificates || []).filter(function(c){ return (c.name||'').trim() || (c.issuer||'').trim() || (c.imageUrl||'').trim(); });
 
         var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">';
         html += '<title>'+name+' | '+role+'</title>';
         html += '<meta name="description" content="'+summary.replace(/"/g, '&quot;')+'">';
         html += '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">';
         html += '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">';
-        html += '<style>:root{--primary:'+primary+';--text-main:#0f172a;--text-muted:#475569;--bg-base:#f8fafc;}*{margin:0;padding:0;box-sizing:border-box;}body{font-family:"'+font+'",sans-serif;background:var(--bg-base);color:var(--text-main);line-height:1.6;overflow-x:hidden;}@keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}@keyframes floatAvatar{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}.navbar{position:sticky;top:0;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);padding:16px 40px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,0.06);z-index:100;transition:all 0.3s;}.nav-brand{font-weight:800;font-size:1.35rem;color:var(--primary);text-decoration:none;display:flex;align-items:center;gap:8px;}.hero{padding:90px 20px 60px;text-align:center;max-width:820px;margin:0 auto;animation:fadeInUp 0.8s ease-out;}.hero img{width:148px;height:148px;border-radius:50%;object-fit:cover;border:4px solid var(--primary);box-shadow:0 12px 30px rgba(13,110,253,0.28);margin-bottom:24px;display:inline-block;animation:floatAvatar 4s ease-in-out infinite;}.hero h1{font-size:3rem;font-weight:800;margin-bottom:10px;background:linear-gradient(135deg,var(--text-main),var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}.hero h2{font-size:1.4rem;color:var(--primary);margin-bottom:20px;font-weight:600;}.hero p{color:var(--text-muted);font-size:1.15rem;max-width:680px;margin:0 auto;}.section{max-width:960px;margin:60px auto;padding:0 24px;animation:fadeInUp 0.9s ease-out;}.section-title{font-size:1.85rem;font-weight:800;margin-bottom:28px;color:var(--text-main);border-left:5px solid var(--primary);padding-left:14px;}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;}.card{background:#fff;border-radius:18px;padding:26px;box-shadow:0 8px 24px rgba(0,0,0,0.05);border:1px solid rgba(0,0,0,0.06);transition:all 0.3s cubic-bezier(0.16,1,0.3,1);}.card:hover{transform:translateY(-6px);box-shadow:0 16px 36px rgba(0,0,0,0.1);border-color:var(--primary);}.card h3{font-size:1.25rem;margin-bottom:8px;font-weight:700;}.card .sub{color:var(--text-muted);font-size:0.9rem;margin-bottom:12px;font-weight:500;}.tag-container{display:flex;flex-wrap:wrap;gap:10px;}.tag{background:rgba(13,110,253,0.1);color:var(--primary);padding:8px 16px;border-radius:30px;font-weight:600;font-size:0.92rem;transition:transform 0.2s;}.tag:hover{transform:scale(1.05);}.proj-img{width:100%;height:190px;object-fit:cover;border-radius:12px;margin-bottom:16px;display:block;}.btn{display:inline-block;background:var(--primary);color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:600;margin-top:16px;transition:all 0.2s;box-shadow:0 4px 14px rgba(13,110,253,0.3);}.btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(13,110,253,0.4);}footer{text-align:center;padding:60px 20px;color:var(--text-muted);font-size:0.9rem;}@media (max-width: 479px){.navbar{padding:14px 16px;}.hero{padding:60px 14px 40px;width:100%;}.hero h1{font-size:2.2rem;}.hero img{width:120px;height:120px;}.section{padding:0 14px;margin:40px auto;width:100%;}.grid{grid-template-columns:1fr;gap:16px;}.card{padding:20px;}}@media (min-width: 480px) and (max-width: 767px){.navbar{padding:16px 20px;}.hero{padding:70px 16px 50px;max-width:460px;}.section{padding:0 16px;max-width:460px;}.grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;}}@media (min-width: 768px) and (max-width: 1023px){.navbar{padding:16px 32px;}.hero{max-width:720px;padding:80px 24px 60px;}.section{max-width:750px;padding:0 24px;}.grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;}}</style></head><body>';
-        html += '<nav class="navbar"><a href="#" class="nav-brand"><i class="fas fa-briefcase"></i> '+name+'</a></nav>';
-        html += '<div class="hero">';
-        if (photoUrl) {
-          html += '<img src="'+photoUrl+'" alt="'+name+'" onerror="this.onerror=null;this.src=\'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80\';">';
-        }
-        html += '<h1>'+name+'</h1><h2>'+role+'</h2><p>'+summary+'</p></div>';
+        html += '<style>';
+        html += ':root { --primary: '+primary+'; --text-main: #0f172a; --text-muted: #475569; --bg-base: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0; }';
+        html += '*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }';
+        html += 'html { scroll-behavior: smooth; overflow-x: hidden; }';
+        html += 'body { font-family: "'+font+'", "Inter", sans-serif; background: var(--bg-base); color: var(--text-main); line-height: 1.65; overflow-x: hidden; width: 100%; }';
+        html += '@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }';
+        html += '.navbar { position: sticky; top: 0; background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); z-index: 1000; }';
+        html += '.nav-brand { font-weight: 800; font-size: clamp(1.1rem, 2vw, 1.35rem); color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 10px; }';
+        html += '.nav-btn { background: var(--primary); color: #fff; padding: 10px 20px; border-radius: 9999px; font-weight: 600; font-size: 0.9rem; text-decoration: none; transition: all 0.2s cubic-bezier(0.16,1,0.3,1); box-shadow: 0 4px 14px rgba(13, 110, 253, 0.25); }';
+        html += '.nav-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(13, 110, 253, 0.38); }';
+        html += '.container { width: 100%; margin: 0 auto; }';
+        html += '@media (max-width: 767px) { .container { width: 100%; padding: 0 16px; max-width: none; } }';
+        html += '@media (min-width: 768px) and (max-width: 1023px) { .container { max-width: 720px; padding: 0 24px; } }';
+        html += '@media (min-width: 1024px) and (max-width: 1279px) { .container { max-width: 960px; padding: 0 32px; } }';
+        html += '@media (min-width: 1280px) { .container { max-width: 1200px; padding: 0 48px; } }';
+        html += '.hero-section { padding: clamp(48px, 8vw, 96px) 0 clamp(36px, 6vw, 64px); text-align: center; animation: fadeInUp 0.7s ease-out; }';
+        html += '.avatar-wrap { width: clamp(110px, 18vw, 156px); height: clamp(110px, 18vw, 156px); margin: 0 auto 24px; border-radius: 50%; overflow: hidden; border: 4px solid #fff; box-shadow: 0 16px 36px rgba(0,0,0,0.12); }';
+        html += '.avatar-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }';
+        html += '.hero-title { font-size: clamp(2rem, 5.5vw, 3.6rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; line-height: 1.15; }';
+        html += '.hero-role { font-size: clamp(1.1rem, 2.5vw, 1.45rem); color: var(--primary); font-weight: 700; margin-bottom: 20px; }';
+        html += '.hero-summary { max-width: 680px; margin: 0 auto 28px; color: var(--text-muted); font-size: clamp(1rem, 1.8vw, 1.15rem); line-height: 1.7; }';
+        html += '.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 24px; }';
+        html += '.btn-primary { background: var(--primary); color: #fff; padding: 12px 26px; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; box-shadow: 0 4px 14px rgba(0,0,0,0.1); }';
+        html += '.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }';
+        html += '.btn-outline { background: #fff; color: var(--text-main); border: 1px solid var(--border); padding: 12px 26px; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; }';
+        html += '.btn-outline:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }';
+        html += '.section { padding: clamp(36px, 6vw, 64px) 0; }';
+        html += '.section-header { margin-bottom: clamp(24px, 4vw, 36px); }';
+        html += '.section-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; }';
+        html += '.section-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; }';
+        html += '.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(16px, 2.5vw, 24px); }';
+        html += '@media (max-width: 767px) { .card-grid { grid-template-columns: 1fr; gap: 16px; } }';
+        html += '.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: clamp(20px, 3.5vw, 28px); box-shadow: 0 4px 18px rgba(0,0,0,0.03); transition: all 0.3s cubic-bezier(0.16,1,0.3,1); display: flex; flex-direction: column; }';
+        html += '.card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(0,0,0,0.08); border-color: var(--primary); }';
+        html += '.card-title { font-size: clamp(1.15rem, 2.2vw, 1.35rem); font-weight: 700; margin-bottom: 6px; }';
+        html += '.card-meta { color: var(--primary); font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }';
+        html += '.card-body { color: var(--text-muted); font-size: 0.96rem; line-height: 1.65; flex-grow: 1; }';
+        html += '.skill-tags { display: flex; flex-wrap: wrap; gap: 10px; }';
+        html += '.skill-chip { background: rgba(13, 110, 253, 0.08); color: var(--primary); padding: 8px 18px; border-radius: 9999px; font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(13, 110, 253, 0.15); transition: all 0.2s; }';
+        html += '.skill-chip:hover { transform: translateY(-2px); background: var(--primary); color: #fff; }';
+        html += '.proj-img-wrap { width: 100%; height: 200px; border-radius: 14px; overflow: hidden; margin-bottom: 18px; background: #f1f5f9; }';
+        html += '.proj-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }';
+        html += '.card:hover .proj-img-wrap img { transform: scale(1.06); }';
+        html += '.contact-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #fff; border-radius: 24px; padding: clamp(32px, 6vw, 48px); text-align: center; box-shadow: 0 20px 40px rgba(15,23,42,0.15); }';
+        html += '.contact-card h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 12px; }';
+        html += '.contact-card p { color: #94a3b8; font-size: clamp(1rem, 2vw, 1.15rem); max-width: 560px; margin: 0 auto 28px; }';
+        html += 'footer { text-align: center; padding: 48px 24px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); margin-top: 48px; }';
+        html += '</style></head><body>';
 
+        html += '<nav class="navbar"><a href="#" class="nav-brand"><i class="fas fa-layer-group"></i> '+name+'</a><a href="#contact" class="nav-btn">Get in Touch</a></nav>';
+
+        // HERO SECTION
+        html += '<section class="section hero-section"><div class="container">';
+        html += '<div class="avatar-wrap"><img src="'+(photoUrl || fallbackAvatar)+'" alt="'+name+'" onerror="this.onerror=null;this.src=\''+fallbackAvatar+'\';"></div>';
+        html += '<h1 class="hero-title">'+name+'</h1>';
+        html += '<div class="hero-role">'+role+'</div>';
+        html += '<p class="hero-summary">'+summary+'</p>';
+        html += '<div class="hero-actions">';
+        if (resumeUrl) {
+          html += '<a href="'+resumeUrl+'" target="_blank" class="btn-primary"><i class="fas fa-file-alt"></i> View Resume</a>';
+        }
+        html += '<a href="#contact" class="btn-outline"><i class="fas fa-paper-plane"></i> Contact Me</a>';
+        html += '</div></div></section>';
+
+        // ABOUT / SUMMARY SECTION
+        html += '<section class="section"><div class="container">';
+        html += '<div class="section-header"><h2 class="section-title">About Me</h2></div>';
+        html += '<div class="card" style="padding: clamp(24px, 4vw, 36px);"><p class="card-body" style="font-size: 1.05rem;">'+summary+'</p></div>';
+        html += '</div></section>';
+
+        // SKILLS SECTION
         if (skills.length > 0) {
-          html += '<div class="section"><h2 class="section-title">Core Competencies</h2><div class="tag-container">';
-          skills.forEach(s => html += '<span class="tag">'+s+'</span>');
-          html += '</div></div>';
+          html += '<section class="section"><div class="container">';
+          html += '<div class="section-header"><h2 class="section-title">Core Competencies</h2><div class="section-subtitle">Skills & expertise</div></div>';
+          html += '<div class="skill-tags">';
+          skills.forEach(function(s){ html += '<span class="skill-chip">'+s+'</span>'; });
+          html += '</div></div></section>';
         }
-        if (validExp.length > 0) {
-          html += '<div class="section"><h2 class="section-title">Experience</h2><div class="grid">';
-          validExp.forEach(e => {
-            html += '<div class="card"><h3>'+(e.role||'Role')+'</h3><div class="sub"><i class="fas fa-building"></i> '+(e.company||'')+' | '+(e.duration||'')+'</div><p>'+(e.description||'')+'</p></div>';
-          });
-          html += '</div></div>';
-        }
+
+        // PROJECTS SECTION
         if (validProj.length > 0) {
-          html += '<div class="section"><h2 class="section-title">Selected Projects</h2><div class="grid">';
-          validProj.forEach(p => {
+          html += '<section class="section"><div class="container">';
+          html += '<div class="section-header"><h2 class="section-title">Featured Projects</h2><div class="section-subtitle">Highlights of my work</div></div>';
+          html += '<div class="card-grid">';
+          validProj.forEach(function(p){
             html += '<div class="card">';
             var normProjImg = normalizeImageUrl(p.imageUrl);
-            if (normProjImg) {
-              html += '<img src="'+normProjImg+'" class="proj-img" alt="'+(p.title||'Project')+'" onerror="this.onerror=null;this.style.display=\'none\';">';
+            html += '<div class="proj-img-wrap"><img src="'+(normProjImg || fallbackAvatar)+'" alt="'+(p.title||'Project')+'" onerror="this.onerror=null;this.src=\''+fallbackAvatar+'\';"></div>';
+            html += '<h3 class="card-title">'+(p.title||'Project')+'</h3>';
+            html += '<p class="card-body">'+(p.description||'')+'</p>';
+            if (p.link) {
+              html += '<div style="margin-top:18px;"><a href="'+p.link+'" target="_blank" class="btn-outline" style="padding: 8px 18px; font-size: 0.88rem;">Explore Project <i class="fas fa-external-link-alt"></i></a></div>';
             }
-            html += '<h3>'+(p.title||'Project')+'</h3><p>'+(p.description||'')+'</p>';
-            if (p.link) html += '<a href="'+p.link+'" target="_blank" class="btn">View Project <i class="fas fa-arrow-right"></i></a>';
             html += '</div>';
           });
-          html += '</div></div>';
+          html += '</div></div></section>';
         }
-        if (validEdu.length > 0) {
-          html += '<div class="section"><h2 class="section-title">Education</h2><div class="grid">';
-          validEdu.forEach(ed => {
-            html += '<div class="card"><h3>'+(ed.degree||'Degree')+'</h3><div class="sub"><i class="fas fa-university"></i> '+(ed.institution||'')+' | '+(ed.year||'')+'</div></div>';
+
+        // EXPERIENCE SECTION
+        if (validExp.length > 0) {
+          html += '<section class="section"><div class="container">';
+          html += '<div class="section-header"><h2 class="section-title">Professional Experience</h2><div class="section-subtitle">My career journey</div></div>';
+          html += '<div class="card-grid">';
+          validExp.forEach(function(e){
+            html += '<div class="card">';
+            html += '<h3 class="card-title">'+(e.role||'Role')+'</h3>';
+            html += '<div class="card-meta"><i class="fas fa-building"></i> '+(e.company||'Company')+' &bull; '+(e.duration||'')+'</div>';
+            html += '<p class="card-body">'+(e.description||'')+'</p>';
+            html += '</div>';
           });
-          html += '</div></div>';
+          html += '</div></div></section>';
         }
+
+        // EDUCATION SECTION
+        if (validEdu.length > 0) {
+          html += '<section class="section"><div class="container">';
+          html += '<div class="section-header"><h2 class="section-title">Education</h2></div>';
+          html += '<div class="card-grid">';
+          validEdu.forEach(function(ed){
+            html += '<div class="card">';
+            html += '<h3 class="card-title">'+(ed.degree||'Degree')+'</h3>';
+            html += '<div class="card-meta"><i class="fas fa-university"></i> '+(ed.institution||'Institution')+' &bull; '+(ed.year||'')+'</div>';
+            html += '</div>';
+          });
+          html += '</div></div></section>';
+        }
+
+        // CERTIFICATIONS SECTION
         if (validCert.length > 0) {
-          html += '<div class="section"><h2 class="section-title">Certifications</h2><div class="grid">';
-          validCert.forEach(c => {
+          html += '<section class="section"><div class="container">';
+          html += '<div class="section-header"><h2 class="section-title">Certifications</h2></div>';
+          html += '<div class="card-grid">';
+          validCert.forEach(function(c){
             html += '<div class="card">';
             var normCertImg = normalizeImageUrl(c.imageUrl);
             if (normCertImg) {
-              html += '<img src="'+normCertImg+'" class="proj-img" alt="'+(c.name||'Certificate')+'" onerror="this.onerror=null;this.style.display=\'none\';">';
+              html += '<div class="proj-img-wrap" style="height:140px;"><img src="'+normCertImg+'" alt="'+(c.name||'Certificate')+'" onerror="this.onerror=null;this.style.display=\'none\';"></div>';
             }
-            html += '<h3>'+(c.name||'Certificate')+'</h3><div class="sub"><i class="fas fa-award"></i> '+(c.issuer||'')+' | '+(c.year||'')+'</div></div>';
+            html += '<h3 class="card-title">'+(c.name||'Certificate')+'</h3>';
+            html += '<div class="card-meta"><i class="fas fa-award"></i> '+(c.issuer||'Issuer')+'</div>';
+            html += '</div>';
           });
-          html += '</div></div>';
+          html += '</div></div></section>';
         }
+
+        // ACHIEVEMENTS SECTION
         var achievementsText = (state.achievements || '').trim();
         if (achievementsText) {
-          var achievementLines = achievementsText.split('\n').map(s => s.trim()).filter(Boolean);
+          var achievementLines = achievementsText.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
           if (achievementLines.length > 0) {
-            html += '<div class="section"><h2 class="section-title">Honors &amp; Achievements</h2><div class="grid">';
+            html += '<section class="section"><div class="container">';
+            html += '<div class="section-header"><h2 class="section-title">Honors &amp; Achievements</h2></div>';
+            html += '<div class="card-grid">';
             achievementLines.forEach(function(item) {
-              html += '<div class="card" style="display:flex;align-items:flex-start;gap:14px;"><i class="fas fa-trophy" style="color:#f59e0b;font-size:1.5rem;margin-top:2px;"></i><div><h3 style="margin-bottom:4px;">Achievement</h3><p style="color:var(--text-muted);font-size:0.95rem;">'+item+'</p></div></div>';
+              html += '<div class="card" style="flex-direction:row;align-items:flex-start;gap:14px;"><i class="fas fa-trophy" style="color:#f59e0b;font-size:1.4rem;margin-top:2px;"></i><div><h3 style="font-size:1.05rem;font-weight:700;margin-bottom:4px;">Achievement</h3><p style="color:var(--text-muted);font-size:0.95rem;">'+item+'</p></div></div>';
             });
-            html += '</div></div>';
+            html += '</div></div></section>';
           }
         }
-        html += '<footer>&copy; '+name+' &bull; Powered by AI Portfolio Builder Pro</footer></body></html>';
+
+        // CONTACT SECTION
+        html += '<section class="section" id="contact"><div class="container">';
+        html += '<div class="contact-card">';
+        html += '<h2>Let&rsquo;s Connect</h2>';
+        html += '<p>Open to opportunities, collaboration, and exciting projects. Feel free to reach out anytime.</p>';
+        html += '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px;">';
+        if (email) {
+          html += '<a href="mailto:'+email+'" class="btn-primary" style="background:#fff;color:#0f172a;"><i class="fas fa-envelope"></i> '+email+'</a>';
+        }
+        if (phone) {
+          html += '<a href="tel:'+phone+'" class="btn-primary" style="background:rgba(255,255,255,0.15);color:#fff;"><i class="fas fa-phone"></i> '+phone+'</a>';
+        }
+        html += '</div></div></div></section>';
+
+        // FOOTER
+        html += '<footer><div class="container">&copy; '+new Date().getFullYear()+' '+name+' &bull; Powered by <strong>Prompt Bazaar Labs</strong></div></footer></body></html>';
         return html;
       }
 
@@ -2366,20 +2504,36 @@
           localStorage.setItem('portfolio_html_' + username, htmlContent);
           localStorage.setItem('portfolio_latest_html', htmlContent);
         } catch(e){}
-        var encodedStateParam = '';
-        try {
-          encodedStateParam = '&d=' + encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(state)))));
-        } catch(e) {}
-        var targetUrl = '/portfolio-viewer?u=' + encodeURIComponent(username) + encodedStateParam;
 
-        // Also save portfolio data to Google Sheets via Apps Script webhook
+        // PHASE 6 CLEAN URL ARCHITECTURE: Never expose base64 encoded JSON in URL
+        var targetUrl = '/portfolio-viewer?u=' + encodeURIComponent(username);
+
+        // Also save portfolio data to Google Sheets via Apps Script webhook & user history
         try {
-          var livePortfolioUrl = 'https://prompt-bazaar.web.app/portfolio-viewer?u=' + encodeURIComponent(username);
-          var liveSubdomain = 'https://' + username + '.prompt-bazaar.web.app/';
+          var livePortfolioUrl = 'https://prompt-bazaar.web.app/p/' + encodeURIComponent(username);
+          var liveSubdomain = 'https://' + username + '.prompt-bazaar.web.app/ , https://' + username + '.promptbazzar.netlify.app/';
           state.resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
           state.colorPalette = state.colorPalette || '#0D6EFD';
           state.font = state.font || 'Inter';
-          state.theme = state.theme || 'Minimal';
+          state.theme = state.theme || 'Minimal SaaS';
+
+          // Save to User Profile Dashboard History
+          try {
+            var savedHistory = JSON.parse(localStorage.getItem('pb_user_portfolios') || '[]');
+            savedHistory = savedHistory.filter(function(item) { return item.username !== username; });
+            savedHistory.unshift({
+              id: username,
+              username: username,
+              name: (state.personal && state.personal.name) || username,
+              theme: state.theme,
+              colorPalette: state.colorPalette,
+              portfolioUrl: livePortfolioUrl,
+              customSubdomain: 'https://' + username + '.prompt-bazaar.web.app/',
+              createdAt: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+              data: state
+            });
+            localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory));
+          } catch(historyErr) {}
 
           fetch('https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec', {
             method: 'POST',
@@ -2387,7 +2541,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               action: 'save_portfolio',
-              user_id: (window.sessionUser ? window.sessionUser.uid : 'guest'),
+              user_id: userId,
               username: username,
               portfolio_url: livePortfolioUrl,
               custom_subdomain: liveSubdomain,

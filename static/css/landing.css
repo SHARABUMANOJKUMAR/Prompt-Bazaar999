@@ -1033,20 +1033,25 @@ section {
   }
   .nav-btns {
     display: flex !important;
-    gap: 6px !important;
+    gap: 8px !important;
     align-items: center !important;
     flex-shrink: 0 !important;
   }
-  .nav-btns .btn {
-    height: 34px !important;
-    padding: 0 12px !important;
+  .nav-btns .btn-outline {
+    display: none !important;
+  }
+  .nav-btns .btn-primary {
+    height: 36px !important;
+    padding: 0 14px !important;
     font-size: 13px !important;
+    font-weight: 700 !important;
     border-radius: 9999px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     width: auto !important;
     flex-shrink: 0 !important;
+    box-shadow: 0 2px 10px rgba(13, 110, 253, 0.25) !important;
   }
   .mobile-toggle {
     display: block !important;
@@ -1143,7 +1148,7 @@ section {
   }
   .hero {
     margin-top: 0 !important;
-    padding-top: 115px !important; /* Fixed navbar clearance */
+    padding-top: 135px !important; /* Fixed navbar clearance to prevent overlap */
     padding-left: 20px !important;
     padding-right: 20px !important;
     padding-bottom: 40px !important;
@@ -1268,9 +1273,9 @@ section {
   .hero-logo-main {
     order: 2 !important;
     width: 100% !important;
-    max-width: 320px !important;
+    max-width: 230px !important;
     height: auto !important;
-    margin: 32px auto 0 auto !important;
+    margin: 14px auto 0 auto !important;
     display: block !important;
     animation: float 6s ease-in-out infinite !important;
   }

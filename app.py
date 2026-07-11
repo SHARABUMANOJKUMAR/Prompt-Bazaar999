@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, send_from_directory
 from functools import wraps
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
@@ -176,22 +176,31 @@ def tools():
     return render_template('tools.html', user=user)
 
 @app.route('/profile')
-@login_required
 def profile():
     user = session.get('user')
     return render_template('profile.html', user=user, active_tab='account')
 
 @app.route('/wishlist')
-@login_required
 def wishlist():
     user = session.get('user')
     return render_template('profile.html', user=user, active_tab='wishlist')
 
 @app.route('/payments')
-@login_required
 def payments():
     user = session.get('user')
     return render_template('profile.html', user=user, active_tab='payments')
+
+@app.route('/portfolio-viewer')
+@app.route('/portfolio-viewer.html')
+@app.route('/p/<path:username>')
+@app.route('/u/<path:username>')
+@app.route('/portfolio/<path:username>')
+def portfolio_viewer(username=None):
+    template_path = os.path.join(app.root_path, 'templates', 'portfolio-viewer.html')
+    if os.path.exists(template_path):
+        return render_template('portfolio-viewer.html')
+    return send_from_directory(app.root_path, 'portfolio-viewer.html')
+
 
 
 # --- API Routes for Authentication Session Management ---
