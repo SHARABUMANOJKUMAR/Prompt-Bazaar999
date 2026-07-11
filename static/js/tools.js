@@ -2110,10 +2110,8 @@
               ctx.drawImage(img, 0, 0, w, h);
               state.personal.photoUrl = canvas.toDataURL('image/jpeg', 0.82);
               var urlInput = document.getElementById('pbPhotoUrl');
-              if (urlInput) {
-                urlInput.value = state.personal.photoUrl;
-                showToast('Photo uploaded successfully', 'success');
-              }
+              if (urlInput) urlInput.value = state.personal.photoUrl;
+              renderStep();
             };
             img.src = evt.target.result;
           };
@@ -2637,7 +2635,7 @@
           theme: state.theme,
           colorPalette: state.colorPalette,
           data: state,
-          portfolioUrl: '/' + encodeURIComponent(username),
+          portfolioUrl: '/p/' + encodeURIComponent(username),
           created_at: new Date().toISOString()
         });
         localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory.slice(0, 50)));
@@ -2665,11 +2663,11 @@
       .catch(err => {
 
         // PHASE 6 CLEAN URL ARCHITECTURE: Never expose base64 encoded JSON in URL
-        var targetUrl = '/' + encodeURIComponent(username);
+        var targetUrl = '/portfolio-viewer?u=' + encodeURIComponent(username);
 
         // Also save portfolio data to Google Sheets via Apps Script webhook & user history
         try {
-          var livePortfolioUrl = 'https://prompt-bazaar.web.app/' + encodeURIComponent(username);
+          var livePortfolioUrl = 'https://prompt-bazaar.web.app/p/' + encodeURIComponent(username);
           var liveSubdomain = 'https://' + username + '.prompt-bazaar.web.app/ , https://' + username + '.promptbazzar.netlify.app/';
           state.resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
           state.colorPalette = state.colorPalette || '#0D6EFD';
@@ -2697,7 +2695,7 @@
           fetch('https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec', {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               action: 'save_portfolio',
               user_id: userId,
