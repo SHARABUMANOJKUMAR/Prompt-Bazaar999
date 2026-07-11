@@ -727,6 +727,7 @@
         }
 
         function init3DInteractiveAnimations(animation) {
+            if (window.matchMedia && window.matchMedia('(hover: none)').matches) return;
             if (animation === '3D Tilt & Glow') {
                 document.querySelectorAll('.card, .contact-card').forEach(function(card) {
                     card.style.transformStyle = 'preserve-3d';

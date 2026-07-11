@@ -620,6 +620,7 @@ class PortfolioGenerationAgent:
     </div>
     <script>
     document.addEventListener("DOMContentLoaded", function() {{
+        if (window.matchMedia && window.matchMedia('(hover: none)').matches) return;
         var anim = "{animation_style}";
         if (anim === '3D Tilt & Glow') {{
             document.querySelectorAll('.glass-card').forEach(function(card) {{

@@ -2567,6 +2567,7 @@
         // 3D & Interactive Animation Engine Script
         html += '<script>';
         html += 'document.addEventListener("DOMContentLoaded", function() {';
+        html += '  if (window.matchMedia && window.matchMedia("(hover: none)").matches) return;';
         if (animation === '3D Tilt & Glow') {
           html += '  var cards = document.querySelectorAll(".card, .contact-card");';
           html += '  cards.forEach(function(card) {';
