@@ -793,6 +793,13 @@
         if (!lookup && window.location.pathname.indexOf('/u/') !== -1) {
             lookup = window.location.pathname.split('/u/')[1];
         }
+        if (!lookup && window.location.pathname.length > 1 && window.location.pathname.indexOf('/') === 0) {
+            var parts = window.location.pathname.split('/').filter(Boolean);
+            var ignoreList = ['gallery', 'tools', 'profile', 'wishlist', 'payments', 'admin', 'portfolio-viewer.html', 'index.html'];
+            if (parts.length === 1 && ignoreList.indexOf(parts[0]) === -1) {
+                lookup = parts[0];
+            }
+        }
 
         // 1. If base64 data parameter is still passed (legacy links), decode & render
         var d = params.get('d') || params.get('data');

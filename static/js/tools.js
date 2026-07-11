@@ -2635,7 +2635,7 @@
           theme: state.theme,
           colorPalette: state.colorPalette,
           data: state,
-          portfolioUrl: '/p/' + encodeURIComponent(username),
+          portfolioUrl: '/' + encodeURIComponent(username),
           created_at: new Date().toISOString()
         });
         localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory.slice(0, 50)));
@@ -2663,11 +2663,11 @@
       .catch(err => {
 
         // PHASE 6 CLEAN URL ARCHITECTURE: Never expose base64 encoded JSON in URL
-        var targetUrl = '/portfolio-viewer?u=' + encodeURIComponent(username);
+        var targetUrl = '/' + encodeURIComponent(username);
 
         // Also save portfolio data to Google Sheets via Apps Script webhook & user history
         try {
-          var livePortfolioUrl = 'https://prompt-bazaar.web.app/p/' + encodeURIComponent(username);
+          var livePortfolioUrl = 'https://prompt-bazaar.web.app/' + encodeURIComponent(username);
           var liveSubdomain = 'https://' + username + '.prompt-bazaar.web.app/ , https://' + username + '.promptbazzar.netlify.app/';
           state.resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
           state.colorPalette = state.colorPalette || '#0D6EFD';
