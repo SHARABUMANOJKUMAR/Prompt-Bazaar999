@@ -793,6 +793,9 @@
         if (!lookup && window.location.pathname.indexOf('/u/') !== -1) {
             lookup = window.location.pathname.split('/u/')[1];
         }
+        if (!lookup && window.location.pathname !== '/' && window.location.pathname !== '/portfolio-viewer' && window.location.pathname !== '/portfolio-viewer.html') {
+            lookup = window.location.pathname.split('/').filter(Boolean).pop();
+        }
 
         // 1. If base64 data parameter is still passed (legacy links), decode & render
         var d = params.get('d') || params.get('data');
