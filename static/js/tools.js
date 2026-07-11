@@ -2110,8 +2110,10 @@
               ctx.drawImage(img, 0, 0, w, h);
               state.personal.photoUrl = canvas.toDataURL('image/jpeg', 0.82);
               var urlInput = document.getElementById('pbPhotoUrl');
-              if (urlInput) urlInput.value = state.personal.photoUrl;
-              renderStep();
+              if (urlInput) {
+                urlInput.value = state.personal.photoUrl;
+                showToast('Photo uploaded successfully', 'success');
+              }
             };
             img.src = evt.target.result;
           };
@@ -2695,7 +2697,7 @@
           fetch('https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec', {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({
               action: 'save_portfolio',
               user_id: userId,
