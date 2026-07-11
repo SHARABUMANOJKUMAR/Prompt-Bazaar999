@@ -476,8 +476,8 @@
 
         let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px;">';
         portfolios.forEach(item => {
-            const cleanUrl = item.portfolioUrl || ('https://prompt-bazaar.web.app/p/' + item.username);
-            const subUrl = item.customSubdomain || ('https://' + item.username + '.prompt-bazaar.web.app/');
+            const cleanUrl = item.portfolioUrl || ('https://promptbazzar.netlify.app/p/' + item.username);
+            const subUrl = item.customSubdomain || ('https://' + item.username + '.promptbazzar.netlify.app/');
             const theme = item.theme || 'Minimal SaaS';
             const dateStr = item.createdAt || 'Recent';
 

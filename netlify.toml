@@ -58,6 +58,11 @@
   to = "/portfolio-viewer.html"
   status = 200
 
+[[redirects]]
+  from = "/*"
+  to = "/portfolio-viewer.html"
+  status = 200
+
 [build]
   command = "echo 'Netlify static deploy'"
   publish = "."

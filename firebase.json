@@ -1,16 +1,11 @@
 {
   "hosting": {
-    "public": ".",
+    "public": "build",
     "cleanUrls": true,
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      "services/**",
-      "app.py",
-      "requirements.txt",
-      "render.yaml",
-      "netlify.toml"
+      "**/node_modules/**"
     ],
     "headers": [
       {
@@ -37,16 +32,6 @@
           { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
           { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=()" }
         ]
-      },
-      {
-        "source": "/p/**",
-        "headers": [
-          { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600, stale-while-revalidate=60" },
-          { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
-          { "key": "X-Content-Type-Options", "value": "nosniff" },
-          { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-          { "key": "X-XSS-Protection", "value": "1; mode=block" }
-        ]
       }
     ],
     "rewrites": [
@@ -55,10 +40,7 @@
       { "source": "/wishlist", "destination": "/profile.html" },
       { "source": "/payments", "destination": "/profile.html" },
       { "source": "/admin/dashboard", "destination": "/admin-dashboard.html" },
-      { "source": "/p/**", "destination": "/portfolio-viewer.html" },
-      { "source": "/u/**", "destination": "/portfolio-viewer.html" },
-      { "source": "/portfolio/**", "destination": "/portfolio-viewer.html" },
-      { "source": "/**", "destination": "/portfolio-viewer.html" }
+      { "source": "**", "destination": "/portfolio-viewer.html" }
     ]
   }
 }

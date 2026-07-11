@@ -477,7 +477,7 @@ async function submitPromptForm(event) {
                 const title = formData.get('title') || 'New Prompt Added!';
                 const priceValue = formData.get('price');
                 const price = (priceValue !== null && priceValue !== '') ? priceValue : '9';
-                const image_url = formData.get('image_url') || 'https://prompt-bazaar.web.app/static/images/logo.png';
+                const image_url = formData.get('image_url') || 'https://promptbazzar.netlify.app/static/images/logo.png';
                 const prompt_id = result.prompt_id || '';
                 const prompt_text = formData.get('prompt_text') || '';
                 const category = formData.get('category') || '';

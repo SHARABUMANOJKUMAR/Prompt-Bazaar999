@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Prompt Bazaar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=9">
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
+    
+    
+    <script>
+        window.FIREBASE_CONFIG = {"apiKey": "YOUR_FIREBASE_API_KEY", "appId": "YOUR_FIREBASE_APP_ID", "authDomain": "YOUR_FIREBASE_AUTH_DOMAIN", "messagingSenderId": "YOUR_FIREBASE_MESSAGING_SENDER_ID", "projectId": "YOUR_FIREBASE_PROJECT_ID", "storageBucket": "YOUR_FIREBASE_STORAGE_BUCKET"};
+    </script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <!-- Global Modal Backdrop -->
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+
+    <!-- Global Prompt Preview Modal -->
+    <div id="prompt-modal" class="modal-overlay">
+        <div class="modal-header">
+            <div id="modal-platform" class="platform-badge">MIDJOURNEY</div>
+            <button id="close-modal" class="close-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-image-container">
+            <img id="modal-image" src="" alt="Prompt Preview">
+        </div>
+        <div class="modal-content">
+            <h2 id="modal-title" class="text-h3 mb-2">Prompt Title</h2>
+            <div id="modal-price" class="price-badge mb-4" style="position:static; display:inline-block">₹2</div>
+            
+            <div class="modal-actions">
+                <button class="action-btn" id="modal-wishlist">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Wishlist</span>
+                </button>
+                <button class="action-btn" id="modal-share" onclick="sharePrompt(currentPrompt)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    <span>Share</span>
+                </button>
+                <button class="action-btn" id="modal-report" onclick="openReportModal(currentPrompt)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                    <span>Report</span>
+                </button>
+            </div>
+            
+            <button id="modal-primary-action" class="btn btn-primary mt-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span class="btn-text">🔒 UNLOCK PROMPT</span>
+            </button>
+        </div>
+    </div>
+
+    
+<div class="auth-layout">
+    <div class="floating-bg">
+        <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778937517/img1_s28pjt.png" class="floating-img img-1" alt="bg">
+        <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778937514/img2_qvkqbd.png" class="floating-img img-2" alt="bg">
+        <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" class="floating-img img-3" alt="bg">
+        <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778937514/img2_qvkqbd.png" class="floating-img img-4" alt="bg">
+    </div>
+    <div class="card card-auth">
+        <div class="text-center mb-6">
+            <h1 class="logo mb-2">Prompt Bazaar</h1>
+            <p class="text-secondary">Create your account to get started</p>
+        </div>
+
+        <button type="button" id="googleSignInBtn" class="btn btn-outline google-signin-btn mb-6">
+            <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+            Sign up with Google
+        </button>
+
+        <div class="divider text-sm text-secondary">OR CONTINUE WITH</div>
+
+        <form id="signup-form">
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" type="text" id="username" required placeholder="johndoe">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-control" type="email" id="email" required placeholder="john@example.com">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="mobile">Mobile Number</label>
+                <input class="form-control" type="tel" id="mobile" required placeholder="+1234567890">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Create Password</label>
+                <input class="form-control" type="password" id="password" required placeholder="••••••••">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="confirm-password">Confirm Password</label>
+                <input class="form-control" type="password" id="confirm-password" required placeholder="••••••••">
+            </div>
+
+            <div id="form-error" class="form-error mb-4"></div>
+
+            <button type="submit" id="submit-btn" class="btn btn-primary mt-4">
+                <span class="btn-text">Create Account</span>
+                <div class="spinner"></div>
+            </button>
+        </form>
+
+        <p class="text-center text-sm text-secondary mt-6 mb-0">
+            Already have an account? <a href="/login">Sign in</a>
+        </p>
+    </div>
+</div>
+
+    
+    <!-- Web Push Notifications -->
+    <script type="module" src="/static/js/notifications.js?v=3"></script>
+
+    
+<script type="module" src="/static/js/auth.js?v=3"></script>
+
+</body>
+</html>

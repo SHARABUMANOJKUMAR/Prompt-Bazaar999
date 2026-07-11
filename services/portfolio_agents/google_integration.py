@@ -28,8 +28,8 @@ def save_portfolio_data(user_id, username, portfolio_data, html_content):
         portfolio_data['theme'] = portfolio_data.get('theme') or 'Minimal'
         portfolio_data['resumeUrl'] = resume_val
 
-    portfolio_url = f"https://prompt-bazaar.web.app/p/{username}"
-    custom_subdomain = f"https://{username}.prompt-bazaar.web.app/ , https://{username}.promptbazzar.netlify.app/"
+    portfolio_url = f"https://promptbazzar.netlify.app/p/{username}"
+    custom_subdomain = f"https://{username}.promptbazzar.netlify.app/"
 
     payload = {
         "action": "save_portfolio",

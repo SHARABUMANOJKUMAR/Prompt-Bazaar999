@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Prompt Bazaar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="icon" type="image/png"
+        href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+
+<body>
+    <!-- Global Modal Backdrop -->
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+
+    <div class="dashboard-layout">
+        <header class="header">
+            <div class="container nav-container">
+                <div class="logo" style="font-weight: bold; font-size: 1.5rem; color: var(--color-primary);">Prompt
+                    Bazaar</div>
+                <button id="logout-btn" class="btn btn-outline w-auto">
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <main class="container mt-8">
+            <div class="card max-w-full">
+                <h1 class="text-h2 mb-4">Welcome back, <span id="dash-username">User</span>!</h1>
+                <p class="text-secondary text-body mb-6">
+                    You have successfully logged in to Prompt Bazaar. This is your protected dashboard.
+                </p>
+
+                <div class="p-4 bg-tertiary rounded-md">
+                    <h3 class="text-h3 mb-2">Account Details</h3>
+                    <p class="text-secondary"><strong class="text-primary">Name:</strong> <span
+                            id="dash-full-name">Loading...</span></p>
+                    <p class="text-secondary"><strong class="text-primary">Email:</strong> <span
+                            id="dash-email">Loading...</span></p>
+                    <p class="text-secondary"><strong class="text-primary">User ID:</strong> <span
+                            class="font-mono text-sm" id="dash-uid">Loading...</span></p>
+                </div>
+
+                <div class="mt-8">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 class="text-h3">My Generated Portfolios History</h3>
+                        <a href="/tools" class="btn btn-primary" style="text-decoration: none; padding: 8px 18px; border-radius: 9999px;">+ New Portfolio</a>
+                    </div>
+                    <div id="dashPortfoliosContainer">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const localUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+            if (localUser && localUser.email) {
+                document.getElementById('dash-username').textContent = localUser.full_name || localUser.username || 'User';
+                document.getElementById('dash-full-name').textContent = localUser.full_name || localUser.username || 'N/A';
+                document.getElementById('dash-email').textContent = localUser.email;
+                document.getElementById('dash-uid').textContent = localUser.user_id || localUser.uid || 'N/A';
+            }
+
+            const container = document.getElementById('dashPortfoliosContainer');
+            if (container) {
+                let portfolios = [];
+                try {
+                    portfolios = JSON.parse(localStorage.getItem('pb_user_portfolios') || '[]');
+                } catch(e) {}
+
+                if (portfolios.length === 0) {
+                    container.innerHTML = `
+                        <div class="p-6 bg-tertiary rounded-md text-center">
+                            <p class="text-secondary mb-3">You haven't generated any AI portfolios yet.</p>
+                            <a href="/tools" class="btn btn-primary" style="text-decoration: none; display: inline-block;">🚀 Launch Portfolio Builder</a>
+                        </div>
+                    `;
+                } else {
+                    let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">';
+                    portfolios.forEach(item => {
+                        const cleanUrl = item.portfolioUrl || ('https://prompt-bazaar.web.app/p/' + item.username);
+                        const subUrl = item.customSubdomain || ('https://' + item.username + '.prompt-bazaar.web.app/');
+                        html += `
+                            <div style="background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 14px; padding: 18px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <strong style="color: var(--color-primary);">${item.name || item.username}</strong>
+                                    <span style="font-size: 11px; background: rgba(13,110,253,0.15); color: #38bdf8; padding: 3px 8px; border-radius: 9999px;">Live ✅</span>
+                                </div>
+                                <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">Theme: ${item.theme || 'Minimal SaaS'}</p>
+                                <a href="${cleanUrl}" target="_blank" class="btn btn-outline" style="width: 100%; text-align: center; text-decoration: none; padding: 8px;">🌐 Open Live Portfolio</a>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    container.innerHTML = html;
+                }
+            }
+        });
+    </script>
+    <script type="module" src="static/js/auth.js"></script>
+    <script type="module" src="static/js/notifications.js?v=2"></script>
+</body>
+
+</html>

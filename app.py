@@ -105,14 +105,12 @@ def handle_options_preflight():
         response = jsonify({'success': True})
         origin = request.headers.get('Origin')
         allowed_origins = [
-            "https://prompt-bazaar.web.app", 
             "https://promptbazzar.netlify.app",
-            "https://prompt-bazaar.netlify.app",
             "http://localhost:5000", 
             "http://127.0.0.1:5000"
         ]
         if not origin or origin not in allowed_origins:
-            origin = "https://prompt-bazaar.web.app"
+            origin = "https://promptbazzar.netlify.app"
         response.headers['Access-Control-Allow-Origin'] = origin
         response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
         response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
@@ -123,14 +121,12 @@ def handle_options_preflight():
 def add_cors_headers(response):
     origin = request.headers.get('Origin')
     allowed_origins = [
-        "https://prompt-bazaar.web.app", 
         "https://promptbazzar.netlify.app",
-        "https://prompt-bazaar.netlify.app",
         "http://localhost:5000", 
         "http://127.0.0.1:5000"
     ]
     if not origin or origin not in allowed_origins:
-        origin = "https://prompt-bazaar.web.app"
+        origin = "https://promptbazzar.netlify.app"
     response.headers['Access-Control-Allow-Origin'] = origin
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type,Authorization'
     response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
@@ -636,7 +632,7 @@ def send_notification():
         data = request.get_json() or {}
         title = data.get("title", "New Prompt Added!")
         price = data.get("price", "9")
-        image_url = data.get("image_url", "https://prompt-bazaar.web.app/static/images/logo.png")
+        image_url = data.get("image_url", "https://promptbazzar.netlify.app/static/images/logo.png")
         prompt_id = data.get("prompt_id", "")
 
         # 1. Fetch all tokens from collection 'notification_tokens'
@@ -670,7 +666,7 @@ def send_notification():
             ),
             webpush=messaging.WebpushConfig(
                 fcm_options=messaging.WebpushFCMOptions(
-                    link="https://prompt-bazaar.web.app/prompt-gallery"
+                    link="https://promptbazzar.netlify.app/prompt-gallery"
                 ),
                 headers={
                     "TTL": "86400" # 24 hours

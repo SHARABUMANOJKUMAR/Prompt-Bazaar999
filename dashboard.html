@@ -85,8 +85,8 @@
                 } else {
                     let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">';
                     portfolios.forEach(item => {
-                        const cleanUrl = item.portfolioUrl || ('https://prompt-bazaar.web.app/p/' + item.username);
-                        const subUrl = item.customSubdomain || ('https://' + item.username + '.prompt-bazaar.web.app/');
+                        const cleanUrl = item.portfolioUrl || ('https://promptbazzar.netlify.app/p/' + item.username);
+                        const subUrl = item.customSubdomain || ('https://' + item.username + '.promptbazzar.netlify.app/');
                         html += `
                             <div style="background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 14px; padding: 18px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">

@@ -90,8 +90,8 @@ function doPost(e) {
       const colorPalette = pData.colorPalette || pData.color_palette || '#0D6EFD';
       const font = pData.font || 'Inter';
       const resumeUrl = personal.resumeUrl || personal.resume_url || pData.resumeUrl || '';
-      const portfolioUrl = postData.portfolio_url || ('https://prompt-bazaar.web.app/p/' + username);
-      const customSubdomain = postData.custom_subdomain || ('https://' + username + '.prompt-bazaar.web.app/ , https://' + username + '.promptbazzar.netlify.app/');
+      const portfolioUrl = postData.portfolio_url || ('https://promptbazzar.netlify.app/p/' + username);
+      const customSubdomain = postData.custom_subdomain || ('https://' + username + '.promptbazzar.netlify.app/');
 
       const status = 'Published';
       const now = new Date();
@@ -216,8 +216,8 @@ function doGet(e) {
 function sendPortfolioSuccessEmail(recipientEmail, name, username, portfolioUrl, customSubdomain, theme) {
   const subject = "🎉 Your Custom AI Portfolio is Live on Prompt Bazaar!";
   
-  const cleanPortfolioUrl = portfolioUrl || ("https://prompt-bazaar.web.app/p/" + username);
-  const primarySubdomain = customSubdomain ? customSubdomain.split(',')[0].trim() : ("https://" + username + ".prompt-bazaar.web.app/");
+  const cleanPortfolioUrl = portfolioUrl || ("https://promptbazzar.netlify.app/p/" + username);
+  const primarySubdomain = customSubdomain ? customSubdomain.split(',')[0].trim() : ("https://" + username + ".promptbazzar.netlify.app/");
 
   const htmlBody = `
   <!DOCTYPE html>

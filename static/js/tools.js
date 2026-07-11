@@ -1123,12 +1123,12 @@
         var parts = name.split(' ');
         var lastName = parts.length > 1 ? parts.slice(1).join(' ') : '';
         var firstName = parts[0] || '';
-        var vc = 'BEGIN:VCARD\nVERSION:3.0\nN:' + lastName + ';' + firstName + ';;;\nFN:' + name + '\n';
-        if (i.org) vc += 'ORG:' + i.org + '\n';
-        if (i.title) vc += 'TITLE:' + i.title + '\n';
-        if (i.tel) vc += 'TEL;TYPE=CELL,VOICE:' + i.tel + '\n';
-        if (i.email) vc += 'EMAIL;TYPE=INTERNET:' + i.email + '\n';
-        if (i.url) vc += 'URL:' + (i.url.startsWith('http') ? i.url : 'https://' + i.url) + '\n';
+        var vc = 'BEGIN:VCARD\r\nVERSION:3.0\r\nN:' + lastName + ';' + firstName + ';;;\r\nFN:' + name + '\r\n';
+        if (i.org) vc += 'ORG:' + i.org + '\r\n';
+        if (i.title) vc += 'TITLE:' + i.title + '\r\n';
+        if (i.tel) vc += 'TEL;TYPE=CELL,VOICE:' + i.tel + '\r\n';
+        if (i.email) vc += 'EMAIL;TYPE=INTERNET:' + i.email + '\r\n';
+        if (i.url) vc += 'URL:' + (i.url.startsWith('http') ? i.url : 'https://' + i.url) + '\r\n';
         vc += 'END:VCARD';
         return vc;
       }
@@ -1965,10 +1965,9 @@
       experience: [],
       projects: [],
       certificates: [],
-      achievements: '',
+      achievements: [],
       socials: { github: '', linkedin: '' },
-      theme: 'Minimal',
-      colorPalette: '#0D6EFD',
+      customColors: { bgBase: '#0B0F19', textMain: '#F8FAFC', primary: '#0D6EFD', cardBg: '#121826', cardBorder: '#1E293B', textMuted: '#94A3B8' },
       font: 'Inter',
       animation: '3D Tilt & Glow'
     };
@@ -2030,8 +2029,8 @@
         html += '<button class="tool-btn" id="pbAddProj" style="margin-bottom:24px;">+ Add Project</button>';
         html += '<h4>Certificates</h4><div id="pbCertList"></div>';
         html += '<button class="tool-btn" id="pbAddCert" style="margin-bottom:24px;">+ Add Certificate</button>';
-        html += '<h4>Achievements</h4>';
-        html += '<div class="wizard-form-group"><textarea class="tool-textarea" id="pbAchievements" style="min-height:80px;" placeholder="Key awards or recognitions...">'+state.achievements+'</textarea></div>';
+        html += '<h4>Achievements</h4><div id="pbAchList"></div>';
+        html += '<button class="tool-btn" id="pbAddAch" style="margin-bottom:24px;">+ Add Achievement</button>';
       } else if (state.step === 5) {
         html += '<h3>Design & Socials</h3>';
         html += '<div style="display:flex; gap:12px;">';
@@ -2039,18 +2038,16 @@
         html += '<div class="wizard-form-group" style="flex:1"><label>GitHub URL</label><input class="tool-input" id="pbGithub" value="'+state.socials.github+'"></div>';
         html += '</div>';
         
-        html += '<h4>Theme Selection</h4><div class="wizard-grid">';
-        THEMES.forEach(function(t) {
-          html += '<div class="wizard-card '+(state.theme === t ? 'active' : '')+'" data-type="theme" data-val="'+t+'"><div class="wizard-card-label" style="margin-top:10px;">'+t+'</div></div>';
-        });
+        html += '<h4>Theme & Color Customization</h4><div class="wizard-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px;">';
+        var cc = state.customColors || { bgBase: '#0B0F19', textMain: '#F8FAFC', primary: '#0D6EFD', cardBg: '#121826', cardBorder: '#1E293B', textMuted: '#94A3B8' };
+        html += '<div class="wizard-form-group" style="margin-bottom:0;"><label>Background Color</label><div style="display:flex;align-items:center;gap:10px;"><input type="color" id="pbColorBg" value="'+cc.bgBase+'" style="height:36px;width:60px;cursor:pointer;"><input class="tool-input" style="flex:1;" readonly value="'+cc.bgBase+'"></div></div>';
+        html += '<div class="wizard-form-group" style="margin-bottom:0;"><label>Text / Foreground Color</label><div style="display:flex;align-items:center;gap:10px;"><input type="color" id="pbColorText" value="'+cc.textMain+'" style="height:36px;width:60px;cursor:pointer;"><input class="tool-input" style="flex:1;" readonly value="'+cc.textMain+'"></div></div>';
+        html += '<div class="wizard-form-group" style="margin-bottom:0;"><label>Primary (Accent) Color</label><div style="display:flex;align-items:center;gap:10px;"><input type="color" id="pbColorPri" value="'+cc.primary+'" style="height:36px;width:60px;cursor:pointer;"><input class="tool-input" style="flex:1;" readonly value="'+cc.primary+'"></div></div>';
+        html += '<div class="wizard-form-group" style="margin-bottom:0;"><label>Card Background</label><div style="display:flex;align-items:center;gap:10px;"><input type="color" id="pbColorCard" value="'+cc.cardBg+'" style="height:36px;width:60px;cursor:pointer;"><input class="tool-input" style="flex:1;" readonly value="'+cc.cardBg+'"></div></div>';
+        html += '<div class="wizard-form-group" style="margin-bottom:0;"><label>Card Border</label><div style="display:flex;align-items:center;gap:10px;"><input type="color" id="pbColorBorder" value="'+cc.cardBorder+'" style="height:36px;width:60px;cursor:pointer;"><input class="tool-input" style="flex:1;" readonly value="'+cc.cardBorder+'"></div></div>';
+        html += '<div class="wizard-form-group" style="margin-bottom:0;"><label>Muted Text Color</label><div style="display:flex;align-items:center;gap:10px;"><input type="color" id="pbColorMuted" value="'+cc.textMuted+'" style="height:36px;width:60px;cursor:pointer;"><input class="tool-input" style="flex:1;" readonly value="'+cc.textMuted+'"></div></div>';
         html += '</div>';
-
-        html += '<h4>Color Palette</h4><div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom: 20px;">';
-        COLORS.forEach(function(c) {
-          html += '<div class="wizard-card '+(state.colorPalette === c.val ? 'active' : '')+'" data-type="color" data-val="'+c.val+'" style="width:auto; padding:10px; min-height:auto; display:flex; align-items:center; gap:8px;">';
-          html += '<div style="width:20px; height:20px; border-radius:50%; background:'+c.val+';"></div><span>'+c.name+'</span></div>';
-        });
-        html += '</div>';
+        html += '<button class="tool-btn" id="pbResetColors" style="margin-bottom:24px;"><i class="fas fa-undo"></i> Reset to Default Dark Theme</button>';
 
         html += '<h4>Typography Font</h4><div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom: 24px;">';
         FONTS.forEach(function(f) {
@@ -2111,6 +2108,7 @@
               state.personal.photoUrl = canvas.toDataURL('image/jpeg', 0.82);
               var urlInput = document.getElementById('pbPhotoUrl');
               if (urlInput) urlInput.value = state.personal.photoUrl;
+              saveCurrentStep();
               renderStep();
             };
             img.src = evt.target.result;
@@ -2156,16 +2154,40 @@
           renderStep();
         });
       }
+      if (document.getElementById('pbAddAch')) {
+        renderRepeater('pbAchList', state.achievements, ['Achievement Description (1-3 sentences)']);
+        document.getElementById('pbAddAch').addEventListener('click', function() {
+          saveCurrentStep();
+          state.achievements.push({description: ''});
+          renderStep();
+        });
+      }
 
       document.querySelectorAll('.wizard-card').forEach(function(c) {
         c.addEventListener('click', function() {
           saveCurrentStep();
-          if (c.getAttribute('data-type') === 'theme') state.theme = c.getAttribute('data-val');
-          if (c.getAttribute('data-type') === 'color') state.colorPalette = c.getAttribute('data-val');
           if (c.getAttribute('data-type') === 'font') state.font = c.getAttribute('data-val');
           if (c.getAttribute('data-type') === 'animation') state.animation = c.getAttribute('data-val');
           renderStep();
         });
+      });
+      
+      var resetBtn = document.getElementById('pbResetColors');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', function() {
+          state.customColors = { bgBase: '#0B0F19', textMain: '#F8FAFC', primary: '#0D6EFD', cardBg: '#121826', cardBorder: '#1E293B', textMuted: '#94A3B8' };
+          renderStep();
+        });
+      }
+      
+      // Update readonly inputs when color changes
+      ['Bg', 'Text', 'Pri', 'Card', 'Border', 'Muted'].forEach(function(idSuffix) {
+        var el = document.getElementById('pbColor' + idSuffix);
+        if (el) {
+          el.addEventListener('input', function(e) {
+            e.target.nextElementSibling.value = e.target.value;
+          });
+        }
       });
       
       var backBtn = el.querySelector('#pbBackBtn');
@@ -2235,10 +2257,27 @@
             imageUrl: cinputs[3] ? cinputs[3].value : ''
           });
         }
-        state.achievements = document.getElementById('pbAchievements').value;
+        var alist = document.getElementById('pbAchList').children;
+        state.achievements = [];
+        for(var i=0; i<alist.length; i++) {
+          var ainputs = alist[i].querySelectorAll('input');
+          state.achievements.push({
+            description: ainputs[0] ? ainputs[0].value : ''
+          });
+        }
       } else if (state.step === 5) {
         state.socials.linkedin = document.getElementById('pbLinkedin').value;
         state.socials.github = document.getElementById('pbGithub').value;
+        if (document.getElementById('pbColorBg')) {
+          state.customColors = {
+            bgBase: document.getElementById('pbColorBg').value,
+            textMain: document.getElementById('pbColorText').value,
+            primary: document.getElementById('pbColorPri').value,
+            cardBg: document.getElementById('pbColorCard').value,
+            cardBorder: document.getElementById('pbColorBorder').value,
+            textMuted: document.getElementById('pbColorMuted').value
+          };
+        }
       }
     }
 
@@ -2246,10 +2285,20 @@
       var html = '';
       dataArray.forEach(function(item, idx) {
         html += '<div style="background:#f8fafc;padding:12px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:12px;">';
-        html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><strong>Item '+(idx+1)+'</strong><span style="color:#ef4444;cursor:pointer;font-size:12px;" onclick="window.pbRemoveItem(\\\'' + containerId + '\\\', '+idx+')">Remove</span></div>';
+        html += '<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><strong>Item '+(idx+1)+'</strong><span style="color:#ef4444;cursor:pointer;font-size:12px;" onclick="window.pbRemoveItem(\'' + containerId + '\', '+idx+')">Remove</span></div>';
         var keys = Object.keys(item);
         keys.forEach(function(k, kIdx) {
-          html += '<input class="tool-input" style="margin-bottom:8px;" placeholder="'+placeholders[kIdx]+'" value="'+item[k]+'">';
+          var isImage = placeholders[kIdx].indexOf('Image') !== -1;
+          var inputId = 'input_' + containerId + '_' + idx + '_' + kIdx;
+          html += '<div style="display:flex; gap:10px; align-items:center;">';
+          html += '<input class="tool-input" id="' + inputId + '" style="margin-bottom:8px; flex:1;" placeholder="'+placeholders[kIdx]+'" value="'+item[k]+'">';
+          if (isImage) {
+            html += '<label class="tool-btn" style="margin:0; margin-bottom:8px; cursor:pointer; padding:8px 12px; font-size:12px; white-space:nowrap;"><i class="fas fa-upload"></i> Upload<input type="file" style="display:none;" accept="image/*" onchange="window.pbUploadImage(this, \'' + inputId + '\')"></label>';
+          }
+          html += '</div>';
+          if (isImage && item[k]) {
+            html += '<img src="'+item[k]+'" style="max-height:60px; margin-bottom:8px; border-radius:4px; border:1px solid #e2e8f0;">';
+          }
         });
         html += '</div>';
       });
@@ -2262,19 +2311,49 @@
       if (type === 'pbEduList') state.education.splice(idx, 1);
       if (type === 'pbProjList') state.projects.splice(idx, 1);
       if (type === 'pbCertList') state.certificates.splice(idx, 1);
+      if (type === 'pbAchList') state.achievements.splice(idx, 1);
       renderStep();
+    };
+
+    window.pbUploadImage = function(fileInput, inputId) {
+      var file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(evt) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement('canvas');
+          var maxDim = 800;
+          var w = img.width, h = img.height;
+          if (w > h) { if (w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; } }
+          else { if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; } }
+          canvas.width = w;
+          canvas.height = h;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          var dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          var targetInput = document.getElementById(inputId);
+          if (targetInput) targetInput.value = dataUrl;
+          saveCurrentStep();
+          renderStep();
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
     };
 
     function generatePortfolio() {
       saveCurrentStep();
       if (document.getElementById('pbPhotoUrl')) state.personal.photoUrl = document.getElementById('pbPhotoUrl').value.trim();
+      
+      document.getElementById('pbGenerate').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Generating...';
+      document.getElementById('pbGenerate').disabled = true;
       if (document.getElementById('pbFirstName')) state.personal.firstName = document.getElementById('pbFirstName').value.trim();
       if (document.getElementById('pbLastName')) state.personal.lastName = document.getElementById('pbLastName').value.trim();
       if (document.getElementById('pbRole')) state.personal.role = document.getElementById('pbRole').value.trim();
       if (document.getElementById('pbEmail')) state.personal.email = document.getElementById('pbEmail').value.trim();
       if (document.getElementById('pbPhone')) state.personal.phone = document.getElementById('pbPhone').value.trim();
       if (document.getElementById('pbResumeUrl')) state.personal.resumeUrl = document.getElementById('pbResumeUrl').value.trim();
-      if (document.getElementById('pbAchievements')) state.achievements = document.getElementById('pbAchievements').value.trim();
       if (document.getElementById('pbSummary')) state.summary = document.getElementById('pbSummary').value.trim();
       if (document.getElementById('pbSkills')) state.skills = document.getElementById('pbSkills').value.trim();
       if (document.getElementById('pbLinkedin')) state.socials.linkedin = document.getElementById('pbLinkedin').value.trim();
@@ -2284,6 +2363,12 @@
       var statusText = document.getElementById('pbStatusText');
       statusText.innerHTML = 'Submitting to AI Agents...<br><span style="color:#6366f1;">Agent 1 (Validator): Checking inputs...</span>';
       
+      var overlay = document.createElement('div');
+      overlay.id = 'pbLoadingOverlay';
+      overlay.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;backdrop-filter:blur(8px);';
+      overlay.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="font-size:3rem;color:var(--primary);margin-bottom:16px;"></i><h2 style="margin:0;">Generating Your Portfolio...</h2><p style="color:#94a3b8;margin-top:8px;">Applying AI enhancements and securing output.</p>';
+      document.body.appendChild(overlay);
+
       function getOrGenerateUserId() {
         if (window.sessionUser && window.sessionUser.uid) return window.sessionUser.uid;
         var existing = localStorage.getItem('pb_user_uuid');
@@ -2359,32 +2444,21 @@
         var validProj = (state.projects || []).filter(function(p){ return (p.title||'').trim() || (p.description||'').trim() || (p.imageUrl||'').trim() || (p.link||'').trim(); });
         var validEdu = (state.education || []).filter(function(ed){ return (ed.institution||'').trim() || (ed.degree||'').trim() || (ed.year||'').trim(); });
         var validCert = (state.certificates || []).filter(function(c){ return (c.name||'').trim() || (c.issuer||'').trim() || (c.imageUrl||'').trim(); });
+        var cardStyles = 'background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;';
+        function escapeHtml(text) { return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
 
         var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">';
         html += '<title>'+name+' | '+role+'</title>';
         html += '<meta name="description" content="'+summary.replace(/"/g, '&quot;')+'">';
         html += '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">';
         html += '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">';
-        var theme = state.theme || 'Minimal';
-        var animation = state.animation || '3D Tilt & Glow';
+        var cc = state.customColors || { bgBase: '#0B0F19', textMain: '#F8FAFC', primary: '#0D6EFD', cardBg: '#121826', cardBorder: '#1E293B', textMuted: '#94A3B8' };
         html += '<style>';
-        html += ':root { --primary: '+primary+'; --text-main: #0f172a; --text-muted: #475569; --bg-base: #0B0F19; --card-bg: rgba(255, 255, 255, 0.04); --border: rgba(255, 255, 255, 0.1); }';
+        html += ':root { --primary: '+cc.primary+'; --text-main: '+cc.textMain+'; --text-muted: '+cc.textMuted+'; --bg-base: '+cc.bgBase+'; --card-bg: '+cc.cardBg+'; --border: '+cc.cardBorder+'; }';
         html += '*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }';
         html += 'html { scroll-behavior: smooth; overflow-x: hidden; }';
-        html += 'body { font-family: "'+font+'", "Inter", sans-serif; background: #0A0F1D; color: #F8FAFC; line-height: 1.65; overflow-x: hidden; width: 100%; }';
-        if (theme === 'Futuristic Cyber') {
-          html += 'body { background: #030611 !important; background-image: radial-gradient(circle at 50% 0%, rgba(13,110,253,0.18), transparent 60%), linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px) !important; background-size: 100% 100%, 40px 40px, 40px 40px !important; }';
-          html += '.card { border: 1px solid rgba(13,110,253,0.35) !important; box-shadow: 0 0 25px rgba(13,110,253,0.12) !important; }';
-        } else if (theme === 'Executive SaaS') {
-          html += 'body { background: #090D16 !important; }';
-          html += '.card { background: rgba(18,24,38,0.75) !important; border: 1px solid rgba(255,255,255,0.12) !important; border-radius: 14px !important; }';
-        } else if (theme === 'Bento Grid Pro') {
-          html += '.card-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important; gap: 20px !important; }';
-          html += '.card { border-radius: 28px !important; background: rgba(255,255,255,0.05) !important; }';
-        } else if (theme === 'Aurora Glass') {
-          html += 'body { background: #070913 !important; background-image: radial-gradient(circle at 20% 30%, rgba(139,92,246,0.22), transparent 50%), radial-gradient(circle at 80% 70%, rgba(16,185,129,0.18), transparent 50%) !important; }';
-          html += '.card { backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; background: rgba(255,255,255,0.06) !important; }';
-        }
+        html += 'body { font-family: "'+font+'", "Inter", sans-serif; background: var(--bg-base); color: var(--text-main); line-height: 1.65; overflow-x: hidden; width: 100%; }';
+
         html += '@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }';
         html += '.navbar { position: sticky; top: 0; background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); z-index: 1000; }';
         html += '.nav-brand { font-weight: 800; font-size: clamp(1.1rem, 2.2vw, 1.35rem); color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 10px; }';
@@ -2398,7 +2472,7 @@
         html += '.hero-section { padding: clamp(48px, 8vw, 96px) 0 clamp(36px, 6vw, 64px); text-align: center; animation: fadeInUp 0.7s ease-out; }';
         html += '.avatar-wrap { width: clamp(110px, 18vw, 156px); height: clamp(110px, 18vw, 156px); margin: 0 auto 24px; border-radius: 50%; overflow: hidden; border: 3px solid rgba(255,255,255,0.2); box-shadow: 0 16px 36px rgba(0,0,0,0.4); }';
         html += '.avatar-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }';
-        html += '.hero-title { font-size: clamp(2rem, 6vw, 3.8rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; line-height: 1.15; color: #FFFFFF; }';
+        html += '.hero-title { font-size: clamp(2rem, 6vw, 3.8rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; line-height: 1.15; color: var(--text-main); }';
         html += '.hero-role { font-size: clamp(1.1rem, 2.5vw, 1.45rem); color: var(--primary); font-weight: 700; margin-bottom: 20px; }';
         html += '.hero-summary { max-width: 680px; margin: 0 auto 28px; color: #94A3B8; font-size: clamp(1rem, 1.8vw, 1.15rem); line-height: 1.7; }';
         html += '.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 24px; }';
@@ -2512,6 +2586,27 @@
           html += '</div></div></section>';
         }
 
+        // ACHIEVEMENTS SECTION
+        if (state.achievements && state.achievements.length > 0) {
+          var validAchs = state.achievements.filter(function(a) { return a.description.trim() !== ''; });
+          if (validAchs.length > 0) {
+            html += '<section class="container" style="margin-top:60px;">';
+            html += '<div class="section-header"><h2 class="section-title">Honors &amp; Achievements</h2></div>';
+            html += '<div class="grid-layout">';
+            validAchs.forEach(function(ach, i) {
+              html += '<div class="card" style="padding:24px; ' + cardStyles + '">';
+              html += '<div style="display:flex; align-items:flex-start; gap:16px;">';
+              html += '<div style="width:48px;height:48px;border-radius:12px;background:rgba(13,110,253,0.1);display:flex;align-items:center;justify-content:center;color:var(--primary);flex-shrink:0;">';
+              html += '<i class="fas fa-award" style="font-size:1.5rem;"></i></div>';
+              html += '<div>';
+              html += '<h3 style="font-size:1.25rem;color:var(--text-main);margin-bottom:8px;font-weight:600;">Achievement ' + (i+1) + '</h3>';
+              html += '<p style="color:var(--text-muted);line-height:1.6;font-size:0.95rem;">' + escapeHtml(ach.description) + '</p>';
+              html += '</div></div></div>';
+            });
+            html += '</div></section>';
+          }
+        }
+
         // CERTIFICATIONS SECTION
         if (validCert.length > 0) {
           html += '<section class="section"><div class="container">';
@@ -2529,20 +2624,7 @@
           html += '</div></div></section>';
         }
 
-        // ACHIEVEMENTS SECTION
-        var achievementsText = (state.achievements || '').trim();
-        if (achievementsText) {
-          var achievementLines = achievementsText.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
-          if (achievementLines.length > 0) {
-            html += '<section class="section"><div class="container">';
-            html += '<div class="section-header"><h2 class="section-title">Honors &amp; Achievements</h2></div>';
-            html += '<div class="card-grid">';
-            achievementLines.forEach(function(item) {
-              html += '<div class="card" style="flex-direction:row;align-items:flex-start;gap:14px;"><i class="fas fa-trophy" style="color:#f59e0b;font-size:1.4rem;margin-top:2px;"></i><div><h3 style="font-size:1.05rem;font-weight:700;margin-bottom:4px;">Achievement</h3><p style="color:var(--text-muted);font-size:0.95rem;">'+item+'</p></div></div>';
-            });
-            html += '</div></div></section>';
-          }
-        }
+
 
         // CONTACT SECTION
         html += '<section class="section" id="contact"><div class="container">';
@@ -2607,6 +2689,10 @@
       }
 
       function renderSuccessUI(url) {
+        var overlay = document.getElementById('pbLoadingOverlay');
+        if (overlay) overlay.remove();
+        document.getElementById('pbGenerate').innerHTML = 'Generate AI Portfolio';
+        document.getElementById('pbGenerate').disabled = false;
         statusText.innerHTML = '<div style="background:#ecfdf5;border:1px solid #10b981;border-radius:12px;padding:16px;text-align:center;">' +
           '<div style="font-size:1.1rem;font-weight:700;color:#065f46;margin-bottom:8px;">🎉 Your Real Custom Portfolio is Ready!</div>' +
           '<p style="font-size:0.9rem;color:#047857;margin-bottom:12px;">Built using your exact form data, images &amp; animations.</p>' +
@@ -2668,8 +2754,8 @@
 
         // Also save portfolio data to Google Sheets via Apps Script webhook & user history
         try {
-          var livePortfolioUrl = 'https://prompt-bazaar.web.app/' + encodeURIComponent(username);
-          var liveSubdomain = 'https://' + username + '.prompt-bazaar.web.app/ , https://' + username + '.promptbazzar.netlify.app/';
+          var livePortfolioUrl = 'https://promptbazzar.netlify.app/' + encodeURIComponent(username);
+          var liveSubdomain = 'https://' + username + '.promptbazzar.netlify.app/';
           state.resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
           state.colorPalette = state.colorPalette || '#0D6EFD';
           state.font = state.font || 'Inter';
@@ -2686,7 +2772,7 @@
               theme: state.theme,
               colorPalette: state.colorPalette,
               portfolioUrl: livePortfolioUrl,
-              customSubdomain: 'https://' + username + '.prompt-bazaar.web.app/',
+              customSubdomain: 'https://' + username + '.promptbazzar.netlify.app/',
               createdAt: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
               data: state
             });
