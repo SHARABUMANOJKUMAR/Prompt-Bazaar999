@@ -2371,6 +2371,32 @@
           encodedStateParam = '&d=' + encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(state)))));
         } catch(e) {}
         var targetUrl = '/portfolio-viewer?u=' + encodeURIComponent(username) + encodedStateParam;
+
+        // Also save portfolio data to Google Sheets via Apps Script webhook
+        try {
+          var livePortfolioUrl = 'https://prompt-bazaar.web.app/portfolio-viewer?u=' + encodeURIComponent(username);
+          var liveSubdomain = 'https://' + username + '.prompt-bazaar.web.app/';
+          state.resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
+          state.colorPalette = state.colorPalette || '#0D6EFD';
+          state.font = state.font || 'Inter';
+          state.theme = state.theme || 'Minimal';
+
+          fetch('https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'save_portfolio',
+              user_id: (window.sessionUser ? window.sessionUser.uid : 'guest'),
+              username: username,
+              portfolio_url: livePortfolioUrl,
+              custom_subdomain: liveSubdomain,
+              portfolio_data: JSON.stringify(state),
+              html_content: htmlContent
+            })
+          }).catch(function(){});
+        } catch(e){}
+
         renderSuccessUI(targetUrl);
       });
     }
