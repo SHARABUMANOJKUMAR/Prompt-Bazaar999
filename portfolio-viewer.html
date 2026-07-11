@@ -488,7 +488,7 @@
             var t = url.trim().replace(/^['"]|['"]$/g, '');
             var gdriveMatch = t.match(/drive\.google\.com\/.*(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/i);
             if (gdriveMatch && gdriveMatch[1]) {
-                return 'https://drive.google.com/uc?export=view&id=' + gdriveMatch[1];
+                return 'https://lh3.googleusercontent.com/d/' + gdriveMatch[1];
             }
             if (t.indexOf('dropbox.com') !== -1 && t.indexOf('?dl=0') !== -1) {
                 return t.replace('?dl=0', '?raw=1');
@@ -508,16 +508,27 @@
             return 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="340" viewBox="0 0 600 340"><defs><linearGradient id="cg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="%23F1F5F9"/><stop offset="100%" stop-color="%23E2E8F0"/></linearGradient></defs><rect width="600" height="340" fill="url(%23cg)"/><circle cx="300" cy="140" r="42" fill="' + c + '" opacity="0.18"/><path d="M285 140l10 10 20-20" stroke="' + c + '" stroke-width="4" fill="none" stroke-linecap="round"/><text x="50%" y="74%" dominant-baseline="middle" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="%23475569">' + label + '</text></svg>';
         }
 
+        function getImageHtml(url, fallbackSvg, altText) {
+            var normUrl = normalizeImageUrl(url);
+            if (!normUrl) return '<img src="' + fallbackSvg + '" alt="' + altText + '" loading="lazy" decoding="async">';
+            var driveId = '';
+            var m = (url||'').match(/drive\.google\.com\/.*(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/i);
+            if (m && m[1]) driveId = m[1];
+            var thumbUrl = driveId ? 'https://drive.google.com/thumbnail?id=' + driveId + '&sz=w1000' : fallbackSvg;
+            return '<img src="' + normUrl + '" alt="' + altText + '" loading="lazy" decoding="async" onerror="if(this.src!==\'' + thumbUrl + '\'){this.src=\'' + thumbUrl + '\';}else{this.onerror=null;this.src=\'' + fallbackSvg + '\';}">';
+        }
+
         function buildPortfolioMarkup(username, state) {
             var name = (state.personal && state.personal.name) || state.name || 'Professional Portfolio';
             var role = (state.personal && state.personal.role) || state.role || 'Software & Technology Creator';
             var email = (state.personal && state.personal.email) || state.email || '';
             var phone = (state.personal && state.personal.phone) || state.phone || '';
             var resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
-            var photoUrl = normalizeImageUrl((state.personal && (state.personal.photoUrl || state.personal.photo)) || state.photo);
+            var photoUrl = (state.personal && (state.personal.photoUrl || state.personal.photo)) || state.photo;
             var primary = state.colorPalette || '#0D6EFD';
             var summary = state.summary || 'Welcome to my professional portfolio showcasing key technical projects, expertise, and measurable achievements.';
-            var skills = (typeof state.skills === 'string' ? state.skills.split(',') : (state.skills || [])).map(function(s){ return typeof s === 'string' ? s.trim() : s; }).filter(Boolean);
+            var skillsRaw = typeof state.skills === 'string' ? state.skills.split(/[,\n]+/) : (state.skills || []);
+            var skills = skillsRaw.map(function(s){ return typeof s === 'string' ? s.trim() : s; }).filter(Boolean);
 
             var fallbackAvatar = getFallbackAvatarSvg(name, primary);
 
@@ -539,12 +550,12 @@
 
             // HERO ↓
             html += '<section class="hero-section" id="hero"><div class="container">';
-            html += '<div class="avatar-wrap"><img src="' + (photoUrl || fallbackAvatar) + '" alt="' + name + '" onerror="this.onerror=null;this.src=\'' + fallbackAvatar + '\';"></div>';
+            html += '<div class="avatar-wrap">' + getImageHtml(photoUrl, fallbackAvatar, name) + '</div>';
             html += '<h1 class="hero-title">' + name + '</h1>';
             html += '<div class="hero-role">' + role + '</div>';
             html += '<p class="hero-summary">' + summary + '</p>';
             html += '<div class="hero-actions">';
-            if (resumeUrl) {
+            if (resumeUrl && /^https?:\/\//i.test(resumeUrl)) {
                 html += '<a href="' + resumeUrl + '" target="_blank" class="btn-primary"><i class="fas fa-file-alt"></i> View Resume</a>';
             }
             html += '<a href="#contact" class="btn-outline"><i class="fas fa-paper-plane"></i> Contact Me</a>';
@@ -573,13 +584,12 @@
                 html += '<div class="section-header"><h2 class="section-title">Featured Projects</h2><div class="section-subtitle">Selected works and technical highlights</div></div>';
                 html += '<div class="card-grid">';
                 validProj.forEach(function(p) {
-                    var normProjImg = normalizeImageUrl(p.imageUrl);
                     var fallbackProjSvg = getFallbackCardSvg(p.title || 'Project', primary);
                     html += '<div class="card">';
-                    html += '<div class="card-img-wrap"><img src="' + (normProjImg || fallbackProjSvg) + '" alt="' + (p.title || 'Project') + '" onerror="this.onerror=null;this.src=\'' + fallbackProjSvg + '\';"></div>';
+                    html += '<div class="card-img-wrap">' + getImageHtml(p.imageUrl, fallbackProjSvg, p.title || 'Project') + '</div>';
                     html += '<h3 class="card-title">' + (p.title || 'Project') + '</h3>';
                     html += '<p class="card-body">' + (p.description || '') + '</p>';
-                    if (p.link) {
+                    if (p.link && /^https?:\/\//i.test(p.link)) {
                         html += '<div style="margin-top:20px;"><a href="' + p.link + '" target="_blank" class="btn-outline" style="padding:9px 20px;font-size:0.88rem;">Explore Project <i class="fas fa-external-link-alt"></i></a></div>';
                     }
                     html += '</div>';
@@ -622,11 +632,10 @@
                 html += '<div class="section-header"><h2 class="section-title">Certifications</h2></div>';
                 html += '<div class="card-grid">';
                 validCert.forEach(function(c) {
-                    var normCertImg = normalizeImageUrl(c.imageUrl);
                     var fallbackCertSvg = getFallbackCardSvg(c.name || 'Certificate', primary);
                     html += '<div class="card">';
-                    if (normCertImg) {
-                        html += '<div class="card-img-wrap" style="height:150px;"><img src="' + normCertImg + '" alt="' + (c.name || 'Certificate') + '" onerror="this.onerror=null;this.src=\'' + fallbackCertSvg + '\';"></div>';
+                    if (c.imageUrl) {
+                        html += '<div class="card-img-wrap" style="height:150px;">' + getImageHtml(c.imageUrl, fallbackCertSvg, c.name || 'Certificate') + '</div>';
                     }
                     html += '<h3 class="card-title">' + (c.name || 'Certificate') + '</h3>';
                     html += '<div class="card-meta"><i class="fas fa-award"></i> ' + (c.issuer || 'Issuer') + '</div>';
@@ -725,23 +734,31 @@
             } catch(e) {}
         }
 
-        // 2. Fast check in local storage if present
-        if (lookup && localStorage.getItem('portfolio_html_' + lookup)) {
-            // Render cached HTML directly
-            document.open();
-            document.write(localStorage.getItem('portfolio_html_' + lookup));
-            document.close();
-            return;
+        // 2. Fast check in local storage state if present
+        if (lookup) {
+            try {
+                var cachedState = localStorage.getItem('portfolio_state_' + lookup);
+                if (cachedState) {
+                    renderPortfolio(lookup, JSON.parse(cachedState));
+                    return;
+                }
+                var allPortfolios = JSON.parse(localStorage.getItem('pb_user_portfolios') || '[]');
+                var matched = allPortfolios.find(function(item) { return item.username === lookup || item.id === lookup; });
+                if (matched && matched.data) {
+                    renderPortfolio(lookup, matched.data);
+                    return;
+                }
+            } catch(e) {}
         }
 
         if (!lookup) {
-            // Preview latest portfolio if available
-            if (localStorage.getItem('portfolio_latest_html')) {
-                document.open();
-                document.write(localStorage.getItem('portfolio_latest_html'));
-                document.close();
-                return;
-            }
+            try {
+                var latestState = localStorage.getItem('portfolio_latest_state');
+                if (latestState) {
+                    renderPortfolio('My Portfolio', JSON.parse(latestState));
+                    return;
+                }
+            } catch(e) {}
             showNotFound();
             return;
         }

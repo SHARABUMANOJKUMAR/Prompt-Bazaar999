@@ -16,7 +16,7 @@ function normalizeDriveUrl(url) {
   const t = url.trim();
   const gMatch = t.match(/drive\.google\.com\/.*(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/i);
   if (gMatch && gMatch[1]) {
-    return 'https://drive.google.com/uc?export=view&id=' + gMatch[1];
+    return 'https://lh3.googleusercontent.com/d/' + gMatch[1];
   }
   if (t.indexOf('dropbox.com') !== -1 && t.indexOf('?dl=0') !== -1) {
     return t.replace('?dl=0', '?raw=1');

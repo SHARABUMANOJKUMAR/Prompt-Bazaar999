@@ -1133,6 +1133,14 @@ def enhance_prompt_v7():
 # PORTFOLIO BUILDER PRO API & PREVIEWS
 # =============================================================================
 
+@app.route('/p/<username>')
+def serve_user_portfolio(username):
+    viewer_path = os.path.join(os.path.dirname(__file__), 'portfolio-viewer.html')
+    if os.path.exists(viewer_path):
+        with open(viewer_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    return "Portfolio Viewer not found", 404
+
 @app.route('/preview_portfolio')
 @app.route('/portfolio/preview')
 def preview_portfolio_page():

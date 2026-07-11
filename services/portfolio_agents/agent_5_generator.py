@@ -12,7 +12,7 @@ class PortfolioGenerationAgent:
         gdrive_match = re.search(r'drive\.google\.com/.*(?:file/d/|id=)([a-zA-Z0-9_-]+)', url)
         if gdrive_match:
             file_id = gdrive_match.group(1)
-            primary_url = f"https://drive.google.com/uc?export=view&id={file_id}"
+            primary_url = f"https://lh3.googleusercontent.com/d/{file_id}"
             fallback_url = f"https://drive.google.com/thumbnail?id={file_id}&sz=w1000"
             return primary_url, fallback_url
         if 'dropbox.com' in url and '?dl=0' in url:
