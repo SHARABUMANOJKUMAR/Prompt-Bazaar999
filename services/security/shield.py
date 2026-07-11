@@ -50,9 +50,9 @@ _XSS_PATTERNS = [
 
 # SQL injection vectors
 _SQL_PATTERNS = [
-    re.compile(r"(\b(SELECT|INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|EXEC|EXECUTE|UNION)\b\s+(ALL\s+)?)", re.IGNORECASE),
+    re.compile(r"(\b(SELECT.*FROM|INSERT\s+INTO|UPDATE.*SET|DELETE\s+FROM|DROP\s+(TABLE|DATABASE)|ALTER\s+(TABLE|DATABASE)|CREATE\s+(TABLE|DATABASE|INDEX|VIEW|USER)|UNION\s+ALL)\b)", re.IGNORECASE),
     re.compile(r"('|\")\s*(OR|AND)\s+('|\")?[^'\"]*\s*=\s*('|\")?", re.IGNORECASE),
-    re.compile(r";\s*(DROP|DELETE|INSERT|UPDATE|ALTER)\s+", re.IGNORECASE),
+    re.compile(r";\s*(DROP|DELETE|INSERT|UPDATE|ALTER)\s+(TABLE|DATABASE|INTO|FROM)\s+", re.IGNORECASE),
     re.compile(r"--\s*$", re.MULTILINE),
     re.compile(r"/\*.*?\*/", re.DOTALL),
     re.compile(r"\b\d+\s+(OR|AND)\s+\d+\s*=\s*\d+", re.IGNORECASE),  # tautology: 1 OR 1=1
