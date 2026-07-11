@@ -149,18 +149,45 @@ function doPost(e) {
       }
 
       // Extract the pre-built HTML content if provided
-      const htmlContent = postData.html_content || '';
+      let htmlContent = postData.html_content || '';
+      
+      // Google Sheets has a hard limit of 50,000 characters per cell.
+      // If the HTML includes Base64 images, it will crash the save process.
+      // If it's too large, we drop it. The viewer will safely fallback to re-rendering from JSON state.
+      if (htmlContent.length > 45000) {
+        htmlContent = '';
+      }
+
+      let stringifiedPData = JSON.stringify(pData);
+      if (stringifiedPData.length > 45000) {
+        // If still too big (e.g. Drive upload failed), aggressively strip base64 to save the text data
+        if (pData.photo && pData.photo.length > 500) pData.photo = '';
+        if (pData.personal && pData.personal.photoUrl && pData.personal.photoUrl.length > 500) pData.personal.photoUrl = '';
+        if (Array.isArray(pData.projects)) {
+          pData.projects.forEach(p => { if (p.imageUrl && p.imageUrl.length > 500) p.imageUrl = ''; });
+        }
+        if (Array.isArray(pData.certificates)) {
+          pData.certificates.forEach(c => { if (c.imageUrl && c.imageUrl.length > 500) c.imageUrl = ''; });
+        }
+        stringifiedPData = JSON.stringify(pData);
+        // Hard limit
+        if (stringifiedPData.length > 45000) stringifiedPData = stringifiedPData.substring(0, 45000);
+      }
+
+      const projectsStr = Array.isArray(pData.projects) ? JSON.stringify(pData.projects) : (pData.projects || '');
+      const experienceStr = Array.isArray(pData.experience) ? JSON.stringify(pData.experience) : (pData.experience || '');
+      const certificatesStr = Array.isArray(pData.certificates) ? JSON.stringify(pData.certificates) : (pData.certificates || '');
 
       const rowValues = [
         userId, firstName, lastName, email, phone,
         profilePhoto, summary, skills, education,
-        projects, experience, certificates, achievements,
+        projectsStr, experienceStr, certificatesStr, achievements,
         linkedIn, github, theme, colorPalette, font,
         resumeUrl, portfolioUrl, customSubdomain, status,
         foundRow > 0 ? dataRange[foundRow - 1][22] : now,
         now,
         username,
-        JSON.stringify(pData),
+        stringifiedPData,
         htmlContent   // col 27: pre-built HTML portfolio
       ];
 
