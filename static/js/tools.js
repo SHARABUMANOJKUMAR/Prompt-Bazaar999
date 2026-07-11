@@ -1969,19 +1969,29 @@
       socials: { github: '', linkedin: '' },
       theme: 'Minimal',
       colorPalette: '#0D6EFD',
-      font: 'Inter'
+      font: 'Inter',
+      animation: '3D Tilt & Glow'
     };
 
-    var THEMES = ['Minimal', 'Dark Pro', 'Gradient', 'Glassmorphism', 'Terminal'];
+    var THEMES = ['Minimal', 'Dark Pro', 'Gradient', 'Glassmorphism', 'Terminal', 'Futuristic Cyber', 'Executive SaaS', 'Bento Grid Pro', 'Aurora Glass'];
     var COLORS = [
       {name: 'Ocean Blue', val: '#0D6EFD'}, 
       {name: 'Emerald Green', val: '#10B981'},
-      {name: 'Purple Haze', val: '#8B5CF6'},
+      {name: 'Cyber Purple', val: '#8B5CF6'},
       {name: 'Crimson Red', val: '#E11D48'},
       {name: 'Sunset Orange', val: '#F97316'},
-      {name: 'Slate Gray', val: '#475569'}
+      {name: 'Rose Gold', val: '#FB7185'},
+      {name: 'Midnight Teal', val: '#0F766E'},
+      {name: 'Golden Elegance', val: '#D97706'},
+      {name: 'Obsidian Chrome', val: '#475569'}
     ];
     var FONTS = ['Inter', 'Outfit', 'Roboto', 'Poppins', 'Playfair Display'];
+    var ANIMATIONS = [
+      {name: '3D Tilt & Glow', desc: 'Interactive cursor 3D tilt tracking with lighting glare'},
+      {name: 'Smooth Reveal', desc: 'Professional staggered viewport scroll fade-in'},
+      {name: 'Floating Hologram', desc: 'Continuous floating 3D parallax & levitation'},
+      {name: 'Magnetic Interactive', desc: 'Buttons & interactive cards pull toward cursor'}
+    ];
 
     function renderStep() {
       var html = '';
@@ -1994,7 +2004,15 @@
         html += '<div class="wizard-form-group"><label>Professional Role / Headline</label><input class="tool-input" id="pbRole" value="'+state.personal.role+'"></div>';
         html += '<div class="wizard-form-group"><label>Email</label><input type="email" class="tool-input" id="pbEmail" value="'+state.personal.email+'"></div>';
         html += '<div class="wizard-form-group"><label>Phone</label><input class="tool-input" id="pbPhone" value="'+state.personal.phone+'"></div>';
-        html += '<div class="wizard-form-group"><label>Profile Photo URL</label><input class="tool-input" id="pbPhotoUrl" value="'+state.personal.photoUrl+'"></div>';
+        html += '<div class="wizard-form-group"><label>Profile Photo (Enter URL or Upload Local Image)</label>';
+        html += '<div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">';
+        html += '<input class="tool-input" id="pbPhotoUrl" placeholder="https://... image URL" value="'+state.personal.photoUrl+'" style="flex:1; min-width:220px;">';
+        html += '<label class="tool-btn" style="margin:0; cursor:pointer; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2);"><i class="fas fa-upload"></i> Upload Local Image<input type="file" id="pbPhotoFile" accept="image/*" style="display:none;"></label>';
+        html += '</div>';
+        if (state.personal.photoUrl) {
+          html += '<div style="margin-top:10px; display:flex; align-items:center; gap:10px;"><img src="'+state.personal.photoUrl+'" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);"><span style="font-size:0.85rem;color:#94a3b8;">Profile image ready</span></div>';
+        }
+        html += '</div>';
         html += '<div class="wizard-form-group"><label>Resume/CV URL</label><input class="tool-input" id="pbResumeUrl" value="'+state.personal.resumeUrl+'"></div>';
       } else if (state.step === 2) {
         html += '<h3>Professional Summary & Skills</h3>';
@@ -2039,6 +2057,15 @@
           html += '<div class="wizard-card '+(state.font === f ? 'active' : '')+'" data-type="font" data-val="'+f+'" style="width:auto; padding:10px; min-height:auto;">'+f+'</div>';
         });
         html += '</div>';
+
+        html += '<h4>3D Professional Animation Style</h4><div class="wizard-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 24px;">';
+        ANIMATIONS.forEach(function(anim) {
+          html += '<div class="wizard-card '+(state.animation === anim.name ? 'active' : '')+'" data-type="animation" data-val="'+anim.name+'" style="text-align:left; padding:16px;">';
+          html += '<div style="font-weight:700; color:#fff; margin-bottom:4px;"><i class="fas fa-cube" style="color:var(--primary); margin-right:6px;"></i>'+anim.name+'</div>';
+          html += '<div style="font-size:0.8rem; color:#94a3b8;">'+anim.desc+'</div>';
+          html += '</div>';
+        });
+        html += '</div>';
       }
 
       var totalSteps = 5;
@@ -2055,6 +2082,36 @@
         '</div>';
 
       document.getElementById('pbStepContainer').innerHTML = stepHTML + html + buttonsHTML;
+
+      // Local Profile Photo Upload Handler
+      var fileInput = document.getElementById('pbPhotoFile');
+      if (fileInput) {
+        fileInput.addEventListener('change', function(e) {
+          var file = e.target.files && e.target.files[0];
+          if (!file) return;
+          var reader = new FileReader();
+          reader.onload = function(evt) {
+            var img = new Image();
+            img.onload = function() {
+              var canvas = document.createElement('canvas');
+              var maxDim = 320;
+              var w = img.width, h = img.height;
+              if (w > h) { if (w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; } }
+              else { if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; } }
+              canvas.width = w;
+              canvas.height = h;
+              var ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, w, h);
+              state.personal.photoUrl = canvas.toDataURL('image/jpeg', 0.82);
+              var urlInput = document.getElementById('pbPhotoUrl');
+              if (urlInput) urlInput.value = state.personal.photoUrl;
+              renderStep();
+            };
+            img.src = evt.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
 
       // Event Listeners
       if (document.getElementById('pbNext')) document.getElementById('pbNext').addEventListener('click', function() { saveCurrentStep(); state.step++; renderStep(); });
@@ -2099,6 +2156,7 @@
           if (c.getAttribute('data-type') === 'theme') state.theme = c.getAttribute('data-val');
           if (c.getAttribute('data-type') === 'color') state.colorPalette = c.getAttribute('data-val');
           if (c.getAttribute('data-type') === 'font') state.font = c.getAttribute('data-val');
+          if (c.getAttribute('data-type') === 'animation') state.animation = c.getAttribute('data-val');
           renderStep();
         });
       });
@@ -2296,11 +2354,26 @@
         html += '<meta name="description" content="'+summary.replace(/"/g, '&quot;')+'">';
         html += '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">';
         html += '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">';
+        var theme = state.theme || 'Minimal';
+        var animation = state.animation || '3D Tilt & Glow';
         html += '<style>';
         html += ':root { --primary: '+primary+'; --text-main: #0f172a; --text-muted: #475569; --bg-base: #0B0F19; --card-bg: rgba(255, 255, 255, 0.04); --border: rgba(255, 255, 255, 0.1); }';
         html += '*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }';
         html += 'html { scroll-behavior: smooth; overflow-x: hidden; }';
         html += 'body { font-family: "'+font+'", "Inter", sans-serif; background: #0A0F1D; color: #F8FAFC; line-height: 1.65; overflow-x: hidden; width: 100%; }';
+        if (theme === 'Futuristic Cyber') {
+          html += 'body { background: #030611 !important; background-image: radial-gradient(circle at 50% 0%, rgba(13,110,253,0.18), transparent 60%), linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px) !important; background-size: 100% 100%, 40px 40px, 40px 40px !important; }';
+          html += '.card { border: 1px solid rgba(13,110,253,0.35) !important; box-shadow: 0 0 25px rgba(13,110,253,0.12) !important; }';
+        } else if (theme === 'Executive SaaS') {
+          html += 'body { background: #090D16 !important; }';
+          html += '.card { background: rgba(18,24,38,0.75) !important; border: 1px solid rgba(255,255,255,0.12) !important; border-radius: 14px !important; }';
+        } else if (theme === 'Bento Grid Pro') {
+          html += '.card-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important; gap: 20px !important; }';
+          html += '.card { border-radius: 28px !important; background: rgba(255,255,255,0.05) !important; }';
+        } else if (theme === 'Aurora Glass') {
+          html += 'body { background: #070913 !important; background-image: radial-gradient(circle at 20% 30%, rgba(139,92,246,0.22), transparent 50%), radial-gradient(circle at 80% 70%, rgba(16,185,129,0.18), transparent 50%) !important; }';
+          html += '.card { backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; background: rgba(255,255,255,0.06) !important; }';
+        }
         html += '@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }';
         html += '.navbar { position: sticky; top: 0; background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); z-index: 1000; }';
         html += '.nav-brand { font-weight: 800; font-size: clamp(1.1rem, 2.2vw, 1.35rem); color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 10px; }';
@@ -2468,6 +2541,42 @@
         }
         html += '</div></div></div></section>';
 
+        // 3D & Interactive Animation Engine Script
+        html += '<script>';
+        html += 'document.addEventListener("DOMContentLoaded", function() {';
+        if (animation === '3D Tilt & Glow') {
+          html += '  var cards = document.querySelectorAll(".card, .contact-card");';
+          html += '  cards.forEach(function(card) {';
+          html += '    card.style.transformStyle = "preserve-3d";';
+          html += '    card.style.transition = "transform 0.15s ease-out, box-shadow 0.3s ease";';
+          html += '    card.addEventListener("mousemove", function(e) {';
+          html += '      var rect = card.getBoundingClientRect();';
+          html += '      var x = e.clientX - rect.left, y = e.clientY - rect.top;';
+          html += '      var rotateX = ((y - rect.height/2) / (rect.height/2)) * -6;';
+          html += '      var rotateY = ((x - rect.width/2) / (rect.width/2)) * 6;';
+          html += '      card.style.transform = "perspective(1000px) rotateX("+rotateX+"deg) rotateY("+rotateY+"deg) scale3d(1.02,1.02,1.02)";';
+          html += '    });';
+          html += '    card.addEventListener("mouseleave", function() {';
+          html += '      card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";';
+          html += '    });';
+          html += '  });';
+        } else if (animation === 'Floating Hologram') {
+          html += '  var wrap = document.querySelector(".avatar-wrap");';
+          html += '  if(wrap) { wrap.style.transition = "transform 3s ease-in-out infinite alternate"; }';
+        } else if (animation === 'Magnetic Interactive') {
+          html += '  document.querySelectorAll(".btn-primary, .btn-outline").forEach(function(btn) {';
+          html += '    btn.addEventListener("mousemove", function(e) {';
+          html += '      var r = btn.getBoundingClientRect();';
+          html += '      var dx = (e.clientX - (r.left + r.width/2)) * 0.25;';
+          html += '      var dy = (e.clientY - (r.top + r.height/2)) * 0.25;';
+          html += '      btn.style.transform = "translate("+dx+"px, "+dy+"px)";';
+          html += '    });';
+          html += '    btn.addEventListener("mouseleave", function() { btn.style.transform = "translate(0, 0)"; });';
+          html += '  });';
+        }
+        html += '});';
+        html += '<' + '/script>';
+
         // FOOTER
         html += '<footer><div class="container">&copy; '+new Date().getFullYear()+' '+name+' &bull; Powered by <strong>Prompt Bazaar Labs</strong></div></footer></body></html>';
         return html;
@@ -2486,6 +2595,28 @@
         }
         showToast('Portfolio Generated successfully!', 'success');
       }
+
+      var htmlContent = buildClientSidePortfolioHtml(username, state);
+      try {
+        localStorage.setItem('portfolio_state_' + username, JSON.stringify(state));
+        localStorage.setItem('portfolio_latest_state', JSON.stringify(state));
+        localStorage.setItem('portfolio_html_' + username, htmlContent);
+        localStorage.setItem('portfolio_latest_html', htmlContent);
+
+        var savedHistory = JSON.parse(localStorage.getItem('pb_user_portfolios') || '[]');
+        savedHistory = savedHistory.filter(function(item) { return item.username !== username; });
+        savedHistory.unshift({
+          id: username,
+          username: username,
+          name: (state.personal && (state.personal.firstName + ' ' + state.personal.lastName)) || username,
+          theme: state.theme,
+          colorPalette: state.colorPalette,
+          data: state,
+          portfolioUrl: '/p/' + encodeURIComponent(username),
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory.slice(0, 50)));
+      } catch(e){}
 
       fetch('/api/tools/portfolio/generate', {
         method: 'POST',
@@ -2507,13 +2638,6 @@
         }
       })
       .catch(err => {
-        var htmlContent = buildClientSidePortfolioHtml(username, state);
-        try {
-          localStorage.setItem('portfolio_state_' + username, JSON.stringify(state));
-          localStorage.setItem('portfolio_latest_state', JSON.stringify(state));
-          localStorage.setItem('portfolio_html_' + username, htmlContent);
-          localStorage.setItem('portfolio_latest_html', htmlContent);
-        } catch(e){}
 
         // PHASE 6 CLEAN URL ARCHITECTURE: Never expose base64 encoded JSON in URL
         var targetUrl = '/portfolio-viewer?u=' + encodeURIComponent(username);

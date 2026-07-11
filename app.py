@@ -1178,8 +1178,8 @@ def enhance_prompt_v7():
 # PORTFOLIO BUILDER PRO API & PREVIEWS
 # =============================================================================
 
-@app.route('/p/<username>')
-def serve_user_portfolio(username):
+@app.route('/portfolio-viewer')
+def serve_user_portfolio():
     viewer_path = os.path.join(os.path.dirname(__file__), 'portfolio-viewer.html')
     if os.path.exists(viewer_path):
         with open(viewer_path, 'r', encoding='utf-8') as f:
@@ -1245,6 +1245,22 @@ def generate_portfolio():
             
     return jsonify(result)
 
+@app.route('/api/portfolio/<username>')
+def get_portfolio_api(username):
+    # Fast memory cache check
+    if username in PORTFOLIO_CACHE:
+        return jsonify({"success": True, "username": username, "html": PORTFOLIO_CACHE[username]})
+    local_path = os.path.join(os.path.dirname(__file__), "static", "portfolios", f"{username}.html")
+    if os.path.exists(local_path):
+        try:
+            with open(local_path, "r", encoding="utf-8") as f:
+                html_content = f.read()
+                PORTFOLIO_CACHE[username] = html_content
+                return jsonify({"success": True, "username": username, "html": html_content})
+        except Exception:
+            pass
+    return jsonify({"success": False, "message": "Not found"}), 404
+
 @app.route('/p/<username>')
 def serve_portfolio(username):
     # 1. Check in-memory cache first
@@ -1268,18 +1284,18 @@ def serve_portfolio(username):
             doc = firebase_db.collection("portfolios").document(username).get()
             if doc.exists:
                 data = doc.to_dict()
-                html_content = data.get("html", "<h1>Empty Portfolio</h1>")
-                PORTFOLIO_CACHE[username] = html_content
-                return html_content
+                html_content = data.get("html", "")
+                if html_content:
+                    PORTFOLIO_CACHE[username] = html_content
+                    return html_content
         except Exception as e:
             logging.error(f"Error fetching portfolio from Firebase: {e}")
 
-    # 4. Fallback for preview/demo usernames
-    if username in ['preview', 'demo', 'sample']:
-        preview_path = os.path.join(os.path.dirname(__file__), 'preview_portfolio.html')
-        if os.path.exists(preview_path):
-            with open(preview_path, 'r', encoding='utf-8') as f:
-                return f.read()
+    # 4. Universal fast fallback: Serve portfolio-viewer.html which renders instantly from client localStorage / Apps Script
+    viewer_path = os.path.join(os.path.dirname(__file__), 'portfolio-viewer.html')
+    if os.path.exists(viewer_path):
+        with open(viewer_path, 'r', encoding='utf-8') as f:
+            return f.read()
 
     return "Portfolio not found. Make sure you have generated one first.", 404
 

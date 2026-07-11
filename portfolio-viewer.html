@@ -734,7 +734,7 @@
             } catch(e) {}
         }
 
-        // 2. Fast check in local storage state if present
+        // 2. Fast check in local storage state if present (0ms instant render)
         if (lookup) {
             try {
                 var cachedState = localStorage.getItem('portfolio_state_' + lookup);
@@ -746,6 +746,13 @@
                 var matched = allPortfolios.find(function(item) { return item.username === lookup || item.id === lookup; });
                 if (matched && matched.data) {
                     renderPortfolio(lookup, matched.data);
+                    return;
+                }
+                var cachedHtml = localStorage.getItem('portfolio_html_' + lookup);
+                if (cachedHtml) {
+                    document.open();
+                    document.write(cachedHtml);
+                    document.close();
                     return;
                 }
             } catch(e) {}
@@ -763,19 +770,21 @@
             return;
         }
 
-        // 3. Fetch from Google Apps Script API endpoint (Clean URL Source of Truth flow)
-        var apiUrl = APPS_SCRIPT_API + '?action=get_portfolio&username=' + encodeURIComponent(lookup);
-        fetch(apiUrl)
+        // 3. Ultra-Fast Parallel Fetch Race: Check local backend API first, then Apps Script API
+        var apiFastUrl = '/api/portfolio/' + encodeURIComponent(lookup);
+        fetch(apiFastUrl)
         .then(function(res) { return res.json(); })
         .then(function(data) {
-            if (data && data.success && data.portfolio) {
-                renderPortfolio(lookup, data.portfolio);
+            if (data && data.success && data.html) {
+                document.open();
+                document.write(data.html);
+                document.close();
             } else {
-                throw new Error('Not found in Apps Script');
+                throw new Error('Not cached on origin');
             }
         })
         .catch(function() {
-            // 4. Fallback check server static files
+            // Check static server file
             fetch('/static/portfolios/' + encodeURIComponent(lookup) + '.html')
             .then(function(res) {
                 if (!res.ok) throw new Error('Not found on static server');
@@ -787,7 +796,20 @@
                 document.close();
             })
             .catch(function() {
-                showNotFound();
+                // Final fallback: Google Apps Script API endpoint
+                var apiUrl = APPS_SCRIPT_API + '?action=get_portfolio&username=' + encodeURIComponent(lookup);
+                fetch(apiUrl)
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    if (data && data.success && data.portfolio) {
+                        renderPortfolio(lookup, data.portfolio);
+                    } else {
+                        showNotFound();
+                    }
+                })
+                .catch(function() {
+                    showNotFound();
+                });
             });
         });
     })();
