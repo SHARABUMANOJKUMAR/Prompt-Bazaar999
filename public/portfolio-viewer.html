@@ -857,32 +857,34 @@
         fetch(apiUrl)
         .then(function(res) { return res.json(); })
         .then(function(data) {
-            if (data && data.success && data.portfolio) {
-                renderPortfolio(lookup, data.portfolio);
-            } else {
-                throw new Error('Not found in Apps Script DB');
-            }
-        })
-        .catch(function() {
-            // Fallback: Check local API (in case running on Python backend)
-            fetch('/api/portfolio/' + encodeURIComponent(lookup))
-            .then(function(res) { 
-                var ct = res.headers.get('content-type');
-                if(ct && ct.indexOf('application/json') !== -1) return res.json();
-                throw new Error('API not available');
-            })
-            .then(function(data) {
-                if (data && data.success && data.html) {
+            if (data && data.success) {
+                // Priority 1: Use pre-built HTML directly (fastest, most accurate)
+                if (data.html && data.html.length > 100) {
                     document.open();
                     document.write(data.html);
                     document.close();
-                } else {
-                    showNotFound();
+                    return;
                 }
-            })
-            .catch(function() {
-                showNotFound();
-            });
+                // Priority 2: Re-render from state data (fallback)
+                if (data.portfolio) {
+                    renderPortfolio(lookup, data.portfolio);
+                    return;
+                }
+            }
+            throw new Error('Not found in Apps Script DB');
+        })
+        .catch(function() {
+            // Last resort: try portfolio_latest_html from localStorage
+            try {
+                var latestHtml = localStorage.getItem('portfolio_latest_html');
+                if (latestHtml) {
+                    document.open();
+                    document.write(latestHtml);
+                    document.close();
+                    return;
+                }
+            } catch(e2) {}
+            showNotFound();
         });
     })();
     </script>

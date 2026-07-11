@@ -148,6 +148,9 @@ function doPost(e) {
         }
       }
 
+      // Extract the pre-built HTML content if provided
+      const htmlContent = postData.html_content || '';
+
       const rowValues = [
         userId, firstName, lastName, email, phone,
         profilePhoto, summary, skills, education,
@@ -157,7 +160,8 @@ function doPost(e) {
         foundRow > 0 ? dataRange[foundRow - 1][22] : now,
         now,
         username,
-        JSON.stringify(pData)
+        JSON.stringify(pData),
+        htmlContent   // col 27: pre-built HTML portfolio
       ];
 
       if (foundRow > 0) {
@@ -209,6 +213,7 @@ function doGet(e) {
         const rowUsername = String(dataRange[i][24] || '');   // Username Slug (col 25)
         const rowUrl = String(dataRange[i][19] || '');        // Portfolio URL (col 20)
         const rawJson = dataRange[i][25];                     // Raw JSON (col 26)
+        const htmlContent = dataRange[i][26] || '';           // Pre-built HTML (col 27)
 
         if ((rowUsername.toLowerCase() === lookup.toLowerCase() ||
              rowUserId === lookup ||
@@ -217,7 +222,8 @@ function doGet(e) {
             success: true,
             user_id: rowUserId,
             username: rowUsername,
-            portfolio: JSON.parse(rawJson)
+            portfolio: JSON.parse(rawJson),
+            html: htmlContent || null
           })).setMimeType(ContentService.MimeType.JSON);
         }
       }
