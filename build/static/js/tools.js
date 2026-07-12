@@ -2124,28 +2124,41 @@
         fileInput.addEventListener('change', function(e) {
           var file = e.target.files && e.target.files[0];
           if (!file) return;
-          var reader = new FileReader();
-          reader.onload = function(evt) {
-            var img = new Image();
-            img.onload = function() {
-              var canvas = document.createElement('canvas');
-              var maxDim = 320;
-              var w = img.width, h = img.height;
-              if (w > h) { if (w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; } }
-              else { if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; } }
-              canvas.width = w;
-              canvas.height = h;
-              var ctx = canvas.getContext('2d');
-              ctx.drawImage(img, 0, 0, w, h);
-              state.personal.photoUrl = canvas.toDataURL('image/jpeg', 0.82);
+          var labelEl = e.target.parentElement;
+          var originalText = labelEl.innerHTML;
+          labelEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+          labelEl.style.pointerEvents = 'none';
+
+          var formData = new FormData();
+          formData.append('file', file);
+          formData.append('upload_preset', 'prompt_bazaar');
+          formData.append('folder', 'protofolio-images');
+
+          fetch('https://api.cloudinary.com/v1_1/dwv8kc9vb/image/upload', {
+            method: 'POST',
+            body: formData
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.secure_url) {
+              state.personal.photoUrl = data.secure_url;
               var urlInput = document.getElementById('pbPhotoUrl');
-              if (urlInput) urlInput.value = state.personal.photoUrl;
+              if (urlInput) urlInput.value = data.secure_url;
               saveCurrentStep();
               renderStep();
-            };
-            img.src = evt.target.result;
-          };
-          reader.readAsDataURL(file);
+            } else {
+              throw new Error(data.error ? data.error.message : 'Unknown Cloudinary error');
+            }
+          })
+          .catch(err => {
+            console.error("Cloudinary upload failed:", err);
+            alert("Image upload failed: " + err.message);
+          })
+          .finally(() => {
+            labelEl.innerHTML = originalText;
+            labelEl.style.pointerEvents = 'auto';
+            e.target.value = '';
+          });
         });
       }
 
@@ -2364,28 +2377,41 @@
     window.pbUploadImage = function(fileInput, inputId) {
       var file = fileInput.files && fileInput.files[0];
       if (!file) return;
-      var reader = new FileReader();
-      reader.onload = function(evt) {
-        var img = new Image();
-        img.onload = function() {
-          var canvas = document.createElement('canvas');
-          var maxDim = 800;
-          var w = img.width, h = img.height;
-          if (w > h) { if (w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; } }
-          else { if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; } }
-          canvas.width = w;
-          canvas.height = h;
-          var ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, w, h);
-          var dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      
+      var labelEl = fileInput.parentElement;
+      var originalText = labelEl.innerHTML;
+      labelEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+      labelEl.style.pointerEvents = 'none';
+
+      var formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'prompt_bazaar');
+      formData.append('folder', 'protofolio-images');
+
+      fetch('https://api.cloudinary.com/v1_1/dwv8kc9vb/image/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.secure_url) {
           var targetInput = document.getElementById(inputId);
-          if (targetInput) targetInput.value = dataUrl;
+          if (targetInput) targetInput.value = data.secure_url;
           saveCurrentStep();
           renderStep();
-        };
-        img.src = evt.target.result;
-      };
-      reader.readAsDataURL(file);
+        } else {
+          throw new Error(data.error ? data.error.message : 'Unknown Cloudinary error');
+        }
+      })
+      .catch(err => {
+        console.error("Cloudinary upload failed:", err);
+        alert("Image upload failed: " + err.message);
+      })
+      .finally(() => {
+        labelEl.innerHTML = originalText;
+        labelEl.style.pointerEvents = 'auto';
+        fileInput.value = '';
+      });
     };
 
     function generatePortfolio() {

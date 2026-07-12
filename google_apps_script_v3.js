@@ -85,32 +85,8 @@
           username = baseSlug || ('user-' + Math.floor(100 + Math.random() * 900));
         }
 
-        // Convert Base64 images to Google Drive files to stay under the 50k character limit per Google Sheets cell
-        if (personal.photoUrl && personal.photoUrl.indexOf('data:') === 0) {
-          personal.photoUrl = uploadBase64ToDrive(personal.photoUrl, username + '_profile.jpg', uploadErrors);
-        }
-        if (personal.photo_url && personal.photo_url.indexOf('data:') === 0) {
-          personal.photo_url = uploadBase64ToDrive(personal.photo_url, username + '_profile.jpg', uploadErrors);
-        }
-        if (pData.photo && pData.photo.indexOf('data:') === 0) {
-          pData.photo = uploadBase64ToDrive(pData.photo, username + '_profile.jpg', uploadErrors);
-        }
-
-        if (Array.isArray(pData.projects)) {
-          pData.projects.forEach(function(p, idx) {
-            if (p && p.imageUrl && p.imageUrl.indexOf('data:') === 0) {
-              p.imageUrl = uploadBase64ToDrive(p.imageUrl, username + '_project_' + idx + '.jpg', uploadErrors);
-            }
-          });
-        }
-
-        if (Array.isArray(pData.certificates)) {
-          pData.certificates.forEach(function(c, idx) {
-            if (c && c.imageUrl && c.imageUrl.indexOf('data:') === 0) {
-              c.imageUrl = uploadBase64ToDrive(c.imageUrl, username + '_certificate_' + idx + '.jpg', uploadErrors);
-            }
-          });
-        }
+        // Google Drive Base64 upload logic has been removed.
+        // The frontend now uploads images directly to Cloudinary and sends the secure URLs.
 
 
         const email = personal.email || pData.email || '';
@@ -411,57 +387,6 @@
     }
   }
 
-  // Helper to convert Base64 data URLs to Google Drive files and return a direct download URL
-  function uploadBase64ToDrive(base64DataUrl, fileName, uploadErrors) {
-    try {
-      if (!base64DataUrl || typeof base64DataUrl !== 'string' || base64DataUrl.indexOf('data:') !== 0) {
-        return base64DataUrl;
-      }
-      
-      // Sanitize string to remove any weird linebreaks that break regex
-      base64DataUrl = base64DataUrl.replace(/[\n\r\s]+/g, '');
-      
-      // Parse the data URL (e.g., data:image/jpeg;base64,/9j/...)
-      var matches = base64DataUrl.match(/^data:(image\/[a-zA-Z0-9+.-]+);base64,(.+)$/);
-      if (!matches || matches.length < 3) {
-        if (uploadErrors) uploadErrors.push("Regex parse failed for " + fileName);
-        return base64DataUrl;
-      }
-      
-      var mimeType = matches[1];
-      var base64Data = matches[2];
-      
-      // Decode base64
-      var decodedBytes = Utilities.base64Decode(base64Data);
-      var blob = Utilities.newBlob(decodedBytes, mimeType, fileName);
-      
-      // Get or create folder
-      var folder;
-      var folderName = "Prompt Bazaar Portfolios";
-      var folders = DriveApp.getFoldersByName(folderName);
-      if (folders.hasNext()) {
-        folder = folders.next();
-      } else {
-        folder = DriveApp.createFolder(folderName);
-      }
-      
-      var file = folder.createFile(blob);
-      try {
-        file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-      } catch (shareErr) {
-        logErrorToSheet("Sharing failed for " + fileName + ", but file was uploaded.", shareErr);
-        if (uploadErrors) uploadErrors.push("Image uploaded, but public sharing is blocked by your organization.");
-      }
-      
-      // Return direct download link
-      var fileId = file.getId();
-      return 'https://drive.google.com/uc?export=view&id=' + fileId;
-    } catch (err) {
-      Logger.log("Error uploading image to Drive: " + err.toString());
-      logErrorToSheet("Drive Upload Failed for " + fileName, err);
-      if (uploadErrors) uploadErrors.push("Upload failed for " + fileName + ": " + err.message);
-      return ''; // Return empty string if upload fails so Google Sheets does not crash on 500k char string
-    }
-  }
+
 
 
