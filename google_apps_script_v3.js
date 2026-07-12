@@ -45,7 +45,140 @@
       const postData = JSON.parse(e.postData.contents);
       const action = postData.action;
 
-      if (action === 'save_portfolio') {
+      if (action === 'get_academy') {
+        var ss = SpreadsheetApp.getActiveSpreadsheet();
+        var sheet = ss.getSheetByName("Academy");
+        if (!sheet) {
+          return ContentService.createTextOutput(JSON.stringify({
+            success: false,
+            error: "Academy sheet not found"
+          })).setMimeType(ContentService.MimeType.JSON);
+        }
+        
+        var data = sheet.getDataRange().getValues();
+        var headers = data[0];
+        var userIdIdx = headers.indexOf("User ID");
+        var currentModuleIdx = headers.indexOf("Current Module");
+        var completedModulesIdx = headers.indexOf("Completed Modules");
+        var progressPctIdx = headers.indexOf("Progress %");
+        
+        var userId = postData.user_id;
+        var progress = { currentModule: 1, completedModules: 0, progressPct: 0 };
+        
+        for (var i = 1; i < data.length; i++) {
+          if (data[i][userIdIdx] === userId) {
+            progress = {
+              currentModule: data[i][currentModuleIdx] || 1,
+              completedModules: data[i][completedModulesIdx] || 0,
+              progressPct: data[i][progressPctIdx] || 0
+            };
+            break;
+          }
+        }
+        
+        return ContentService.createTextOutput(JSON.stringify({
+          success: true,
+          progress: progress
+        })).setMimeType(ContentService.MimeType.JSON);
+        
+      } else if (action === 'update_academy') {
+        var ss = SpreadsheetApp.getActiveSpreadsheet();
+        var sheet = ss.getSheetByName("Academy");
+        if (!sheet) {
+          // Create sheet and headers if it doesn't exist
+          sheet = ss.insertSheet("Academy");
+          sheet.appendRow(["User ID", "Name", "Email", "Course ID", "Current Module", "Completed Modules", "M1 Quiz", "M2 Quiz", "M3 Quiz", "M4 Quiz", "M5 Quiz", "M6 Quiz", "M7 Quiz", "M8 Quiz", "Assignment 1", "Assignment 2", "Assignment 3", "Assignment 4", "Progress %", "Certificate Status", "Certificate ID", "QR URL", "Completion Date", "Last Updated"]);
+          // Freeze header
+          sheet.setFrozenRows(1);
+          sheet.getRange(1, 1, 1, 24).setFontWeight("bold").setBackground("#f3f4f6");
+        }
+        
+        var data = sheet.getDataRange().getValues();
+        var headers = data[0];
+        var userId = postData.user_id;
+        
+        // Find if user exists
+        var rowIndex = -1;
+        for (var i = 1; i < data.length; i++) {
+          if (data[i][0] === userId) {
+            rowIndex = i + 1; // 1-indexed for SpreadsheetApp
+            break;
+          }
+        }
+        
+        var now = new Date();
+        var completed = parseInt(postData.completedModules) || 0;
+        var current = parseInt(postData.currentModule) || 1;
+        var pct = parseInt(postData.progressPct) || 0;
+        
+        if (rowIndex > -1) {
+          // Update existing user
+          sheet.getRange(rowIndex, headers.indexOf("Current Module") + 1).setValue(current);
+          sheet.getRange(rowIndex, headers.indexOf("Completed Modules") + 1).setValue(completed);
+          sheet.getRange(rowIndex, headers.indexOf("Progress %") + 1).setValue(pct);
+          sheet.getRange(rowIndex, headers.indexOf("Last Updated") + 1).setValue(now);
+          
+          if (pct === 100) {
+            sheet.getRange(rowIndex, headers.indexOf("Completion Date") + 1).setValue(now);
+          }
+        } else {
+          // New user (Enrolment)
+          var newRow = new Array(24).fill('');
+          newRow[0] = userId;
+          newRow[1] = postData.name || '';
+          newRow[2] = postData.email || '';
+          newRow[3] = "PROMPT_ENG_MASTER"; // Course ID
+          newRow[4] = current;
+          newRow[5] = completed;
+          newRow[18] = pct;
+          newRow[19] = "Not Started"; // Cert Status
+          newRow[23] = now; // Last Updated
+          
+          sheet.appendRow(newRow);
+          
+          // Send Welcome Email
+          try {
+            var emailStr = postData.email;
+            if (emailStr) {
+              var subject = "Welcome to Prompt Bazaar Academy! 🎓";
+              var htmlBody = `
+                <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                  <div style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); padding: 40px 20px; text-align: center; color: white;">
+                    <h1 style="margin: 0; font-size: 24px;">Welcome to Prompt Bazaar Academy!</h1>
+                  </div>
+                  <div style="padding: 40px 30px; background: white; color: #0f172a;">
+                    <p style="font-size: 16px; line-height: 1.6;">Hi ${postData.name || 'there'},</p>
+                    <p style="font-size: 16px; line-height: 1.6;">You have successfully enrolled in the <strong>Prompt Engineering Master Course</strong>. We are excited to have you on board.</p>
+                    <p style="font-size: 16px; line-height: 1.6;">In this 8-module course, you will learn everything from prompt fundamentals to advanced AI agent workflows.</p>
+                    
+                    <div style="text-align: center; margin: 40px 0;">
+                      <a href="https://promptbazzar.netlify.app/academy" style="background-color: #2563eb; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Start Learning Now</a>
+                    </div>
+                    
+                    <p style="font-size: 16px; line-height: 1.6;">Happy Prompting,<br><strong>The Prompt Bazaar Team</strong></p>
+                  </div>
+                  <div style="background: #f8fafc; padding: 20px; text-align: center; color: #64748b; font-size: 12px; border-top: 1px solid #e2e8f0;">
+                    &copy; ${new Date().getFullYear()} Prompt Bazaar. All rights reserved.
+                  </div>
+                </div>
+              `;
+              MailApp.sendEmail({
+                to: emailStr,
+                subject: subject,
+                htmlBody: htmlBody
+              });
+            }
+          } catch (emailErr) {
+            logErrorToSheet("Welcome Email Failed for " + userId, emailErr);
+          }
+        }
+        
+        return ContentService.createTextOutput(JSON.stringify({
+          success: true,
+          message: "Progress updated"
+        })).setMimeType(ContentService.MimeType.JSON);
+        
+      } else if (action === 'save_portfolio') {
         const userId = postData.user_id || Utilities.getUuid();
         const rawData = postData.portfolio_data || postData.data || {};
         
