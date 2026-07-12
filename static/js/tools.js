@@ -2411,8 +2411,8 @@
       
       var overlay = document.createElement('div');
       overlay.id = 'pbLoadingOverlay';
-      overlay.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;backdrop-filter:blur(8px);';
-      overlay.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="font-size:3rem;color:var(--primary);margin-bottom:16px;"></i><h2 style="margin:0;">Generating Your Portfolio...</h2><p style="color:#94a3b8;margin-top:8px;">Applying AI enhancements and securing output.</p>';
+      overlay.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.95);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0F172A;backdrop-filter:blur(12px);transition:opacity 0.3s ease;';
+      overlay.innerHTML = '<i class="fas fa-circle-notch fa-spin" style="font-size:3rem;color:var(--primary);margin-bottom:16px;"></i><h2 id="pbLoadingText" style="margin:0;">Saving Data...</h2><p style="color:#64748B;margin-top:8px;">Just a second.</p>';
       document.body.appendChild(overlay);
 
       function getOrGenerateUserId() {
@@ -2753,87 +2753,79 @@
         showToast('Portfolio Generated successfully!', 'success');
       }
 
-      var htmlContent = buildClientSidePortfolioHtml(username, state);
-      try {
-        localStorage.setItem('portfolio_state_' + username, JSON.stringify(state));
-        localStorage.setItem('portfolio_latest_state', JSON.stringify(state));
-        localStorage.setItem('portfolio_html_' + username, htmlContent);
-        localStorage.setItem('portfolio_latest_html', htmlContent);
-
-        var savedHistory = JSON.parse(localStorage.getItem('pb_user_portfolios') || '[]');
-        savedHistory = savedHistory.filter(function(item) { return item.username !== username; });
-        savedHistory.unshift({
-          id: username,
-          username: username,
-          name: (state.personal && (state.personal.firstName + ' ' + state.personal.lastName)) || username,
-          theme: state.theme,
-          colorPalette: state.colorPalette,
-          data: state,
-          portfolioUrl: '/' + encodeURIComponent(username),
-          created_at: new Date().toISOString()
-        });
-        localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory.slice(0, 50)));
-      } catch(e){}
-
-      // Phase 6 Clean URL Architecture: Fully serverless processing
+      // Defer heavy work to allow browser to paint the loading screen
       setTimeout(() => {
         var targetUrl = '/' + encodeURIComponent(username);
+        var livePortfolioUrl = 'https://promptbazzar.netlify.app/' + encodeURIComponent(username);
+        var liveSubdomain = 'https://' + username + '.promptbazzar.netlify.app/';
+
+        state.resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
+        state.colorPalette = state.colorPalette || '#0D6EFD';
+        state.font = state.font || 'Inter';
+        state.theme = state.theme || 'Minimal SaaS';
+
+        document.getElementById('pbLoadingText').innerText = 'Creating Portfolio...';
+
+        // Build HTML synchronously (it's fast)
+        var htmlContent = buildClientSidePortfolioHtml(username, state);
 
         try {
-          var livePortfolioUrl = 'https://promptbazzar.netlify.app/' + encodeURIComponent(username);
-          var liveSubdomain = 'https://' + username + '.promptbazzar.netlify.app/';
-          state.resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
-          state.colorPalette = state.colorPalette || '#0D6EFD';
-          state.font = state.font || 'Inter';
-          state.theme = state.theme || 'Minimal SaaS';
+          localStorage.setItem('portfolio_state_' + username, JSON.stringify(state));
+          localStorage.setItem('portfolio_latest_state', JSON.stringify(state));
+          localStorage.setItem('portfolio_html_' + username, htmlContent);
+          localStorage.setItem('portfolio_latest_html', htmlContent);
 
-          // Save to User Profile Dashboard History
-          try {
-            var savedHistory = JSON.parse(localStorage.getItem('pb_user_portfolios') || '[]');
-            savedHistory = savedHistory.filter(function(item) { return item.username !== username; });
-            savedHistory.unshift({
-              id: username,
-              username: username,
-              name: (state.personal && state.personal.name) || username,
-              theme: state.theme,
-              colorPalette: state.colorPalette,
-              portfolioUrl: livePortfolioUrl,
-              customSubdomain: 'https://' + username + '.promptbazzar.netlify.app/',
-              createdAt: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
-              data: state
-            });
-            localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory));
-          } catch(historyErr) {}
-
-          // Prevent payload from being too large (strip HTML if it's crazy huge due to Base64)
-          var safeHtmlContent = htmlContent && htmlContent.length < 500000 ? htmlContent : '';
-
-          // Async Google Sheets submission
-          fetch('https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec', {
-            method: 'POST',
-            // mode: 'no-cors', // Removed to allow reading the JSON response
-            headers: { 'Content-Type': 'text/plain' }, // Text plain avoids preflight OPTIONS request
-            body: JSON.stringify({
-              action: 'save_portfolio',
-              user_id: userId,
-              username: username,
-              portfolio_url: livePortfolioUrl,
-              custom_subdomain: liveSubdomain,
-              portfolio_data: JSON.stringify(state),
-              html_content: safeHtmlContent
-            })
-          })
-          .then(res => res.json())
-          .then(data => {
-            console.log("Portfolio Save API Response:", data);
-          })
-          .catch(function(err){
-            console.error("Portfolio Save API Error:", err);
+          var savedHistory = JSON.parse(localStorage.getItem('pb_user_portfolios') || '[]');
+          savedHistory = savedHistory.filter(function(item) { return item.username !== username; });
+          savedHistory.unshift({
+            id: username,
+            username: username,
+            name: (state.personal && state.personal.name) || username,
+            theme: state.theme,
+            colorPalette: state.colorPalette,
+            portfolioUrl: livePortfolioUrl,
+            customSubdomain: liveSubdomain,
+            createdAt: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+            data: state
           });
-        } catch(e){}
+          localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory.slice(0, 50)));
+        } catch(e) { console.warn("Local storage save failed", e); }
 
+        document.getElementById('pbLoadingText').innerText = 'Opening Portfolio...';
+
+        // Background payload generation and saving
+        setTimeout(() => {
+          try {
+            var payloadState = JSON.parse(JSON.stringify(state));
+            if (payloadState.personal && payloadState.personal.photoUrl && payloadState.personal.photoUrl.length > 2000) {
+              payloadState.personal.photoUrl = ''; 
+            }
+            if (payloadState.photo && payloadState.photo.length > 2000) {
+              payloadState.photo = '';
+            }
+            
+            var safeHtmlContent = htmlContent && htmlContent.length < 150000 ? htmlContent : '';
+            
+            fetch('https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec', {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain' },
+              body: JSON.stringify({
+                action: 'save_portfolio',
+                user_id: userId,
+                username: username,
+                portfolio_url: livePortfolioUrl,
+                custom_subdomain: liveSubdomain,
+                portfolio_data: JSON.stringify(payloadState),
+                html_content: safeHtmlContent
+              })
+            }).then(r => r.json()).then(d => console.log("Bg save success:", d)).catch(e => console.error("Bg save error:", e));
+          } catch(err) { console.error("Background task failed", err); }
+        }, 10);
+
+        // Instantly unlock UI and open portfolio
         renderSuccessUI(targetUrl);
-      }, 800); // Small 800ms delay to let the UI show the loading spinner smoothly
+        window.location.href = targetUrl;
+      }, 50);
     }
 
     renderStep();
