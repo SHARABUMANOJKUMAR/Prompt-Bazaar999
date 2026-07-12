@@ -11,7 +11,7 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw995twwCFv2Mp7
 // State
 let currentUser = null;
 let courseProgress = null;
-let currentView = 'home'; // 'home', 'dashboard', 'module_reader'
+let currentView = 'home';
 let activeModuleId = null;
 
 // DOM Elements
@@ -131,30 +131,37 @@ const COURSE_DATA = [
 document.addEventListener('DOMContentLoaded', () => {
     setupSidebar();
     
-    // Auth Listener
-    onAuthStateChanged(auth, (user) => {
-        let localUser = localStorage.getItem('currentUser');
-        if (localUser) {
-            try { localUser = JSON.parse(localUser); } catch(e) { localUser = null; }
-        }
-
-        if (user || localUser) {
-            currentUser = user || localUser;
-            // Handle differences between Firebase User object and localUser object
-            const displayName = currentUser.displayName || currentUser.full_name || currentUser.name || '';
-            const email = currentUser.email || '';
-            const avatarChar = displayName ? displayName.charAt(0).toUpperCase() : (email ? email.charAt(0).toUpperCase() : 'U');
-            
-            if (headerAvatar) headerAvatar.innerText = avatarChar;
-            fetchProgress();
-        } else {
-            // Render Home view for guests
-            currentUser = null;
-            if (headerAvatar) headerAvatar.innerText = 'U';
-            renderHome();
-        }
-    });
+    // Auth Check
+    let localUser = localStorage.getItem('currentUser') || localStorage.getItem('user') || localStorage.getItem('promptbazaar_user');
+    
+    if (localUser) {
+        try { localUser = JSON.parse(localUser); } catch(e) { localUser = null; }
+    }
+    
+    if (localUser) {
+        currentUser = localUser;
+        updateAvatar();
+        fetchProgress(); 
+    } else {
+        // Fallback to Firebase auth listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                updateAvatar();
+                fetchProgress();
+            } else if (!currentUser) {
+                renderHome();
+            }
+        });
+    }
 });
+
+function updateAvatar() {
+    const displayName = currentUser.displayName || currentUser.full_name || currentUser.name || '';
+    const email = currentUser.email || '';
+    const avatarChar = displayName ? displayName.charAt(0).toUpperCase() : (email ? email.charAt(0).toUpperCase() : 'U');
+    if (headerAvatar) headerAvatar.innerText = avatarChar;
+}
 
 function setupSidebar() {
     const toggle = document.getElementById('menuToggleBtn');
@@ -187,21 +194,20 @@ async function fetchProgress() {
             method: 'POST',
             body: JSON.stringify({
                 action: 'get_academy',
-                user_id: currentUser.uid || currentUser.user_id,
+                user_id: currentUser.uid || currentUser.user_id || currentUser.email,
                 email: currentUser.email,
                 name: currentUser.displayName || currentUser.full_name || currentUser.name || 'User'
             })
         });
         const data = await res.json();
         if (data.success) {
-            courseProgress = data.progress; // { currentModule: 1, completedModules: 0, progressPct: 0 }
-            renderDashboard(); // Default to dashboard if logged in
+            courseProgress = data.progress; 
+            renderDashboard(); 
         } else {
             throw new Error(data.error || 'Failed to fetch progress');
         }
     } catch (e) {
         console.error(e);
-        showToast("Error loading course progress", "error");
         // Fallback progress
         courseProgress = { currentModule: 1, completedModules: 0, progressPct: 0 };
         renderDashboard();
@@ -216,7 +222,6 @@ async function completeModule(moduleId) {
     
     showLoading();
     
-    // Calculate new progress
     let newCompleted = Math.max(courseProgress.completedModules, moduleId);
     let newCurrent = newCompleted < 8 ? newCompleted + 1 : 8;
     let newPct = Math.round((newCompleted / 8) * 100);
@@ -226,7 +231,7 @@ async function completeModule(moduleId) {
             method: 'POST',
             body: JSON.stringify({
                 action: 'update_academy',
-                user_id: currentUser.uid || currentUser.user_id,
+                user_id: currentUser.uid || currentUser.user_id || currentUser.email,
                 email: currentUser.email,
                 name: currentUser.displayName || currentUser.full_name || currentUser.name || 'User',
                 completedModules: newCompleted,
@@ -264,7 +269,7 @@ function hideLoading() {
 
 window.goToDashboard = function() {
     if (!currentUser) {
-        showToast("Please log in using the menu to access the Academy.", "error");
+        window.location.href = '/login.html?redirect=/academy';
         return;
     }
     renderDashboard();
@@ -272,7 +277,7 @@ window.goToDashboard = function() {
 
 window.goToModule = function(id) {
     if (!currentUser) {
-        showToast("Please log in using the menu to access the Academy.", "error");
+        window.location.href = '/login.html?redirect=/academy';
         return;
     }
     if (id > courseProgress.completedModules + 1) {
@@ -288,173 +293,212 @@ window.triggerCompleteModule = function(id) {
 
 function renderHome() {
     currentView = 'home';
-    let html = `
+    let html = \`
         <div class="academy-hero">
+            <div class="hero-bg-shapes"></div>
             <div class="hero-content">
+                <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Academy Logo" class="hero-academy-logo">
                 <div class="academy-hero-badges">
                     <span class="hero-badge"><i class="fas fa-graduation-cap"></i> Prompt Bazaar Academy</span>
                     <span class="hero-badge"><i class="fas fa-star"></i> Professional Certification</span>
                 </div>
-                <h1>Prompt Engineering Master Course</h1>
+                <h1>Master Prompt Engineering</h1>
                 <p>Learn Prompt Engineering from Scratch to Professional Level with Real-World Projects, Company Tasks, and Industry Experience.</p>
-                <div style="display:flex; gap:16px; margin-top:30px;" class="hero-buttons">
-                    <button class="btn-academy-primary" onclick="goToDashboard()">Start Learning</button>
-                    <a href="#curriculum" class="btn-academy-secondary">View Course Curriculum</a>
+                
+                <div class="hero-actions">
+                    <button class="btn-academy-primary" onclick="goToDashboard()">
+                        Start Learning Now <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <a href="#curriculum" class="btn-academy-secondary">View Curriculum</a>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-num">8</div>
+                        <div class="stat-label">Modules</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">80+</div>
+                        <div class="stat-label">Lessons</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num">4</div>
+                        <div class="stat-label">Assignments</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num"><i class="fas fa-certificate"></i></div>
+                        <div class="stat-label">Certificate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-num"><i class="fas fa-infinity"></i></div>
+                        <div class="stat-label">Lifetime Access</div>
+                    </div>
                 </div>
             </div>
-            
-            <!-- Floating Decorative Elements -->
-            <div class="hero-decoration">
-                <div class="floating-shape shape-1"></div>
-                <div class="floating-shape shape-2"></div>
-                <div class="floating-shape shape-3"></div>
-            </div>
         </div>
 
-        <div class="overview-grid">
-            <div class="overview-card">
-                <h3>Duration</h3>
-                <div class="stat">14+ Hours</div>
+        <section class="premium-section" id="overview">
+            <div class="section-header">
+                <h2>Why Learn Prompt Engineering?</h2>
+                <p>The most in-demand skill of the AI era. Transform how you work and build.</p>
             </div>
-            <div class="overview-card">
-                <h3>Level</h3>
-                <div class="stat">Beginner to Expert</div>
+            <div class="overview-grid">
+                <div class="overview-card">
+                    <div class="card-icon"><i class="fas fa-rocket"></i></div>
+                    <h3>Boost Productivity</h3>
+                    <p>Automate repetitive tasks and accelerate your workflow tenfold.</p>
+                </div>
+                <div class="overview-card">
+                    <div class="card-icon"><i class="fas fa-briefcase"></i></div>
+                    <h3>Career Growth</h3>
+                    <p>Stand out in the job market with cutting-edge AI orchestration skills.</p>
+                </div>
+                <div class="overview-card">
+                    <div class="card-icon"><i class="fas fa-code"></i></div>
+                    <h3>Build Better Apps</h3>
+                    <p>Integrate LLMs into your software with robust and reliable prompts.</p>
+                </div>
+                <div class="overview-card">
+                    <div class="card-icon"><i class="fas fa-brain"></i></div>
+                    <h3>Future Proof</h3>
+                    <p>Master the fundamentals of AI communication that will outlast any specific model.</p>
+                </div>
             </div>
-            <div class="overview-card">
-                <h3>Modules</h3>
-                <div class="stat">8 Modules</div>
-            </div>
-            <div class="overview-card">
-                <h3>Projects</h3>
-                <div class="stat">4 Assignments</div>
-            </div>
-        </div>
+        </section>
 
-        <!-- NEW: Dashboard Preview Section -->
-        <section class="home-section dashboard-preview-section">
-            <h2 class="section-title">Experience a Premium Learning Environment</h2>
-            <p class="section-subtitle">Track your progress, earn achievements, and access industry-grade materials from a professional dashboard.</p>
-            <div class="dashboard-preview-wrapper">
-                <div class="dash-preview-header">
-                    <div class="dash-preview-avatar">U</div>
-                    <div class="dash-preview-info">
-                        <h3>Welcome back, Future Prompt Engineer!</h3>
-                        <div class="progress-bar-bg" style="width:100%; margin-top:10px;">
-                            <div class="progress-bar-fill" style="width: 35%"></div>
+        <!-- Dashboard Preview Section -->
+        <section class="premium-section dashboard-preview-section">
+            <div class="section-header">
+                <h2>Your Learning Environment</h2>
+                <p>Experience a seamless, distraction-free dashboard built for serious learners.</p>
+            </div>
+            <div class="dashboard-preview">
+                <div class="dashboard-header mock-header">
+                    <div class="dashboard-avatar">S</div>
+                    <div class="dashboard-stats">
+                        <h2>Welcome back, Student!</h2>
+                        <div style="color:var(--pb-text-muted);">Prompt Engineering Master Course</div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 25%"></div>
                         </div>
-                        <div style="font-size:0.8rem; color:var(--pb-text-muted); margin-top:5px;">Overall Progress: 35%</div>
+                        <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:0.9rem; color:var(--pb-text-muted);">
+                            <span>Overall Progress</span>
+                            <span style="font-weight:700; color:var(--pb-primary);">25%</span>
+                        </div>
                     </div>
                 </div>
-                <div class="dash-preview-modules">
-                    <div class="dash-preview-module">
-                        <h4>Module 3: Advanced Prompting</h4>
-                        <button class="btn-academy-primary" style="padding:6px 12px; font-size:0.85rem;">Continue</button>
+                <div class="module-grid mock-grid">
+                    <div class="module-card">
+                        <div class="module-card-header">
+                            <span class="mod-num">Module 1</span>
+                            <span style="color:#10b981; font-weight:600;"><i class="fas fa-check-circle"></i> Completed</span>
+                        </div>
+                        <div class="module-card-body">
+                            <div style="display:flex; gap:16px; margin-bottom:12px;">
+                                <div class="mod-icon completed"><i class="fas fa-check"></i></div>
+                                <h3>Introduction to Prompt Engineering</h3>
+                            </div>
+                            <div style="display:flex; gap:16px; font-size:0.85rem; color:var(--pb-text-muted);">
+                                <span><i class="far fa-clock"></i> 1 hour</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card active-preview">
+                        <div class="module-card-header">
+                            <span class="mod-num">Module 2</span>
+                            <span style="color:var(--pb-primary); font-weight:600;"><i class="fas fa-play-circle"></i> In Progress</span>
+                        </div>
+                        <div class="module-card-body">
+                            <div style="display:flex; gap:16px; margin-bottom:12px;">
+                                <div class="mod-icon active"><i class="fas fa-play"></i></div>
+                                <h3>Prompt Fundamentals</h3>
+                            </div>
+                            <div style="display:flex; gap:16px; font-size:0.85rem; color:var(--pb-text-muted);">
+                                <span><i class="far fa-clock"></i> 1 hour</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="module-card locked">
+                        <div class="module-card-header">
+                            <span class="mod-num">Module 3</span>
+                            <span style="color:var(--pb-text-muted);"><i class="fas fa-lock"></i> Locked</span>
+                        </div>
+                        <div class="module-card-body">
+                            <div style="display:flex; gap:16px; margin-bottom:12px;">
+                                <div class="mod-icon locked"><i class="fas fa-lock"></i></div>
+                                <h3>Advanced Prompting</h3>
+                            </div>
+                            <div style="display:flex; gap:16px; font-size:0.85rem; color:var(--pb-text-muted);">
+                                <span><i class="far fa-clock"></i> 1.5 hours</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- NEW: Why Learn Prompt Engineering -->
-        <section class="home-section why-learn-section">
-            <h2 class="section-title">Why Learn Prompt Engineering?</h2>
-            <div class="why-learn-grid">
-                <div class="why-card">
-                    <div class="why-icon"><i class="fas fa-rocket"></i></div>
-                    <h3>Future-Proof Career</h3>
-                    <p>AI is transforming every industry. Mastering prompt engineering ensures you stay ahead of the curve.</p>
-                </div>
-                <div class="why-card">
-                    <div class="why-icon"><i class="fas fa-chart-line"></i></div>
-                    <h3>10x Productivity</h3>
-                    <p>Learn how to automate tasks, generate content, and solve complex problems in seconds.</p>
-                </div>
-                <div class="why-card">
-                    <div class="why-icon"><i class="fas fa-building"></i></div>
-                    <h3>High Industry Demand</h3>
-                    <p>Top companies are actively hiring professionals who can effectively communicate with AI models.</p>
+                <div class="preview-overlay">
+                    <button class="btn-academy-primary" onclick="goToDashboard()">Access Full Dashboard</button>
                 </div>
             </div>
         </section>
 
-        <!-- NEW: Skills You'll Gain -->
-        <section class="home-section skills-section">
-            <h2 class="section-title">Skills You'll Gain</h2>
-            <div class="skills-tags">
-                <span class="skill-tag">Zero-Shot Prompting</span>
-                <span class="skill-tag">Few-Shot Learning</span>
-                <span class="skill-tag">Chain of Thought</span>
-                <span class="skill-tag">System Prompt Design</span>
-                <span class="skill-tag">AI Hallucination Mitigation</span>
-                <span class="skill-tag">Automated Workflows</span>
-                <span class="skill-tag">Prompt Injection Security</span>
-                <span class="skill-tag">Context Window Optimization</span>
+        <section class="premium-section" id="curriculum">
+            <div class="section-header">
+                <h2>Learning Roadmap</h2>
+                <p>A structured path from beginner to expert prompt engineer.</p>
             </div>
-        </section>
-
-        <section class="roadmap-container" id="curriculum">
-            <h2 class="section-title" style="text-align:center;">Course Curriculum</h2>
-            <p class="section-subtitle" style="text-align:center; margin-bottom:40px;">Step-by-step roadmap to mastery.</p>
             <div class="roadmap-timeline">
-    `;
+    \`;
     
-    COURSE_DATA.forEach((mod, index) => {
-        const isLocked = index > 0; // Only Module 1 is active for guests
-        const iconHtml = isLocked ? `<i class="fas fa-lock" style="font-size:0.9rem;"></i>` : mod.id;
+    COURSE_DATA.forEach((mod, idx) => {
+        const isActive = idx === 0;
+        const isLocked = idx > 0;
         
-        html += `
-            <div class="roadmap-item ${isLocked ? 'locked' : 'active'}">
-                <div class="roadmap-icon">${iconHtml}</div>
+        let iconHtml = isActive ? '<i class="fas fa-play"></i>' : '<i class="fas fa-lock"></i>';
+        
+        html += \`
+            <div class="roadmap-item \${isActive ? 'active' : ''} \${isLocked ? 'locked' : ''}">
+                <div class="roadmap-marker">
+                    <div class="marker-icon">\${iconHtml}</div>
+                </div>
                 <div class="roadmap-content">
-                    <h4>${mod.title}</h4>
-                    <p>${mod.description}</p>
-                    <div class="roadmap-meta" style="margin-top:12px; font-size:0.85rem; color:var(--pb-text-muted);">
-                        <span><i class="far fa-clock"></i> ${mod.duration}</span> &nbsp;&nbsp;|&nbsp;&nbsp; 
-                        <span><i class="fas fa-layer-group"></i> ${mod.difficulty}</span>
+                    <div class="roadmap-content-inner">
+                        <div class="mod-tag">Module \${mod.id}</div>
+                        <h4>\${mod.title}</h4>
+                        <p>\${mod.description}</p>
+                        <div class="mod-meta">
+                            <span><i class="far fa-clock"></i> \${mod.duration}</span>
+                            <span><i class="fas fa-layer-group"></i> \${mod.difficulty}</span>
+                            <span><i class="fas fa-tasks"></i> \${mod.objectives.length} Lessons</span>
+                        </div>
                     </div>
-                    ${isLocked ? '' : '<button class="btn-academy-secondary" style="margin-top:16px;" onclick="goToDashboard()">Start Module 1</button>'}
                 </div>
             </div>
-        `;
+        \`;
     });
     
-    html += `
+    html += \`
             </div>
-        </section>
-
-        <!-- NEW: FAQ Section -->
-        <section class="home-section faq-section">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <div class="faq-list">
-                <div class="faq-item">
-                    <h4>Is this course for beginners?</h4>
-                    <p>Yes! We start from the absolute basics and gradually move to advanced, enterprise-grade techniques.</p>
-                </div>
-                <div class="faq-item">
-                    <h4>Do I get a certificate?</h4>
-                    <p>Yes, upon completing all modules and assignments, you will receive a verifiable Professional Certificate.</p>
-                </div>
-                <div class="faq-item">
-                    <h4>How long does it take?</h4>
-                    <p>The course is self-paced. Most students complete it in 2-3 weeks dedicating a few hours per week.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- NEW: Final CTA -->
-        <section class="home-section cta-section">
-            <h2>Ready to Master AI?</h2>
-            <p>Join thousands of learners and upgrade your career today.</p>
-            <button class="btn-academy-primary" style="margin-top:20px; font-size:1.1rem; padding:14px 32px;" onclick="goToDashboard()">Start Learning Now</button>
         </section>
         
-        <!-- NEW: Footer -->
-        <footer class="academy-footer">
-            <div class="footer-content">
-                <div class="footer-logo"><i class="fas fa-graduation-cap"></i> Prompt Bazaar Academy</div>
-                <p>&copy; 2026 Prompt Bazaar. All rights reserved.</p>
+        <section class="premium-section faq-section">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
             </div>
-        </footer>
-    `;
+            <div class="faq-grid">
+                <div class="faq-card">
+                    <h4>Do I need coding experience?</h4>
+                    <p>No coding experience is required for the first 4 modules. Later modules touch on developer APIs but focus on the prompting aspect.</p>
+                </div>
+                <div class="faq-card">
+                    <h4>Is this course free?</h4>
+                    <p>Currently, the Prompt Bazaar Academy provides lifetime access for free during our beta phase. Take advantage of it while it lasts!</p>
+                </div>
+                <div class="faq-card">
+                    <h4>Will I get a certificate?</h4>
+                    <p>Yes, upon completing all modules and the capstone project, you will receive a verifiable Professional Certificate.</p>
+                </div>
+            </div>
+        </section>
+    \`;
     
     viewContainer.innerHTML = html;
     hideLoading();
@@ -462,18 +506,18 @@ function renderHome() {
 
 function renderDashboard() {
     currentView = 'dashboard';
-    let html = `
+    let html = \`
         <div class="dashboard-header">
-            <div class="dashboard-avatar">${currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : (currentUser.email ? currentUser.email.charAt(0).toUpperCase() : 'U')}</div>
+            <div class="dashboard-avatar">\${currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : (currentUser.email ? currentUser.email.charAt(0).toUpperCase() : 'U')}</div>
             <div class="dashboard-stats">
-                <h2>Welcome back, ${currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'Student'}!</h2>
-                <div style="color:var(--pb-text-muted);">Prompt Engineering Master Course</div>
+                <h2>Welcome back, \${currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'Student'}!</h2>
+                <div style="color:var(--pb-text-muted); margin-bottom: 12px;">Prompt Engineering Master Course</div>
                 <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" style="width: ${courseProgress.progressPct}%"></div>
+                    <div class="progress-bar-fill" style="width: \${courseProgress.progressPct}%"></div>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:0.9rem; color:var(--pb-text-muted);">
+                <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:0.95rem; color:var(--pb-text-muted);">
                     <span>Overall Progress</span>
-                    <span style="font-weight:700; color:var(--pb-primary);">${courseProgress.progressPct}%</span>
+                    <span style="font-weight:800; color:var(--pb-primary);">\${courseProgress.progressPct}%</span>
                 </div>
                 
                 <div class="dashboard-badges">
@@ -490,9 +534,12 @@ function renderDashboard() {
             </div>
         </div>
 
-        <h3 style="margin-bottom:24px;">Course Modules</h3>
+        <div class="dashboard-section-title">
+            <h3>Course Modules</h3>
+            <p>Pick up where you left off or review past material.</p>
+        </div>
         <div class="module-grid">
-    `;
+    \`;
 
     COURSE_DATA.forEach((mod, idx) => {
         const isLocked = mod.id > courseProgress.completedModules + 1;
@@ -505,30 +552,39 @@ function renderDashboard() {
 
         let btnClass = isLocked ? 'btn-module-action locked-btn' : 'btn-module-action';
         let btnText = isCompleted ? 'Review Module' : (isLocked ? 'Locked' : 'Start Learning');
-        let clickAttr = isLocked ? '' : `onclick="goToModule(${mod.id})"`;
+        let clickAttr = isLocked ? '' : \`onclick="goToModule(\${mod.id})"\`;
+        
+        // Gradient animated icons
+        let iconMarkup = '';
+        if (isCompleted) iconMarkup = '<div class="mod-icon completed"><i class="fas fa-check"></i></div>';
+        else if (!isLocked) iconMarkup = '<div class="mod-icon active"><i class="fas fa-play"></i></div>';
+        else iconMarkup = '<div class="mod-icon locked"><i class="fas fa-lock"></i></div>';
 
-        html += `
-            <div class="module-card ${isLocked ? 'locked' : ''}">
+        html += \`
+            <div class="module-card \${isLocked ? 'locked' : ''}">
                 <div class="module-card-header">
-                    <span class="mod-num">Module ${mod.id}</span>
-                    ${statusBadge}
+                    <span class="mod-num">Module \${mod.id}</span>
+                    \${statusBadge}
                 </div>
                 <div class="module-card-body">
-                    <h3>${mod.title}</h3>
-                    <p>${mod.description}</p>
-                    <div style="display:flex; gap:16px; font-size:0.85rem; color:var(--pb-text-muted);">
-                        <span><i class="far fa-clock"></i> ${mod.duration}</span>
-                        <span><i class="fas fa-layer-group"></i> ${mod.difficulty}</span>
+                    <div style="display:flex; gap:16px; margin-bottom:16px; align-items: center;">
+                        \${iconMarkup}
+                        <h3 style="margin:0;">\${mod.title}</h3>
+                    </div>
+                    <p>\${mod.description}</p>
+                    <div class="mod-meta" style="display:flex; gap:16px; font-size:0.85rem; color:var(--pb-text-muted); margin-bottom: 24px;">
+                        <span><i class="far fa-clock"></i> \${mod.duration}</span>
+                        <span><i class="fas fa-layer-group"></i> \${mod.difficulty}</span>
                     </div>
                 </div>
                 <div class="module-card-footer">
-                    <button class="${btnClass}" ${clickAttr}>${btnText}</button>
+                    <button class="\${btnClass}" \${clickAttr}>\${btnText}</button>
                 </div>
             </div>
-        `;
+        \`;
     });
 
-    html += `</div>`;
+    html += \`</div>\`;
     viewContainer.innerHTML = html;
     hideLoading();
 }
@@ -541,46 +597,53 @@ function renderModuleReader(id) {
     activeModuleId = id;
     const isCompleted = id <= courseProgress.completedModules;
 
-    let html = `
+    let html = \`
         <div class="reader-container">
             <div class="reader-header">
                 <div class="reader-breadcrumb">
-                    <a href="javascript:void(0)" onclick="goToDashboard()">Course Dashboard</a> / Module ${id}
+                    <a href="javascript:void(0)" onclick="goToDashboard()"><i class="fas fa-arrow-left"></i> Course Dashboard</a> <span style="margin:0 10px;">/</span> <span style="color:var(--pb-text-muted)">Module \${id}</span>
                 </div>
-                <h1>${mod.title}</h1>
-                <div style="margin-top:12px; color:var(--pb-text-muted); display:flex; gap:16px;">
-                    <span><i class="far fa-clock"></i> ${mod.duration}</span>
-                    <span><i class="fas fa-bullseye"></i> ${mod.difficulty}</span>
+                <h1>\${mod.title}</h1>
+                <div style="margin-top:16px; color:var(--pb-text-muted); display:flex; gap:20px; font-weight:500;">
+                    <span><i class="far fa-clock"></i> \${mod.duration}</span>
+                    <span><i class="fas fa-layer-group"></i> \${mod.difficulty}</span>
                 </div>
             </div>
             
             <div class="reader-content">
-                <h2>Learning Objectives</h2>
-                <ul>
-                    ${mod.objectives.map(obj => `<li>${obj}</li>`).join('')}
-                </ul>
+                <div class="objectives-box">
+                    <h2><i class="fas fa-bullseye"></i> Learning Objectives</h2>
+                    <ul>
+                        \${mod.objectives.map(obj => \`<li><i class="fas fa-check"></i> \${obj}</li>\`).join('')}
+                    </ul>
+                </div>
                 
-                ${mod.theory}
+                <div class="theory-content">
+                    \${mod.theory}
+                </div>
                 
-                <!-- Placeholders for Phase 2 -->
-                <div class="reader-alert" style="background:#f1f5f9; border-color:#94a3b8; margin-top:60px;">
-                    <i class="fas fa-lock"></i> <strong>Interactive Quiz & Assignment</strong> (Coming in Phase 2)
+                <div class="reader-alert premium-alert">
+                    <div class="alert-icon"><i class="fas fa-laptop-code"></i></div>
+                    <div class="alert-text">
+                        <strong>Interactive Quiz & Assignment</strong>
+                        <span>Coming in Phase 2. Practice what you've learned with hands-on exercises.</span>
+                    </div>
                 </div>
             </div>
             
-            <div class="reader-footer" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-                <div class="reader-nav-buttons" style="display:flex; gap:12px;">
-                    ${id > 1 ? `<button class="btn-reader-nav" onclick="goToModule(${id - 1})"><i class="fas fa-chevron-left"></i> Previous Module</button>` : `<button class="btn-reader-nav" disabled style="opacity:0.5; cursor:not-allowed;"><i class="fas fa-chevron-left"></i> Previous Module</button>`}
-                    ${id < 8 ? `<button class="btn-reader-nav" onclick="goToModule(${id + 1})">Next Module <i class="fas fa-chevron-right"></i></button>` : ''}
+            <div class="reader-footer">
+                <div class="reader-nav-buttons">
+                    \${id > 1 ? \`<button class="btn-reader-nav" onclick="goToModule(\${id - 1})"><i class="fas fa-chevron-left"></i> Previous Module</button>\` : \`<button class="btn-reader-nav" disabled style="opacity:0.5; cursor:not-allowed;"><i class="fas fa-chevron-left"></i> Previous Module</button>\`}
+                    \${id < 8 ? \`<button class="btn-reader-nav" onclick="goToModule(\${id + 1})">Next Module <i class="fas fa-chevron-right"></i></button>\` : ''}
                 </div>
                 <div class="reader-action-buttons">
-                    ${!isCompleted ? `<button class="btn-reader-complete" onclick="triggerCompleteModule(${id})">Complete Module</button>` : `<div style="color:#10b981; font-weight:600;"><i class="fas fa-check-circle"></i> Module Completed</div>`}
+                    \${!isCompleted ? \`<button class="btn-reader-complete" onclick="triggerCompleteModule(\${id})">Mark as Complete <i class="fas fa-check-circle"></i></button>\` : \`<div class="completed-stamp"><i class="fas fa-check-circle"></i> Module Completed</div>\`}
                 </div>
             </div>
         </div>
-    `;
+    \`;
 
     viewContainer.innerHTML = html;
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     hideLoading();
 }
