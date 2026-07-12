@@ -1967,12 +1967,23 @@
       certificates: [],
       achievements: [],
       socials: { github: '', linkedin: '' },
-      customColors: { bgBase: '#0B0F19', textMain: '#F8FAFC', primary: '#0D6EFD', cardBg: '#121826', cardBorder: '#1E293B', textMuted: '#94A3B8' },
-      font: 'Inter',
-      animation: '3D Tilt & Glow'
+      customColors: { bgBase: '#F8FCFF', textMain: '#1A365D', primary: '#2563EB', cardBg: '#FFFFFF', cardBorder: '#D6E4FF', textMuted: '#64748B' },
+      theme: 'Ocean Breeze',
+      font: 'Plus Jakarta Sans',
+      animation: 'Floating Cards'
     };
 
-    var THEMES = ['Minimal', 'Dark Pro', 'Gradient', 'Glassmorphism', 'Terminal', 'Futuristic Cyber', 'Executive SaaS', 'Bento Grid Pro', 'Aurora Glass'];
+    var PREMIUM_THEMES = [
+      { name: 'Ocean Breeze', desc: 'Modern, Fresh, Startup', bgBase: '#F8FCFF', textMain: '#1A365D', primary: '#2563EB', cardBg: '#FFFFFF', cardBorder: '#D6E4FF', textMuted: '#64748B', font: 'Plus Jakarta Sans', animation: 'Floating Cards' },
+      { name: 'Sky Blue', desc: 'Corporate, Clean', bgBase: '#F4FAFF', textMain: '#0F172A', primary: '#0EA5E9', cardBg: '#FFFFFF', cardBorder: '#D9F1FF', textMuted: '#64748B', font: 'DM Sans', animation: 'Fade Up' },
+      { name: 'Emerald Professional', desc: 'Technology, Business', bgBase: '#F3FFF9', textMain: '#1E293B', primary: '#10B981', cardBg: '#FFFFFF', cardBorder: '#D8F5E7', textMuted: '#6B7280', font: 'Manrope', animation: 'Smooth Reveal' },
+      { name: 'Lavender Premium', desc: 'Creative, Designer', bgBase: '#FCFAFF', textMain: '#312E81', primary: '#8B5CF6', cardBg: '#FFFFFF', cardBorder: '#E9D5FF', textMuted: '#6B7280', font: 'Space Grotesk', animation: 'Floating Hologram' },
+      { name: 'Sunset Orange', desc: 'Freelancer, Personal', bgBase: '#FFF9F5', textMain: '#7C2D12', primary: '#F97316', cardBg: '#FFFFFF', cardBorder: '#FED7AA', textMuted: '#78716C', font: 'Sora', animation: 'Magnetic Interactive' },
+      { name: 'Royal Purple', desc: 'Premium, Luxury', bgBase: '#FAF7FF', textMain: '#3B0764', primary: '#9333EA', cardBg: '#FFFFFF', cardBorder: '#E9D5FF', textMuted: '#7C3AED', font: 'Plus Jakarta Sans', animation: 'Floating Cards' },
+      { name: 'Aqua Mint', desc: 'AI, Startup, SaaS', bgBase: '#F0FDFA', textMain: '#134E4A', primary: '#14B8A6', cardBg: '#FFFFFF', cardBorder: '#CCFBF1', textMuted: '#64748B', font: 'Inter', animation: 'Glass Hover' },
+      { name: 'Rose Gold', desc: 'Elegant, Luxury', bgBase: '#FFF8FA', textMain: '#831843', primary: '#EC4899', cardBg: '#FFFFFF', cardBorder: '#FBCFE8', textMuted: '#6B7280', font: 'Playfair Display', animation: 'Fade Up' }
+    ];
+    var THEMES = ['Ocean Breeze', 'Sky Blue', 'Emerald Professional', 'Lavender Premium', 'Sunset Orange', 'Royal Purple', 'Aqua Mint', 'Rose Gold'];
     var COLORS = [
       {name: 'Ocean Blue', val: '#0D6EFD'}, 
       {name: 'Emerald Green', val: '#10B981'},
@@ -1984,12 +1995,15 @@
       {name: 'Golden Elegance', val: '#D97706'},
       {name: 'Obsidian Chrome', val: '#475569'}
     ];
-    var FONTS = ['Inter', 'Outfit', 'Roboto', 'Poppins', 'Playfair Display'];
+    var FONTS = ['Inter', 'Outfit', 'Roboto', 'Poppins', 'Playfair Display', 'Manrope', 'DM Sans', 'Plus Jakarta Sans', 'Space Grotesk', 'Nunito', 'Sora', 'Montserrat', 'Lato', 'Open Sans', 'Raleway'];
     var ANIMATIONS = [
       {name: '3D Tilt & Glow', icon: 'fa-cube', color: '#6366F1', desc: 'Interactive cursor 3D perspective tilt tracking with lighting glare'},
       {name: 'Smooth Reveal', icon: 'fa-layer-group', color: '#10B981', desc: 'Professional staggered viewport scroll fade-in transitions'},
       {name: 'Floating Hologram', icon: 'fa-atom', color: '#8B5CF6', desc: 'Continuous floating 3D parallax & levitation physics'},
-      {name: 'Magnetic Interactive', icon: 'fa-magnet', color: '#F59E0B', desc: 'Buttons & interactive cards pull smoothly toward cursor'}
+      {name: 'Magnetic Interactive', icon: 'fa-magnet', color: '#F59E0B', desc: 'Buttons & interactive cards pull smoothly toward cursor'},
+      {name: 'Floating Cards', icon: 'fa-clone', color: '#2563EB', desc: 'Cards float gently up and down adding a dynamic ambient feel'},
+      {name: 'Fade Up', icon: 'fa-arrow-up', color: '#0EA5E9', desc: 'Elements smoothly fade and slide up as you scroll'},
+      {name: 'Glass Hover', icon: 'fa-glass-martini', color: '#14B8A6', desc: 'Cards gain a beautiful frosted glass shine on hover'}
     ];
 
     function renderStep() {
@@ -2038,7 +2052,25 @@
         html += '<div class="wizard-form-group" style="flex:1"><label>GitHub URL</label><input class="tool-input" id="pbGithub" value="'+state.socials.github+'"></div>';
         html += '</div>';
         
-        html += '<h4>Theme & Color Customization</h4><div class="wizard-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px;">';
+        html += '<h4>Choose Portfolio Theme</h4><div class="wizard-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 24px;">';
+        PREMIUM_THEMES.forEach(function(t) {
+          var isAct = state.theme === t.name;
+          html += '<div class="wizard-card '+(isAct ? 'active' : '')+' pb-theme-card" data-theme="'+t.name+'" style="text-align:left; padding:16px; border:'+(isAct?'2px solid var(--primary)':'1px solid rgba(255,255,255,0.12)')+'; background:'+(isAct?'rgba(13,110,253,0.08)':'rgba(255,255,255,0.02)')+'; position:relative; cursor:pointer;">';
+          html += '<div style="font-weight:700; font-size:1.05rem; margin-bottom:4px; color:#fff;">' + t.name + '</div>';
+          html += '<div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px;">' + t.desc + '</div>';
+          html += '<div style="display:flex; gap:6px; margin-bottom:12px;">';
+          html += '<div style="width:24px; height:24px; border-radius:4px; background:'+t.bgBase+'; border:1px solid rgba(255,255,255,0.2);" title="Background"></div>';
+          html += '<div style="width:24px; height:24px; border-radius:4px; background:'+t.primary+'; border:1px solid rgba(255,255,255,0.2);" title="Primary"></div>';
+          html += '<div style="width:24px; height:24px; border-radius:4px; background:'+t.cardBg+'; border:1px solid rgba(255,255,255,0.2);" title="Card"></div>';
+          html += '<div style="width:24px; height:24px; border-radius:4px; background:'+t.textMain+'; border:1px solid rgba(255,255,255,0.2);" title="Text"></div>';
+          html += '</div>';
+          html += '<div style="font-size:0.75rem; color:#a1a1aa;"><i class="fas fa-font"></i> ' + t.font + '</div>';
+          if (isAct) html += '<div style="position:absolute; top:12px; right:12px; color:var(--primary);"><i class="fas fa-check-circle"></i></div>';
+          html += '</div>';
+        });
+        html += '</div>';
+        
+        html += '<h4>Manual Color Customization</h4><div class="wizard-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px;">';
         var cc = state.customColors || { bgBase: '#0B0F19', textMain: '#F8FAFC', primary: '#0D6EFD', cardBg: '#121826', cardBorder: '#1E293B', textMuted: '#94A3B8' };
         html += '<div class="wizard-form-group" style="margin-bottom:0;"><label>Background Color</label><div style="display:flex;align-items:center;gap:10px;"><input type="color" id="pbColorBg" value="'+cc.bgBase+'" style="height:36px;width:60px;cursor:pointer;"><input class="tool-input" style="flex:1;" readonly value="'+cc.bgBase+'"></div></div>';
         html += '<div class="wizard-form-group" style="margin-bottom:0;"><label>Text / Foreground Color</label><div style="display:flex;align-items:center;gap:10px;"><input type="color" id="pbColorText" value="'+cc.textMain+'" style="height:36px;width:60px;cursor:pointer;"><input class="tool-input" style="flex:1;" readonly value="'+cc.textMain+'"></div></div>';
@@ -2047,7 +2079,7 @@
         html += '<div class="wizard-form-group" style="margin-bottom:0;"><label>Card Border</label><div style="display:flex;align-items:center;gap:10px;"><input type="color" id="pbColorBorder" value="'+cc.cardBorder+'" style="height:36px;width:60px;cursor:pointer;"><input class="tool-input" style="flex:1;" readonly value="'+cc.cardBorder+'"></div></div>';
         html += '<div class="wizard-form-group" style="margin-bottom:0;"><label>Muted Text Color</label><div style="display:flex;align-items:center;gap:10px;"><input type="color" id="pbColorMuted" value="'+cc.textMuted+'" style="height:36px;width:60px;cursor:pointer;"><input class="tool-input" style="flex:1;" readonly value="'+cc.textMuted+'"></div></div>';
         html += '</div>';
-        html += '<button class="tool-btn" id="pbResetColors" style="margin-bottom:24px;"><i class="fas fa-undo"></i> Reset to Default Dark Theme</button>';
+        html += '<button class="tool-btn" id="pbResetColors" style="margin-bottom:24px;"><i class="fas fa-undo"></i> Reset to Default</button>';
 
         html += '<h4>Typography Font</h4><div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom: 24px;">';
         FONTS.forEach(function(f) {
@@ -2168,6 +2200,16 @@
           saveCurrentStep();
           if (c.getAttribute('data-type') === 'font') state.font = c.getAttribute('data-val');
           if (c.getAttribute('data-type') === 'animation') state.animation = c.getAttribute('data-val');
+          if (c.getAttribute('data-theme')) {
+            var themeName = c.getAttribute('data-theme');
+            var selected = PREMIUM_THEMES.find(function(t) { return t.name === themeName; });
+            if (selected) {
+              state.theme = selected.name;
+              state.font = selected.font;
+              state.animation = selected.animation;
+              state.customColors = { bgBase: selected.bgBase, textMain: selected.textMain, primary: selected.primary, cardBg: selected.cardBg, cardBorder: selected.cardBorder, textMuted: selected.textMuted };
+            }
+          }
           renderStep();
         });
       });
@@ -2175,7 +2217,11 @@
       var resetBtn = document.getElementById('pbResetColors');
       if (resetBtn) {
         resetBtn.addEventListener('click', function() {
-          state.customColors = { bgBase: '#0B0F19', textMain: '#F8FAFC', primary: '#0D6EFD', cardBg: '#121826', cardBorder: '#1E293B', textMuted: '#94A3B8' };
+          var t = PREMIUM_THEMES.find(function(th) { return th.name === 'Ocean Breeze'; });
+          state.theme = t.name;
+          state.font = t.font;
+          state.animation = t.animation;
+          state.customColors = { bgBase: t.bgBase, textMain: t.textMain, primary: t.primary, cardBg: t.cardBg, cardBorder: t.cardBorder, textMuted: t.textMuted };
           renderStep();
         });
       }
