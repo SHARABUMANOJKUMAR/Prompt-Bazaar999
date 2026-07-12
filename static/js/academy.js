@@ -119,8 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (headerAvatar) headerAvatar.innerText = user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
             fetchProgress();
         } else {
-            // Redirect to login or show home view as guest
-            window.location.href = '/login.html?redirect=/academy';
+            // Render Home view for guests
+            currentUser = null;
+            if (headerAvatar) headerAvatar.innerText = 'U';
+            renderHome();
         }
     });
 });
@@ -232,10 +234,18 @@ function hideLoading() {
 }
 
 window.goToDashboard = function() {
+    if (!currentUser) {
+        window.location.href = '/login.html?redirect=/academy';
+        return;
+    }
     renderDashboard();
 };
 
 window.goToModule = function(id) {
+    if (!currentUser) {
+        window.location.href = '/login.html?redirect=/academy';
+        return;
+    }
     if (id > courseProgress.completedModules + 1) {
         showToast("This module is locked.", "error");
         return;
@@ -246,6 +256,67 @@ window.goToModule = function(id) {
 window.triggerCompleteModule = function(id) {
     completeModule(id);
 };
+
+function renderHome() {
+    currentView = 'home';
+    let html = `
+        <div class="academy-hero">
+            <div class="academy-hero-badges">
+                <span class="hero-badge"><i class="fas fa-graduation-cap"></i> Prompt Bazaar Academy</span>
+                <span class="hero-badge"><i class="fas fa-star"></i> Professional Certification</span>
+            </div>
+            <h1>Prompt Engineering Master Course</h1>
+            <p>Learn Prompt Engineering from Scratch to Professional Level with Real-World Projects, Company Tasks, and Industry Experience.</p>
+            <div style="display:flex; gap:16px; margin-top:30px;">
+                <button class="btn-academy-primary" onclick="goToDashboard()">Start Learning</button>
+                <a href="#curriculum" class="btn-academy-secondary">View Course Curriculum</a>
+            </div>
+        </div>
+
+        <div class="overview-grid">
+            <div class="overview-card">
+                <h3>Duration</h3>
+                <div class="stat">14+ Hours</div>
+            </div>
+            <div class="overview-card">
+                <h3>Level</h3>
+                <div class="stat">Beginner to Expert</div>
+            </div>
+            <div class="overview-card">
+                <h3>Modules</h3>
+                <div class="stat">8 Modules</div>
+            </div>
+            <div class="overview-card">
+                <h3>Projects</h3>
+                <div class="stat">4 Assignments</div>
+            </div>
+        </div>
+
+        <div class="roadmap-container" id="curriculum">
+            <h2 class="roadmap-title">Course Curriculum</h2>
+    `;
+    
+    COURSE_DATA.forEach(mod => {
+        html += `
+            <div class="roadmap-item">
+                <div class="roadmap-icon">${mod.id}</div>
+                <div class="roadmap-content">
+                    <h4>${mod.title}</h4>
+                    <p>${mod.description}</p>
+                    <div style="margin-top:12px; font-size:0.85rem; color:var(--pb-text-muted);">
+                        <span><i class="far fa-clock"></i> ${mod.duration}</span> &nbsp;&nbsp;|&nbsp;&nbsp; 
+                        <span><i class="fas fa-layer-group"></i> ${mod.difficulty}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += `</div>`;
+    
+    viewContainer.innerHTML = html;
+    hideLoading();
+}
 
 function renderDashboard() {
     currentView = 'dashboard';
