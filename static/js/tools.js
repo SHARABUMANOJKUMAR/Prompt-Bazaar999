@@ -2797,12 +2797,6 @@
         setTimeout(() => {
           try {
             var payloadState = JSON.parse(JSON.stringify(state));
-            if (payloadState.personal && payloadState.personal.photoUrl && payloadState.personal.photoUrl.length > 2000) {
-              payloadState.personal.photoUrl = ''; 
-            }
-            if (payloadState.photo && payloadState.photo.length > 2000) {
-              payloadState.photo = '';
-            }
             
             var safeHtmlContent = htmlContent && htmlContent.length < 150000 ? htmlContent : '';
             
