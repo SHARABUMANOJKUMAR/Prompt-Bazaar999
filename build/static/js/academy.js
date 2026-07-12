@@ -264,7 +264,7 @@ function hideLoading() {
 
 window.goToDashboard = function() {
     if (!currentUser) {
-        window.location.href = '/login.html?redirect=/academy';
+        showToast("Please log in using the menu to access the Academy.", "error");
         return;
     }
     renderDashboard();
@@ -272,7 +272,7 @@ window.goToDashboard = function() {
 
 window.goToModule = function(id) {
     if (!currentUser) {
-        window.location.href = '/login.html?redirect=/academy';
+        showToast("Please log in using the menu to access the Academy.", "error");
         return;
     }
     if (id > courseProgress.completedModules + 1) {
@@ -297,10 +297,17 @@ function renderHome() {
                 </div>
                 <h1>Prompt Engineering Master Course</h1>
                 <p>Learn Prompt Engineering from Scratch to Professional Level with Real-World Projects, Company Tasks, and Industry Experience.</p>
-                <div style="display:flex; gap:16px; margin-top:30px;">
+                <div style="display:flex; gap:16px; margin-top:30px;" class="hero-buttons">
                     <button class="btn-academy-primary" onclick="goToDashboard()">Start Learning</button>
                     <a href="#curriculum" class="btn-academy-secondary">View Course Curriculum</a>
                 </div>
+            </div>
+            
+            <!-- Floating Decorative Elements -->
+            <div class="hero-decoration">
+                <div class="floating-shape shape-1"></div>
+                <div class="floating-shape shape-2"></div>
+                <div class="floating-shape shape-3"></div>
             </div>
         </div>
 
@@ -323,27 +330,131 @@ function renderHome() {
             </div>
         </div>
 
-        <div class="roadmap-container" id="curriculum">
-            <h2 class="roadmap-title">Course Curriculum</h2>
+        <!-- NEW: Dashboard Preview Section -->
+        <section class="home-section dashboard-preview-section">
+            <h2 class="section-title">Experience a Premium Learning Environment</h2>
+            <p class="section-subtitle">Track your progress, earn achievements, and access industry-grade materials from a professional dashboard.</p>
+            <div class="dashboard-preview-wrapper">
+                <div class="dash-preview-header">
+                    <div class="dash-preview-avatar">U</div>
+                    <div class="dash-preview-info">
+                        <h3>Welcome back, Future Prompt Engineer!</h3>
+                        <div class="progress-bar-bg" style="width:100%; margin-top:10px;">
+                            <div class="progress-bar-fill" style="width: 35%"></div>
+                        </div>
+                        <div style="font-size:0.8rem; color:var(--pb-text-muted); margin-top:5px;">Overall Progress: 35%</div>
+                    </div>
+                </div>
+                <div class="dash-preview-modules">
+                    <div class="dash-preview-module">
+                        <h4>Module 3: Advanced Prompting</h4>
+                        <button class="btn-academy-primary" style="padding:6px 12px; font-size:0.85rem;">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Why Learn Prompt Engineering -->
+        <section class="home-section why-learn-section">
+            <h2 class="section-title">Why Learn Prompt Engineering?</h2>
+            <div class="why-learn-grid">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-rocket"></i></div>
+                    <h3>Future-Proof Career</h3>
+                    <p>AI is transforming every industry. Mastering prompt engineering ensures you stay ahead of the curve.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>10x Productivity</h3>
+                    <p>Learn how to automate tasks, generate content, and solve complex problems in seconds.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-building"></i></div>
+                    <h3>High Industry Demand</h3>
+                    <p>Top companies are actively hiring professionals who can effectively communicate with AI models.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Skills You'll Gain -->
+        <section class="home-section skills-section">
+            <h2 class="section-title">Skills You'll Gain</h2>
+            <div class="skills-tags">
+                <span class="skill-tag">Zero-Shot Prompting</span>
+                <span class="skill-tag">Few-Shot Learning</span>
+                <span class="skill-tag">Chain of Thought</span>
+                <span class="skill-tag">System Prompt Design</span>
+                <span class="skill-tag">AI Hallucination Mitigation</span>
+                <span class="skill-tag">Automated Workflows</span>
+                <span class="skill-tag">Prompt Injection Security</span>
+                <span class="skill-tag">Context Window Optimization</span>
+            </div>
+        </section>
+
+        <section class="roadmap-container" id="curriculum">
+            <h2 class="section-title" style="text-align:center;">Course Curriculum</h2>
+            <p class="section-subtitle" style="text-align:center; margin-bottom:40px;">Step-by-step roadmap to mastery.</p>
+            <div class="roadmap-timeline">
     `;
     
-    COURSE_DATA.forEach(mod => {
+    COURSE_DATA.forEach((mod, index) => {
+        const isLocked = index > 0; // Only Module 1 is active for guests
+        const iconHtml = isLocked ? `<i class="fas fa-lock" style="font-size:0.9rem;"></i>` : mod.id;
+        
         html += `
-            <div class="roadmap-item">
-                <div class="roadmap-icon">${mod.id}</div>
+            <div class="roadmap-item ${isLocked ? 'locked' : 'active'}">
+                <div class="roadmap-icon">${iconHtml}</div>
                 <div class="roadmap-content">
                     <h4>${mod.title}</h4>
                     <p>${mod.description}</p>
-                    <div style="margin-top:12px; font-size:0.85rem; color:var(--pb-text-muted);">
+                    <div class="roadmap-meta" style="margin-top:12px; font-size:0.85rem; color:var(--pb-text-muted);">
                         <span><i class="far fa-clock"></i> ${mod.duration}</span> &nbsp;&nbsp;|&nbsp;&nbsp; 
                         <span><i class="fas fa-layer-group"></i> ${mod.difficulty}</span>
                     </div>
+                    ${isLocked ? '' : '<button class="btn-academy-secondary" style="margin-top:16px;" onclick="goToDashboard()">Start Module 1</button>'}
                 </div>
             </div>
         `;
     });
     
-    html += `</div>`;
+    html += `
+            </div>
+        </section>
+
+        <!-- NEW: FAQ Section -->
+        <section class="home-section faq-section">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <h4>Is this course for beginners?</h4>
+                    <p>Yes! We start from the absolute basics and gradually move to advanced, enterprise-grade techniques.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Do I get a certificate?</h4>
+                    <p>Yes, upon completing all modules and assignments, you will receive a verifiable Professional Certificate.</p>
+                </div>
+                <div class="faq-item">
+                    <h4>How long does it take?</h4>
+                    <p>The course is self-paced. Most students complete it in 2-3 weeks dedicating a few hours per week.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Final CTA -->
+        <section class="home-section cta-section">
+            <h2>Ready to Master AI?</h2>
+            <p>Join thousands of learners and upgrade your career today.</p>
+            <button class="btn-academy-primary" style="margin-top:20px; font-size:1.1rem; padding:14px 32px;" onclick="goToDashboard()">Start Learning Now</button>
+        </section>
+        
+        <!-- NEW: Footer -->
+        <footer class="academy-footer">
+            <div class="footer-content">
+                <div class="footer-logo"><i class="fas fa-graduation-cap"></i> Prompt Bazaar Academy</div>
+                <p>&copy; 2026 Prompt Bazaar. All rights reserved.</p>
+            </div>
+        </footer>
+    `;
     
     viewContainer.innerHTML = html;
     hideLoading();
