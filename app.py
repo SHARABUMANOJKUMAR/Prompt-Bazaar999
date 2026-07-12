@@ -1310,6 +1310,20 @@ def health_check():
     }
     return jsonify(health), 200
 
+# ── Local Catch-All for Portfolio Viewer SPA ────────────────────────────
+@app.route('/<path:username>')
+def catch_all_portfolio(username):
+    # Ignore API, static, and internal routes
+    if username.startswith('api/') or username.startswith('static/') or username in ['tools', 'login', 'signup']:
+        return "Not Found", 404
+        
+    viewer_path = os.path.join(os.path.dirname(__file__), 'portfolio-viewer.html')
+    if os.path.exists(viewer_path):
+        with open(viewer_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    return "Not Found", 404
+
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

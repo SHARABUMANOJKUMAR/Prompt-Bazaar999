@@ -16,7 +16,7 @@ function normalizeDriveUrl(url) {
   const t = url.trim();
   const gMatch = t.match(/drive\.google\.com\/.*(?:file\/d\/|id=)([a-zA-Z0-9_-]+)/i);
   if (gMatch && gMatch[1]) {
-    return 'https://lh3.googleusercontent.com/d/' + gMatch[1];
+    return 'https://drive.google.com/uc?export=view&id=' + gMatch[1];
   }
   if (t.indexOf('dropbox.com') !== -1 && t.indexOf('?dl=0') !== -1) {
     return t.replace('?dl=0', '?raw=1');
@@ -163,6 +163,7 @@ function doPost(e) {
         // If still too big (e.g. Drive upload failed), aggressively strip base64 to save the text data
         if (pData.photo && pData.photo.length > 500) pData.photo = '';
         if (pData.personal && pData.personal.photoUrl && pData.personal.photoUrl.length > 500) pData.personal.photoUrl = '';
+        if (pData.personal && pData.personal.photo_url && pData.personal.photo_url.length > 500) pData.personal.photo_url = '';
         if (Array.isArray(pData.projects)) {
           pData.projects.forEach(p => { if (p.imageUrl && p.imageUrl.length > 500) p.imageUrl = ''; });
         }
@@ -170,8 +171,12 @@ function doPost(e) {
           pData.certificates.forEach(c => { if (c.imageUrl && c.imageUrl.length > 500) c.imageUrl = ''; });
         }
         stringifiedPData = JSON.stringify(pData);
-        // Hard limit
-        if (stringifiedPData.length > 45000) stringifiedPData = stringifiedPData.substring(0, 45000);
+        // Fallback to avoid JSON corruption if text is inexplicably huge
+        if (stringifiedPData.length > 45000) {
+          pData.projects = [];
+          pData.certificates = [];
+          stringifiedPData = JSON.stringify(pData);
+        }
       }
 
       const projectsStr = Array.isArray(pData.projects) ? JSON.stringify(pData.projects) : (pData.projects || '');
@@ -245,11 +250,19 @@ function doGet(e) {
         if ((rowUsername.toLowerCase() === lookup.toLowerCase() ||
              rowUserId === lookup ||
              rowUrl.toLowerCase().indexOf('/' + lookup.toLowerCase()) !== -1) && rawJson) {
+          
+          let parsedJson = {};
+          try {
+            parsedJson = JSON.parse(rawJson);
+          } catch(e) {
+            parsedJson = { error: "Portfolio data corrupted", fallback: true };
+          }
+
           return ContentService.createTextOutput(JSON.stringify({
             success: true,
             user_id: rowUserId,
             username: rowUsername,
-            portfolio: JSON.parse(rawJson),
+            portfolio: parsedJson,
             html: htmlContent || null
           })).setMimeType(ContentService.MimeType.JSON);
         }
@@ -412,7 +425,7 @@ function uploadBase64ToDrive(base64DataUrl, fileName) {
     
     // Return direct download link
     var fileId = file.getId();
-    return 'https://lh3.googleusercontent.com/d/' + fileId;
+    return 'https://drive.google.com/uc?export=view&id=' + fileId;
   } catch (err) {
     Logger.log("Error uploading image to Drive: " + err.toString());
     return base64DataUrl; // Return original Base64 if upload fails

@@ -2759,11 +2759,14 @@
             localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory));
           } catch(historyErr) {}
 
+          // Prevent payload from being too large (strip HTML if it's crazy huge due to Base64)
+          var safeHtmlContent = htmlContent && htmlContent.length < 500000 ? htmlContent : '';
+
           // Async Google Sheets submission
-          fetch('https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec', {
+          fetch('https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec', {
             method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain' },
+            // mode: 'no-cors', // Removed to allow reading the JSON response
+            headers: { 'Content-Type': 'text/plain' }, // Text plain avoids preflight OPTIONS request
             body: JSON.stringify({
               action: 'save_portfolio',
               user_id: userId,
@@ -2771,9 +2774,16 @@
               portfolio_url: livePortfolioUrl,
               custom_subdomain: liveSubdomain,
               portfolio_data: JSON.stringify(state),
-              html_content: htmlContent
+              html_content: safeHtmlContent
             })
-          }).catch(function(){});
+          })
+          .then(res => res.json())
+          .then(data => {
+            console.log("Portfolio Save API Response:", data);
+          })
+          .catch(function(err){
+            console.error("Portfolio Save API Error:", err);
+          });
         } catch(e){}
 
         renderSuccessUI(targetUrl);

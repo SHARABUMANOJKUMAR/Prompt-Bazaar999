@@ -4,7 +4,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec"
+APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec"
 
 def save_portfolio_data(user_id, username, portfolio_data, html_content):
     """

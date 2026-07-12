@@ -2779,7 +2779,7 @@
             localStorage.setItem('pb_user_portfolios', JSON.stringify(savedHistory));
           } catch(historyErr) {}
 
-          fetch('https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec', {
+          fetch('https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec', {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },

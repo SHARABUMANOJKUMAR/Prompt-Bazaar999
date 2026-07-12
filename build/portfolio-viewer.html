@@ -481,7 +481,7 @@
 
     <script>
     (function() {
-        const APPS_SCRIPT_API = "https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec";
+        const APPS_SCRIPT_API = "https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec";
 
         function normalizeImageUrl(url) {
             if (!url || typeof url !== 'string') return '';
@@ -845,7 +845,7 @@
         }
 
         // 3. Ultra-Fast Parallel Fetch: Check Google Apps Script directly (and fallback local API)
-        var APPS_SCRIPT_API = 'https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec';
+        var APPS_SCRIPT_API = 'https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec';
         var apiUrl = APPS_SCRIPT_API + '?action=get_portfolio&username=' + encodeURIComponent(lookup);
         
         fetch(apiUrl)

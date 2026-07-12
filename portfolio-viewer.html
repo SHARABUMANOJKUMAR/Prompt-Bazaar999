@@ -481,7 +481,7 @@
 
     <script>
     (function() {
-        const APPS_SCRIPT_API = "https://script.google.com/macros/s/AKfycbzVOqOCQuvLHp59mBKes38ZJ9WouIKVDf6GN1MxF_DOjMdJFrX14sknQjMoYppdIBzy/exec";
+        const APPS_SCRIPT_API = "https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec";
 
         function normalizeImageUrl(url) {
             if (!url || typeof url !== 'string') return '';
@@ -790,11 +790,12 @@
         var lookup = params.get('u') || params.get('username') || params.get('id');
         if (!lookup && window.location.pathname.indexOf('/p/') !== -1) {
             lookup = window.location.pathname.split('/p/')[1];
+            if (lookup) lookup = lookup.replace(/\/+$/, '');
         }
 
         if (!lookup) {
             var path = window.location.pathname;
-            if (path && path !== '/' && path.indexOf('portfolio') === -1) {
+            if (path && path !== '/' && path.indexOf('portfolio') === -1 && path.indexOf('.html') === -1) {
                 lookup = decodeURIComponent(path.replace(/^\/+|\/+$/g, ''));
             }
         }
