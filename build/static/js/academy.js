@@ -133,9 +133,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Auth Listener
     onAuthStateChanged(auth, (user) => {
-        if (user) {
-            currentUser = user;
-            if (headerAvatar) headerAvatar.innerText = user.displayName ? user.displayName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
+        let localUser = localStorage.getItem('currentUser');
+        if (localUser) {
+            try { localUser = JSON.parse(localUser); } catch(e) { localUser = null; }
+        }
+
+        if (user || localUser) {
+            currentUser = user || localUser;
+            // Handle differences between Firebase User object and localUser object
+            const displayName = currentUser.displayName || currentUser.full_name || currentUser.name || '';
+            const email = currentUser.email || '';
+            const avatarChar = displayName ? displayName.charAt(0).toUpperCase() : (email ? email.charAt(0).toUpperCase() : 'U');
+            
+            if (headerAvatar) headerAvatar.innerText = avatarChar;
             fetchProgress();
         } else {
             // Render Home view for guests
@@ -177,9 +187,9 @@ async function fetchProgress() {
             method: 'POST',
             body: JSON.stringify({
                 action: 'get_academy',
-                user_id: currentUser.uid,
+                user_id: currentUser.uid || currentUser.user_id,
                 email: currentUser.email,
-                name: currentUser.displayName || 'User'
+                name: currentUser.displayName || currentUser.full_name || currentUser.name || 'User'
             })
         });
         const data = await res.json();
@@ -216,9 +226,9 @@ async function completeModule(moduleId) {
             method: 'POST',
             body: JSON.stringify({
                 action: 'update_academy',
-                user_id: currentUser.uid,
+                user_id: currentUser.uid || currentUser.user_id,
                 email: currentUser.email,
-                name: currentUser.displayName || 'User',
+                name: currentUser.displayName || currentUser.full_name || currentUser.name || 'User',
                 completedModules: newCompleted,
                 currentModule: newCurrent,
                 progressPct: newPct
@@ -280,15 +290,17 @@ function renderHome() {
     currentView = 'home';
     let html = `
         <div class="academy-hero">
-            <div class="academy-hero-badges">
-                <span class="hero-badge"><i class="fas fa-graduation-cap"></i> Prompt Bazaar Academy</span>
-                <span class="hero-badge"><i class="fas fa-star"></i> Professional Certification</span>
-            </div>
-            <h1>Prompt Engineering Master Course</h1>
-            <p>Learn Prompt Engineering from Scratch to Professional Level with Real-World Projects, Company Tasks, and Industry Experience.</p>
-            <div style="display:flex; gap:16px; margin-top:30px;">
-                <button class="btn-academy-primary" onclick="goToDashboard()">Start Learning</button>
-                <a href="#curriculum" class="btn-academy-secondary">View Course Curriculum</a>
+            <div class="hero-content">
+                <div class="academy-hero-badges">
+                    <span class="hero-badge"><i class="fas fa-graduation-cap"></i> Prompt Bazaar Academy</span>
+                    <span class="hero-badge"><i class="fas fa-star"></i> Professional Certification</span>
+                </div>
+                <h1>Prompt Engineering Master Course</h1>
+                <p>Learn Prompt Engineering from Scratch to Professional Level with Real-World Projects, Company Tasks, and Industry Experience.</p>
+                <div style="display:flex; gap:16px; margin-top:30px;">
+                    <button class="btn-academy-primary" onclick="goToDashboard()">Start Learning</button>
+                    <a href="#curriculum" class="btn-academy-secondary">View Course Curriculum</a>
+                </div>
             </div>
         </div>
 
@@ -341,16 +353,28 @@ function renderDashboard() {
     currentView = 'dashboard';
     let html = `
         <div class="dashboard-header">
-            <div class="dashboard-avatar">${currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'U'}</div>
+            <div class="dashboard-avatar">${currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : (currentUser.email ? currentUser.email.charAt(0).toUpperCase() : 'U')}</div>
             <div class="dashboard-stats">
                 <h2>Welcome back, ${currentUser.displayName ? currentUser.displayName.split(' ')[0] : 'Student'}!</h2>
                 <div style="color:var(--pb-text-muted);">Prompt Engineering Master Course</div>
                 <div class="progress-bar-bg">
                     <div class="progress-bar-fill" style="width: ${courseProgress.progressPct}%"></div>
                 </div>
-                <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:0.85rem; color:var(--pb-text-muted);">
+                <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:0.9rem; color:var(--pb-text-muted);">
                     <span>Overall Progress</span>
-                    <span style="font-weight:600; color:var(--pb-primary);">${courseProgress.progressPct}%</span>
+                    <span style="font-weight:700; color:var(--pb-primary);">${courseProgress.progressPct}%</span>
+                </div>
+                
+                <div class="dashboard-badges">
+                    <div class="dash-badge">
+                        <i class="fas fa-fire" style="color:#ef4444;"></i> <span>3 Day Streak</span>
+                    </div>
+                    <div class="dash-badge">
+                        <i class="fas fa-star" style="color:#eab308;"></i> <span>1250 XP</span>
+                    </div>
+                    <div class="dash-badge">
+                        <i class="fas fa-certificate" style="color:var(--pb-primary);"></i> <span>Level 2</span>
+                    </div>
                 </div>
             </div>
         </div>
