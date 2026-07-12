@@ -107,8 +107,8 @@ function doPost(e) {
       const projects = Array.isArray(pData.projects) ? JSON.stringify(pData.projects) : (pData.projects || '');
       const experience = Array.isArray(pData.experience) ? JSON.stringify(pData.experience) : (pData.experience || '');
       const certificates = Array.isArray(pData.certificates) ? JSON.stringify(pData.certificates) : (pData.certificates || '');
-      const achievements = Array.isArray(pData.achievements) ? pData.achievements.join('\n') : (pData.achievements || '');
-
+      const achievements = Array.isArray(pData.achievements) ? pData.achievements.map(function(a){ return typeof a === 'string' ? a : (a.description || ''); }).join('\n') : (pData.achievements || '');
+      const achievementsList = Array.isArray(pData.achievements) ? pData.achievements.map(function(a){ return typeof a === 'string' ? a : (a.description || ''); }).join('\n') : (pData.achievements || '');
       // Social links
       const linkedIn = personal.linkedin || personal.linkedIn || pData.linkedIn || '';
       const github = personal.github || personal.gitHub || pData.github || '';

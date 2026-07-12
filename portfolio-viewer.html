@@ -671,21 +671,23 @@
             }
 
             // ACHIEVEMENTS ↓
-            var achievementsText = (state.achievements || '').trim();
-            if (achievementsText) {
-                var achievementLines = achievementsText.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
-                if (achievementLines.length > 0) {
-                    html += '<section class="section reveal" id="achievements"><div class="container">';
-                    html += '<div class="section-header"><h2 class="section-title">Honors &amp; Achievements</h2></div>';
-                    html += '<div class="card-grid">';
-                    achievementLines.forEach(function(item) {
-                        html += '<div class="card" style="flex-direction:row;align-items:flex-start;gap:16px;">';
-                        html += '<i class="fas fa-trophy" style="color:#F59E0B;font-size:1.5rem;margin-top:2px;flex-shrink:0;"></i>';
-                        html += '<div><h3 class="card-title" style="margin-bottom:4px;">Achievement</h3><p class="card-body">' + item + '</p></div>';
-                        html += '</div>';
-                    });
-                    html += '</div></div></section>';
-                }
+            var validAchs = [];
+            if (Array.isArray(state.achievements)) {
+                validAchs = state.achievements.filter(function(a) { return a.description && a.description.trim() !== ''; }).map(function(a) { return a.description; });
+            } else if (typeof state.achievements === 'string') {
+                validAchs = state.achievements.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+            }
+            if (validAchs.length > 0) {
+                html += '<section class="section reveal" id="achievements"><div class="container">';
+                html += '<div class="section-header"><h2 class="section-title">Honors &amp; Achievements</h2></div>';
+                html += '<div class="card-grid">';
+                validAchs.forEach(function(item) {
+                    html += '<div class="card" style="flex-direction:row;align-items:flex-start;gap:16px;">';
+                    html += '<i class="fas fa-trophy" style="color:#F59E0B;font-size:1.5rem;margin-top:2px;flex-shrink:0;"></i>';
+                    html += '<div><h3 class="card-title" style="margin-bottom:4px;">Achievement</h3><p class="card-body">' + item + '</p></div>';
+                    html += '</div>';
+                });
+                html += '</div></div></section>';
             }
 
             // CONTACT ↓

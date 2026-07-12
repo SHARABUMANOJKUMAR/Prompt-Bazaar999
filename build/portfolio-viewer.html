@@ -544,18 +544,22 @@
             var html = '';
 
             // Apply custom styling, theme & typography
-            html += '<style>:root { --primary: ' + primary + '; } body { font-family: "' + font + '", sans-serif; }';
-            if (theme === 'Dark Pro') {
-                html += 'body { background: #0A0E1A !important; } .card, .contact-card { background: #111827 !important; border-color: #1F2937 !important; }';
-            } else if (theme === 'Futuristic Cyber') {
-                html += 'body { background: #05070F !important; } .card { background: rgba(13,110,253,0.06) !important; border: 1px solid rgba(13,110,253,0.35) !important; box-shadow: 0 0 25px rgba(13,110,253,0.12) !important; }';
-            } else if (theme === 'Executive SaaS') {
-                html += 'body { background: #090D16 !important; } .card { background: rgba(18,24,38,0.75) !important; border: 1px solid rgba(255,255,255,0.12) !important; border-radius: 14px !important; }';
-            } else if (theme === 'Bento Grid Pro') {
-                html += '.card-grid { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important; gap: 20px !important; } .card { border-radius: 28px !important; background: rgba(255,255,255,0.05) !important; }';
-            } else if (theme === 'Aurora Glass') {
-                html += 'body { background: #070913 !important; background-image: radial-gradient(circle at 20% 30%, rgba(139,92,246,0.22), transparent 50%), radial-gradient(circle at 80% 70%, rgba(16,185,129,0.18), transparent 50%) !important; } .card { backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; background: rgba(255,255,255,0.06) !important; }';
-            }
+            var cc = state.customColors || { bgBase: '#F8FCFF', textMain: '#1A365D', primary: '#2563EB', cardBg: '#FFFFFF', cardBorder: '#D6E4FF', textMuted: '#64748B' };
+            var fontToLoad = font.replace(/\s+/g, '+');
+            html += '<style>';
+            html += '@import url("https://fonts.googleapis.com/css2?family=' + fontToLoad + ':wght@300;400;500;600;700;800&display=swap");';
+            html += ':root {';
+            html += '  --bg-base: ' + cc.bgBase + ';';
+            html += '  --text-main: ' + cc.textMain + ';';
+            html += '  --primary: ' + (primary !== '#0D6EFD' ? primary : cc.primary) + ';';
+            html += '  --card-bg: ' + cc.cardBg + ';';
+            html += '  --card-border: ' + cc.cardBorder + ';';
+            html += '  --text-muted: ' + cc.textMuted + ';';
+            html += '}';
+            html += 'body { font-family: "' + font + '", sans-serif; background: var(--bg-base) !important; color: var(--text-main) !important; }';
+            html += '.card, .contact-card { background: var(--card-bg) !important; border-color: var(--card-border) !important; }';
+            html += '.card-meta, .section-subtitle, .skill-chip { color: var(--text-muted) !important; }';
+            html += '.navbar { background: ' + cc.cardBg + 'F2 !important; border-color: var(--card-border) !important; }';
             html += '</style>';
 
             // NAVBAR
@@ -667,21 +671,23 @@
             }
 
             // ACHIEVEMENTS ↓
-            var achievementsText = (state.achievements || '').trim();
-            if (achievementsText) {
-                var achievementLines = achievementsText.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
-                if (achievementLines.length > 0) {
-                    html += '<section class="section reveal" id="achievements"><div class="container">';
-                    html += '<div class="section-header"><h2 class="section-title">Honors &amp; Achievements</h2></div>';
-                    html += '<div class="card-grid">';
-                    achievementLines.forEach(function(item) {
-                        html += '<div class="card" style="flex-direction:row;align-items:flex-start;gap:16px;">';
-                        html += '<i class="fas fa-trophy" style="color:#F59E0B;font-size:1.5rem;margin-top:2px;flex-shrink:0;"></i>';
-                        html += '<div><h3 class="card-title" style="margin-bottom:4px;">Achievement</h3><p class="card-body">' + item + '</p></div>';
-                        html += '</div>';
-                    });
-                    html += '</div></div></section>';
-                }
+            var validAchs = [];
+            if (Array.isArray(state.achievements)) {
+                validAchs = state.achievements.filter(function(a) { return a.description && a.description.trim() !== ''; }).map(function(a) { return a.description; });
+            } else if (typeof state.achievements === 'string') {
+                validAchs = state.achievements.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+            }
+            if (validAchs.length > 0) {
+                html += '<section class="section reveal" id="achievements"><div class="container">';
+                html += '<div class="section-header"><h2 class="section-title">Honors &amp; Achievements</h2></div>';
+                html += '<div class="card-grid">';
+                validAchs.forEach(function(item) {
+                    html += '<div class="card" style="flex-direction:row;align-items:flex-start;gap:16px;">';
+                    html += '<i class="fas fa-trophy" style="color:#F59E0B;font-size:1.5rem;margin-top:2px;flex-shrink:0;"></i>';
+                    html += '<div><h3 class="card-title" style="margin-bottom:4px;">Achievement</h3><p class="card-body">' + item + '</p></div>';
+                    html += '</div>';
+                });
+                html += '</div></div></section>';
             }
 
             // CONTACT ↓
@@ -765,6 +771,31 @@
                         btn.style.transform = 'translate(0, 0)';
                     });
                 });
+            } else if (animation === 'Floating Cards') {
+                document.querySelectorAll('.card').forEach(function(card, i) {
+                    card.style.transition = 'transform 3s ease-in-out, box-shadow 0.3s ease';
+                    setTimeout(function() {
+                        var isUp = false;
+                        setInterval(function() {
+                            isUp = !isUp;
+                            card.style.transform = isUp ? 'translateY(-8px)' : 'translateY(0px)';
+                        }, 2000);
+                    }, i * 200);
+                });
+            } else if (animation === 'Glass Hover') {
+                document.querySelectorAll('.card').forEach(function(card) {
+                    card.style.transition = 'transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease';
+                    card.addEventListener('mouseenter', function() {
+                        card.style.transform = 'translateY(-6px) scale(1.01)';
+                        card.style.background = 'rgba(255, 255, 255, 0.4)';
+                        card.style.boxShadow = '0 20px 40px -10px rgba(0,0,0,0.1)';
+                    });
+                    card.addEventListener('mouseleave', function() {
+                        card.style.transform = 'translateY(0) scale(1)';
+                        card.style.background = 'var(--card-bg)';
+                        card.style.boxShadow = 'none';
+                    });
+                });
             }
         }
 
@@ -790,13 +821,18 @@
         var lookup = params.get('u') || params.get('username') || params.get('id');
         if (!lookup && window.location.pathname.indexOf('/p/') !== -1) {
             lookup = window.location.pathname.split('/p/')[1];
+            if (lookup) lookup = lookup.replace(/\/+$/, '');
         }
-        if (!lookup && window.location.pathname.indexOf('/u/') !== -1) {
-            lookup = window.location.pathname.split('/u/')[1];
+
+        if (!lookup) {
+            var path = window.location.pathname;
+            if (path && path !== '/' && path.indexOf('portfolio') === -1 && path.indexOf('.html') === -1) {
+                lookup = decodeURIComponent(path.replace(/^\/+|\/+$/g, ''));
+            }
         }
-        if (!lookup && window.location.pathname !== '/' && window.location.pathname !== '/portfolio-viewer' && window.location.pathname !== '/portfolio-viewer.html') {
-            lookup = window.location.pathname.split('/').filter(Boolean).pop();
-        }
+        
+        // Normalize lookup to handle spaces or casing issues in URLs
+        var cleanLookup = lookup ? lookup.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') : '';
 
         // 1. If base64 data parameter is still passed (legacy links), decode & render
         var d = params.get('d') || params.get('data');
@@ -811,18 +847,20 @@
         // 2. Fast check in local storage state if present (0ms instant render)
         if (lookup) {
             try {
-                var cachedState = localStorage.getItem('portfolio_state_' + lookup);
+                var cachedState = localStorage.getItem('portfolio_state_' + lookup) || (cleanLookup && localStorage.getItem('portfolio_state_' + cleanLookup));
                 if (cachedState) {
                     renderPortfolio(lookup, JSON.parse(cachedState));
                     return;
                 }
                 var allPortfolios = JSON.parse(localStorage.getItem('pb_user_portfolios') || '[]');
-                var matched = allPortfolios.find(function(item) { return item.username === lookup || item.id === lookup; });
+                var matched = allPortfolios.find(function(item) { 
+                    return item.username === lookup || item.id === lookup || (cleanLookup && (item.username === cleanLookup || item.id === cleanLookup)); 
+                });
                 if (matched && matched.data) {
                     renderPortfolio(lookup, matched.data);
                     return;
                 }
-                var cachedHtml = localStorage.getItem('portfolio_html_' + lookup);
+                var cachedHtml = localStorage.getItem('portfolio_html_' + lookup) || (cleanLookup && localStorage.getItem('portfolio_html_' + cleanLookup));
                 if (cachedHtml) {
                     document.open();
                     document.write(cachedHtml);
@@ -845,38 +883,40 @@
         }
 
         // 3. Ultra-Fast Parallel Fetch: Check Google Apps Script directly (and fallback local API)
-        var APPS_SCRIPT_API = 'https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec';
-        var apiUrl = APPS_SCRIPT_API + '?action=get_portfolio&username=' + encodeURIComponent(lookup);
+        var apiUrl = APPS_SCRIPT_API + '?action=get_portfolio&username=' + encodeURIComponent(cleanLookup || lookup);
+
         
         fetch(apiUrl)
         .then(function(res) { return res.json(); })
         .then(function(data) {
-            if (data && data.success && data.portfolio) {
-                renderPortfolio(lookup, data.portfolio);
-            } else {
-                throw new Error('Not found in Apps Script DB');
-            }
-        })
-        .catch(function() {
-            // Fallback: Check local API (in case running on Python backend)
-            fetch('/api/portfolio/' + encodeURIComponent(lookup))
-            .then(function(res) { 
-                var ct = res.headers.get('content-type');
-                if(ct && ct.indexOf('application/json') !== -1) return res.json();
-                throw new Error('API not available');
-            })
-            .then(function(data) {
-                if (data && data.success && data.html) {
+            if (data && data.success) {
+                // Priority 1: Use pre-built HTML directly (fastest, most accurate)
+                if (data.html && data.html.length > 100) {
                     document.open();
                     document.write(data.html);
                     document.close();
-                } else {
-                    showNotFound();
+                    return;
                 }
-            })
-            .catch(function() {
-                showNotFound();
-            });
+                // Priority 2: Re-render from state data (fallback)
+                if (data.portfolio) {
+                    renderPortfolio(lookup, data.portfolio);
+                    return;
+                }
+            }
+            throw new Error('Not found in Apps Script DB');
+        })
+        .catch(function() {
+            // Last resort: try portfolio_latest_html from localStorage
+            try {
+                var latestHtml = localStorage.getItem('portfolio_latest_html');
+                if (latestHtml) {
+                    document.open();
+                    document.write(latestHtml);
+                    document.close();
+                    return;
+                }
+            } catch(e2) {}
+            showNotFound();
         });
     })();
     </script>
