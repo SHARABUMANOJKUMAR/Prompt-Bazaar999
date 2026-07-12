@@ -2391,6 +2391,8 @@
     function generatePortfolio() {
       saveCurrentStep();
       if (document.getElementById('pbPhotoUrl')) state.personal.photoUrl = document.getElementById('pbPhotoUrl').value.trim();
+      if (document.getElementById('pbLinkedin')) state.socials.linkedin = document.getElementById('pbLinkedin').value.trim();
+      if (document.getElementById('pbGithub')) state.socials.github = document.getElementById('pbGithub').value.trim();
       
       document.getElementById('pbGenerate').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Generating...';
       document.getElementById('pbGenerate').disabled = true;
@@ -2818,7 +2820,12 @@
                 portfolio_data: JSON.stringify(payloadState),
                 html_content: safeHtmlContent
               })
-            }).then(r => r.json()).then(d => console.log("Bg save success:", d)).catch(e => console.error("Bg save error:", e));
+            }).then(r => r.json()).then(d => {
+              console.log("Bg save success:", d);
+              if (d.uploadErrors && d.uploadErrors.length > 0) {
+                alert("Portfolio saved, but some images failed to upload:\\n\\n" + d.uploadErrors.join("\\n"));
+              }
+            }).catch(e => console.error("Bg save error:", e));
           } catch(err) { console.error("Background task failed", err); }
         }, 10);
 

@@ -49,6 +49,7 @@
         const userId = postData.user_id || Utilities.getUuid();
         const rawData = postData.portfolio_data || postData.data || {};
         
+        let uploadErrors = [];
         let pData = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
         const personal = pData.personal || {};
 
@@ -86,19 +87,19 @@
 
         // Convert Base64 images to Google Drive files to stay under the 50k character limit per Google Sheets cell
         if (personal.photoUrl && personal.photoUrl.indexOf('data:') === 0) {
-          personal.photoUrl = uploadBase64ToDrive(personal.photoUrl, username + '_profile.jpg');
+          personal.photoUrl = uploadBase64ToDrive(personal.photoUrl, username + '_profile.jpg', uploadErrors);
         }
         if (personal.photo_url && personal.photo_url.indexOf('data:') === 0) {
-          personal.photo_url = uploadBase64ToDrive(personal.photo_url, username + '_profile.jpg');
+          personal.photo_url = uploadBase64ToDrive(personal.photo_url, username + '_profile.jpg', uploadErrors);
         }
         if (pData.photo && pData.photo.indexOf('data:') === 0) {
-          pData.photo = uploadBase64ToDrive(pData.photo, username + '_profile.jpg');
+          pData.photo = uploadBase64ToDrive(pData.photo, username + '_profile.jpg', uploadErrors);
         }
 
         if (Array.isArray(pData.projects)) {
           pData.projects.forEach(function(p, idx) {
             if (p && p.imageUrl && p.imageUrl.indexOf('data:') === 0) {
-              p.imageUrl = uploadBase64ToDrive(p.imageUrl, username + '_project_' + idx + '.jpg');
+              p.imageUrl = uploadBase64ToDrive(p.imageUrl, username + '_project_' + idx + '.jpg', uploadErrors);
             }
           });
         }
@@ -106,7 +107,7 @@
         if (Array.isArray(pData.certificates)) {
           pData.certificates.forEach(function(c, idx) {
             if (c && c.imageUrl && c.imageUrl.indexOf('data:') === 0) {
-              c.imageUrl = uploadBase64ToDrive(c.imageUrl, username + '_certificate_' + idx + '.jpg');
+              c.imageUrl = uploadBase64ToDrive(c.imageUrl, username + '_certificate_' + idx + '.jpg', uploadErrors);
             }
           });
         }
@@ -227,12 +228,14 @@
           } catch (mailErr) {}
         }
 
+        // Return success response
         return ContentService.createTextOutput(JSON.stringify({
           success: true,
-          message: 'Portfolio saved successfully and automated email sent',
-          user_id: userId,
+          message: 'Portfolio successfully created/updated!',
+          portfolio_url: portfolioUrl,
           username: username,
-          url: portfolioUrl
+          user_id: userId,
+          uploadErrors: uploadErrors
         })).setMimeType(ContentService.MimeType.JSON);
       }
 
@@ -409,15 +412,19 @@
   }
 
   // Helper to convert Base64 data URLs to Google Drive files and return a direct download URL
-  function uploadBase64ToDrive(base64DataUrl, fileName) {
+  function uploadBase64ToDrive(base64DataUrl, fileName, uploadErrors) {
     try {
       if (!base64DataUrl || typeof base64DataUrl !== 'string' || base64DataUrl.indexOf('data:') !== 0) {
         return base64DataUrl;
       }
       
+      // Sanitize string to remove any weird linebreaks that break regex
+      base64DataUrl = base64DataUrl.replace(/[\n\r\s]+/g, '');
+      
       // Parse the data URL (e.g., data:image/jpeg;base64,/9j/...)
-      var matches = base64DataUrl.match(/^data:(image\/[a-zA-Z+.-]+);base64,(.+)$/);
+      var matches = base64DataUrl.match(/^data:(image\/[a-zA-Z0-9+.-]+);base64,(.+)$/);
       if (!matches || matches.length < 3) {
+        if (uploadErrors) uploadErrors.push("Regex parse failed for " + fileName);
         return base64DataUrl;
       }
       
@@ -439,7 +446,12 @@
       }
       
       var file = folder.createFile(blob);
-      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      try {
+        file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      } catch (shareErr) {
+        logErrorToSheet("Sharing failed for " + fileName + ", but file was uploaded.", shareErr);
+        if (uploadErrors) uploadErrors.push("Image uploaded, but public sharing is blocked by your organization.");
+      }
       
       // Return direct download link
       var fileId = file.getId();
@@ -447,6 +459,7 @@
     } catch (err) {
       Logger.log("Error uploading image to Drive: " + err.toString());
       logErrorToSheet("Drive Upload Failed for " + fileName, err);
+      if (uploadErrors) uploadErrors.push("Upload failed for " + fileName + ": " + err.message);
       return ''; // Return empty string if upload fails so Google Sheets does not crash on 500k char string
     }
   }
