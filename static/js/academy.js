@@ -25,22 +25,41 @@ const COURSE_DATA = [
     {
         id: 1,
         title: "Introduction to Prompt Engineering",
-        duration: "45 mins",
+        duration: "1 hour",
         difficulty: "Beginner",
-        description: "Understand the fundamentals of Generative AI and how prompt engineering bridges human intent with machine output.",
-        objectives: ["Define Prompt Engineering", "Understand LLM limitations", "Write your first clear prompt"],
+        description: "Learn the core concepts of LLMs, how they work, and why prompt engineering is a critical skill.",
+        objectives: ["Understand LLM Architecture", "Learn tokenization basics", "Write your first structured prompt"],
         theory: `
-            <h3>What is Prompt Engineering?</h3>
-            <p>Prompt engineering is the practice of designing and refining inputs (prompts) to guide Generative AI models to produce optimal, accurate, and relevant outputs.</p>
-            <div class="reader-alert">
-                <strong>Key Concept:</strong> AI models don't "think" like humans. They predict the next most likely token based on the context you provide. Better context equals better prediction.
-            </div>
-            <h3>Core Principles</h3>
+            <h3>Simple English Explanation</h3>
+            <p>Prompt engineering is the art of communicating with AI. Just like you would give clear instructions to an intern, you need to give clear, structured instructions to an AI model to get the best results. It involves choosing the right words, context, and formatting.</p>
+            
+            <h3>Real-Time Examples</h3>
+            <p><strong>Bad Prompt:</strong> "Write an email to my boss about being late."<br>
+            <strong>Good Prompt:</strong> "Act as a professional employee. Write a polite and concise email to my manager explaining that I will be 30 minutes late today due to unexpected traffic. Apologize for the inconvenience and assure them I will make up the time."</p>
+
+            <h3>Industry Use Cases</h3>
             <ul>
-                <li><strong>Clarity:</strong> Be explicit about what you want.</li>
-                <li><strong>Context:</strong> Provide background information.</li>
-                <li><strong>Constraints:</strong> Tell the AI what NOT to do.</li>
+                <li><strong>Customer Support:</strong> Automating ticket routing and drafting responses.</li>
+                <li><strong>Marketing:</strong> Generating SEO-optimized blog posts and ad copy.</li>
+                <li><strong>Software Development:</strong> Writing boilerplate code, unit tests, and documentation.</li>
             </ul>
+
+            <h3>Best Practices</h3>
+            <ul>
+                <li>Always provide context and persona.</li>
+                <li>Be specific about the desired output format (e.g., JSON, Markdown table).</li>
+                <li>Use delimiters (like """ or ###) to separate instructions from data.</li>
+            </ul>
+
+            <h3>Common Mistakes</h3>
+            <ul>
+                <li>Being too vague or assuming the AI "knows what you mean."</li>
+                <li>Providing conflicting instructions in the same prompt.</li>
+                <li>Failing to specify the target audience or tone.</li>
+            </ul>
+
+            <h3>Summary</h3>
+            <p>Prompt engineering is an essential skill that transforms how we interact with AI. By mastering clarity, structure, and context, you can unlock the full potential of Large Language Models across any industry.</p>
         `
     },
     {
@@ -414,9 +433,14 @@ function renderModuleReader(id) {
                 </div>
             </div>
             
-            <div class="reader-footer">
-                <button class="btn-reader-nav" onclick="goToDashboard()">Back to Dashboard</button>
-                ${!isCompleted ? `<button class="btn-reader-complete" onclick="triggerCompleteModule(${id})">Complete Module</button>` : `<div style="color:#10b981; font-weight:600;"><i class="fas fa-check-circle"></i> Module Completed</div>`}
+            <div class="reader-footer" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+                <div class="reader-nav-buttons" style="display:flex; gap:12px;">
+                    ${id > 1 ? `<button class="btn-reader-nav" onclick="goToModule(${id - 1})"><i class="fas fa-chevron-left"></i> Previous Module</button>` : `<button class="btn-reader-nav" disabled style="opacity:0.5; cursor:not-allowed;"><i class="fas fa-chevron-left"></i> Previous Module</button>`}
+                    ${id < 8 ? `<button class="btn-reader-nav" onclick="goToModule(${id + 1})">Next Module <i class="fas fa-chevron-right"></i></button>` : ''}
+                </div>
+                <div class="reader-action-buttons">
+                    ${!isCompleted ? `<button class="btn-reader-complete" onclick="triggerCompleteModule(${id})">Complete Module</button>` : `<div style="color:#10b981; font-weight:600;"><i class="fas fa-check-circle"></i> Module Completed</div>`}
+                </div>
             </div>
         </div>
     `;
