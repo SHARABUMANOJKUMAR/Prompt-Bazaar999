@@ -6,7 +6,7 @@ const app = initializeApp(window.FIREBASE_CONFIG);
 const auth = getAuth(app);
 
 // Apps Script Endpoint
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw995twwCFv2Mp72WaEbMzn5KsPok1KmP-oMcTv380PTNBTQWYua27sC8NWmT8eAIO6/exec';
 
 // State
 let currentUser = null;
