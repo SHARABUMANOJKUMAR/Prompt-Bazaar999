@@ -24,6 +24,22 @@
     return t;
   }
 
+  function logErrorToSheet(message, errorObject) {
+    try {
+      var ss = SpreadsheetApp.getActiveSpreadsheet();
+      var sheet = ss.getSheetByName("Debug Logs");
+      if (!sheet) {
+        sheet = ss.insertSheet("Debug Logs");
+        sheet.appendRow(["Timestamp", "Message", "Error Details"]);
+      }
+      var errStr = errorObject ? errorObject.toString() : "";
+      if (errorObject && errorObject.stack) errStr += "\n" + errorObject.stack;
+      sheet.appendRow([new Date(), message, errStr]);
+    } catch (e) {
+      Logger.log("Failed to log error: " + e.toString());
+    }
+  }
+
   function doPost(e) {
     try {
       const postData = JSON.parse(e.postData.contents);
@@ -98,7 +114,7 @@
 
         const email = personal.email || pData.email || '';
         const phone = personal.phone || pData.phone || '';
-        const profilePhoto = personal.photoUrl || personal.photo || pData.photo || '';
+        let profilePhoto = '';
         const summary = pData.summary || personal.summary || '';
 
         // Array / string conversions
@@ -182,6 +198,8 @@
         const projectsStr = Array.isArray(pData.projects) ? JSON.stringify(pData.projects) : (pData.projects || '');
         const experienceStr = Array.isArray(pData.experience) ? JSON.stringify(pData.experience) : (pData.experience || '');
         const certificatesStr = Array.isArray(pData.certificates) ? JSON.stringify(pData.certificates) : (pData.certificates || '');
+        
+        profilePhoto = personal.photoUrl || personal.photo || pData.photo || '';
 
         const rowValues = [
           userId, firstName, lastName, email, phone,
@@ -428,7 +446,8 @@
       return 'https://drive.google.com/uc?export=view&id=' + fileId;
     } catch (err) {
       Logger.log("Error uploading image to Drive: " + err.toString());
-      return base64DataUrl; // Return original Base64 if upload fails
+      logErrorToSheet("Drive Upload Failed for " + fileName, err);
+      return ''; // Return empty string if upload fails so Google Sheets does not crash on 500k char string
     }
   }
 

@@ -2800,6 +2800,12 @@
             
             var safeHtmlContent = htmlContent && htmlContent.length < 150000 ? htmlContent : '';
             
+            console.log("=== PORTFOLIO PAYLOAD DEBUG ===");
+            console.log("Profile Photo URL (starts with data:?):", payloadState.personal && payloadState.personal.photoUrl ? payloadState.personal.photoUrl.substring(0, 30) + '...' : 'EMPTY');
+            console.log("Project 1 Image URL (starts with data:?):", payloadState.projects && payloadState.projects[0] && payloadState.projects[0].imageUrl ? payloadState.projects[0].imageUrl.substring(0, 30) + '...' : 'EMPTY');
+            console.log("Total Payload Size (chars):", JSON.stringify(payloadState).length);
+            console.log("===============================");
+            
             fetch('https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec', {
               method: 'POST',
               headers: { 'Content-Type': 'text/plain' },
