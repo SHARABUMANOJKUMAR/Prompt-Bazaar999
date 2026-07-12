@@ -34,13 +34,7 @@
     transition: margin-left 0.3s ease;
 }
 
-@media (max-width: 768px) {
-    .academy-container {
-        margin-left: 0;
-        padding: 16px;
-    }
-}
-
+/* Responsive Breakpoints will be defined at the end of the file */
 .academy-loading {
     display: flex;
     flex-direction: column;
@@ -550,3 +544,139 @@
 
 .toast-success { border-color: #10b981; }
 .toast-error { border-color: #ef4444; }
+
+/* ----------------------------------------
+   Standard Responsive Breakpoints
+---------------------------------------- */
+
+/* 1. Base Styles (Mobile First) - < 576px */
+.academy-container {
+    margin-left: 0;
+    padding: 16px;
+    margin-top: 60px; /* Adjust header height for mobile */
+}
+.academy-hero {
+    padding: 30px 20px;
+}
+.academy-hero h1 {
+    font-size: 1.8rem;
+}
+.academy-hero p {
+    font-size: 1rem;
+}
+.dashboard-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+}
+.dashboard-stats h2 {
+    font-size: 1.5rem;
+}
+.btn-academy-primary, .btn-academy-secondary {
+    width: 100%;
+    margin: 0 0 10px 0 !important;
+    justify-content: center;
+}
+.academy-hero div[style*="display:flex"] {
+    flex-direction: column;
+}
+.roadmap-container {
+    padding: 20px;
+}
+.roadmap-item:not(:last-child)::after {
+    left: 15px; /* Adjust line for mobile icon */
+}
+.roadmap-icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    font-size: 0.9rem;
+}
+.reader-header, .reader-content, .reader-footer {
+    padding: 20px;
+}
+.reader-header h1 {
+    font-size: 1.5rem;
+}
+
+/* 2. Large Mobile (sm) - >= 576px */
+@media (min-width: 576px) {
+    .academy-container {
+        padding: 20px;
+    }
+    .academy-hero {
+        padding: 40px 30px;
+    }
+    .academy-hero h1 {
+        font-size: 2rem;
+    }
+    .dashboard-header {
+        flex-direction: row;
+        text-align: left;
+        padding: 30px;
+    }
+    .btn-academy-primary, .btn-academy-secondary {
+        width: auto;
+        margin-bottom: 0 !important;
+    }
+    .btn-academy-secondary {
+        margin-left: 12px !important;
+    }
+    .academy-hero div[style*="flex-direction: column"] {
+        flex-direction: row;
+    }
+}
+
+/* 3. Tablets (md) - >= 768px */
+@media (min-width: 768px) {
+    .academy-container {
+        padding: 24px;
+        margin-left: 0; /* Sidebar might still be an overlay */
+    }
+    .overview-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .roadmap-container {
+        padding: 40px;
+    }
+    .roadmap-item:not(:last-child)::after {
+        left: 19px;
+    }
+    .roadmap-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 20px;
+        font-size: 1rem;
+    }
+    .reader-header, .reader-content, .reader-footer {
+        padding: 30px 40px;
+    }
+}
+
+/* 4. Laptops (lg) - >= 992px */
+@media (min-width: 992px) {
+    .academy-container {
+        margin-left: 260px; /* Sidebar becomes fixed */
+        margin-top: 70px;
+    }
+    .academy-hero h1 {
+        font-size: 2.5rem;
+    }
+    .overview-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* 5. Desktops (xl) - >= 1200px */
+@media (min-width: 1200px) {
+    .academy-container {
+        max-width: 1200px;
+    }
+}
+
+/* 6. Ultra-Wide (xxl) - >= 1400px */
+@media (min-width: 1400px) {
+    .academy-container {
+        max-width: 1400px;
+    }
+}
