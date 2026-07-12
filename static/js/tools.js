@@ -2713,10 +2713,10 @@
           html += '      card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";';
           html += '    });';
           html += '  });';
-        } else if (animation === 'Floating Hologram') {
+        } else if (animationStyle === 'Floating Hologram') {
           html += '  var wrap = document.querySelector(".avatar-wrap");';
           html += '  if(wrap) { wrap.style.transition = "transform 3s ease-in-out infinite alternate"; }';
-        } else if (animation === 'Magnetic Interactive') {
+        } else if (animationStyle === 'Magnetic Interactive') {
           html += '  document.querySelectorAll(".btn-primary, .btn-outline").forEach(function(btn) {';
           html += '    btn.addEventListener("mousemove", function(e) {';
           html += '      var r = btn.getBoundingClientRect();';
@@ -2755,8 +2755,8 @@
 
       // Defer heavy work to allow browser to paint the loading screen
       setTimeout(() => {
-        var targetUrl = '/' + encodeURIComponent(username);
-        var livePortfolioUrl = 'https://promptbazzar.netlify.app/' + encodeURIComponent(username);
+        var targetUrl = '/p/' + encodeURIComponent(username);
+        var livePortfolioUrl = 'https://promptbazzar.netlify.app/p/' + encodeURIComponent(username);
         var liveSubdomain = 'https://' + username + '.promptbazzar.netlify.app/';
 
         state.resumeUrl = (state.personal && (state.personal.resumeUrl || state.personal.resume_url)) || state.resumeUrl || '';
@@ -2822,9 +2822,8 @@
           } catch(err) { console.error("Background task failed", err); }
         }, 10);
 
-        // Instantly unlock UI and open portfolio
+        // Instantly unlock UI and show success screen (keeps background fetch alive)
         renderSuccessUI(targetUrl);
-        window.location.href = targetUrl;
       }, 50);
     }
 
