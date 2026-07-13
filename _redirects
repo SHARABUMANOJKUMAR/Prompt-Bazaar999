@@ -7,5 +7,6 @@
 /payments /profile.html 200
 /success /success.html 200
 /admin/dashboard /admin-dashboard.html 200
+/admin /admin-dashboard.html 200
 /p/* /portfolio-viewer.html 200
 /* /portfolio-viewer.html 200
