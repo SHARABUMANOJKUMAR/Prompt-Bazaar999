@@ -284,11 +284,54 @@
                                 <input class="form-control" type="number" id="price" name="price" value="0" min="0">
                             </div>
                             <div class="form-group mb-0">
-                                <label class="form-label" for="image_url">Image URL</label>
-                                <input class="form-control" type="url" id="image_url" name="image_url" placeholder="Paste image link here..." required>
+                                <label class="form-label" for="image_upload">Upload Image (Auto-Drive)</label>
+                                <input class="form-control" type="file" id="image_upload" accept="image/*,video/*,.pdf" required>
+                                <input type="hidden" id="image_url" name="image_url">
+                                <div id="upload-status" style="margin-top: 8px; font-size: 13px; color: var(--color-primary);"></div>
                                 <div id="image-preview-container" class="mt-2" style="display: none;">
                                     <img id="image-preview" src="#" alt="Preview" style="max-width: 100px; border-radius: var(--radius-md); border: 1px solid var(--color-border);">
                                 </div>
+                                <script>
+                                    document.getElementById('image_upload').addEventListener('change', async function(e) {
+                                        const file = e.target.files[0];
+                                        if (!file) return;
+                                        
+                                        const statusDiv = document.getElementById('upload-status');
+                                        const submitBtn = document.querySelector('#add-prompt-form button[type="submit"]');
+                                        
+                                        statusDiv.textContent = 'Uploading to Google Drive... ⏳';
+                                        if(submitBtn) submitBtn.disabled = true;
+                                        
+                                        const formData = new FormData();
+                                        formData.append('file', file);
+                                        
+                                        try {
+                                            const response = await fetch('http://127.0.0.1:5000/upload', {
+                                                method: 'POST',
+                                                body: formData
+                                            });
+                                            const result = await response.json();
+                                            
+                                            if (result.success) {
+                                                document.getElementById('image_url').value = result.view_url;
+                                                statusDiv.innerHTML = '✅ Uploaded to Drive successfully!';
+                                                
+                                                // Preview
+                                                const previewContainer = document.getElementById('image-preview-container');
+                                                const previewImg = document.getElementById('image-preview');
+                                                previewImg.src = result.view_url;
+                                                previewContainer.style.display = 'block';
+                                            } else {
+                                                statusDiv.innerHTML = '❌ Upload failed: ' + (result.error || result.message);
+                                            }
+                                        } catch (err) {
+                                            console.error(err);
+                                            statusDiv.innerHTML = '❌ Upload error. Is PromptBazaarBackend running on port 5000?';
+                                        } finally {
+                                            if(submitBtn) submitBtn.disabled = false;
+                                        }
+                                    });
+                                </script>
                             </div>
                         </div>
 

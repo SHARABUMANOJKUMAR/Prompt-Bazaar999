@@ -423,13 +423,46 @@
         </div>
         <div class="modal-body">
             <div class="form-group mb-4">
-                <label class="form-label" for="avatar-url-input">Image URL or Google Drive Link</label>
-                <input type="text" id="avatar-url-input" class="form-control" placeholder="https://example.com/image.jpg" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 8px;">
-                <div style="background: rgba(13, 110, 253, 0.05); border-left: 4px solid var(--color-primary); padding: 12px; border-radius: 4px; margin-top: 12px;">
-                    <p style="font-size: 0.825rem; font-weight: 500; color: var(--color-primary); margin: 0; line-height: 1.4;">
-                        <strong>Note:</strong> Upload your image to Google Drive. In <strong>Manage Access</strong>, set the file permission to <strong>Anyone with the link</strong> so the image can be displayed properly.
-                    </p>
-                </div>
+                <label class="form-label" for="avatar_upload">Upload Profile Picture (Auto-Drive)</label>
+                <input type="file" id="avatar_upload" class="form-control" accept="image/*" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 8px;">
+                <input type="hidden" id="avatar-url-input">
+                <div id="avatar-upload-status" style="margin-top: 8px; font-size: 13px; color: var(--color-primary);"></div>
+                
+                <script>
+                    document.getElementById('avatar_upload').addEventListener('change', async function(e) {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        
+                        const statusDiv = document.getElementById('avatar-upload-status');
+                        const applyBtn = document.querySelector('#changeAvatarModal .btn-primary');
+                        
+                        statusDiv.textContent = 'Uploading to Google Drive... ⏳';
+                        if(applyBtn) applyBtn.disabled = true;
+                        
+                        const formData = new FormData();
+                        formData.append('file', file);
+                        
+                        try {
+                            const response = await fetch('http://127.0.0.1:5000/upload', {
+                                method: 'POST',
+                                body: formData
+                            });
+                            const result = await response.json();
+                            
+                            if (result.success) {
+                                document.getElementById('avatar-url-input').value = result.view_url;
+                                statusDiv.innerHTML = '✅ Uploaded to Drive successfully! Click Apply Picture.';
+                            } else {
+                                statusDiv.innerHTML = '❌ Upload failed: ' + (result.error || result.message);
+                            }
+                        } catch (err) {
+                            console.error(err);
+                            statusDiv.innerHTML = '❌ Upload error. Is backend running on port 5000?';
+                        } finally {
+                            if(applyBtn) applyBtn.disabled = false;
+                        }
+                    });
+                </script>
             </div>
         </div>
         <div class="modal-footer" style="display: flex; gap: 12px; justify-content: flex-end; padding: 16px 24px; background: var(--color-bg-secondary); border-top: 1px solid var(--color-border); border-radius: 0 0 16px 16px;">
