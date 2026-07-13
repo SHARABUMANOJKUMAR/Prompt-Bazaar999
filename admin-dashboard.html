@@ -305,7 +305,7 @@
                                         const formData = new FormData();
                                         formData.append('file', file);
                                         
-                                        const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+                                        const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') 
                                             ? 'http://127.0.0.1:5000/upload' 
                                             : 'https://promptbazaarbackend.onrender.com/upload';
                                         
@@ -317,13 +317,14 @@
                                             const result = await response.json();
                                             
                                             if (result.success) {
-                                                document.getElementById('image_url').value = result.view_url;
+                                                document.getElementById('image_url').value = result.viewUrl;
                                                 statusDiv.innerHTML = '✅ Uploaded to Drive successfully!';
                                                 
                                                 // Preview
                                                 const previewContainer = document.getElementById('image-preview-container');
                                                 const previewImg = document.getElementById('image-preview');
-                                                previewImg.src = result.view_url;
+                                                // Use Google Drive direct image link format for img tag
+                                                previewImg.src = `https://drive.google.com/uc?export=view&id=${result.fileId}`;
                                                 previewContainer.style.display = 'block';
                                             } else {
                                                 statusDiv.innerHTML = '❌ Upload failed: ' + (result.error || result.message);

@@ -442,7 +442,7 @@
                         const formData = new FormData();
                         formData.append('file', file);
                         
-                        const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+                        const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') 
                             ? 'http://127.0.0.1:5000/upload' 
                             : 'https://promptbazaarbackend.onrender.com/upload';
                         
@@ -454,8 +454,14 @@
                             const result = await response.json();
                             
                             if (result.success) {
-                                document.getElementById('avatar-url-input').value = result.view_url;
+                                document.getElementById('avatar-url-input').value = result.viewUrl;
                                 statusDiv.innerHTML = '✅ Uploaded to Drive successfully! Click Apply Picture.';
+                                
+                                // Preview
+                                const avatarPreview = document.getElementById('user-avatar-modal');
+                                if (avatarPreview) {
+                                    avatarPreview.src = `https://drive.google.com/uc?export=view&id=${result.fileId}`;
+                                }
                             } else {
                                 statusDiv.innerHTML = '❌ Upload failed: ' + (result.error || result.message);
                             }
