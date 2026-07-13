@@ -75,3 +75,8 @@ __pycache__/
 
 # Local Generated Portfolios
 static/portfolios/*.html
+
+
+git init
+git add .
+git commit -m "Initial commit for secure Flask Backend"
