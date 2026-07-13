@@ -510,6 +510,12 @@ def api_delete_user(user_id):
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
 
+@app.route('/admin')
+@app.route('/admin/')
+@login_required
+def admin_redirect():
+    return redirect(url_for('admin_dashboard'))
+
 @app.route('/admin/dashboard')
 @login_required
 def admin_dashboard():
