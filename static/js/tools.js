@@ -2026,7 +2026,15 @@
           html += '<div style="margin-top:10px; display:flex; align-items:center; gap:10px;"><img src="'+state.personal.photoUrl+'" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--primary);"><span style="font-size:0.85rem;color:#94a3b8;">Profile image ready</span></div>';
         }
         html += '</div>';
-        html += '<div class="wizard-form-group"><label>Resume/CV URL</label><input class="tool-input" id="pbResumeUrl" value="'+state.personal.resumeUrl+'"></div>';
+        html += '<div class="wizard-form-group"><label>Resume/CV URL (Enter URL or Upload Local File)</label>';
+        html += '<div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">';
+        html += '<input class="tool-input" id="pbResumeUrl" placeholder="https://... resume link" value="'+state.personal.resumeUrl+'" style="flex:1; min-width:220px;">';
+        html += '<label class="tool-btn" style="margin:0; cursor:pointer; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2);"><i class="fas fa-upload"></i> Upload Local Resume<input type="file" id="pbResumeFile" accept=".pdf,.doc,.docx" style="display:none;"></label>';
+        html += '</div>';
+        if (state.personal.resumeUrl) {
+          html += '<div style="margin-top:10px; display:flex; align-items:center; gap:10px;"><i class="fas fa-file-alt" style="color:#10b981;"></i><span style="font-size:0.85rem;color:#94a3b8;">Resume link ready</span></div>';
+        }
+        html += '</div>';
       } else if (state.step === 2) {
         html += '<h3>Professional Summary & Skills</h3>';
         html += '<div class="wizard-form-group"><label>Summary</label><textarea class="tool-textarea" id="pbSummary" style="min-height:120px;" placeholder="Write a brief summary about yourself.">'+state.summary+'</textarea></div>';
@@ -2159,6 +2167,51 @@
             labelEl.style.pointerEvents = 'auto';
             e.target.value = '';
           });
+        });
+      }
+
+      // Local Resume Upload Handler (Google Drive via Backend)
+      var resumeInput = document.getElementById('pbResumeFile');
+      if (resumeInput) {
+        resumeInput.addEventListener('change', async function(e) {
+          var file = e.target.files && e.target.files[0];
+          if (!file) return;
+          var labelEl = e.target.parentElement;
+          var originalText = labelEl.innerHTML;
+          labelEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading to Drive...';
+          labelEl.style.pointerEvents = 'none';
+
+          var formData = new FormData();
+          formData.append('file', file);
+          
+          const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') 
+              ? 'http://127.0.0.1:5000/upload' 
+              : 'https://promptbazaarbackend.onrender.com/upload';
+
+          try {
+            const response = await fetch(backendUrl, {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            
+            if (result.success) {
+              state.personal.resumeUrl = result.viewUrl;
+              var urlInput = document.getElementById('pbResumeUrl');
+              if (urlInput) urlInput.value = result.viewUrl;
+              saveCurrentStep();
+              renderStep();
+            } else {
+              throw new Error(result.error || result.message || 'Upload failed');
+            }
+          } catch (err) {
+            console.error("Google Drive upload failed:", err);
+            alert("Resume upload failed: " + err.message);
+          } finally {
+            labelEl.innerHTML = originalText;
+            labelEl.style.pointerEvents = 'auto';
+            e.target.value = '';
+          }
         });
       }
 
