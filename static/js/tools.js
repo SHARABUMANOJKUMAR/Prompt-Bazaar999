@@ -2063,17 +2063,17 @@
         html += '<h4>Choose Portfolio Theme</h4><div class="wizard-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 24px;">';
         PREMIUM_THEMES.forEach(function(t) {
           var isAct = state.theme === t.name;
-          html += '<div class="wizard-card '+(isAct ? 'active' : '')+' pb-theme-card" data-theme="'+t.name+'" style="text-align:left; padding:16px; border:'+(isAct?'2px solid var(--primary)':'1px solid rgba(255,255,255,0.12)')+'; background:'+(isAct?'rgba(13,110,253,0.08)':'rgba(255,255,255,0.02)')+'; position:relative; cursor:pointer;">';
-          html += '<div style="font-weight:700; font-size:1.05rem; margin-bottom:4px; color:#fff;">' + t.name + '</div>';
-          html += '<div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px;">' + t.desc + '</div>';
-          html += '<div style="display:flex; gap:6px; margin-bottom:12px;">';
+          html += '<div class="wizard-card '+(isAct ? 'active' : '')+' pb-theme-card" data-theme="'+t.name+'" style="text-align:left; padding:16px; border:'+(isAct?'2px solid var(--primary)':'1px solid rgba(255,255,255,0.12)')+'; background:'+(isAct?'rgba(13,110,253,0.08)':'rgba(255,255,255,0.02)')+'; position:relative; cursor:pointer; transform-style: preserve-3d; transition: transform 0.15s ease-out, box-shadow 0.3s ease;">';
+          html += '<div style="font-weight:700; font-size:1.05rem; margin-bottom:4px; color:#fff; transform: translateZ(20px);">' + t.name + '</div>';
+          html += '<div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px; transform: translateZ(10px);">' + t.desc + '</div>';
+          html += '<div style="display:flex; gap:6px; margin-bottom:12px; transform: translateZ(15px);">';
           html += '<div style="width:24px; height:24px; border-radius:4px; background:'+t.bgBase+'; border:1px solid rgba(255,255,255,0.2);" title="Background"></div>';
           html += '<div style="width:24px; height:24px; border-radius:4px; background:'+t.primary+'; border:1px solid rgba(255,255,255,0.2);" title="Primary"></div>';
           html += '<div style="width:24px; height:24px; border-radius:4px; background:'+t.cardBg+'; border:1px solid rgba(255,255,255,0.2);" title="Card"></div>';
           html += '<div style="width:24px; height:24px; border-radius:4px; background:'+t.textMain+'; border:1px solid rgba(255,255,255,0.2);" title="Text"></div>';
           html += '</div>';
-          html += '<div style="font-size:0.75rem; color:#a1a1aa;"><i class="fas fa-font"></i> ' + t.font + '</div>';
-          if (isAct) html += '<div style="position:absolute; top:12px; right:12px; color:var(--primary);"><i class="fas fa-check-circle"></i></div>';
+          html += '<div style="font-size:0.75rem; color:#a1a1aa; transform: translateZ(5px);"><i class="fas fa-font"></i> ' + t.font + '</div>';
+          if (isAct) html += '<div style="position:absolute; top:12px; right:12px; color:var(--primary); transform: translateZ(20px);"><i class="fas fa-check-circle"></i></div>';
           html += '</div>';
         });
         html += '</div>';
@@ -2250,6 +2250,33 @@
           saveCurrentStep();
           state.certificates.push({name: '', issuer: '', year: '', imageUrl: ''});
           renderStep();
+        });
+        
+        document.querySelectorAll('.pb-theme-card').forEach(function(c) {
+          c.addEventListener('click', function() {
+            var th = c.getAttribute('data-theme');
+            state.theme = th;
+            var tObj = PREMIUM_THEMES.find(function(x){return x.name === th;});
+            if (tObj) {
+              state.customColors = { bgBase: tObj.bgBase, textMain: tObj.textMain, primary: tObj.primary, cardBg: tObj.cardBg, cardBorder: tObj.cardBorder, textMuted: tObj.textMuted };
+              state.font = tObj.font;
+              state.animation = tObj.animation;
+            }
+            renderStep();
+            updatePreview();
+          });
+          
+          // Add 3D Tilt Effect
+          c.addEventListener("mousemove", function(e) {
+            var rect = c.getBoundingClientRect();
+            var x = e.clientX - rect.left, y = e.clientY - rect.top;
+            var rotateX = ((y - rect.height/2) / (rect.height/2)) * -10;
+            var rotateY = ((x - rect.width/2) / (rect.width/2)) * 10;
+            c.style.transform = "perspective(1000px) rotateX("+rotateX+"deg) rotateY("+rotateY+"deg) scale3d(1.02,1.02,1.02)";
+          });
+          c.addEventListener("mouseleave", function() {
+            c.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)";
+          });
         });
       }
       if (document.getElementById('pbAddAch')) {
@@ -2577,9 +2604,15 @@
         var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">';
         html += '<title>'+name+' | '+role+'</title>';
         html += '<meta name="description" content="'+summary.replace(/"/g, '&quot;')+'">';
+        html += '<meta name="keywords" content="'+name.replace(/"/g, '&quot;')+', '+role.replace(/"/g, '&quot;')+', Portfolio, Professional, Resume, Developer, Designer, '+skills.join(', ')+'">';
+        if (photoUrl) {
+          html += '<link rel="icon" type="image/x-icon" href="'+photoUrl+'">';
+        } else {
+          html += '<link rel="icon" type="image/svg+xml" href="'+fallbackAvatar.replace(/"/g, '&quot;')+'">';
+        }
         html += '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">';
         html += '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">';
-        var cc = state.customColors || { bgBase: '#0B0F19', textMain: '#F8FAFC', primary: '#0D6EFD', cardBg: '#121826', cardBorder: '#1E293B', textMuted: '#94A3B8' };
+        var cc = state.customColors || { bgBase: '#F8FCFF', textMain: '#1A365D', primary: '#2563EB', cardBg: '#FFFFFF', cardBorder: '#D6E4FF', textMuted: '#64748B' };
         html += '<style>';
         html += ':root { --primary: '+cc.primary+'; --text-main: '+cc.textMain+'; --text-muted: '+cc.textMuted+'; --bg-base: '+cc.bgBase+'; --card-bg: '+cc.cardBg+'; --border: '+cc.cardBorder+'; }';
         html += '*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }';
@@ -2605,17 +2638,17 @@
         html += '.hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 24px; }';
         html += '.btn-primary { background: var(--primary); color: #fff; padding: 12px 26px; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; box-shadow: 0 4px 14px rgba(0,0,0,0.2); }';
         html += '.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }';
-        html += '.btn-outline { background: rgba(255,255,255,0.05); color: #F8FAFC; border: 1px solid var(--border); padding: 12px 26px; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; }';
-        html += '.btn-outline:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }';
+        html += '.btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); padding: 12px 26px; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.25s; }';
+        html += '.btn-outline:hover { background: var(--primary); color: #ffffff; transform: translateY(-2px); }';
         html += '.section { padding: clamp(36px, 6vw, 64px) 0; }';
         html += '.section-header { margin-bottom: clamp(24px, 4vw, 36px); }';
-        html += '.section-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; color: #FFFFFF; }';
+        html += '.section-title { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 800; letter-spacing: -0.02em; color: #000000; }';
         html += '.section-subtitle { color: #94A3B8; font-size: 0.95rem; margin-top: 4px; }';
         html += '.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: clamp(16px, 2.5vw, 24px); }';
         html += '@media (max-width: 767px) { .card-grid { grid-template-columns: 1fr; gap: 16px; } }';
         html += '.card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: clamp(20px, 3.5vw, 28px); box-shadow: 0 4px 18px rgba(0,0,0,0.2); transition: all 0.3s cubic-bezier(0.16,1,0.3,1); display: flex; flex-direction: column; backdrop-filter: blur(14px); }';
-        html += '.card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(0,0,0,0.35); border-color: var(--primary); }';
-        html += '.card-title { font-size: clamp(1.15rem, 2.2vw, 1.35rem); font-weight: 700; margin-bottom: 6px; color: #FFFFFF; }';
+        html += '.card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px rgba(0,0,0,0.15); border-color: var(--primary); }';
+        html += '.card-title { font-size: clamp(1.15rem, 2.2vw, 1.35rem); font-weight: 700; margin-bottom: 6px; color: var(--text-main); }';
         html += '.card-meta { color: var(--primary); font-size: 0.9rem; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }';
         html += '.card-body { color: #94A3B8; font-size: 0.96rem; line-height: 1.65; flex-grow: 1; }';
         html += '.skill-tags { display: flex; flex-wrap: wrap; gap: 10px; }';
@@ -2624,9 +2657,9 @@
         html += '.proj-img-wrap { width: 100%; height: 200px; border-radius: 14px; overflow: hidden; margin-bottom: 18px; background: rgba(255,255,255,0.05); }';
         html += '.proj-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(0.16,1,0.3,1); }';
         html += '.card:hover .proj-img-wrap img { transform: scale(1.06); }';
-        html += '.contact-card { background: linear-gradient(135deg, rgba(30,41,59,0.7) 0%, rgba(15,23,42,0.85) 100%); color: #fff; border-radius: 24px; padding: clamp(32px, 6vw, 48px); text-align: center; border: 1px solid var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }';
-        html += '.contact-card h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 12px; }';
-        html += '.contact-card p { color: #94A3B8; font-size: clamp(1rem, 2vw, 1.15rem); max-width: 560px; margin: 0 auto 28px; }';
+        html += '.contact-card { background: var(--card-bg); color: var(--text-main); border-radius: 24px; padding: clamp(32px, 6vw, 48px); text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }';
+        html += '.contact-card h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 12px; color: #000000; }';
+        html += '.contact-card p { color: var(--text-muted); font-size: clamp(1rem, 2vw, 1.15rem); max-width: 560px; margin: 0 auto 28px; }';
         html += 'footer { text-align: center; padding: 48px 24px; color: #64748B; font-size: 0.9rem; border-top: 1px solid var(--border); margin-top: 48px; }';
         html += '</style></head><body>';
 
@@ -2760,10 +2793,10 @@
         html += '<p>Open to opportunities, collaboration, and exciting projects. Feel free to reach out anytime.</p>';
         html += '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px;">';
         if (email) {
-          html += '<a href="mailto:'+email+'" class="btn-primary" style="background:#fff;color:#0f172a;"><i class="fas fa-envelope"></i> '+email+'</a>';
+          html += '<a href="mailto:'+email+'" class="btn-primary" style="background:var(--primary);color:#fff;"><i class="fas fa-envelope"></i> '+email+'</a>';
         }
         if (phone) {
-          html += '<a href="tel:'+phone+'" class="btn-primary" style="background:rgba(255,255,255,0.15);color:#fff;"><i class="fas fa-phone"></i> '+phone+'</a>';
+          html += '<a href="tel:'+phone+'" class="btn-primary" style="background:var(--primary);color:#fff;">📞 '+phone+'</a>';
         }
         if (linkedin && /^https?:\/\//i.test(linkedin)) {
           html += '<a href="'+linkedin+'" target="_blank" class="btn-primary" style="background:#0A66C2;color:#fff;"><i class="fab fa-linkedin"></i> LinkedIn</a>';
