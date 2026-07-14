@@ -483,7 +483,7 @@ def api_edit_user():
         
         # Also sync with USERS_API_URL (Google Sheets) via update_profile
         try:
-            users_api_url = "https://script.google.com/macros/s/AKfycbzeyp93N_8BIW40Qi5isffi5h7FfHvm84_1n3mWMIzYNVVovayy-fL5RNiC6k15i7GL8g/exec"
+            users_api_url = "https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6hIj1A7ErMlqXwxAyCSXajDO2Zc4x9a9jR-wnU9DQWdUxdMVDtTn/exec"
             payload = {
                 'action': 'update_profile',
                 'user_id': uid,
