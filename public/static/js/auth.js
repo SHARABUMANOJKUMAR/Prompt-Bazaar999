@@ -392,8 +392,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 u = JSON.parse(localStorage.getItem("currentUser") || localStorage.getItem("user") || "null");
             } catch(e) {}
         }
-        const avatarEl = document.querySelector('.user-avatar') || document.querySelector('a[href="/profile"]');
-        if (!avatarEl) return;
+        const avatarEl = document.querySelector('.user-avatar') || document.querySelector('.navbar a[href="/profile"], header a[href="/profile"]');
+        if (!avatarEl || avatarEl.closest('.admin-sidebar')) return;
 
         if (u && (u.email || u.uid || u.user_id)) {
             avatarEl.href = "/profile";

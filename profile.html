@@ -247,15 +247,143 @@
                 <div class="profile-card">
                     <!-- Profile Picture Upload -->
                     <div class="avatar-upload-container">
-                        <div class="profile-avatar-large" id="profile-avatar-preview">
+                        <input type="file" id="direct_avatar_upload" accept="image/*" style="display: none;">
+                        <div class="profile-avatar-large" id="profile-avatar-preview" onclick="document.getElementById('direct_avatar_upload').click()">
                             
                                 <span id="avatar-initials">U</span>
                             
-                            <div class="avatar-edit-overlay" onclick="openModal('changeAvatarModal')">
+                            <div class="avatar-edit-overlay">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
                             </div>
                         </div>
-                        <p class="text-sm text-secondary mt-2" onclick="openModal('changeAvatarModal')" style="cursor: pointer;">Click to change profile picture</p>
+                        <p class="text-sm text-secondary mt-2" onclick="document.getElementById('direct_avatar_upload').click()" style="cursor: pointer;">Click to change profile picture</p>
+                        <div id="direct-avatar-upload-status" style="margin-top: 8px; font-size: 13px; color: var(--color-primary); text-align: center; max-width: 200px;"></div>
+                        
+                        <script type="module">
+                            import { auth, db, doc, setDoc, serverTimestamp, updateProfile } from '/static/js/firebase-config.js?v=2';
+                            
+                            document.getElementById('direct_avatar_upload').addEventListener('change', async function(e) {
+                                const file = e.target.files[0];
+                                if (!file) return;
+                                
+                                const statusDiv = document.getElementById('direct-avatar-upload-status');
+                                statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+                                
+                                const formData = new FormData();
+                                formData.append('file', file);
+                                
+                                const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') 
+                                    ? 'http://127.0.0.1:5000/upload' 
+                                    : 'https://promptbazaarbackend.onrender.com/upload';
+                                
+                                try {
+                                    // 1. Upload to Google Drive
+                                    const response = await fetch(backendUrl, {
+                                        method: 'POST',
+                                        body: formData
+                                    });
+                                    const result = await response.json();
+                                    
+                                    if (result.success) {
+                                        let url = result.viewUrl;
+                                        // Auto-convert Google Drive URL to direct view
+                                        const regex = /\\/file\\/d\\/([a-zA-Z0-9_-]+)/;
+                                        let match = url.match(regex);
+                                        if (match && match[1]) {
+                                            url = `https://lh3.googleusercontent.com/d/${match[1]}`;
+                                        }
+                                        
+                                        // 2. Update UI instantly
+                                        const img = document.getElementById('avatar-img');
+                                        const initials = document.getElementById('avatar-initials');
+                                        const previewContainer = document.getElementById('profile-avatar-preview');
+                                        
+                                        if (img) {
+                                            img.src = url;
+                                            img.style.display = 'block';
+                                            if (initials) initials.style.display = 'none';
+                                        } else if (initials) {
+                                            const newImg = document.createElement('img');
+                                            newImg.id = 'avatar-img';
+                                            newImg.src = url;
+                                            newImg.alt = "Avatar";
+                                            newImg.style.width = '100%';
+                                            newImg.style.height = '100%';
+                                            newImg.style.objectFit = 'cover';
+                                            newImg.style.borderRadius = '50%';
+                                            previewContainer.prepend(newImg);
+                                            initials.style.display = 'none';
+                                        }
+                                        
+                                        // Update Navbar
+                                        const navbarAvatar = document.querySelector('.user-avatar');
+                                        if (navbarAvatar) {
+                                            navbarAvatar.innerHTML = `<img src="${url}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                                        }
+                                        
+                                        // 3. Update localStorage and Backend Systems
+                                        if (window.currentUser) {
+                                            window.currentUser.photoURL = url;
+                                            
+                                            // Update LocalStorage
+                                            const keys = ["currentUser", "user", "promptbazaar_user"];
+                                            keys.forEach(k => {
+                                                const d = localStorage.getItem(k);
+                                                if(d) {
+                                                    try { 
+                                                        const p = JSON.parse(d); 
+                                                        p.profile_picture = url; 
+                                                        p.photoURL = url;
+                                                        localStorage.setItem(k, JSON.stringify(p)); 
+                                                    } catch(e){}
+                                                }
+                                            });
+
+                                            statusDiv.innerHTML = '✅ Saved successfully!';
+                                            if(window.showToast) window.showToast('Profile picture updated!');
+                                            
+                                            // Sync with Flask
+                                            fetch('https://prompt-bazaar999.onrender.com/api/session/update', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ photoURL: url })
+                                            }).catch(err => console.warn(err));
+
+                                            // Sync with GAS
+                                            fetch("https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6hIj1A7ErMlqXwxAyCSXajDO2Zc4x9a9jR-wnU9DQWdUxdMVDtTn/exec", {
+                                                method: 'POST',
+                                                body: JSON.stringify({
+                                                    action: "update_profile",
+                                                    user_id: window.currentUser.uid,
+                                                    full_name: window.currentUser.name,
+                                                    profile_picture: url
+                                                })
+                                            }).catch(err => console.warn(err));
+                                            
+                                            // Sync with Firebase Auth
+                                            if (auth && auth.currentUser) {
+                                                updateProfile(auth.currentUser, { photoURL: url }).catch(e => console.warn(e));
+                                                setDoc(doc(db, "users", auth.currentUser.uid), {
+                                                    updatedAt: serverTimestamp(),
+                                                    photoURL: url
+                                                }, { merge: true }).catch(e => console.warn(e));
+                                            }
+                                        }
+                                        
+                                        setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
+                                        
+                                    } else {
+                                        statusDiv.innerHTML = '❌ Upload failed: ' + (result.error || result.message);
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                    statusDiv.innerHTML = '❌ Upload error.';
+                                }
+                                
+                                // Reset input so same file can be selected again if needed
+                                e.target.value = '';
+                            });
+                        </script>
                     </div>
                     
                     <form id="profile-edit-form">
@@ -266,7 +394,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email Address</label>
-                                <input class="form-control" type="email" value="" readonly style="background: rgba(255,255,255,0.03); cursor: not-allowed;">
+                                <input class="form-control" type="email" id="edit-email" value="" readonly style="background: rgba(255,255,255,0.03); cursor: not-allowed;">
                                 <small class="text-xs text-secondary mt-1">Email cannot be changed</small>
                             </div>
                         </div>
@@ -412,77 +540,6 @@
     </main>
 </div>
 
-<!-- Change Profile Picture Modal -->
-<div id="changeAvatarModal" class="modal-overlay">
-    <div class="modal-card">
-        <div class="modal-header">
-            <h3 class="text-h3 mb-0">Change Profile Picture</h3>
-            <button class="modal-close-btn" onclick="closeModal('changeAvatarModal')">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group mb-4">
-                <label class="form-label" for="avatar_upload">Upload Profile Picture (Auto-Drive)</label>
-                <input type="file" id="avatar_upload" class="form-control" accept="image/*" style="width: 100%; box-sizing: border-box; padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 8px;">
-                <input type="hidden" id="avatar-url-input">
-                <div id="avatar-upload-status" style="margin-top: 8px; font-size: 13px; color: var(--color-primary);"></div>
-                
-                <script>
-                    document.getElementById('avatar_upload').addEventListener('change', async function(e) {
-                        const file = e.target.files[0];
-                        if (!file) return;
-                        
-                        const statusDiv = document.getElementById('avatar-upload-status');
-                        const applyBtn = document.querySelector('#changeAvatarModal .btn-primary');
-                        
-                        statusDiv.textContent = 'Uploading to Google Drive... ⏳';
-                        if(applyBtn) applyBtn.disabled = true;
-                        
-                        const formData = new FormData();
-                        formData.append('file', file);
-                        
-                        const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') 
-                            ? 'http://127.0.0.1:5000/upload' 
-                            : 'https://promptbazaarbackend.onrender.com/upload';
-                        
-                        try {
-                            const response = await fetch(backendUrl, {
-                                method: 'POST',
-                                body: formData
-                            });
-                            const result = await response.json();
-                            
-                            if (result.success) {
-                                document.getElementById('avatar-url-input').value = result.viewUrl;
-                                statusDiv.innerHTML = '✅ Uploaded to Drive successfully! Click Apply Picture.';
-                                
-                                // Preview
-                                const avatarPreview = document.getElementById('user-avatar-modal');
-                                if (avatarPreview) {
-                                    avatarPreview.src = `https://drive.google.com/uc?export=view&id=${result.fileId}`;
-                                }
-                            } else {
-                                statusDiv.innerHTML = '❌ Upload failed: ' + (result.error || result.message);
-                            }
-                        } catch (err) {
-                            console.error(err);
-                            statusDiv.innerHTML = '❌ Upload error. Is backend running on port 5000?';
-                        } finally {
-                            if(applyBtn) applyBtn.disabled = false;
-                        }
-                    });
-                </script>
-            </div>
-        </div>
-        <div class="modal-footer" style="display: flex; gap: 12px; justify-content: flex-end; padding: 16px 24px; background: var(--color-bg-secondary); border-top: 1px solid var(--color-border); border-radius: 0 0 16px 16px;">
-            <button type="button" class="btn btn-outline" onclick="closeModal('changeAvatarModal')">Cancel</button>
-            <button type="button" class="btn btn-primary" onclick="applyAvatarUrl()">
-                <span>Apply Picture</span>
-            </button>
-        </div>
-    </div>
-</div>
 
 <!-- Toast Container -->
 <div id="toast-container" class="toast-container"></div>
