@@ -2064,8 +2064,8 @@
         PREMIUM_THEMES.forEach(function(t) {
           var isAct = state.theme === t.name;
           html += '<div class="wizard-card '+(isAct ? 'active' : '')+' pb-theme-card" data-theme="'+t.name+'" style="text-align:left; padding:16px; border:'+(isAct?'2px solid var(--primary)':'1px solid rgba(255,255,255,0.12)')+'; background:'+(isAct?'rgba(13,110,253,0.08)':'rgba(255,255,255,0.02)')+'; position:relative; cursor:pointer; transform-style: preserve-3d; transition: transform 0.15s ease-out, box-shadow 0.3s ease;">';
-          html += '<div style="font-weight:700; font-size:1.05rem; margin-bottom:4px; color:#fff; transform: translateZ(20px);">' + t.name + '</div>';
-          html += '<div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px; transform: translateZ(10px);">' + t.desc + '</div>';
+          html += '<div style="font-weight:700; font-size:1.05rem; margin-bottom:4px; color:'+(isAct?'#fff':'var(--text-main, #1e293b)')+'; transform: translateZ(20px);">' + t.name + '</div>';
+          html += '<div style="font-size:0.8rem; color:'+(isAct?'rgba(255,255,255,0.8)':'#64748b')+'; margin-bottom:12px; transform: translateZ(10px);">' + t.desc + '</div>';
           html += '<div style="display:flex; gap:6px; margin-bottom:12px; transform: translateZ(15px);">';
           html += '<div style="width:24px; height:24px; border-radius:4px; background:'+t.bgBase+'; border:1px solid rgba(255,255,255,0.2);" title="Background"></div>';
           html += '<div style="width:24px; height:24px; border-radius:4px; background:'+t.primary+'; border:1px solid rgba(255,255,255,0.2);" title="Primary"></div>';
@@ -2102,10 +2102,10 @@
           var isAct = state.animation === anim.name;
           html += '<div class="wizard-card '+(isAct ? 'active' : '')+'" data-type="animation" data-val="'+anim.name+'" style="text-align:left; padding:18px; border:'+(isAct?'2px solid '+anim.color:'1px solid rgba(255,255,255,0.12)')+'; background:'+(isAct?'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))':'rgba(255,255,255,0.03)')+'; box-shadow:'+(isAct?'0 0 20px '+anim.color+'33':'none')+'; position:relative;">';
           html += '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">';
-          html += '<span style="font-weight:700; color:#fff; font-size:1rem; display:flex; align-items:center; gap:8px;"><i class="fas '+anim.icon+'" style="color:'+anim.color+'; font-size:1.15rem;"></i> '+anim.name+'</span>';
+          html += '<span style="font-weight:700; color:'+(isAct?'#fff':'var(--text-main, #1e293b)')+'; font-size:1rem; display:flex; align-items:center; gap:8px;"><i class="fas '+anim.icon+'" style="color:'+anim.color+'; font-size:1.15rem;"></i> '+anim.name+'</span>';
           if (isAct) html += '<span style="background:'+anim.color+'; color:#fff; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:9999px;">ACTIVE</span>';
           html += '</div>';
-          html += '<div style="font-size:0.84rem; color:#a1a1aa; line-height:1.5;">'+anim.desc+'</div>';
+          html += '<div style="font-size:0.84rem; color:'+(isAct?'rgba(255,255,255,0.8)':'#64748b')+'; line-height:1.5;">'+anim.desc+'</div>';
           html += '</div>';
         });
         html += '</div>';
@@ -2606,7 +2606,7 @@
         html += '<meta name="description" content="'+summary.replace(/"/g, '&quot;')+'">';
         html += '<meta name="keywords" content="'+name.replace(/"/g, '&quot;')+', '+role.replace(/"/g, '&quot;')+', Portfolio, Professional, Resume, Developer, Designer, '+skills.join(', ')+'">';
         if (photoUrl) {
-          html += '<link rel="icon" type="image/x-icon" href="'+photoUrl+'">';
+          html += '<link rel="icon" href="'+photoUrl+'">';
         } else {
           html += '<link rel="icon" type="image/svg+xml" href="'+fallbackAvatar.replace(/"/g, '&quot;')+'">';
         }
@@ -2788,9 +2788,9 @@
 
         // CONTACT SECTION
         html += '<section class="section" id="contact"><div class="container">';
-        html += '<div class="contact-card">';
-        html += '<h2>Let&rsquo;s Connect</h2>';
-        html += '<p>Open to opportunities, collaboration, and exciting projects. Feel free to reach out anytime.</p>';
+        html += '<div class="contact-card" style="background:var(--card-bg); border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.05);">';
+        html += '<h2 style="color:#000000;">Let&rsquo;s Connect</h2>';
+        html += '<p style="color:#475569;">Open to professional opportunities, collaboration, and exciting projects. Feel free to reach out anytime.</p>';
         html += '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px;">';
         if (email) {
           html += '<a href="mailto:'+email+'" class="btn-primary" style="background:var(--primary);color:#fff;"><i class="fas fa-envelope"></i> '+email+'</a>';
