@@ -175,6 +175,11 @@ def index():
     user = session.get('user')
     return render_template('index.html', user=user)
 
+@app.route('/academy')
+def academy():
+    user = session.get('user')
+    return render_template('academy.html', user=user)
+
 @app.route('/signup')
 def signup():
     if 'user' in session:

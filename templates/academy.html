@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% block title %}Prompt Academy - Prompt Bazaar{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/academy.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Sidebar Drawer (shared) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar-drawer" id="sidebarDrawer">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-left">
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+            Prompt Bazaar
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
+        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
+        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
+        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon">🎓</span> Academy</a>
+    </nav>
+    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+</aside>
+
+<div class="academy-layout">
+    <!-- Top Navbar -->
+    <header class="academy-header">
+        <div class="header-left">
+            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+            Prompt Bazaar
+        </div>
+        <div class="header-right">
+            <div class="xp-badge" id="user-xp-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <span id="user-xp-amount">0</span> XP
+            </div>
+            <a href="{{ url_for('profile') }}" class="user-avatar" title="Profile">
+                {% if user and user.photoURL %}
+                    <img src="{{ user.photoURL }}" alt="Avatar">
+                {% else %}
+                    {{ user.displayName[0] | upper if user else 'U' }}
+                {% endif %}
+            </a>
+        </div>
+    </header>
+
+    <main class="academy-main-content">
+        <!-- SECTION 1: HERO -->
+        <section class="academy-hero">
+            <div class="hero-content">
+                <div class="hero-badge">New</div>
+                <h1 class="hero-title">🎓 Prompt Academy</h1>
+                <h2 class="hero-subtitle">Learn Prompt Engineering From Beginner to AI Expert</h2>
+                <p class="hero-description">Master Prompt Engineering, Large Language Models (LLMs), AI Agents, Retrieval-Augmented Generation (RAG), AI Automation, and AI Product Development through structured lessons, quizzes, projects, AI playgrounds, and certifications.</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">20</span>
+                        <span class="stat-label">Modules</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">250+</span>
+                        <span class="stat-label">Lessons</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">20+</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">12–16</span>
+                        <span class="stat-label">Weeks</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" id="startLearningBtn">Start Learning</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('learning-roadmap').scrollIntoView({behavior: 'smooth'})">Browse Modules</button>
+                </div>
+            </div>
+            <div class="hero-illustration">
+                <div class="floating-icons">
+                    <div class="float-icon icon-brain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+                    <div class="float-icon icon-robot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4M8 16h.01M16 16h.01"></path></svg></div>
+                    <div class="float-icon icon-code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg></div>
+                    <div class="float-icon icon-llm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+                    <div class="float-icon icon-prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: FEATURES -->
+        <section class="academy-features">
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon bg-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></div>
+                    <h3>Interactive Learning</h3>
+                    <p>Practice playground with hands-on projects and AI tutor.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon bg-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+                    <h3>Quizzes & Assessments</h3>
+                    <p>Test your knowledge with quizzes and secure certificates.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon bg-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg></div>
+                    <h3>Progress Tracking</h3>
+                    <p>Earn XP, unlock achievements, and enjoy gamification features.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: LEARNING ROADMAP -->
+        <section id="learning-roadmap" class="academy-roadmap">
+            <div class="section-header">
+                <h2>Learning Roadmap</h2>
+                <p>Complete modules in order to unlock the next level of expertise.</p>
+            </div>
+            <div class="modules-grid" id="modules-container">
+                <!-- Modules injected via JS -->
+            </div>
+        </section>
+
+        <!-- MODULE DETAIL VIEW (Hidden by default) -->
+        <section id="module-detail-view" class="module-detail-view" style="display: none;">
+            <button class="btn btn-secondary back-to-roadmap" id="backToRoadmapBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Back to Roadmap
+            </button>
+            
+            <div class="module-header-card">
+                <div class="module-meta">
+                    <span class="module-number-badge" id="detail-module-num">Module 1</span>
+                    <span class="module-difficulty" id="detail-module-difficulty">Beginner</span>
+                </div>
+                <h1 id="detail-module-title">AI & Generative AI Fundamentals</h1>
+                
+                <div class="module-stats-row">
+                    <div class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <span id="detail-module-duration">8 Hours</span></div>
+                    <div class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> <span id="detail-module-lessons">15 Lessons</span></div>
+                    <div class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg> <span id="detail-module-quiz">15 Questions</span></div>
+                    <div class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> <span id="detail-module-xp">500 XP</span></div>
+                </div>
+
+                <div class="module-progress-wrapper">
+                    <div class="progress-info">
+                        <span>Completion</span>
+                        <span id="detail-module-progress-text">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="detail-module-progress-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: MODULE OVERVIEW -->
+            <div class="module-overview">
+                <h3>Learning Outcomes</h3>
+                <ul class="learning-outcomes-list" id="detail-module-outcomes">
+                    <!-- Populated by JS -->
+                </ul>
+            </div>
+
+            <!-- SECTION 6: LESSONS -->
+            <div class="lessons-container" id="lessons-container">
+                <!-- Lessons injected by JS -->
+            </div>
+
+            <!-- SECTION 7: QUIZ -->
+            <div class="assessment-card locked" id="quiz-card">
+                <div class="assessment-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+                <div class="assessment-content">
+                    <h3>Module Quiz</h3>
+                    <p>15 Questions • 80% Passing Score • 200 XP</p>
+                </div>
+                <div class="assessment-action">
+                    <button class="btn btn-secondary" disabled>Locked</button>
+                </div>
+            </div>
+
+            <!-- SECTION 8: PROJECT -->
+            <div class="assessment-card locked" id="project-card">
+                <div class="assessment-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg></div>
+                <div class="assessment-content">
+                    <h3>Hands-on Project</h3>
+                    <p>Explain ChatGPT Using Your Own Prompt</p>
+                </div>
+                <div class="assessment-action">
+                    <button class="btn btn-secondary" disabled>Locked</button>
+                </div>
+            </div>
+
+            <!-- SECTION 9: CERTIFICATE -->
+            <div class="assessment-card locked" id="certificate-card">
+                <div class="assessment-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg></div>
+                <div class="assessment-content">
+                    <h3>Module Certificate</h3>
+                    <p>Completion Badge & XP Reward</p>
+                </div>
+                <div class="assessment-action">
+                    <button class="btn btn-secondary" disabled>Locked</button>
+                </div>
+            </div>
+
+            <!-- SECTION 10: NEXT MODULE -->
+            <div class="next-module-preview locked" id="next-module-preview">
+                <div class="preview-content">
+                    <span class="preview-label">Next Module (Locked)</span>
+                    <h3 id="preview-next-title">Module 2: Prompt Engineering Fundamentals</h3>
+                </div>
+                <button class="btn btn-primary" disabled>Continue Learning</button>
+            </div>
+        </section>
+
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/academy.js') }}"></script>
+{% endblock %}
