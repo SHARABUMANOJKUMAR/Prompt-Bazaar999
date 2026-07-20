@@ -3,6 +3,8 @@
 {% block title %}Prompt Academy - Prompt Bazaar{% endblock %}
 
 {% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}?v=3">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/academy.css') }}">
 {% endblock %}
 
@@ -29,9 +31,9 @@
     <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
 </aside>
 
-<div class="academy-layout">
+<div class="gallery-layout">
     <!-- Top Navbar -->
-    <header class="academy-header">
+    <header class="gallery-header">
         <div class="header-left">
             <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -225,4 +227,19 @@
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/academy.js') }}"></script>
+<script>
+(function() {
+    var btn = document.getElementById('menuToggleBtn');
+    var drawer = document.getElementById('sidebarDrawer');
+    var overlay = document.getElementById('sidebarOverlay');
+    var closeBtn = document.getElementById('sidebarCloseBtn');
+    if (!btn || !drawer) return;
+    function open() { drawer.classList.add('open'); if (overlay) overlay.classList.add('open'); }
+    function close() { drawer.classList.remove('open'); if (overlay) overlay.classList.remove('open'); }
+    btn.addEventListener('click', open);
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    if (overlay) overlay.addEventListener('click', close);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+})();
+</script>
 {% endblock %}
