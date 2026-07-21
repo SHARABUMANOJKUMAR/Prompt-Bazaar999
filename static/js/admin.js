@@ -680,18 +680,22 @@ function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.style.display = 'flex';
+        modal.style.visibility = 'visible';
+        modal.style.transform = 'none';
         // Trigger reflow for animation
         modal.offsetHeight;
-        modal.classList.add('active');
+        modal.classList.add('active', 'open');
     }
 }
 
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.remove('active');
+        modal.classList.remove('active', 'open');
+        modal.style.transform = '';
         setTimeout(() => {
             modal.style.display = 'none';
+            modal.style.visibility = '';
         }, 300);
     }
 }
@@ -1540,7 +1544,7 @@ window.openAcademyModal = function(type, existingId = null) {
     }
     
     body.innerHTML = html;
-    modal.classList.add('active');
+    openModal('academyModal');
 };
 
 window.saveAcademyEntity = async function(e) {

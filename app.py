@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, session, redirect, url_for, j
 from functools import wraps
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
+from utils.drive import upload_file_to_drive
 
 load_dotenv()
 
@@ -179,6 +180,91 @@ def index():
 def academy():
     user = session.get('user')
     return render_template('academy.html', user=user)
+
+@app.route('/academy/module1')
+def academy_module1():
+    user = session.get('user')
+    return render_template('module1.html', user=user)
+
+@app.route('/academy/module2')
+def academy_module2():
+    user = session.get('user')
+    return render_template('module2.html', user=user)
+
+@app.route('/academy/module3')
+def academy_module3():
+    user = session.get('user')
+    return render_template('module3.html', user=user)
+
+@app.route('/academy/module4')
+def academy_module4():
+    user = session.get('user')
+    return render_template('module4.html', user=user)
+
+@app.route('/academy/module5')
+def academy_module5():
+    user = session.get('user')
+    return render_template('module5.html', user=user)
+
+@app.route('/academy/module6')
+def academy_module6():
+    user = session.get('user')
+    return render_template('module6.html', user=user)
+
+@app.route('/academy/module7')
+def academy_module7():
+    user = session.get('user')
+    return render_template('module7.html', user=user)
+
+@app.route('/academy/module8')
+def academy_module8():
+    user = session.get('user')
+    return render_template('module8.html', user=user)
+
+@app.route('/academy/module9')
+def academy_module9():
+    user = session.get('user')
+    return render_template('module9.html', user=user)
+
+@app.route('/academy/module10')
+def academy_module10():
+    user = session.get('user')
+    return render_template('module10.html', user=user)
+
+@app.route('/academy/module11')
+def academy_module11():
+    user = session.get('user')
+    return render_template('module11.html', user=user)
+
+@app.route('/academy/module12')
+def academy_module12():
+    user = session.get('user')
+    return render_template('module12.html', user=user)
+
+@app.route('/academy/module13')
+def academy_module13():
+    user = session.get('user')
+    return render_template('module13.html', user=user)
+
+@app.route('/academy/module14')
+def academy_module14():
+    user = session.get('user')
+    return render_template('module14.html', user=user)
+
+@app.route('/academy/module15')
+def academy_module15():
+    user = session.get('user')
+    return render_template('module15.html', user=user)
+
+@app.route('/academy/module16')
+def academy_module16():
+    user = session.get('user')
+    return render_template('module16.html', user=user)
+
+@app.route('/academy/module17')
+def academy_module17():
+    user = session.get('user')
+    return render_template('module17.html', user=user)
 
 @app.route('/signup')
 def signup():
@@ -1334,6 +1420,41 @@ def catch_all_portfolio(username):
             return f.read()
     return "Not Found", 404
 
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'success': False, 'error': 'No file part in the request'}), 400
+        
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({'success': False, 'error': 'No selected file'}), 400
+        
+    if file:
+        filename = secure_filename(file.filename)
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(file_path)
+        
+        try:
+            # Upload to Google Drive
+            result = upload_file_to_drive(file_path, filename, file.mimetype)
+            
+            # Clean up the local file after successful upload
+            os.remove(file_path)
+            
+            return jsonify({
+                'success': True,
+                **result
+            })
+            
+        except Exception as e:
+            # Clean up local file in case of error
+            try:
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+            except Exception:
+                pass
+            return jsonify({'success': False, 'error': str(e)}), 500
 
 
 if __name__ == '__main__':

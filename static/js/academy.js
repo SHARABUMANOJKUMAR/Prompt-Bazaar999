@@ -60,7 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // === API Logic ===
     async function fetchAcademyData() {
         try {
-            modulesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;"><div class="loading-spinner" style="width: 40px; height: 40px; border: 4px solid var(--color-bg-secondary); border-top: 4px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div><p style="margin-top: 16px; color: var(--color-text-secondary);">Loading Academy Data...</p></div>';
+            if (modulesContainer) {
+                modulesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;"><div class="loading-spinner" style="width: 40px; height: 40px; border: 4px solid var(--color-bg-secondary); border-top: 4px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div><p style="margin-top: 16px; color: var(--color-text-secondary);">Loading Academy Data...</p></div>';
+            }
             
             // For the frontend, we only want PUBLISHED courses. 
             const res = await fetch(GAS_ACADEMY_URL, {
@@ -86,14 +88,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     progress.unlockedCourses.push(academyData.courses[0].CourseID);
                     saveProgress();
                 }
-
-                renderCourses();
+                
+                if (modulesContainer) {
+                    renderCourses();
+                }
             } else {
-                modulesContainer.innerHTML = `<div class="error-msg">Failed to load courses. Please try again.</div>`;
+                if (modulesContainer) modulesContainer.innerHTML = `<div class="error-msg">Failed to load courses. Please try again.</div>`;
             }
         } catch (err) {
             console.error(err);
-            modulesContainer.innerHTML = `<div class="error-msg">Could not connect to the Academy API. Please check your config.</div>`;
+            if (modulesContainer) modulesContainer.innerHTML = `<div class="error-msg">Could not connect to the Academy API. Please check your config.</div>`;
         }
     }
 
@@ -105,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderCourses() {
+        if (!modulesContainer) return;
         modulesContainer.innerHTML = '';
         if (academyData.courses.length === 0) {
             modulesContainer.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--color-text-secondary);">No courses available at the moment.</div>`;
@@ -286,10 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Bind Hero Start Learning Button
     document.getElementById('startLearningBtn').addEventListener('click', () => {
-        if(academyData.courses.length > 0) {
-            openCourseDetail(academyData.courses[0].CourseID);
-        } else {
-            document.getElementById('learning-roadmap').scrollIntoView({behavior: 'smooth'});
-        }
+        window.location.href = '/academy/module1';
     });
 });

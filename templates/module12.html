@@ -1,0 +1,565 @@
+{% extends 'base.html' %}
+
+{% block title %}Prompt Academy - Module 12{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}?v=3">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/academy.css') }}">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    .module-container {
+        max-width: 960px;
+        margin: 60px auto;
+        padding: 0 24px;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .lesson-card {
+        background: var(--color-bg-secondary);
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 40px;
+        border: 1px solid var(--color-border);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .lesson-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .lesson-card h2 {
+        color: var(--primary-color);
+        margin-top: 0;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 700;
+        border-bottom: 2px solid rgba(37, 99, 235, 0.1);
+        padding-bottom: 16px;
+        line-height: 1.3;
+    }
+
+    .lesson-card h3 {
+        margin-top: 32px;
+        margin-bottom: 16px;
+        color: var(--color-text-primary);
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    .lesson-card p,
+    .lesson-card ul,
+    .lesson-card li {
+        color: var(--color-text-secondary);
+        line-height: 1.8;
+        font-size: 16px;
+    }
+
+    .lesson-card ul,
+    .lesson-card ol {
+        padding-left: 24px;
+        margin-bottom: 24px;
+    }
+
+    .lesson-card li {
+        margin-bottom: 12px;
+    }
+
+    .highlight-box {
+        background: linear-gradient(90deg, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%);
+        border-left: 4px solid var(--primary-color);
+        padding: 24px;
+        margin: 24px 0;
+        border-radius: 0 12px 12px 0;
+    }
+
+    .diagram-box {
+        background: var(--color-bg-primary);
+        padding: 24px;
+        border-radius: 12px;
+        font-family: monospace;
+        white-space: pre-line;
+        margin: 24px 0;
+        border: 1px dashed var(--color-border);
+        color: var(--color-text-primary);
+        text-align: center;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+        line-height: 1.6;
+        font-size: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .module-container {
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+        .lesson-card {
+            padding: 24px;
+            border-radius: 12px;
+        }
+        .lesson-card h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .lesson-card h3 {
+            font-size: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar-drawer" id="sidebarDrawer">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-left">
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+            Prompt Bazaar
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
+        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
+        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
+        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon">🎓</span> Prompt Academy</a>
+    </nav>
+    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+</aside>
+
+<div class="gallery-layout">
+    <header class="gallery-header">
+        <div class="header-left">
+            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+            Prompt Bazaar
+        </div>
+        <div class="header-right">
+            <div class="xp-badge" id="user-xp-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+                <span id="user-xp-amount">0</span> XP
+            </div>
+            <a href="{{ url_for('profile') }}" class="user-avatar" title="Profile">
+                {% if user and user.photoURL %}
+                <img src="{{ user.photoURL }}" alt="Avatar">
+                {% else %}
+                {{ user.displayName[0] | upper if user else 'U' }}
+                {% endif %}
+            </a>
+        </div>
+    </header>
+
+    <main class="academy-main-content">
+        <div class="module-container">
+            <a href="/academy" class="btn btn-secondary" style="margin-bottom: 24px;">&larr; Back to Academy Roadmap</a>
+            <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">📘 Module 12: AI Automation & API Integration</h1>
+            
+            <div class="lesson-card" style="border: 2px solid var(--primary-color);">
+                <h2>🎯 Module Objective</h2>
+                <p>Learn how to automate AI workflows by integrating Large Language Models (LLMs) with APIs, Google Workspace, Slack, and no-code automation platforms such as n8n. Build real-world AI automations that connect multiple services and perform end-to-end tasks.</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 1: What is Automation?</h2>
+                <h3>Definition</h3>
+                <p>Automation is the process of using software or AI to perform repetitive tasks automatically with little or no human intervention.<br>AI automation combines Large Language Models (LLMs), APIs, databases, and workflow tools to complete business processes efficiently.</p>
+                <h3>Why is it Important?</h3>
+                <ul>
+                    <li>Automation helps:</li>
+                    <li>Save time.</li>
+                    <li>Reduce manual work.</li>
+                    <li>Improve accuracy.</li>
+                    <li>Increase productivity.</li>
+                    <li>Scale business operations.</li>
+                </ul>
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Automatic execution</li>
+                    <li>Repeatable</li>
+                    <li>Time-saving</li>
+                    <li>Reliable</li>
+                    <li>Scalable</li>
+                </ul>
+                <h3>Uses</h3>
+                <ul>
+                    <li>Email automation</li>
+                    <li>Customer support</li>
+                    <li>Report generation</li>
+                    <li>Lead management</li>
+                    <li>Data processing</li>
+                </ul>
+                <h3>Workflow</h3>
+                <div class="diagram-box">Trigger<br>↓</div>
+                <h3>Workflow</h3>
+                <div class="diagram-box">↓<br>AI Processing<br>↓<br>Action<br>↓<br>Result</div>
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    A customer submits a form.<br>The workflow:<br>Stores the data in Google Sheets.<br>Uses AI to summarize the request.<br>Sends an email confirmation.<br>Notifies the support team on Slack.
+                </div>
+                <h3>Real-Life Analogy</h3>
+                <p>Imagine an office assistant who receives a request, updates records, sends emails, and informs the team without being reminded each time.</p>
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    Automation reduces repetitive manual work by allowing software and AI to perform tasks automatically.
+                </div>
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Design workflows with clear triggers, actions, and error handling to make automations reliable.
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 2: n8n</h2>
+                <h3>Definition</h3>
+                <p>n8n is an open-source workflow automation platform that connects applications, APIs, databases, and AI models without requiring extensive coding.</p>
+                <h3>Why is it Important?</h3>
+                <ul>
+                    <li>n8n enables you to:</li>
+                    <li>Connect multiple apps.</li>
+                    <li>Automate business workflows.</li>
+                    <li>Integrate AI with external services.</li>
+                    <li>Build no-code or low-code solutions.</li>
+                </ul>
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Open source</li>
+                    <li>Visual workflow editor</li>
+                    <li>Hundreds of integrations</li>
+                    <li>Supports custom code</li>
+                    <li>AI-ready</li>
+                </ul>
+                <h3>Uses</h3>
+                <ul>
+                    <li>AI chatbots</li>
+                    <li>CRM automation</li>
+                    <li>Email workflows</li>
+                    <li>Lead generation</li>
+                    <li>Social media automation</li>
+                </ul>
+                <h3>Workflow</h3>
+                <div class="diagram-box">Trigger<br>↓<br>Google Sheets<br>↓<br>OpenAI<br>↓<br>Email<br>↓<br>Slack</div>
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    When a new customer fills out a contact form:<br>Save the data to Google Sheets.<br>Generate an AI summary.<br>Send a welcome email.<br>Notify the sales team in Slack.
+                </div>
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    n8n is widely used to build AI-powered automation workflows without writing large amounts of code.
+                </div>
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Keep workflows modular so individual steps can be reused in multiple automations.
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 3: APIs & API Integration</h2>
+                <h3>Definition</h3>
+                <p>An API (Application Programming Interface) is a set of rules that allows two software applications to communicate and exchange data.<br>API Integration connects different applications so they can share information and perform tasks together.</p>
+                <h3>Why is it Important?</h3>
+                <ul>
+                    <li>APIs allow AI to:</li>
+                    <li>Access external services.</li>
+                    <li>Send and receive data.</li>
+                    <li>Trigger workflows.</li>
+                    <li>Integrate with business systems.</li>
+                </ul>
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Standardized communication</li>
+                    <li>Secure</li>
+                    <li>Fast</li>
+                    <li>Scalable</li>
+                </ul>
+                <h3>Uses</h3>
+                <ul>
+                    <li>AI applications</li>
+                    <li>Payment systems</li>
+                    <li>Weather services</li>
+                    <li>Maps</li>
+                    <li>Databases</li>
+                </ul>
+                <h3>Workflow</h3>
+                <div class="diagram-box">User Request<br>↓<br>API Request<br>↓<br>External Service<br>↓<br>API Response<br>↓<br>Application</div>
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    A chatbot sends a request to a weather API to retrieve today's forecast before answering the user.
+                </div>
+                <h3>Real-Life Analogy</h3>
+                <p>An API is like a waiter in a restaurant: it takes your order to the kitchen and brings the finished meal back to you.</p>
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    APIs allow software systems to exchange information and perform actions without needing to know each other's internal implementation.
+                </div>
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Always validate API responses and handle errors gracefully.
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 4: Webhooks</h2>
+                <h3>Definition</h3>
+                <p>A Webhook is a mechanism that automatically sends data from one application to another when a specific event occurs.<br>Unlike APIs, which are usually requested by the client, webhooks push information as soon as an event happens.</p>
+                <h3>Why is it Important?</h3>
+                <ul>
+                    <li>Webhooks:</li>
+                    <li>Enable real-time automation.</li>
+                    <li>Eliminate constant polling.</li>
+                    <li>Trigger workflows immediately.</li>
+                </ul>
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Event-driven</li>
+                    <li>Real-time</li>
+                    <li>Automatic</li>
+                    <li>Efficient</li>
+                </ul>
+                <h3>Uses</h3>
+                <ul>
+                    <li>Payment notifications</li>
+                    <li>Form submissions</li>
+                    <li>GitHub events</li>
+                    <li>CRM updates</li>
+                </ul>
+                <h3>Workflow</h3>
+                <div class="diagram-box">Event<br>↓<br>Webhook<br>↓<br>n8n Workflow<br>↓<br>AI Processing<br>↓<br>Result</div>
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    A customer submits a support form.<br>The form sends a webhook to n8n, which starts an AI workflow instantly.
+                </div>
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    Webhooks push data automatically when an event occurs, while APIs often require a request to retrieve data.
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 5: Google Sheets Integration</h2>
+                <h3>Definition</h3>
+                <p>Google Sheets Integration allows AI workflows to read, write, update, and manage spreadsheet data automatically.</p>
+                <h3>Why is it Important?</h3>
+                <p>Google Sheets is commonly used as a lightweight database for AI applications.</p>
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Cloud-based</li>
+                    <li>Easy to integrate</li>
+                    <li>Collaborative</li>
+                    <li>Low cost</li>
+                </ul>
+                <h3>Uses</h3>
+                <ul>
+                    <li>Student records</li>
+                    <li>CRM</li>
+                    <li>Attendance</li>
+                    <li>AI logs</li>
+                    <li>Lead tracking</li>
+                </ul>
+                <h3>Workflow</h3>
+                <div class="diagram-box">Form Submission<br>↓<br>Google Sheets<br>↓<br>AI Analysis<br>↓<br>Updated Spreadsheet</div>
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    An AI course registration form automatically stores student information in Google Sheets.
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 6: Gmail Integration</h2>
+                <h3>Definition</h3>
+                <p>Gmail Integration enables AI workflows to automatically send, receive, summarize, classify, and manage emails.</p>
+                <h3>Why is it Important?</h3>
+                <ul>
+                    <li>AI can:</li>
+                    <li>Send notifications.</li>
+                    <li>Draft replies.</li>
+                    <li>Categorize emails.</li>
+                    <li>Generate summaries.</li>
+                </ul>
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Automated</li>
+                    <li>Personalized</li>
+                    <li>Fast</li>
+                    <li>Reliable</li>
+                </ul>
+                <h3>Uses</h3>
+                <ul>
+                    <li>Welcome emails</li>
+                    <li>Customer support</li>
+                    <li>Follow-ups</li>
+                    <li>Reports</li>
+                </ul>
+                <h3>Workflow</h3>
+                <div class="diagram-box">AI Generates Email<br>↓<br>Gmail<br>↓<br>Recipient</div>
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    After a user completes a purchase, AI automatically sends an order confirmation email.
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 7: Slack Integration</h2>
+                <h3>Definition</h3>
+                <p>Slack Integration allows AI to send messages, summarize discussions, notify teams, and automate collaboration inside Slack workspaces.</p>
+                <h3>Why is it Important?</h3>
+                <p>Slack helps teams receive important AI-generated updates in real time.</p>
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Team communication</li>
+                    <li>Instant notifications</li>
+                    <li>AI summaries</li>
+                    <li>Workflow automation</li>
+                </ul>
+                <h3>Uses</h3>
+                <ul>
+                    <li>Team alerts</li>
+                    <li>Daily reports</li>
+                    <li>Customer support</li>
+                    <li>AI assistants</li>
+                </ul>
+                <h3>Workflow</h3>
+                <div class="diagram-box">AI Workflow<br>↓<br>Slack<br>↓<br>Team Notification</div>
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    When a high-priority support ticket is created, AI summarizes it and posts the summary to the support Slack channel.
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 8: Building End-to-End AI Workflows</h2>
+                <h3>Definition</h3>
+                <p>An End-to-End AI Workflow combines triggers, AI processing, APIs, databases, and external applications into one complete automation.</p>
+                <h3>Why is it Important?</h3>
+                <p>It enables businesses to automate complete processes from start to finish.</p>
+                <h3>Workflow</h3>
+                <div class="diagram-box">Customer Form<br>↓<br>Webhook<br>↓<br>n8n<br>↓<br>OpenAI<br>↓<br>Google Sheets<br>↓<br>Gmail<br>↓<br>Slack<br>↓<br>Completed Workflow</div>
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    A customer submits a contact form.<br>The workflow:<br>Receives the submission through a webhook.<br>Stores the data in Google Sheets.<br>Uses AI to classify the inquiry.<br>Sends a personalized email.<br>Notifies the sales team on Slack.
+                </div>
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    An End-to-End AI Workflow connects multiple tools and services to automate an entire business process without manual intervention.
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>🚀 Mini Project: AI Business Automation Assistant</h2>
+                <h3>Project Objective</h3>
+                <p>Build an AI-powered automation system that manages customer inquiries automatically.</p>
+                <h3>Features</h3>
+                <p>Receive customer inquiries through a web form.<br>Trigger an n8n workflow.<br>Classify the inquiry using an LLM.<br>Save customer details in Google Sheets.<br>Send a personalized Gmail response.<br>Notify the sales or support team in Slack.<br>Log workflow status for monitoring.</p>
+                <h3>Technology Stack</h3>
+                <ul>
+                    <li>n8n</li>
+                    <li>OpenAI API (or another LLM)</li>
+                    <li>Google Sheets</li>
+                    <li>Gmail</li>
+                    <li>Slack</li>
+                    <li>Webhooks</li>
+                    <li>FastAPI or Flask (optional)</li>
+                </ul>
+                <h3>Sample Workflow</h3>
+                <div class="highlight-box">
+                    Customer Form<br>↓<br>Webhook<br>↓<br>n8n<br>↓<br>LLM<br>↓<br>Google Sheets<br>↓<br>Gmail<br>↓<br>Slack<br>↓<br>Workflow Completed
+                </div>
+            </div>
+
+            <!-- Module Summary -->
+            <div class="lesson-card" style="background: rgba(34, 197, 94, 0.05); border-left: 4px solid #22c55e;">
+                <h2>🎓 Skills Learned</h2>
+                <p>This module provides a comprehensive understanding of AI Automation, APIs, Webhooks, n8n, and integrating various services like Google Sheets, Gmail, and Slack to build powerful end-to-end automated business workflows.</p>
+            </div>
+
+            <!-- Quiz Section -->
+            <div class="lesson-card" style="border: 2px solid var(--primary-color); background: rgba(37,99,235,0.02);">
+                <h2 style="border-bottom: none; margin-bottom: 10px;">📝 Module 12 Assessment</h2>
+                <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- MCQ 1 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q1. What is the primary purpose of n8n?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="A" style="margin-right: 10px;">A) Train machine learning models</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="B" style="margin-right: 10px;">B) Build workflow automations connecting multiple applications</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="C" style="margin-right: 10px;">C) Store vector embeddings</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="D" style="margin-right: 10px;">D) Edit videos</label>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 2 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q2. What is an API?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="A" style="margin-right: 10px;">A) A database</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="B" style="margin-right: 10px;">B) A programming language</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="C" style="margin-right: 10px;">C) A set of rules that allows software applications to communicate and exchange data</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="D" style="margin-right: 10px;">D) A spreadsheet</label>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 3 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q3. What is the main difference between an API and a Webhook?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="A" style="margin-right: 10px;">A) APIs are only used for AI.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="B" style="margin-right: 10px;">B) Webhooks automatically push data when an event occurs, while APIs usually respond to requests.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="C" style="margin-right: 10px;">C) Webhooks replace databases.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="D" style="margin-right: 10px;">D) APIs cannot send data.</label>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 4 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q4. Why is Google Sheets commonly used in AI workflows?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="A" style="margin-right: 10px;">A) It trains LLMs.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="B" style="margin-right: 10px;">B) It serves as a lightweight cloud-based database for storing and managing structured data.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="C" style="margin-right: 10px;">C) It generates images.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="D" style="margin-right: 10px;">D) It replaces APIs.</label>
+                        </div>
+                    </div>
+                    
+                    <!-- MCQ 5 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q5. In an AI automation workflow, what is Slack commonly used for?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="A" style="margin-right: 10px;">A) Training AI models</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="B" style="margin-right: 10px;">B) Vector similarity search</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="C" style="margin-right: 10px;">C) Team communication, notifications, and workflow updates</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="D" style="margin-right: 10px;">D) Image generation</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation to Next Module -->
+            <div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
+                <a href="/academy/module13" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    Move Next Module 13 &rarr;
+                </a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarDrawer = document.getElementById('sidebarDrawer');
+
+    if (menuToggleBtn) menuToggleBtn.addEventListener('click', () => { sidebarDrawer.classList.add('open'); sidebarOverlay.classList.add('show'); });
+    if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', () => { sidebarDrawer.classList.remove('open'); sidebarOverlay.classList.remove('show'); });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', () => { sidebarDrawer.classList.remove('open'); sidebarOverlay.classList.remove('show'); });
+</script>
+{% endblock %}

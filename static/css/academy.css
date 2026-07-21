@@ -916,3 +916,233 @@
     margin-top: 48px;
 }
 
+
+
+/* ==========================================================================
+   ROADMAP ACCORDION (Microsoft Learn / Coursera Inspired)
+   ========================================================================== */
+.roadmap-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
+.rm-module-card {
+    background: var(--ac-card-bg);
+    border: 1px solid var(--ac-border);
+    border-radius: var(--ac-radius-lg);
+    overflow: hidden;
+    transition: var(--ac-transition);
+}
+
+.rm-module-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: var(--ac-shadow-md);
+}
+
+.rm-module-card.expanded {
+    border-color: var(--ac-primary);
+    box-shadow: var(--ac-shadow-lg);
+}
+
+.rm-module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 32px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.rm-module-header:hover {
+    background-color: #F8FAFC;
+}
+
+.rm-module-card.expanded .rm-module-header {
+    background-color: #F8FAFC;
+    border-bottom: 1px solid var(--ac-border);
+}
+
+.rm-module-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.rm-icon {
+    font-size: 24px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ac-icon-bg);
+    border-radius: var(--ac-radius-md);
+    flex-shrink: 0;
+}
+
+.rm-titles {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rm-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ac-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rm-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ac-text-primary);
+    margin: 0;
+}
+
+.rm-module-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.rm-meta {
+    font-size: 14px;
+    color: var(--ac-text-secondary);
+    font-weight: 500;
+}
+
+.rm-arrow {
+    color: var(--ac-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rm-module-card.expanded .rm-arrow {
+    transform: rotate(180deg);
+    color: var(--ac-primary);
+}
+
+.rm-module-body {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rm-module-card.expanded .rm-module-body {
+    grid-template-rows: 1fr;
+}
+
+.rm-body-content {
+    overflow: hidden;
+    padding: 0 32px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    transition-delay: 0s;
+}
+
+.rm-module-card.expanded .rm-body-content {
+    padding: 32px;
+    opacity: 1;
+    transition-delay: 0.15s;
+}
+
+.rm-section {
+    margin-bottom: 24px;
+}
+
+.rm-section:last-child {
+    margin-bottom: 0;
+}
+
+.rm-section h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ac-text-primary);
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rm-section p {
+    font-size: 15px;
+    color: var(--ac-text-secondary);
+    margin: 0;
+    line-height: 1.6;
+}
+
+.rm-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+.rm-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 15px;
+    color: var(--ac-text-secondary);
+    line-height: 1.4;
+}
+
+.rm-check {
+    color: var(--ac-success);
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.rm-project-card {
+    background: #F8FAFC;
+    border: 1px solid var(--ac-border);
+    border-radius: var(--ac-radius-sm);
+    padding: 16px 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rm-proj-icon {
+    font-size: 20px;
+}
+
+.rm-proj-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ac-text-primary);
+}
+
+@media (max-width: 768px) {
+    .rm-module-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 20px;
+    }
+    .rm-module-right {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .rm-arrow {
+        margin-left: auto;
+    }
+    .rm-body-content {
+        padding: 0 20px;
+    }
+    .rm-module-card.expanded .rm-body-content {
+        padding: 24px 20px;
+    }
+    .rm-list {
+        grid-template-columns: 1fr;
+    }
+}
+
