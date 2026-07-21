@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Academy - Module 6</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=9">
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
+    
+<link rel="stylesheet" href="/static/css/gallery.css?v=3">
+<link rel="stylesheet" href="/static/css/tools.css">
+<link rel="stylesheet" href="/static/css/academy.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    .module-container {
+        max-width: 960px;
+        margin: 60px auto;
+        padding: 0 24px;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .lesson-card {
+        background: var(--color-bg-secondary);
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 40px;
+        border: 1px solid var(--color-border);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .lesson-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .lesson-card h2 {
+        color: var(--primary-color);
+        margin-top: 0;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 700;
+        border-bottom: 2px solid rgba(37, 99, 235, 0.1);
+        padding-bottom: 16px;
+        line-height: 1.3;
+    }
+
+    .lesson-card h3 {
+        margin-top: 32px;
+        margin-bottom: 16px;
+        color: var(--color-text-primary);
+        font-size: 22px;
+        font-weight: 600;
+    }
+    
+    .lesson-card h4 {
+        margin-top: 24px;
+        margin-bottom: 12px;
+        color: var(--color-text-primary);
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .lesson-card p,
+    .lesson-card ul,
+    .lesson-card li {
+        color: var(--color-text-secondary);
+        line-height: 1.8;
+        font-size: 16px;
+    }
+
+    .lesson-card ul,
+    .lesson-card ol {
+        padding-left: 24px;
+        margin-bottom: 24px;
+    }
+
+    .lesson-card li {
+        margin-bottom: 12px;
+    }
+
+    .highlight-box {
+        background: linear-gradient(90deg, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%);
+        border-left: 4px solid var(--primary-color);
+        padding: 24px;
+        margin: 24px 0;
+        border-radius: 0 12px 12px 0;
+    }
+    
+    .highlight-box h3 {
+        margin-top: 0;
+        color: var(--primary-color);
+    }
+
+    .diagram-box {
+        background: var(--color-bg-primary);
+        padding: 24px;
+        border-radius: 12px;
+        font-family: monospace;
+        white-space: pre-line;
+        margin: 24px 0;
+        border: 1px dashed var(--color-border);
+        color: var(--color-text-primary);
+        text-align: center;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+        line-height: 1.6;
+        font-size: 15px;
+    }
+    
+    @media (max-width: 768px) {
+        .module-container {
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+        .lesson-card {
+            padding: 24px;
+            border-radius: 12px;
+        }
+        .lesson-card h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .lesson-card h3 {
+            font-size: 20px;
+        }
+        .diagram-box {
+            font-size: 14px;
+            padding: 16px;
+        }
+        .highlight-box {
+            padding: 16px;
+        }
+    }
+</style>
+
+    
+    <script>
+        window.FIREBASE_CONFIG = {"apiKey": "YOUR_FIREBASE_API_KEY", "appId": "YOUR_FIREBASE_APP_ID", "authDomain": "YOUR_FIREBASE_AUTH_DOMAIN", "messagingSenderId": "YOUR_FIREBASE_MESSAGING_SENDER_ID", "projectId": "YOUR_FIREBASE_PROJECT_ID", "storageBucket": "YOUR_FIREBASE_STORAGE_BUCKET"};
+    </script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <!-- Global Modal Backdrop -->
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+
+    <!-- Global Prompt Preview Modal -->
+    <div id="prompt-modal" class="modal-overlay">
+        <div class="modal-header">
+            <div id="modal-platform" class="platform-badge">MIDJOURNEY</div>
+            <button id="close-modal" class="close-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-image-container">
+            <img id="modal-image" src="" alt="Prompt Preview">
+        </div>
+        <div class="modal-content">
+            <h2 id="modal-title" class="text-h3 mb-2">Prompt Title</h2>
+            <div id="modal-price" class="price-badge mb-4" style="position:static; display:inline-block">₹2</div>
+            
+            <div class="modal-actions">
+                <button class="action-btn" id="modal-wishlist">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Wishlist</span>
+                </button>
+                <button class="action-btn" id="modal-share" onclick="sharePrompt(currentPrompt)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    <span>Share</span>
+                </button>
+                <button class="action-btn" id="modal-report" onclick="openReportModal(currentPrompt)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                    <span>Report</span>
+                </button>
+            </div>
+            
+            <button id="modal-primary-action" class="btn btn-primary mt-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span class="btn-text">🔒 UNLOCK PROMPT</span>
+            </button>
+        </div>
+    </div>
+
+    
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar-drawer" id="sidebarDrawer">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-left">
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
+                alt="Logo">
+            Prompt Bazaar
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
+        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
+        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
+        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon">🎓</span> Prompt Academy</a>
+    </nav>
+    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+</aside>
+
+<div class="gallery-layout">
+    <header class="gallery-header">
+        <div class="header-left">
+            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
+                alt="Logo">
+            Prompt Bazaar
+        </div>
+        <div class="header-right">
+            <div class="xp-badge" id="user-xp-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                    </polygon>
+                </svg>
+                <span id="user-xp-amount">0</span> XP
+            </div>
+            <a href="/profile" class="user-avatar" title="Profile">
+                
+                U
+                
+            </a>
+        </div>
+    </header>
+
+    <main class="academy-main-content">
+        <div class="module-container">
+            <a href="/academy" class="btn btn-secondary" style="margin-bottom: 24px;">&larr; Back to Academy Roadmap</a>
+            <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">📘 Module 6: Prompt Engineering Frameworks</h1>
+            <div class="lesson-card">
+                <h2>📖 Lesson 1: RTF Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>R – Role</li>
+                    <li>T – Task</li>
+                    <li>F – Format</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>The RTF Framework is one of the simplest prompt engineering frameworks. It helps create clear prompts by defining:<br>Role → Who the AI should act as.<br>Task → What the AI should do.<br>Format → How the output should be presented.</p>
+                <h3>Why is it Important?</h3>
+                <p>RTF makes prompts:<br>Clear<br>Organized<br>Easy to understand<br>Easy to reuse</p>
+                <h3>Framework Components</h3>
+                <ul>
+                    <li>Role</li>
+                    <li>Task</li>
+                    <li>Format</li>
+                </ul>
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Beginner-friendly</li>
+                    <li>Simple</li>
+                    <li>Reusable</li>
+                    <li>Professional</li>
+                </ul>
+                <h3>Uses</h3>
+                <p>Blog Writing<br>Coding<br>Resume Generation<br>Teaching<br>Email Writing</p>
+                <h3>Workflow</h3>
+                <div class="diagram-box">Role<br>↓<br>Task<br>↓<br>Format<br>↓<br>AI Response</div>
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    Role:<br>Senior Python Developer<br>Task:<br>Explain Python Lists<br>Format:<br>Markdown with examples
+                </div>
+                <h3>Real-Life Analogy</h3>
+                <p>Imagine hiring an employee.<br>You tell them:<br>Who they are.<br>What work to do.<br>How to submit the work.<br>That is exactly how RTF works.</p>
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    RTF is one of the easiest frameworks for writing structured prompts.
+                </div>
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Always define the Role first.
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 2: RISEN Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>R – Role</li>
+                    <li>I – Instructions</li>
+                    <li>S – Steps</li>
+                    <li>E – End Goal</li>
+                    <li>N – Narrow Constraints</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>RISEN is a structured prompting framework that provides the AI with a clear role, detailed instructions, step-by-step guidance, the desired outcome, and specific constraints.</p>
+                <h3>Why is it Important?</h3>
+                <p>It produces:<br>More accurate responses<br>Better reasoning<br>Clear objectives<br>Consistent outputs</p>
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Structured</li>
+                    <li>Goal-oriented</li>
+                    <li>Detailed</li>
+                    <li>High accuracy</li>
+                </ul>
+                <h3>Uses</h3>
+                <p>Business Reports<br>Coding<br>Research<br>AI Assistants</p>
+                <h3>Workflow</h3>
+                <div class="diagram-box">Role<br>↓<br>Instructions<br>↓<br>Steps<br>↓<br>End Goal<br>↓<br>Constraints<br>↓<br>Response</div>
+                <h3>Example</h3>
+                <div class="highlight-box">
+                    Role:<br>Senior Data Scientist<br>Instructions:<br>Explain Linear Regression.<br>Steps:<br>Start with the definition.<br>Explain the formula.<br>Give a real-world example.<br>Goal:<br>Teach beginners.<br>Constraints:<br>Simple English.
+                </div>
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    RISEN is commonly used for educational and business prompts because it provides detailed guidance.
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 3: COAST Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>C – Context</li>
+                    <li>O – Objective</li>
+                    <li>A – Actions</li>
+                    <li>S – Scenario</li>
+                    <li>T – Task</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>COAST provides the AI with background information, a clear objective, required actions, the situation, and the final task to complete.</p>
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Context-driven</li>
+                    <li>Goal-focused</li>
+                    <li>Action-oriented</li>
+                </ul>
+                <h3>Uses</h3>
+                <p>Business Planning<br>Marketing<br>Consulting<br>AI Agents</p>
+                <h3>Example</h3>
+                <div class="highlight-box">
+                    Context → Startup launching an AI product<br>Objective → Increase sales<br>Actions → Analyze competitors<br>Scenario → Indian Market<br>Task → Suggest a marketing strategy
+                </div>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 4: CARE Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>C – Context</li>
+                    <li>A – Action</li>
+                    <li>R – Result</li>
+                    <li>E – Example</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>CARE helps AI understand the situation, perform the required action, achieve the desired result, and follow an example if provided.</p>
+                <h3>Uses</h3>
+                <p>Customer Support<br>Content Writing<br>AI Assistants</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 5: TAG Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>T – Task</li>
+                    <li>A – Action</li>
+                    <li>G – Goal</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>TAG is a lightweight framework that focuses on clearly defining the task, the required action, and the final goal.</p>
+                <h3>Uses</h3>
+                <p>Quick prompts<br>Chatbots<br>Email writing</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 6: APE Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>A – Action</li>
+                    <li>P – Purpose</li>
+                    <li>E – Expectation</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>APE defines what the AI should do, why it should do it, and what the expected outcome should be.</p>
+                <h3>Uses</h3>
+                <p>Business AI<br>Marketing<br>Reports</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 7: BROKE Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>B – Background</li>
+                    <li>R – Role</li>
+                    <li>O – Objective</li>
+                    <li>K – Key Result</li>
+                    <li>E – Examples</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>BROKE provides detailed background information before assigning a role and objective to the AI.</p>
+                <h3>Uses</h3>
+                <p>Enterprise AI<br>Research<br>Strategic Planning</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 8: SMART Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>S – Specific</li>
+                    <li>M – Measurable</li>
+                    <li>A – Achievable</li>
+                    <li>R – Relevant</li>
+                    <li>T – Time-bound</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>SMART is adapted from project management and helps create prompts with clear, measurable objectives and deadlines.</p>
+                <h3>Uses</h3>
+                <p>Goal Planning<br>Productivity<br>Project Management</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 9: CRISPE Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>C – Capacity</li>
+                    <li>R – Role</li>
+                    <li>I – Insight</li>
+                    <li>S – Statement</li>
+                    <li>P – Personality</li>
+                    <li>E – Experiment</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>CRISPE is a detailed framework that combines role assignment, domain expertise, communication style, and experimentation.</p>
+                <h3>Uses</h3>
+                <p>Consulting<br>AI Coaching<br>Expert Systems</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 10: RACE Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>R – Role</li>
+                    <li>A – Action</li>
+                    <li>C – Context</li>
+                    <li>E – Expectation</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>RACE provides a balanced structure for assigning a role, defining an action, providing context, and specifying the expected output.</p>
+                <h3>Uses</h3>
+                <p>General-purpose prompting<br>AI Assistants</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 11: CREATE Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>C – Context</li>
+                    <li>R – Role</li>
+                    <li>E – Example</li>
+                    <li>A – Action</li>
+                    <li>T – Task</li>
+                    <li>E – Expectation</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>CREATE is a comprehensive framework for designing detailed prompts that combine context, examples, and expected outcomes.</p>
+                <h3>Uses</h3>
+                <p>Enterprise AI<br>Documentation<br>Training Materials</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 12: TRACE Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>T – Task</li>
+                    <li>R – Role</li>
+                    <li>A – Action</li>
+                    <li>C – Context</li>
+                    <li>E – Expectation</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>TRACE ensures the AI understands the task, role, required actions, context, and expected response.</p>
+                <h3>Uses</h3>
+                <p>Technical Writing<br>Coding<br>Documentation</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 13: PACE Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>P – Purpose</li>
+                    <li>A – Action</li>
+                    <li>C – Context</li>
+                    <li>E – Expectation</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>PACE emphasizes why the task is being performed before defining actions and expected results.</p>
+                <h3>Uses</h3>
+                <p>Business Planning<br>AI Assistants</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 14: PECRA Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>P – Purpose</li>
+                    <li>E – Expectation</li>
+                    <li>C – Context</li>
+                    <li>R – Role</li>
+                    <li>A – Action</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>PECRA combines purpose, expectations, context, role assignment, and required actions into one structured framework.</p>
+                <h3>Uses</h3>
+                <p>Project Planning<br>AI Consulting</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 15: CLEAR Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>C – Context</li>
+                    <li>L – Language</li>
+                    <li>E – Examples</li>
+                    <li>A – Audience</li>
+                    <li>R – Requirements</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>CLEAR helps generate responses tailored to a specific audience with appropriate language and examples.</p>
+                <h3>Uses</h3>
+                <p>Education<br>Marketing<br>Documentation</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 16: COSTAR Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>C – Context</li>
+                    <li>O – Objective</li>
+                    <li>S – Style</li>
+                    <li>T – Tone</li>
+                    <li>A – Audience</li>
+                    <li>R – Response Format</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>COSTAR is one of the most popular professional prompting frameworks. It defines the context, objective, writing style, tone, target audience, and response format to generate highly customized outputs.</p>
+                <h3>Uses</h3>
+                <p>Content Writing<br>Business Communication<br>Marketing<br>Professional Documentation</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 17: ICE Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>I – Intent</li>
+                    <li>C – Context</li>
+                    <li>E – Expectation</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>ICE is a minimal framework that focuses on user intent, relevant context, and the desired output.</p>
+                <h3>Uses</h3>
+                <p>Chatbots<br>Customer Support</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 18: STAR Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>S – Situation</li>
+                    <li>T – Task</li>
+                    <li>A – Action</li>
+                    <li>R – Result</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>STAR is widely used in interviews and prompt engineering to describe a situation, define the task, explain the action taken, and present the final result.</p>
+                <h3>Uses</h3>
+                <p>Behavioral Interviews<br>Case Studies<br>Project Reports</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 19: ReAct Framework</h2>
+                <h3>Full Form</h3>
+                <ul>
+                    <li>ReAct = Reason + Act</li>
+                </ul>
+                <h3>Definition</h3>
+                <p>ReAct combines reasoning with actions. The AI first reasons about the problem, then decides whether it needs to use external tools or perform actions before producing the final answer.</p>
+                <h3>Workflow</h3>
+                <div class="diagram-box">Question<br>↓<br>Reason<br>↓<br>Choose Tool<br>↓<br>Observe Result<br>↓<br>Reason Again<br>↓<br>Final Answer</div>
+                <h3>Uses</h3>
+                <p>AI Agents<br>Web Search<br>Tool Calling<br>Autonomous Systems</p>
+            </div>
+            <div class="lesson-card">
+                <h2>📖 Lesson 20: Chain of Density (CoD)</h2>
+                <h3>Definition</h3>
+                <p>Chain of Density (CoD) is a summarization technique where the AI repeatedly rewrites a summary, making it denser by including more important information while keeping the length nearly the same.</p>
+                <h3>Why is it Important?</h3>
+                <p>CoD creates summaries that are:<br>More informative<br>More concise<br>Rich in key details</p>
+                <h3>Workflow</h3>
+                <div class="diagram-box">Original Text<br>↓<br>Summary V1<br>↓<br>Add Important Details<br>↓<br>Summary V2<br>↓<br>Repeat<br>↓<br>Dense Final Summary</div>
+                <h3>Uses</h3>
+                <p>Research Papers<br>News Summaries<br>Reports<br>Executive Briefs</p>
+            </div>
+
+            <!-- Navigation to Next Module -->
+            <div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
+                <a href="/academy/module7" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    Move Next Module 7 &rarr;
+                </a>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarDrawer = document.getElementById('sidebarDrawer');
+
+    if (menuToggleBtn) menuToggleBtn.addEventListener('click', () => { sidebarDrawer.classList.add('open'); sidebarOverlay.classList.add('show'); });
+    if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', () => { sidebarDrawer.classList.remove('open'); sidebarOverlay.classList.remove('show'); });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', () => { sidebarDrawer.classList.remove('open'); sidebarOverlay.classList.remove('show'); });
+</script>
+
+    
+    <!-- Web Push Notifications -->
+    <script type="module" src="/static/js/notifications.js?v=3"></script>
+
+    
+</body>
+</html>

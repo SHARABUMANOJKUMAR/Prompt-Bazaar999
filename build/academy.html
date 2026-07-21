@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Academy - Prompt Bazaar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=9">
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
+    
+<link rel="stylesheet" href="/static/css/gallery.css?v=3">
+<link rel="stylesheet" href="/static/css/tools.css">
+<link rel="stylesheet" href="/static/css/academy.css">
+
+    
+    <script>
+        window.FIREBASE_CONFIG = {"apiKey": "YOUR_FIREBASE_API_KEY", "appId": "YOUR_FIREBASE_APP_ID", "authDomain": "YOUR_FIREBASE_AUTH_DOMAIN", "messagingSenderId": "YOUR_FIREBASE_MESSAGING_SENDER_ID", "projectId": "YOUR_FIREBASE_PROJECT_ID", "storageBucket": "YOUR_FIREBASE_STORAGE_BUCKET"};
+    </script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <!-- Global Modal Backdrop -->
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+
+    <!-- Global Prompt Preview Modal -->
+    <div id="prompt-modal" class="modal-overlay">
+        <div class="modal-header">
+            <div id="modal-platform" class="platform-badge">MIDJOURNEY</div>
+            <button id="close-modal" class="close-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-image-container">
+            <img id="modal-image" src="" alt="Prompt Preview">
+        </div>
+        <div class="modal-content">
+            <h2 id="modal-title" class="text-h3 mb-2">Prompt Title</h2>
+            <div id="modal-price" class="price-badge mb-4" style="position:static; display:inline-block">₹2</div>
+            
+            <div class="modal-actions">
+                <button class="action-btn" id="modal-wishlist">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Wishlist</span>
+                </button>
+                <button class="action-btn" id="modal-share" onclick="sharePrompt(currentPrompt)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    <span>Share</span>
+                </button>
+                <button class="action-btn" id="modal-report" onclick="openReportModal(currentPrompt)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                    <span>Report</span>
+                </button>
+            </div>
+            
+            <button id="modal-primary-action" class="btn btn-primary mt-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span class="btn-text">🔒 UNLOCK PROMPT</span>
+            </button>
+        </div>
+    </div>
+
+    
+<!-- Sidebar Drawer (shared) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar-drawer" id="sidebarDrawer">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-left">
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
+                alt="Logo">
+            Prompt Bazaar
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
+        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
+        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
+        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon">🎓</span> Prompt Academy</a>
+    </nav>
+    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+</aside>
+
+<div class="gallery-layout">
+    <!-- Top Navbar -->
+    <header class="gallery-header">
+        <div class="header-left">
+            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
+                alt="Logo">
+            Prompt Bazaar
+        </div>
+        <div class="header-right">
+            <div class="xp-badge" id="user-xp-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                    </polygon>
+                </svg>
+                <span id="user-xp-amount">0</span> XP
+            </div>
+            <a href="/profile" class="user-avatar" title="Profile">
+                
+                U
+                
+            </a>
+        </div>
+    </header>
+
+    <main class="academy-main-content">
+        <!-- SECTION 1: HERO -->
+        <section class="academy-hero">
+            <div class="hero-content">
+                <div class="hero-badge">New</div>
+                <h1 class="hero-title">🎓 Prompt Academy</h1>
+                <h2 class="hero-subtitle">Learn Prompt Engineering From Beginner to AI Expert</h2>
+                <p class="hero-description">Master Prompt Engineering, Large Language Models (LLMs), AI Agents,
+                    Retrieval-Augmented Generation (RAG), AI Automation, and AI Product Development through structured
+                    lessons, quizzes, projects, AI playgrounds, and certifications.</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">17</span>
+                        <span class="stat-label">Modules</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">183</span>
+                        <span class="stat-label">Lessons</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">8</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">8</span>
+                        <span class="stat-label">Weeks</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" id="startLearningBtn">Start Learning</button>
+                    <button class="btn btn-secondary"
+                        onclick="document.getElementById('learning-roadmap').scrollIntoView({behavior: 'smooth'})">Browse
+                        Modules</button>
+                </div>
+            </div>
+            <div class="hero-illustration">
+                <div class="floating-icons">
+                    <div class="float-icon icon-brain"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg></div>
+                    <div class="float-icon icon-robot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                            <circle cx="12" cy="5" r="2"></circle>
+                            <path d="M12 7v4M8 16h.01M16 16h.01"></path>
+                        </svg></div>
+                    <div class="float-icon icon-code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg></div>
+                    <div class="float-icon icon-llm"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg></div>
+                    <div class="float-icon icon-prompt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                            <line x1="9" y1="20" x2="15" y2="20"></line>
+                            <line x1="12" y1="4" x2="12" y2="20"></line>
+                        </svg></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: FEATURES -->
+        <section class="academy-features">
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon bg-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                        </svg></div>
+                    <h3>Interactive Learning</h3>
+                    <p>Practice playground with hands-on projects and AI tutor.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon bg-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg></div>
+                    <h3>Quizzes & Assessments</h3>
+                    <p>Test your knowledge with quizzes and secure certificates.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon bg-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="8" r="7"></circle>
+                            <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                        </svg></div>
+                    <h3>Progress Tracking</h3>
+                    <p>Earn XP, unlock achievements, and enjoy gamification features.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: LEARNING ROADMAP -->
+
+        <section id="learning-roadmap" class="academy-roadmap">
+            <div class="section-header">
+                <h2>Learning Roadmap</h2>
+                <p>Complete modules in order to unlock the next level of expertise.</p>
+            </div>
+            <div class="roadmap-accordion" id="roadmap-accordion">
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 1</span>
+                                <h3 class="rm-title">AI & Generative AI Foundations</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">17 Lessons</span>
+                            <span class="rm-meta">45 mins</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Goal</h4>
+                                <p>Build a strong understanding of AI before Prompt Engineering.</p>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Lessons</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> What is AI?</li>
+                                    <li><span class="rm-check">✓</span> Machine Learning Basics</li>
+                                    <li><span class="rm-check">✓</span> Deep Learning Basics</li>
+                                    <li><span class="rm-check">✓</span> Neural Networks</li>
+                                    <li><span class="rm-check">✓</span> NLP Fundamentals</li>
+                                    <li><span class="rm-check">✓</span> Transformers Explained</li>
+                                    <li><span class="rm-check">✓</span> LLMs Explained</li>
+                                    <li><span class="rm-check">✓</span> Tokens & Tokenization</li>
+                                    <li><span class="rm-check">✓</span> Context Window</li>
+                                    <li><span class="rm-check">✓</span> Embeddings</li>
+                                    <li><span class="rm-check">✓</span> Hallucinations</li>
+                                    <li><span class="rm-check">✓</span> Temperature</li>
+                                    <li><span class="rm-check">✓</span> Top-P</li>
+                                    <li><span class="rm-check">✓</span> Top-K</li>
+                                    <li><span class="rm-check">✓</span> AI Limitations</li>
+                                    <li><span class="rm-check">✓</span> Responsible AI</li>
+                                    <li><span class="rm-check">✓</span> AI Ethics</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Mini Project / Assignment</h4>
+                                <div class="rm-project-card">
+                                    <span class="rm-proj-icon">💻</span>
+                                    <span class="rm-proj-title">Compare ChatGPT, Claude, Gemini, Grok and
+                                        DeepSeek.</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 2</span>
+                                <h3 class="rm-title">Prompt Engineering Fundamentals</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">12 Lessons</span>
+                            <span class="rm-meta">1 hour</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Lessons</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> What is Prompt Engineering?</li>
+                                    <li><span class="rm-check">✓</span> Prompt Anatomy</li>
+                                    <li><span class="rm-check">✓</span> Prompt Lifecycle</li>
+                                    <li><span class="rm-check">✓</span> Prompt Design Principles</li>
+                                    <li><span class="rm-check">✓</span> Instructions vs Context</li>
+                                    <li><span class="rm-check">✓</span> Delimiters</li>
+                                    <li><span class="rm-check">✓</span> Variables</li>
+                                    <li><span class="rm-check">✓</span> Constraints</li>
+                                    <li><span class="rm-check">✓</span> Output Formatting</li>
+                                    <li><span class="rm-check">✓</span> Examples</li>
+                                    <li><span class="rm-check">✓</span> Negative Prompting</li>
+                                    <li><span class="rm-check">✓</span> Prompt Evaluation</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Mini Project / Assignment</h4>
+                                <div class="rm-project-card">
+                                    <span class="rm-proj-icon">💻</span>
+                                    <span class="rm-proj-title">Write 20 Professional Prompts.</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 3</span>
+                                <h3 class="rm-title">Basic Prompting Techniques</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">9 Lessons</span>
+                            <span class="rm-meta">45 mins</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Lessons</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Zero-shot Prompting</li>
+                                    <li><span class="rm-check">✓</span> One-shot Prompting</li>
+                                    <li><span class="rm-check">✓</span> Few-shot Prompting</li>
+                                    <li><span class="rm-check">✓</span> Multi-shot Prompting</li>
+                                    <li><span class="rm-check">✓</span> Persona Prompting</li>
+                                    <li><span class="rm-check">✓</span> Goal Prompting</li>
+                                    <li><span class="rm-check">✓</span> Step Prompting</li>
+                                    <li><span class="rm-check">✓</span> Output Templates</li>
+                                    <li><span class="rm-check">✓</span> Style Control</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Mini Project / Assignment</h4>
+                                <div class="rm-project-card">
+                                    <span class="rm-proj-icon">💻</span>
+                                    <span class="rm-proj-title">AI Email Generator</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 4</span>
+                                <h3 class="rm-title">Intermediate Prompt Engineering</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">8 Lessons</span>
+                            <span class="rm-meta">1 hour</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Lessons</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Chain of Thought</li>
+                                    <li><span class="rm-check">✓</span> Self Consistency</li>
+                                    <li><span class="rm-check">✓</span> Tree of Thought</li>
+                                    <li><span class="rm-check">✓</span> Prompt Chaining</li>
+                                    <li><span class="rm-check">✓</span> Reflection Prompting</li>
+                                    <li><span class="rm-check">✓</span> Self Critique</li>
+                                    <li><span class="rm-check">✓</span> Verification Prompting</li>
+                                    <li><span class="rm-check">✓</span> Iterative Prompting</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Mini Project / Assignment</h4>
+                                <div class="rm-project-card">
+                                    <span class="rm-proj-icon">💻</span>
+                                    <span class="rm-proj-title">AI Research Assistant</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 5</span>
+                                <h3 class="rm-title">Advanced Prompt Engineering</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">9 Lessons</span>
+                            <span class="rm-meta">1.5 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Lessons</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Meta Prompting</li>
+                                    <li><span class="rm-check">✓</span> Dynamic Prompting</li>
+                                    <li><span class="rm-check">✓</span> Structured Prompting</li>
+                                    <li><span class="rm-check">✓</span> XML Prompting</li>
+                                    <li><span class="rm-check">✓</span> JSON Prompting</li>
+                                    <li><span class="rm-check">✓</span> Markdown Prompting</li>
+                                    <li><span class="rm-check">✓</span> Function Calling</li>
+                                    <li><span class="rm-check">✓</span> Tool Calling</li>
+                                    <li><span class="rm-check">✓</span> Schema-based Prompting</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Mini Project / Assignment</h4>
+                                <div class="rm-project-card">
+                                    <span class="rm-proj-icon">💻</span>
+                                    <span class="rm-proj-title">AI Prompt Generator</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 6</span>
+                                <h3 class="rm-title">Prompt Engineering Frameworks</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">16 Lessons</span>
+                            <span class="rm-meta">2 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Frameworks</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> RTF</li>
+                                    <li><span class="rm-check">✓</span> RISEN</li>
+                                    <li><span class="rm-check">✓</span> COAST</li>
+                                    <li><span class="rm-check">✓</span> CARE</li>
+                                    <li><span class="rm-check">✓</span> TAG</li>
+                                    <li><span class="rm-check">✓</span> APE</li>
+                                    <li><span class="rm-check">✓</span> BROKE</li>
+                                    <li><span class="rm-check">✓</span> SMART</li>
+                                    <li><span class="rm-check">✓</span> CRISPE</li>
+                                    <li><span class="rm-check">✓</span> RACE</li>
+                                    <li><span class="rm-check">✓</span> CREATE</li>
+                                    <li><span class="rm-check">✓</span> TRACE</li>
+                                    <li><span class="rm-check">✓</span> PACE</li>
+                                    <li><span class="rm-check">✓</span> PECRA</li>
+                                    <li><span class="rm-check">✓</span> CLEAR</li>
+                                    <li><span class="rm-check">✓</span> COSTAR</li>
+                                    <li><span class="rm-check">✓</span> ICE</li>
+                                    <li><span class="rm-check">✓</span> STAR</li>
+                                    <li><span class="rm-check">✓</span> ReAct</li>
+                                    <li><span class="rm-check">✓</span> Chain of Density</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Mini Project / Assignment</h4>
+                                <div class="rm-project-card">
+                                    <span class="rm-proj-icon">💻</span>
+                                    <span class="rm-proj-title">Convert one task using every framework.</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 7</span>
+                                <h3 class="rm-title">Domain-Specific Prompting</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">15 Lessons</span>
+                            <span class="rm-meta">1.5 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Domains</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Software Development</li>
+                                    <li><span class="rm-check">✓</span> UI/UX</li>
+                                    <li><span class="rm-check">✓</span> Marketing</li>
+                                    <li><span class="rm-check">✓</span> Sales</li>
+                                    <li><span class="rm-check">✓</span> Resume</li>
+                                    <li><span class="rm-check">✓</span> HR</li>
+                                    <li><span class="rm-check">✓</span> Finance</li>
+                                    <li><span class="rm-check">✓</span> Healthcare</li>
+                                    <li><span class="rm-check">✓</span> Education</li>
+                                    <li><span class="rm-check">✓</span> Legal</li>
+                                    <li><span class="rm-check">✓</span> Customer Support</li>
+                                    <li><span class="rm-check">✓</span> E-commerce</li>
+                                    <li><span class="rm-check">✓</span> Real Estate</li>
+                                    <li><span class="rm-check">✓</span> Social Media</li>
+                                    <li><span class="rm-check">✓</span> Content Writing</li>
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 8</span>
+                                <h3 class="rm-title">Image Prompt Engineering</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">11 Lessons</span>
+                            <span class="rm-meta">2 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Topics</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Composition</li>
+                                    <li><span class="rm-check">✓</span> Camera Angles</li>
+                                    <li><span class="rm-check">✓</span> Lighting</li>
+                                    <li><span class="rm-check">✓</span> Color Theory</li>
+                                    <li><span class="rm-check">✓</span> Aspect Ratio</li>
+                                    <li><span class="rm-check">✓</span> Negative Prompts</li>
+                                    <li><span class="rm-check">✓</span> Character Consistency</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Platforms</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Midjourney</li>
+                                    <li><span class="rm-check">✓</span> DALL·E</li>
+                                    <li><span class="rm-check">✓</span> FLUX</li>
+                                    <li><span class="rm-check">✓</span> Stable Diffusion</li>
+                                    <li><span class="rm-check">✓</span> Ideogram</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Projects</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-proj-icon">💻</span> AI Logo Designer</li>
+                                    <li><span class="rm-proj-icon">💻</span> Product Photography</li>
+                                    <li><span class="rm-proj-icon">💻</span> Marketing Posters</li>
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 9</span>
+                                <h3 class="rm-title">Video Prompt Engineering</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">9 Lessons</span>
+                            <span class="rm-meta">1.5 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Topics</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Camera Motion</li>
+                                    <li><span class="rm-check">✓</span> Cinematic Language</li>
+                                    <li><span class="rm-check">✓</span> Character Consistency</li>
+                                    <li><span class="rm-check">✓</span> Scene Control</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Platforms</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Veo</li>
+                                    <li><span class="rm-check">✓</span> Runway</li>
+                                    <li><span class="rm-check">✓</span> Kling</li>
+                                    <li><span class="rm-check">✓</span> Pika</li>
+                                    <li><span class="rm-check">✓</span> Luma</li>
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 10</span>
+                                <h3 class="rm-title">Retrieval-Augmented Generation (RAG)</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">13 Lessons</span>
+                            <span class="rm-meta">3 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Lessons</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> What is RAG?</li>
+                                    <li><span class="rm-check">✓</span> Chunking</li>
+                                    <li><span class="rm-check">✓</span> Embeddings</li>
+                                    <li><span class="rm-check">✓</span> Vector Databases</li>
+                                    <li><span class="rm-check">✓</span> Semantic Search</li>
+                                    <li><span class="rm-check">✓</span> Retrieval Pipeline</li>
+                                    <li><span class="rm-check">✓</span> Re-ranking</li>
+                                    <li><span class="rm-check">✓</span> Context Injection</li>
+                                    <li><span class="rm-check">✓</span> Hybrid Search</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Tools</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Qdrant</li>
+                                    <li><span class="rm-check">✓</span> Chroma</li>
+                                    <li><span class="rm-check">✓</span> Pinecone</li>
+                                    <li><span class="rm-check">✓</span> FAISS</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Mini Project / Assignment</h4>
+                                <div class="rm-project-card">
+                                    <span class="rm-proj-icon">💻</span>
+                                    <span class="rm-proj-title">Legal AI Assistant</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 11</span>
+                                <h3 class="rm-title">AI Agents</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">11 Lessons</span>
+                            <span class="rm-meta">3 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Topics</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> AI Agents</li>
+                                    <li><span class="rm-check">✓</span> Multi-Agent Systems</li>
+                                    <li><span class="rm-check">✓</span> Agent Memory</li>
+                                    <li><span class="rm-check">✓</span> Planning</li>
+                                    <li><span class="rm-check">✓</span> Tool Use</li>
+                                    <li><span class="rm-check">✓</span> Agent Communication</li>
+                                    <li><span class="rm-check">✓</span> Orchestration</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Frameworks</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> LangGraph</li>
+                                    <li><span class="rm-check">✓</span> CrewAI</li>
+                                    <li><span class="rm-check">✓</span> AutoGen</li>
+                                    <li><span class="rm-check">✓</span> OpenAI Agents SDK</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Mini Project / Assignment</h4>
+                                <div class="rm-project-card">
+                                    <span class="rm-proj-icon">💻</span>
+                                    <span class="rm-proj-title">Prompt Intelligence Agent</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 12</span>
+                                <h3 class="rm-title">Automation with AI</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">5 Lessons</span>
+                            <span class="rm-meta">2 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Topics</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> n8n</li>
+                                    <li><span class="rm-check">✓</span> API Integration</li>
+                                    <li><span class="rm-check">✓</span> Google Sheets</li>
+                                    <li><span class="rm-check">✓</span> Gmail</li>
+                                    <li><span class="rm-check">✓</span> Slack</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Mini Project / Assignment</h4>
+                                <div class="rm-project-card">
+                                    <span class="rm-proj-icon">💻</span>
+                                    <span class="rm-proj-title">AI Workflow Builder</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 13</span>
+                                <h3 class="rm-title">LLM Application Development</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">7 Lessons</span>
+                            <span class="rm-meta">3 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Topics</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> OpenAI API</li>
+                                    <li><span class="rm-check">✓</span> Claude API</li>
+                                    <li><span class="rm-check">✓</span> Gemini API</li>
+                                    <li><span class="rm-check">✓</span> Streaming</li>
+                                    <li><span class="rm-check">✓</span> Function Calling</li>
+                                    <li><span class="rm-check">✓</span> Structured Outputs</li>
+                                    <li><span class="rm-check">✓</span> Error Handling</li>
+
+                                </ul>
+                            </div>
+
+                            <div class="rm-section">
+                                <h4>Mini Project / Assignment</h4>
+                                <div class="rm-project-card">
+                                    <span class="rm-proj-icon">💻</span>
+                                    <span class="rm-proj-title">AI SaaS Application</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 14</span>
+                                <h3 class="rm-title">Prompt Optimization</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">7 Lessons</span>
+                            <span class="rm-meta">2 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Topics</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Prompt Evaluation</li>
+                                    <li><span class="rm-check">✓</span> Hallucination Reduction</li>
+                                    <li><span class="rm-check">✓</span> Prompt Compression</li>
+                                    <li><span class="rm-check">✓</span> Latency Optimization</li>
+                                    <li><span class="rm-check">✓</span> Cost Optimization</li>
+                                    <li><span class="rm-check">✓</span> Benchmarking</li>
+                                    <li><span class="rm-check">✓</span> Prompt Testing</li>
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 15</span>
+                                <h3 class="rm-title">AI Safety & Security</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">6 Lessons</span>
+                            <span class="rm-meta">1.5 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Topics</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Prompt Injection</li>
+                                    <li><span class="rm-check">✓</span> Jailbreaks</li>
+                                    <li><span class="rm-check">✓</span> Prompt Leaking</li>
+                                    <li><span class="rm-check">✓</span> Data Privacy</li>
+                                    <li><span class="rm-check">✓</span> AI Governance</li>
+                                    <li><span class="rm-check">✓</span> Secure Prompt Design</li>
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 16</span>
+                                <h3 class="rm-title">Enterprise Prompt Engineering</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">7 Lessons</span>
+                            <span class="rm-meta">2 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Topics</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-check">✓</span> Prompt Versioning</li>
+                                    <li><span class="rm-check">✓</span> Prompt Libraries</li>
+                                    <li><span class="rm-check">✓</span> Prompt Testing</li>
+                                    <li><span class="rm-check">✓</span> Prompt Analytics</li>
+                                    <li><span class="rm-check">✓</span> Team Collaboration</li>
+                                    <li><span class="rm-check">✓</span> CI/CD for Prompts</li>
+                                    <li><span class="rm-check">✓</span> Production Deployment</li>
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card">
+                    <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                        <div class="rm-module-left">
+                            <div class="rm-icon">📘</div>
+                            <div class="rm-titles">
+                                <span class="rm-label">Module 17</span>
+                                <h3 class="rm-title">Building Prompt Bazaar</h3>
+                            </div>
+                        </div>
+                        <div class="rm-module-right">
+                            <span class="rm-meta">7 Lessons</span>
+                            <span class="rm-meta">5 hours</span>
+                            <div class="rm-arrow">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                                    fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-body-content">
+
+                            <div class="rm-section">
+                                <h4>Projects</h4>
+                                <ul class="rm-list">
+                                    <li><span class="rm-proj-icon">💻</span> Prompt Marketplace</li>
+                                    <li><span class="rm-proj-icon">💻</span> Prompt Enhancer</li>
+                                    <li><span class="rm-proj-icon">💻</span> Prompt Optimizer</li>
+                                    <li><span class="rm-proj-icon">💻</span> Prompt Validator</li>
+                                    <li><span class="rm-proj-icon">💻</span> Prompt Intelligence Agent</li>
+                                    <li><span class="rm-proj-icon">💻</span> Portfolio Builder</li>
+                                    <li><span class="rm-proj-icon">💻</span> AI Course Generator</li>
+
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- MODULE DETAIL VIEW (Hidden by default) -->
+        <section id="module-detail-view" class="module-detail-view" style="display: none;">
+            <button class="btn btn-secondary back-to-roadmap" id="backToRoadmapBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Roadmap
+            </button>
+
+            <div class="module-header-card">
+                <div class="module-meta">
+                    <span class="module-number-badge" id="detail-module-num">Module 1</span>
+                    <span class="module-difficulty" id="detail-module-difficulty">Beginner</span>
+                </div>
+                <h1 id="detail-module-title">AI & Generative AI Fundamentals</h1>
+
+                <div class="module-stats-row">
+                    <div class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg> <span id="detail-module-duration">8 Hours</span></div>
+                    <div class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                        </svg> <span id="detail-module-lessons">15 Lessons</span></div>
+                    <div class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg> <span id="detail-module-quiz">15 Questions</span></div>
+                    <div class="stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg> <span id="detail-module-xp">500 XP</span></div>
+                </div>
+
+                <div class="module-progress-wrapper">
+                    <div class="progress-info">
+                        <span>Completion</span>
+                        <span id="detail-module-progress-text">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="detail-module-progress-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: MODULE OVERVIEW -->
+            <div class="module-overview">
+                <h3>Learning Outcomes</h3>
+                <ul class="learning-outcomes-list" id="detail-module-outcomes">
+                    <!-- Populated by JS -->
+                </ul>
+            </div>
+
+            <!-- SECTION 6: LESSONS -->
+            <div class="lessons-container" id="lessons-container">
+                <!-- Lessons injected by JS -->
+            </div>
+
+            <!-- SECTION 7: QUIZ -->
+            <div class="assessment-card locked" id="quiz-card">
+                <div class="assessment-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg></div>
+                <div class="assessment-content">
+                    <h3>Module Quiz</h3>
+                    <p>15 Questions • 80% Passing Score • 200 XP</p>
+                </div>
+                <div class="assessment-action">
+                    <button class="btn btn-secondary" disabled>Locked</button>
+                </div>
+            </div>
+
+            <!-- SECTION 8: PROJECT -->
+            <div class="assessment-card locked" id="project-card">
+                <div class="assessment-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                    </svg></div>
+                <div class="assessment-content">
+                    <h3>Hands-on Project</h3>
+                    <p>Explain ChatGPT Using Your Own Prompt</p>
+                </div>
+                <div class="assessment-action">
+                    <button class="btn btn-secondary" disabled>Locked</button>
+                </div>
+            </div>
+
+            <!-- SECTION 9: CERTIFICATE -->
+            <div class="assessment-card locked" id="certificate-card">
+                <div class="assessment-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <circle cx="12" cy="8" r="7"></circle>
+                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+                    </svg></div>
+                <div class="assessment-content">
+                    <h3>Module Certificate</h3>
+                    <p>Completion Badge & XP Reward</p>
+                </div>
+                <div class="assessment-action">
+                    <button class="btn btn-secondary" disabled>Locked</button>
+                </div>
+            </div>
+
+            <!-- SECTION 10: NEXT MODULE -->
+            <div class="next-module-preview locked" id="next-module-preview">
+                <div class="preview-content">
+                    <span class="preview-label">Next Module (Locked)</span>
+                    <h3 id="preview-next-title">Module 2: Prompt Engineering Fundamentals</h3>
+                </div>
+                <button class="btn btn-primary" disabled>Continue Learning</button>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+    
+    <!-- Web Push Notifications -->
+    <script type="module" src="/static/js/notifications.js?v=3"></script>
+
+    
+<script src="/static/js/academy.js"></script>
+<script>
+    (function () {
+        var btn = document.getElementById('menuToggleBtn');
+        var drawer = document.getElementById('sidebarDrawer');
+        var overlay = document.getElementById('sidebarOverlay');
+        var closeBtn = document.getElementById('sidebarCloseBtn');
+        if (!btn || !drawer) return;
+        function open() { drawer.classList.add('open'); if (overlay) overlay.classList.add('open'); }
+        function close() { drawer.classList.remove('open'); if (overlay) overlay.classList.remove('open'); }
+        btn.addEventListener('click', open);
+        if (closeBtn) closeBtn.addEventListener('click', close);
+        if (overlay) overlay.addEventListener('click', close);
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+    })();
+
+    window.toggleRoadmapModule = function (headerElement) {
+        // Close all other expanded cards
+        const allCards = document.querySelectorAll('.rm-module-card');
+        const parentCard = headerElement.closest('.rm-module-card');
+
+        allCards.forEach(card => {
+            if (card !== parentCard) {
+                card.classList.remove('expanded');
+            }
+        });
+
+        // Toggle current card
+        parentCard.classList.toggle('expanded');
+    }
+</script>
+
+</body>
+</html>
