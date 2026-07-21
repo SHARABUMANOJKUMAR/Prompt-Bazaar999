@@ -176,7 +176,7 @@ def index():
     user = session.get('user')
     return render_template('index.html', user=user)
 
-@app.route('/academy')
+@app.route('/academy/')
 def academy():
     user = session.get('user')
     return render_template('academy.html', user=user)
