@@ -48,8 +48,13 @@ try:
 except Exception as e:
     print(f"WARNING: Firebase Admin SDK initialization failed: {e}. The app will continue, but push notifications will run in mock/no-op mode until credentials are set.")
 
-app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'dev_key')
+from flask_cors import CORS
+
+app = Flask(__name__, static_folder='static', static_url_path='/static')
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'default_dev_secret_key')
+
+# Enable CORS for the frontend hosted on Netlify
+CORS(app)
 
 # ── Enterprise Security & Performance Layer ─────────────────────────────
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB payload limit
