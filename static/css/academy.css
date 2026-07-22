@@ -1152,3 +1152,213 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ===================================================
+   NEW ACCORDION ROADMAP STYLES (rm- prefix)
+   =================================================== */
+
+.rm-roadmap-wrapper {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Phase Label */
+.rm-phase-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ac-text-secondary);
+    padding: 20px 4px 8px;
+}
+
+/* Module Card (accordion item) */
+.rm-module-card {
+    background: var(--ac-card-bg);
+    border: 1.5px solid var(--ac-border);
+    border-radius: var(--ac-radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--ac-transition);
+    box-shadow: var(--ac-shadow-sm);
+}
+
+.rm-module-card:hover {
+    border-color: var(--ac-primary);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.10);
+    transform: translateY(-1px);
+}
+
+.rm-module-card.rm-capstone {
+    border-color: #7C3AED;
+    background: linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%);
+}
+.rm-module-card.rm-capstone:hover {
+    border-color: #6D28D9;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.15);
+}
+
+/* Card Header (always visible) */
+.rm-module-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    gap: 12px;
+    user-select: none;
+}
+
+.rm-module-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Module Number Badge */
+.rm-module-num {
+    min-width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--ac-icon-bg);
+    color: var(--ac-primary);
+    font-size: 14px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--ac-light-blue);
+    flex-shrink: 0;
+    letter-spacing: -0.5px;
+}
+
+.rm-capstone-num {
+    background: linear-gradient(135deg, #7C3AED, #A855F7);
+    color: #fff;
+    border-color: #7C3AED;
+}
+
+.rm-module-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ac-text-primary);
+    line-height: 1.3;
+}
+
+.rm-module-meta {
+    font-size: 12px;
+    color: var(--ac-text-secondary);
+    margin-top: 2px;
+}
+
+/* Chevron Icon */
+.rm-chevron {
+    width: 18px;
+    height: 18px;
+    color: var(--ac-text-secondary);
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.rm-module-card.expanded .rm-chevron {
+    transform: rotate(180deg);
+    color: var(--ac-primary);
+}
+
+/* Card Body (hidden by default) */
+.rm-module-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rm-module-card.expanded .rm-module-body {
+    max-height: 1000px;
+}
+
+/* Lesson Pills Grid */
+.rm-lessons-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 20px 16px;
+    border-top: 1px solid var(--ac-border);
+    padding-top: 16px;
+}
+
+.rm-lesson {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ac-text-primary);
+    background: var(--ac-bg-hero);
+    border: 1px solid var(--ac-border);
+    border-radius: 6px;
+    padding: 5px 11px;
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+.rm-lesson::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ac-primary);
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+.rm-module-card.rm-capstone .rm-lesson::before {
+    background: #7C3AED;
+}
+
+/* Project Tag */
+.rm-project-tag {
+    margin: 4px 20px 16px;
+    background: linear-gradient(90deg, #EFF6FF 0%, #F5F3FF 100%);
+    border: 1px solid var(--ac-light-blue);
+    border-left: 3px solid var(--ac-primary);
+    border-radius: 0 6px 6px 0;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ac-primary);
+}
+
+.rm-module-card.rm-capstone .rm-project-tag {
+    background: linear-gradient(90deg, #F5F3FF, #EDE9FE);
+    border-color: #C4B5FD;
+    border-left-color: #7C3AED;
+    color: #6D28D9;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .rm-roadmap-wrapper {
+        gap: 4px;
+    }
+    .rm-module-header {
+        padding: 14px 16px;
+    }
+    .rm-lessons-grid {
+        padding: 12px 16px 12px;
+    }
+    .rm-project-tag {
+        margin: 4px 16px 12px;
+    }
+    .rm-module-num {
+        min-width: 36px;
+        height: 36px;
+        font-size: 12px;
+    }
+    .rm-module-title {
+        font-size: 14px;
+    }
+}

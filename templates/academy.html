@@ -230,15 +230,355 @@
         </section>
 
         <!-- SECTION 3: LEARNING ROADMAP -->
-
         <section id="learning-roadmap" class="academy-roadmap">
             <div class="section-header">
                 <h2>Learning Roadmap</h2>
-                <p>Complete modules in order to unlock the next level of expertise.</p>
+                <p>Complete modules in order to unlock the next level of expertise. Click any module to explore its lessons.</p>
             </div>
-            <div class="modules-grid" id="modules-container">
-                <!-- Modules injected via JS -->
-            </div>
+
+            <!-- Roadmap Phase + Accordion -->
+            <div class="rm-roadmap-wrapper">
+
+                <!-- Phase 1 -->
+                <div class="rm-phase-label">🟢 Phase 1 — AI Foundations</div>
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">01</div>
+                            <div>
+                                <div class="rm-module-title">AI &amp; Generative AI Foundations</div>
+                                <div class="rm-module-meta">17 Lessons &nbsp;·&nbsp; Mini Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">What is Artificial Intelligence (AI)?</span><span class="rm-lesson">Machine Learning Basics</span><span class="rm-lesson">Deep Learning Basics</span><span class="rm-lesson">Neural Networks</span><span class="rm-lesson">Natural Language Processing (NLP)</span><span class="rm-lesson">Transformers Explained</span><span class="rm-lesson">Large Language Models (LLMs)</span><span class="rm-lesson">Tokens &amp; Tokenization</span><span class="rm-lesson">Context Window</span><span class="rm-lesson">Embeddings</span><span class="rm-lesson">Hallucinations</span><span class="rm-lesson">Temperature</span><span class="rm-lesson">Top-P</span><span class="rm-lesson">Top-K</span><span class="rm-lesson">AI Limitations</span><span class="rm-lesson">Responsible AI</span><span class="rm-lesson">AI Ethics</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Mini Project: Compare ChatGPT vs Claude vs Gemini vs Grok vs DeepSeek</div>
+                    </div>
+                </div>
+
+                <!-- Phase 2 -->
+                <div class="rm-phase-label">🟢 Phase 2 — Prompt Engineering Core</div>
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">02</div>
+                            <div>
+                                <div class="rm-module-title">Prompt Engineering Fundamentals</div>
+                                <div class="rm-module-meta">20 Lessons &nbsp;·&nbsp; Assignment</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">What is Prompt Engineering?</span><span class="rm-lesson">Why Prompt Engineering Matters</span><span class="rm-lesson">How LLMs Understand Prompts</span><span class="rm-lesson">Prompt Anatomy</span><span class="rm-lesson">Prompt Lifecycle</span><span class="rm-lesson">Prompt Design Principles</span><span class="rm-lesson">Instructions vs Context</span><span class="rm-lesson">Delimiters</span><span class="rm-lesson">Variables &amp; Placeholders</span><span class="rm-lesson">Constraints</span><span class="rm-lesson">Output Formatting</span><span class="rm-lesson">Role Prompting Basics</span><span class="rm-lesson">Context Engineering</span><span class="rm-lesson">Prompt Templates</span><span class="rm-lesson">Examples &amp; Demonstrations</span><span class="rm-lesson">Negative Prompting</span><span class="rm-lesson">Prompt Evaluation</span><span class="rm-lesson">Prompt Testing</span><span class="rm-lesson">Prompt Optimization Basics</span><span class="rm-lesson">Common Prompt Mistakes</span>
+                        </div>
+                        <div class="rm-project-tag">📝 Assignment: Write 20 professional prompts for different domains</div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">03</div>
+                            <div>
+                                <div class="rm-module-title">Basic Prompting Techniques</div>
+                                <div class="rm-module-meta">12 Lessons &nbsp;·&nbsp; Mini Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">Zero-shot Prompting</span><span class="rm-lesson">One-shot Prompting</span><span class="rm-lesson">Few-shot Prompting</span><span class="rm-lesson">Multi-shot Prompting</span><span class="rm-lesson">Persona Prompting</span><span class="rm-lesson">Goal-based Prompting</span><span class="rm-lesson">Step-by-step Prompting</span><span class="rm-lesson">Output Templates</span><span class="rm-lesson">Style Control</span><span class="rm-lesson">Tone Control</span><span class="rm-lesson">Length Control</span><span class="rm-lesson">Response Constraints</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Mini Project: AI Email Generator</div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">04</div>
+                            <div>
+                                <div class="rm-module-title">Intermediate Prompt Engineering</div>
+                                <div class="rm-module-meta">12 Lessons &nbsp;·&nbsp; Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">Chain of Thought (CoT)</span><span class="rm-lesson">Self Consistency</span><span class="rm-lesson">Tree of Thought</span><span class="rm-lesson">Prompt Chaining</span><span class="rm-lesson">Reflection Prompting</span><span class="rm-lesson">Self Critique</span><span class="rm-lesson">Verification Prompting</span><span class="rm-lesson">Iterative Prompting</span><span class="rm-lesson">Decomposition</span><span class="rm-lesson">Prompt Refinement</span><span class="rm-lesson">Multi-turn Conversations</span><span class="rm-lesson">Error Recovery</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Project: AI Research Assistant</div>
+                    </div>
+                </div>
+
+                <!-- Phase 3 -->
+                <div class="rm-phase-label">🟡 Phase 3 — Advanced Prompt Engineering</div>
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">05</div>
+                            <div>
+                                <div class="rm-module-title">Advanced Prompt Engineering</div>
+                                <div class="rm-module-meta">12 Lessons &nbsp;·&nbsp; Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">Meta Prompting</span><span class="rm-lesson">Dynamic Prompting</span><span class="rm-lesson">Structured Prompting</span><span class="rm-lesson">XML Prompting</span><span class="rm-lesson">JSON Prompting</span><span class="rm-lesson">Markdown Prompting</span><span class="rm-lesson">Function Calling</span><span class="rm-lesson">Tool Calling</span><span class="rm-lesson">Schema Prompting</span><span class="rm-lesson">Context Compression</span><span class="rm-lesson">Long Context Handling</span><span class="rm-lesson">Output Validation</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Project: AI Prompt Generator</div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">06</div>
+                            <div>
+                                <div class="rm-module-title">Professional Prompt Frameworks</div>
+                                <div class="rm-module-meta">20 Frameworks &nbsp;·&nbsp; Practice</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">RTF</span><span class="rm-lesson">RISEN</span><span class="rm-lesson">COAST</span><span class="rm-lesson">CARE</span><span class="rm-lesson">TAG</span><span class="rm-lesson">APE</span><span class="rm-lesson">BROKE</span><span class="rm-lesson">SMART</span><span class="rm-lesson">CRISPE</span><span class="rm-lesson">RACE</span><span class="rm-lesson">CREATE</span><span class="rm-lesson">TRACE</span><span class="rm-lesson">PACE</span><span class="rm-lesson">PECRA</span><span class="rm-lesson">CLEAR</span><span class="rm-lesson">COSTAR</span><span class="rm-lesson">ICE</span><span class="rm-lesson">STAR</span><span class="rm-lesson">ReAct</span><span class="rm-lesson">Chain of Density</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Practice: Convert one task using every framework</div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">07</div>
+                            <div>
+                                <div class="rm-module-title">Domain-Specific Prompting</div>
+                                <div class="rm-module-meta">18 Domains</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">Software Development</span><span class="rm-lesson">UI/UX Design</span><span class="rm-lesson">Marketing</span><span class="rm-lesson">Sales</span><span class="rm-lesson">Resume Writing</span><span class="rm-lesson">HR</span><span class="rm-lesson">Finance</span><span class="rm-lesson">Healthcare</span><span class="rm-lesson">Education</span><span class="rm-lesson">Legal</span><span class="rm-lesson">Customer Support</span><span class="rm-lesson">E-commerce</span><span class="rm-lesson">Real Estate</span><span class="rm-lesson">Social Media</span><span class="rm-lesson">Content Writing</span><span class="rm-lesson">Research</span><span class="rm-lesson">Business Strategy</span><span class="rm-lesson">Product Management</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phase 4 -->
+                <div class="rm-phase-label">🟠 Phase 4 — Multimodal AI</div>
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">08</div>
+                            <div>
+                                <div class="rm-module-title">AI Image Prompt Engineering</div>
+                                <div class="rm-module-meta">13 Lessons &nbsp;·&nbsp; 3 Projects</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">Midjourney</span><span class="rm-lesson">DALL·E</span><span class="rm-lesson">FLUX</span><span class="rm-lesson">Stable Diffusion</span><span class="rm-lesson">Ideogram</span><span class="rm-lesson">Composition</span><span class="rm-lesson">Camera Angles</span><span class="rm-lesson">Lighting</span><span class="rm-lesson">Color Theory</span><span class="rm-lesson">Aspect Ratio</span><span class="rm-lesson">Character Consistency</span><span class="rm-lesson">Negative Prompts</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Projects: AI Logo Designer · Product Photography · Marketing Poster Generator</div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">09</div>
+                            <div>
+                                <div class="rm-module-title">AI Video Prompt Engineering</div>
+                                <div class="rm-module-meta">12 Lessons &nbsp;·&nbsp; Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">Veo</span><span class="rm-lesson">Runway</span><span class="rm-lesson">Kling</span><span class="rm-lesson">Pika</span><span class="rm-lesson">Luma</span><span class="rm-lesson">Cinematic Prompting</span><span class="rm-lesson">Camera Motion</span><span class="rm-lesson">Scene Control</span><span class="rm-lesson">Character Consistency</span><span class="rm-lesson">Storyboarding</span><span class="rm-lesson">Video Editing Prompts</span><span class="rm-lesson">Video Optimization</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Project: AI Product Advertisement</div>
+                    </div>
+                </div>
+
+                <!-- Phase 5 -->
+                <div class="rm-phase-label">🔵 Phase 5 — Enterprise AI</div>
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">10</div>
+                            <div>
+                                <div class="rm-module-title">RAG (Retrieval-Augmented Generation)</div>
+                                <div class="rm-module-meta">12 Lessons &nbsp;·&nbsp; Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">What is RAG?</span><span class="rm-lesson">Chunking</span><span class="rm-lesson">Embeddings</span><span class="rm-lesson">Semantic Search</span><span class="rm-lesson">Vector Databases</span><span class="rm-lesson">Retrieval Pipeline</span><span class="rm-lesson">Re-ranking</span><span class="rm-lesson">Hybrid Search</span><span class="rm-lesson">Context Injection</span><span class="rm-lesson">Query Expansion</span><span class="rm-lesson">Prompt + RAG Integration</span><span class="rm-lesson">RAG Optimization</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Project: Legal AI Assistant &nbsp;·&nbsp; Tools: Qdrant · Chroma · Pinecone · FAISS</div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">11</div>
+                            <div>
+                                <div class="rm-module-title">AI Agents</div>
+                                <div class="rm-module-meta">12 Lessons &nbsp;·&nbsp; Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">AI Agents</span><span class="rm-lesson">Multi-Agent Systems</span><span class="rm-lesson">Agent Memory</span><span class="rm-lesson">Planning</span><span class="rm-lesson">Tool Use</span><span class="rm-lesson">Agent Communication</span><span class="rm-lesson">Orchestration</span><span class="rm-lesson">Agent Evaluation</span><span class="rm-lesson">Autonomous Agents</span><span class="rm-lesson">Human-in-the-loop</span><span class="rm-lesson">Multi-Agent Collaboration</span><span class="rm-lesson">Agent Deployment</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Project: Prompt Intelligence Agent &nbsp;·&nbsp; Frameworks: LangGraph · CrewAI · AutoGen · OpenAI Agents SDK</div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">12</div>
+                            <div>
+                                <div class="rm-module-title">AI Automation</div>
+                                <div class="rm-module-meta">12 Lessons &nbsp;·&nbsp; Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">n8n</span><span class="rm-lesson">Make</span><span class="rm-lesson">Zapier</span><span class="rm-lesson">APIs</span><span class="rm-lesson">Google Sheets</span><span class="rm-lesson">Gmail Automation</span><span class="rm-lesson">WhatsApp Automation</span><span class="rm-lesson">Slack Automation</span><span class="rm-lesson">CRM Integration</span><span class="rm-lesson">Workflow Optimization</span><span class="rm-lesson">Error Handling</span><span class="rm-lesson">Deployment</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Project: AI Workflow Builder</div>
+                    </div>
+                </div>
+
+                <!-- Phase 6 -->
+                <div class="rm-phase-label">🟣 Phase 6 — AI Application Development</div>
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">13</div>
+                            <div>
+                                <div class="rm-module-title">LLM Application Development</div>
+                                <div class="rm-module-meta">12 Lessons &nbsp;·&nbsp; Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">OpenAI API</span><span class="rm-lesson">Claude API</span><span class="rm-lesson">Gemini API</span><span class="rm-lesson">Streaming Responses</span><span class="rm-lesson">Function Calling</span><span class="rm-lesson">Structured Outputs</span><span class="rm-lesson">Error Handling</span><span class="rm-lesson">Rate Limits</span><span class="rm-lesson">Authentication</span><span class="rm-lesson">Cost Optimization</span><span class="rm-lesson">Production Deployment</span><span class="rm-lesson">Monitoring</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Project: AI SaaS Application</div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">14</div>
+                            <div>
+                                <div class="rm-module-title">Prompt Optimization</div>
+                                <div class="rm-module-meta">10 Lessons</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">Prompt Evaluation</span><span class="rm-lesson">Hallucination Reduction</span><span class="rm-lesson">Prompt Compression</span><span class="rm-lesson">Latency Optimization</span><span class="rm-lesson">Cost Optimization</span><span class="rm-lesson">Benchmarking</span><span class="rm-lesson">A/B Testing</span><span class="rm-lesson">Prompt Analytics</span><span class="rm-lesson">Quality Scoring</span><span class="rm-lesson">Continuous Improvement</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Project: Prompt Optimizer Tool</div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">15</div>
+                            <div>
+                                <div class="rm-module-title">AI Safety &amp; Security</div>
+                                <div class="rm-module-meta">10 Lessons &nbsp;·&nbsp; Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">Prompt Injection</span><span class="rm-lesson">Jailbreak Attacks</span><span class="rm-lesson">Prompt Leaking</span><span class="rm-lesson">Data Privacy</span><span class="rm-lesson">AI Governance</span><span class="rm-lesson">Secure Prompt Design</span><span class="rm-lesson">Model Safety</span><span class="rm-lesson">Red Teaming</span><span class="rm-lesson">Guardrails</span><span class="rm-lesson">Risk Assessment</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Project: AI Prompt Firewall</div>
+                    </div>
+                </div>
+
+                <!-- Phase 7 -->
+                <div class="rm-phase-label">🔴 Phase 7 — Production &amp; Deployment</div>
+                <div class="rm-module-card" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num">16</div>
+                            <div>
+                                <div class="rm-module-title">Enterprise Prompt Engineering</div>
+                                <div class="rm-module-meta">10 Lessons &nbsp;·&nbsp; Project</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">Prompt Versioning</span><span class="rm-lesson">Prompt Libraries</span><span class="rm-lesson">Prompt Testing</span><span class="rm-lesson">Prompt Analytics</span><span class="rm-lesson">Team Collaboration</span><span class="rm-lesson">CI/CD for Prompts</span><span class="rm-lesson">Production Deployment</span><span class="rm-lesson">Monitoring</span><span class="rm-lesson">Governance</span><span class="rm-lesson">Scaling AI Systems</span>
+                        </div>
+                        <div class="rm-project-tag">🛠 Project: Enterprise Prompt Management System</div>
+                    </div>
+                </div>
+
+                <div class="rm-module-card rm-capstone" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-header">
+                        <div class="rm-module-left">
+                            <div class="rm-module-num rm-capstone-num">17</div>
+                            <div>
+                                <div class="rm-module-title">🎓 Capstone: Build Prompt Bazaar</div>
+                                <div class="rm-module-meta">16 Capstone Projects</div>
+                            </div>
+                        </div>
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                    <div class="rm-module-body">
+                        <div class="rm-lessons-grid">
+                            <span class="rm-lesson">Prompt Marketplace</span><span class="rm-lesson">Prompt Enhancer Pro</span><span class="rm-lesson">Prompt Optimizer</span><span class="rm-lesson">Prompt Validator</span><span class="rm-lesson">Prompt Intelligence Agent</span><span class="rm-lesson">Portfolio Builder</span><span class="rm-lesson">AI Course Generator</span><span class="rm-lesson">AI Resume Builder</span><span class="rm-lesson">AI Cover Letter Generator</span><span class="rm-lesson">AI Image Prompt Builder</span><span class="rm-lesson">AI Video Prompt Builder</span><span class="rm-lesson">AI Automation Builder</span><span class="rm-lesson">AI Chatbot Builder</span><span class="rm-lesson">AI Knowledge Base</span><span class="rm-lesson">RAG Search Engine</span><span class="rm-lesson">Multi-Agent System</span>
+                        </div>
+                        <div class="rm-project-tag">🏆 Final Deliverable: Prompt Bazaar SaaS Platform — Live &amp; Deployed</div>
+                    </div>
+                </div>
+
+            </div><!-- end rm-roadmap-wrapper -->
+
+            <!-- Hidden dynamic container kept for JS compatibility -->
+            <div id="modules-container" style="display:none;"></div>
         </section>
 
 
