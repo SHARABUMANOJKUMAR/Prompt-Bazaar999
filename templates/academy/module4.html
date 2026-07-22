@@ -1,0 +1,777 @@
+{% extends 'base.html' %}
+
+{% block title %}Prompt Academy - Module 4{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}?v=3">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/academy.css') }}">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    .module-container {
+        max-width: 960px;
+        margin: 60px auto;
+        padding: 0 24px;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .lesson-card {
+        background: var(--color-bg-secondary);
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 40px;
+        border: 1px solid var(--color-border);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .lesson-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .lesson-card h2 {
+        color: var(--primary-color);
+        margin-top: 0;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 700;
+        border-bottom: 2px solid rgba(37, 99, 235, 0.1);
+        padding-bottom: 16px;
+        line-height: 1.3;
+    }
+
+    .lesson-card h3 {
+        margin-top: 32px;
+        margin-bottom: 16px;
+        color: var(--color-text-primary);
+        font-size: 22px;
+        font-weight: 600;
+    }
+    
+    .lesson-card h4 {
+        margin-top: 24px;
+        margin-bottom: 12px;
+        color: var(--color-text-primary);
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .lesson-card p,
+    .lesson-card ul,
+    .lesson-card li {
+        color: var(--color-text-secondary);
+        line-height: 1.8;
+        font-size: 16px;
+    }
+
+    .lesson-card ul,
+    .lesson-card ol {
+        padding-left: 24px;
+        margin-bottom: 24px;
+    }
+
+    .lesson-card li {
+        margin-bottom: 12px;
+    }
+
+    .highlight-box {
+        background: linear-gradient(90deg, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%);
+        border-left: 4px solid var(--primary-color);
+        padding: 24px;
+        margin: 24px 0;
+        border-radius: 0 12px 12px 0;
+    }
+    
+    .highlight-box h3 {
+        margin-top: 0;
+        color: var(--primary-color);
+    }
+
+    /* Responsive Tables */
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        margin: 24px 0;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    table.styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 15px;
+        min-width: 600px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    table.styled-table thead tr {
+        background-color: var(--primary-color);
+        color: #ffffff;
+        text-align: left;
+    }
+
+    table.styled-table th,
+    table.styled-table td {
+        padding: 16px 20px;
+        border: 1px solid var(--color-border);
+        color: var(--color-text-primary);
+    }
+
+    table.styled-table tbody tr {
+        border-bottom: 1px solid var(--color-border);
+        transition: background-color 0.2s ease;
+    }
+
+    table.styled-table tbody tr:nth-of-type(even) {
+        background-color: var(--color-bg-primary);
+    }
+    
+    table.styled-table tbody tr:hover {
+        background-color: rgba(37, 99, 235, 0.04);
+    }
+
+    .diagram-box {
+        background: var(--color-bg-primary);
+        padding: 24px;
+        border-radius: 12px;
+        font-family: monospace;
+        white-space: pre-line;
+        margin: 24px 0;
+        border: 1px dashed var(--color-border);
+        color: var(--color-text-primary);
+        text-align: center;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+        line-height: 1.6;
+        font-size: 15px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .module-container {
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+        .lesson-card {
+            padding: 24px;
+            border-radius: 12px;
+        }
+        .lesson-card h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .lesson-card h3 {
+            font-size: 20px;
+        }
+        .diagram-box {
+            font-size: 14px;
+            padding: 16px;
+        }
+        .highlight-box {
+            padding: 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Sidebar Drawer (shared) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar-drawer" id="sidebarDrawer">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-left">
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
+                alt="Logo">
+            Prompt Bazaar
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
+        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
+        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
+        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon">🎓</span> Prompt Academy</a>
+    </nav>
+    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+</aside>
+
+<div class="gallery-layout">
+    <!-- Top Navbar -->
+    <header class="gallery-header">
+        <div class="header-left">
+            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
+                alt="Logo">
+            Prompt Bazaar
+        </div>
+        <div class="header-right">
+            <div class="xp-badge" id="user-xp-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                    </polygon>
+                </svg>
+                <span id="user-xp-amount">0</span> XP
+            </div>
+            <a href="{{ url_for('profile') }}" class="user-avatar" title="Profile">
+                {% if user and user.photoURL %}
+                <img src="{{ user.photoURL }}" alt="Avatar">
+                {% else %}
+                {{ user.displayName[0] | upper if user else 'U' }}
+                {% endif %}
+            </a>
+        </div>
+    </header>
+
+    <main class="academy-main-content">
+        <div class="module-container">
+            <a href="/academy" class="btn btn-secondary" style="margin-bottom: 24px;">&larr; Back to Academy Roadmap</a>
+            <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">Module 4: Advanced Prompting Techniques</h1>
+
+            <!-- Lesson 1 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 1: Chain of Thought (CoT)</h2>
+                <h3>Definition</h3>
+                <p>Chain of Thought (CoT) is an advanced prompting technique that encourages the AI to solve a problem by breaking it into logical, step-by-step reasoning before giving the final answer.</p>
+                <p>Instead of directly predicting the answer, the AI reasons through the problem in multiple steps.</p>
+                
+                <h3>Why is it Important?</h3>
+                <p>Chain of Thought helps AI:</p>
+                <ul>
+                    <li>Solve complex problems.</li>
+                    <li>Improve reasoning accuracy.</li>
+                    <li>Reduce mistakes.</li>
+                    <li>Explain its thinking process.</li>
+                    <li>Handle mathematics and logical reasoning better.</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Step-by-step reasoning</li>
+                    <li>Logical thinking</li>
+                    <li>Better accuracy</li>
+                    <li>Easy to understand</li>
+                    <li>Suitable for complex tasks</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Mathematics, Programming, Logical Reasoning, Data Analysis, Scientific Problems</p>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Problem<br>↓<br>Reason Step 1<br>↓<br>Reason Step 2<br>↓<br>Reason Step 3<br>↓<br>Final Answer</div>
+
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    <strong>Prompt:</strong><br>
+                    Solve this math problem step by step:<br><br>
+                    If a train travels 60 km in one hour, how far will it travel in 5 hours?
+                </div>
+
+                <h3>Real-Life Analogy</h3>
+                <p>Imagine solving a math problem in school. Your teacher gives marks not only for the final answer but also for showing every calculation step. Chain of Thought works the same way.</p>
+
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    <strong>Q: What is Chain of Thought Prompting?</strong><br>
+                    <strong>Answer:</strong> Chain of Thought Prompting encourages the AI to solve problems using logical step-by-step reasoning before producing the final answer.
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Use Chain of Thought for: Coding, Mathematics, Business Analysis, Scientific Reasoning.
+                </div>
+            </div>
+
+            <!-- Lesson 2 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 2: Self Consistency</h2>
+                <h3>Definition</h3>
+                <p>Self Consistency is a prompting technique where the AI generates multiple reasoning paths for the same problem and selects the most consistent or frequently occurring answer.</p>
+                <p>Instead of relying on a single reasoning process, the AI compares several possible solutions before producing the final response.</p>
+                
+                <h3>Why is it Important?</h3>
+                <p>It improves:</p>
+                <ul>
+                    <li>Accuracy</li>
+                    <li>Reliability</li>
+                    <li>Logical consistency</li>
+                    <li>Confidence in the final answer</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Multiple reasoning paths</li>
+                    <li>Majority voting</li>
+                    <li>Better accuracy</li>
+                    <li>Reduced reasoning errors</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Mathematics, Logical puzzles, Scientific calculations, AI decision-making</p>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Question<br>↓<br>Reasoning Path 1<br>↓<br>Reasoning Path 2<br>↓<br>Reasoning Path 3<br>↓<br>Most Consistent Answer</div>
+
+                <h3>Real-Time Example</h3>
+                <p>Ask AI to solve the same math problem three different ways and choose the answer that appears most often.</p>
+
+                <h3>Real-Life Analogy</h3>
+                <p>Three experienced doctors independently diagnose the same patient. If all three reach the same conclusion, confidence in the diagnosis increases.</p>
+
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    Self Consistency improves reasoning by comparing multiple reasoning paths instead of relying on just one.
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Use Self Consistency for important reasoning tasks where accuracy matters more than speed.
+                </div>
+            </div>
+
+            <!-- Lesson 3 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 3: Tree of Thought (ToT)</h2>
+                <h3>Definition</h3>
+                <p>Tree of Thought (ToT) is an advanced prompting technique where the AI explores multiple possible reasoning paths, evaluates each one, and selects the best solution before generating the final answer.</p>
+                <p>Unlike Chain of Thought, which follows a single reasoning path, Tree of Thought explores several branches before deciding.</p>
+                
+                <h3>Why is it Important?</h3>
+                <p>Tree of Thought helps AI:</p>
+                <ul>
+                    <li>Explore multiple solutions.</li>
+                    <li>Compare alternatives.</li>
+                    <li>Improve decision-making.</li>
+                    <li>Solve complex planning tasks.</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Multiple branches</li>
+                    <li>Decision making</li>
+                    <li>Evaluation of alternatives</li>
+                    <li>Better planning</li>
+                    <li>Flexible reasoning</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Business Strategy, Game Playing, Planning, Research, Optimization Problems</p>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Problem<br>↓<br>Idea A  &rarr;  Idea B  &rarr;  Idea C<br>↓<br>Evaluate Ideas<br>↓<br>Best Solution</div>
+
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    <strong>Prompt:</strong><br>
+                    Suggest three marketing strategies for launching a new AI product. Compare them and recommend the best one.
+                </div>
+
+                <h3>Real-Life Analogy</h3>
+                <p>Imagine standing at a road intersection. You evaluate three different routes before choosing the fastest one.</p>
+
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    Tree of Thought explores multiple reasoning branches, while Chain of Thought follows a single reasoning path.
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Use Tree of Thought when the problem has multiple possible solutions.
+                </div>
+            </div>
+
+            <!-- Lesson 4 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 4: Prompt Chaining</h2>
+                <h3>Definition</h3>
+                <p>Prompt Chaining is a technique where multiple prompts are connected together, and the output of one prompt becomes the input for the next prompt.</p>
+                <p>This allows complex tasks to be completed in smaller, manageable steps.</p>
+
+                <h3>Why is it Important?</h3>
+                <ul>
+                    <li>Breaks large tasks into smaller tasks.</li>
+                    <li>Improves accuracy.</li>
+                    <li>Makes workflows easier to automate.</li>
+                    <li>Reduces prompt complexity.</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Sequential</li>
+                    <li>Modular</li>
+                    <li>Reusable</li>
+                    <li>Easy to debug</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>AI Workflows, RAG Systems, AI Agents, Document Processing</p>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Prompt 1<br>↓<br>Output<br>↓<br>Prompt 2<br>↓<br>Output<br>↓<br>Prompt 3<br>↓<br>Final Result</div>
+
+                <h3>Real-Time Example</h3>
+                <p>1. Summarize an article.<br>2. Extract key points.<br>3. Generate presentation slides.<br><br><em>Each step uses the previous output.</em></p>
+
+                <h3>Real-Life Analogy</h3>
+                <p>Cooking a meal: Buy ingredients → Prepare vegetables → Cook → Serve.<br>Each step depends on the previous one.</p>
+
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    Prompt Chaining connects multiple prompts into one workflow.
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Use Prompt Chaining for long workflows instead of writing one huge prompt.
+                </div>
+            </div>
+
+            <!-- Lesson 5 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 5: Reflection Prompting</h2>
+                <h3>Definition</h3>
+                <p>Reflection Prompting is a technique where the AI reviews its own answer, reflects on it, and suggests improvements before providing the final response.</p>
+                
+                <h3>Why is it Important?</h3>
+                <ul>
+                    <li>Improve quality.</li>
+                    <li>Reduce mistakes.</li>
+                    <li>Make responses clearer.</li>
+                    <li>Increase completeness.</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Self-review</li>
+                    <li>Continuous improvement</li>
+                    <li>Higher quality</li>
+                    <li>Better explanations</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Essay Writing, Coding, Reports, Documentation</p>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Question<br>↓<br>Initial Answer<br>↓<br>Reflection<br>↓<br>Improved Answer</div>
+
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    <strong>Prompt:</strong><br>
+                    Write an essay, then review it and improve clarity, grammar, and completeness.
+                </div>
+
+                <h3>Real-Life Analogy</h3>
+                <p>A student writes an assignment, rereads it, corrects mistakes, and submits the improved version.</p>
+
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    Reflection Prompting asks AI to review and improve its own work.
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Always add a reflection step before generating important business or technical content.
+                </div>
+            </div>
+
+            <!-- Lesson 6 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 6: Self Critique</h2>
+                <h3>Definition</h3>
+                <p>Self Critique is a prompting technique where the AI evaluates its own response, identifies weaknesses or mistakes, and suggests corrections.</p>
+
+                <h3>Why is it Important?</h3>
+                <ul>
+                    <li>Accuracy</li>
+                    <li>Quality</li>
+                    <li>Reliability</li>
+                    <li>Logical consistency</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Self-evaluation</li>
+                    <li>Error detection</li>
+                    <li>Continuous improvement</li>
+                    <li>Better reasoning</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Coding, Research, Technical Writing, Business Reports</p>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Answer<br>↓<br>Find Errors<br>↓<br>Suggest Improvements<br>↓<br>Revised Answer</div>
+
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    <strong>Prompt:</strong><br>
+                    Write Python code.<br><br>
+                    Now critique your code and improve it.
+                </div>
+
+                <h3>Real-Life Analogy</h3>
+                <p>A software developer reviews their own code before submitting it for code review.</p>
+
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    Self Critique focuses on identifying flaws, while Reflection Prompting focuses on improving the overall response.
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Use Self Critique for high-quality reports, research, and code generation.
+                </div>
+            </div>
+
+            <!-- Lesson 7 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 7: Verification Prompting</h2>
+                <h3>Definition</h3>
+                <p>Verification Prompting is a prompting technique where the AI checks whether its answer is correct, complete, and supported by evidence before presenting the final response.</p>
+                
+                <h3>Why is it Important?</h3>
+                <ul>
+                    <li>Reduce hallucinations.</li>
+                    <li>Improve trust.</li>
+                    <li>Increase factual accuracy.</li>
+                    <li>Detect inconsistencies.</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Fact checking</li>
+                    <li>Validation</li>
+                    <li>Evidence-based</li>
+                    <li>Reliable</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Healthcare, Law, Finance, Scientific Research</p>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Question<br>↓<br>Generate Answer<br>↓<br>Verify Facts<br>↓<br>Final Verified Response</div>
+
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    <strong>Prompt:</strong><br>
+                    Answer the question and verify whether each fact is supported by reliable sources.
+                </div>
+
+                <h3>Real-Life Analogy</h3>
+                <p>A journalist verifies information from multiple sources before publishing a news article.</p>
+
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    Verification Prompting checks whether the answer is correct before delivering it.
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Use Verification Prompting whenever factual accuracy is critical.
+                </div>
+            </div>
+
+            <!-- Lesson 8 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 8: Iterative Prompting</h2>
+                <h3>Definition</h3>
+                <p>Iterative Prompting is a technique where prompts are repeatedly refined based on previous responses until the desired result is achieved.</p>
+                
+                <h3>Why is it Important?</h3>
+                <ul>
+                    <li>Continuous improvement.</li>
+                    <li>Better quality.</li>
+                    <li>More precise outputs.</li>
+                    <li>User feedback integration.</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Repeated refinement</li>
+                    <li>Feedback-driven</li>
+                    <li>Flexible</li>
+                    <li>High-quality results</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Logo Design, Content Writing, Software Development, AI Image Generation</p>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Initial Prompt<br>↓<br>AI Response<br>↓<br>User Feedback<br>↓<br>Improved Prompt<br>↓<br>Better Response</div>
+
+                <h3>Real-Time Example</h3>
+                <p>1. Generate a website homepage.<br>2. Improve colors.<br>3. Improve typography.<br>4. Improve animations.<br>5. Final professional UI.</p>
+
+                <h3>Real-Life Analogy</h3>
+                <p>An architect creates multiple building drafts, improving each version based on client feedback until the final design is approved.</p>
+
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    Iterative Prompting is an ongoing refinement process that gradually improves the output through multiple prompt-and-feedback cycles.
+                </div>
+                
+                <div class="highlight-box">
+                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+                    Start with a simple prompt, review the output, provide specific feedback, and repeat until the result meets your requirements.
+                </div>
+            </div>
+
+            <!-- Mini Project Section -->
+            <div class="lesson-card" style="border: 2px solid var(--primary-color);">
+                <h2>🚀 Module 4 Mini Project: AI Research Assistant</h2>
+                <h3>Project Objective</h3>
+                <p>Build an AI-powered Research Assistant that can:</p>
+                <ul>
+                    <li>Summarize research papers.</li>
+                    <li>Extract key findings.</li>
+                    <li>Compare multiple sources.</li>
+                    <li>Generate literature reviews.</li>
+                    <li>Verify important facts.</li>
+                    <li>Produce structured research reports.</li>
+                </ul>
+
+                <h3>Prompting Techniques Used</h3>
+                <ul style="list-style-type: none; padding-left: 0;">
+                    <li>✅ Chain of Thought</li>
+                    <li>✅ Self Consistency</li>
+                    <li>✅ Tree of Thought</li>
+                    <li>✅ Prompt Chaining</li>
+                    <li>✅ Reflection Prompting</li>
+                    <li>✅ Self Critique</li>
+                    <li>✅ Verification Prompting</li>
+                    <li>✅ Iterative Prompting</li>
+                </ul>
+
+                <h3 style="margin-top: 30px;">Interactive Prompt Field</h3>
+                <p>Write your advanced research prompt below (e.g., <em>"Analyze this topic using Chain of Thought, verify your facts, and output a structured report."</em>):</p>
+                
+                <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 15px;">
+                    <textarea id="project-prompt-input" rows="5" style="width: 100%; padding: 16px; border-radius: 8px; border: 1px solid var(--color-border); background: var(--color-bg-primary); color: var(--color-text-primary); font-family: 'Inter', sans-serif; font-size: 16px; resize: vertical;" placeholder="Type your advanced prompt here..."></textarea>
+                    
+                    <button id="run-prompt-btn" style="align-self: flex-start; background: blue; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,255,0.2);">Run Prompt</button>
+                    
+                    <div id="project-prompt-output" style="display: none; margin-top: 15px; padding: 20px; background: rgba(34, 197, 94, 0.1); border-left: 4px solid #22c55e; border-radius: 0 8px 8px 0; color: var(--color-text-primary);">
+                        <strong>AI Response:</strong><br><br>
+                        <span style="font-style: italic;">"<strong>Reasoning Steps (Chain of Thought):</strong><br>1. Analyzing the topic for key facts...<br>2. Verifying sources and statistics...<br>3. Structuring the report...<br><br><strong>Final Research Summary:</strong><br>The data indicates a strong correlation in recent findings. All facts have been independently verified against baseline datasets."</span>
+                        <br><br>
+                        <small style="color: var(--color-text-secondary);">(Note: This is a simulated response demonstrating how AI uses advanced reasoning techniques.)</small>
+                    </div>
+                </div>
+                
+                <script>
+                    document.getElementById('run-prompt-btn').addEventListener('click', function() {
+                        const input = document.getElementById('project-prompt-input').value;
+                        if(input.trim() === '') {
+                            alert('Please write a prompt first!');
+                            return;
+                        }
+                        this.innerHTML = "Processing (Reasoning...)";
+                        setTimeout(() => {
+                            this.innerHTML = "Run Prompt";
+                            document.getElementById('project-prompt-output').style.display = "block";
+                        }, 1200);
+                    });
+                </script>
+            </div>
+
+            <!-- Quiz Section -->
+            <div class="lesson-card" style="border: 2px solid var(--primary-color); background: rgba(37,99,235,0.02);">
+                <h2 style="border-bottom: none; margin-bottom: 10px;">🧠 Module 4 Quiz: Test Your Knowledge!</h2>
+                <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- MCQ 1 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">1. What is Chain of Thought Prompting?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="A" style="margin-right: 10px;">A) Asking AI to guess the answer instantly.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="B" style="margin-right: 10px;">B) Encouraging the AI to solve a problem using logical step-by-step reasoning.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="C" style="margin-right: 10px;">C) Connecting multiple prompts together.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="D" style="margin-right: 10px;">D) Removing constraints from a prompt.</label>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 2 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">2. How does Tree of Thought differ from Chain of Thought?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="A" style="margin-right: 10px;">A) Tree of Thought does not use logic.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="B" style="margin-right: 10px;">B) Tree of Thought explores multiple reasoning branches before deciding, while Chain of Thought follows a single path.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="C" style="margin-right: 10px;">C) Chain of Thought is only used for image generation.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="D" style="margin-right: 10px;">D) They are exactly the same thing.</label>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 3 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">3. What is Prompt Chaining?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="A" style="margin-right: 10px;">A) Using multiple examples in one prompt.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="B" style="margin-right: 10px;">B) Limiting the AI's output format.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="C" style="margin-right: 10px;">C) Connecting multiple prompts so the output of one becomes the input for the next.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="D" style="margin-right: 10px;">D) Repeating the same prompt infinitely.</label>
+                        </div>
+                    </div>
+                    
+                    <!-- MCQ 4 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">4. Which technique involves the AI checking its own answer for mistakes before finalizing it?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="A" style="margin-right: 10px;">A) Prompt Chaining</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="B" style="margin-right: 10px;">B) Zero-shot Prompting</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="C" style="margin-right: 10px;">C) Self Critique</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="D" style="margin-right: 10px;">D) Output Templates</label>
+                        </div>
+                    </div>
+                    
+                    <!-- MCQ 5 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">5. What is the main goal of Verification Prompting?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="A" style="margin-right: 10px;">A) To generate images faster.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="B" style="margin-right: 10px;">B) To reduce hallucinations and improve factual accuracy by checking evidence.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="C" style="margin-right: 10px;">C) To ask the user to verify their identity.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="D" style="margin-right: 10px;">D) To limit output length.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation to Next Module -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 40px; margin-bottom: 20px;">
+                <a href="/academy/module3" class="btn btn-secondary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; color: var(--color-text-primary); border: 1px solid var(--color-border); background: var(--color-bg-secondary); margin-right: 15px;">&larr; Back to Module 3</a>
+                <a href="/academy/module5" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    Move Next Module 5 &rarr;
+                </a>
+            </div>
+        </div></main>
+</div>
+
+<script>
+    // Include sidebar toggle functionality
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarDrawer = document.getElementById('sidebarDrawer');
+
+    if (menuToggleBtn) menuToggleBtn.addEventListener('click', () => { sidebarDrawer.classList.add('open'); sidebarOverlay.classList.add('show'); });
+    if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', () => { sidebarDrawer.classList.remove('open'); sidebarOverlay.classList.remove('show'); });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', () => { sidebarDrawer.classList.remove('open'); sidebarOverlay.classList.remove('show'); });
+</script>
+{% endblock %}

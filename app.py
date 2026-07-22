@@ -176,9 +176,21 @@ def index():
     return render_template('index.html', user=user)
 
 @app.route('/academy')
+@app.route('/academy/')
 def academy():
     user = session.get('user')
     return render_template('academy.html', user=user)
+
+@app.route('/academy/module<int:module_id>')
+@app.route('/academy/module/<int:module_id>')
+def academy_module(module_id):
+    user = session.get('user')
+    template_name = f'academy/module{module_id}.html'
+    try:
+        return render_template(template_name, user=user)
+    except Exception as e:
+        print(f"Error loading module {module_id}: {e}")
+        return redirect(url_for('academy'))
 
 @app.route('/signup')
 def signup():

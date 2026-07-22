@@ -1,0 +1,1257 @@
+{% extends 'base.html' %}
+
+{% block title %}Prompt Academy - Final Capstone Assessment{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}?v=3">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/tools.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/academy.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+    /* Force Light Theme for Module 17 */
+    .module17-body {
+        background: #f8fafc;
+        background-image:
+            radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 0) 0, transparent 50%),
+            radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 0) 0, transparent 50%),
+            radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 0) 0, transparent 50%);
+        color: #1e293b;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    .capstone-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 24px;
+        position: relative;
+    }
+
+    /* Glassmorphism Cards */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 40px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Gradients & Text */
+    .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-image: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%);
+    }
+
+    .capstone-header {
+        text-align: center;
+        margin-bottom: 50px;
+        animation: fadeInDown 0.8s ease;
+    }
+
+    .capstone-header h1 {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 16px;
+        letter-spacing: -1px;
+    }
+
+    .capstone-header p {
+        font-size: 18px;
+        color: #475569;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Progress Section */
+    .progress-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: white;
+        padding: 24px 32px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .progress-modules {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        flex: 1;
+    }
+
+    .module-pill {
+        background: #ecfdf5;
+        color: #059669;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        border: 1px solid #a7f3d0;
+    }
+
+    .module-pill.current {
+        background: #e0e7ff;
+        color: #4f46e5;
+        border-color: #c7d2fe;
+    }
+
+    .progress-bar-container {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .progress-bar-bg {
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #4f46e5, #0ea5e9);
+        border-radius: 4px;
+        transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Project Cards */
+    .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        border-bottom: 2px solid #f1f5f9;
+        padding-bottom: 16px;
+    }
+
+    .project-header h2 {
+        margin: 0;
+        font-size: 28px;
+        color: #1e293b;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .framework-select {
+        padding: 10px 16px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background: white;
+        font-size: 15px;
+        font-family: 'Inter', sans-serif;
+        color: #334155;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s;
+    }
+
+    .framework-select:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .prompt-textarea {
+        width: 100%;
+        min-height: 200px;
+        padding: 20px;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        background: #f8fafc;
+        font-family: 'Inter', sans-serif;
+        font-size: 16px;
+        color: #1e293b;
+        resize: vertical;
+        outline: none;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+
+    .prompt-textarea:focus {
+        border-color: #4f46e5;
+        background: white;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.05);
+    }
+
+    .char-counter {
+        text-align: right;
+        font-size: 13px;
+        color: #64748b;
+        margin-top: 8px;
+    }
+
+    /* Live Score Card */
+    .live-score-card {
+        margin-top: 24px;
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 24px;
+        border: 1px solid #e2e8f0;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 24px;
+        align-items: center;
+    }
+
+    @media(max-width: 768px) {
+        .live-score-card {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .score-circle {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: conic-gradient(#4f46e5 0%, #e2e8f0 0%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        transition: background 0.5s ease;
+    }
+
+    .score-circle::before {
+        content: '';
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: #f8fafc;
+        border-radius: 50%;
+    }
+
+    .score-value {
+        position: relative;
+        font-size: 28px;
+        font-weight: 800;
+        color: #1e293b;
+        z-index: 1;
+    }
+
+    .score-stars {
+        text-align: center;
+        margin-top: 12px;
+        color: #fbbf24;
+        font-size: 18px;
+        letter-spacing: 2px;
+    }
+
+    .score-metrics {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .metric-item {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #475569;
+    }
+
+    .metric-bar-bg {
+        width: 60%;
+        height: 6px;
+        background: #e2e8f0;
+        border-radius: 3px;
+        margin-top: 6px;
+        overflow: hidden;
+    }
+
+    .metric-bar-fill {
+        height: 100%;
+        background: #0ea5e9;
+        border-radius: 3px;
+        width: 0%;
+        transition: width 0.3s ease;
+    }
+
+    .ai-feedback {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        font-size: 14px;
+    }
+
+    .feedback-box {
+        background: white;
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .feedback-box h4 {
+        margin: 0 0 8px 0;
+        color: #1e293b;
+        font-size: 15px;
+    }
+
+    .feedback-box ul {
+        margin: 0;
+        padding-left: 20px;
+        color: #475569;
+    }
+
+    /* Submit Button */
+    .submit-container {
+        text-align: center;
+        margin: 60px 0;
+    }
+
+    .btn-premium {
+        background: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%);
+        color: white;
+        border: none;
+        padding: 20px 48px;
+        font-size: 20px;
+        font-weight: 700;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
+        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .btn-premium:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(79, 70, 229, 0.5);
+    }
+
+    .btn-premium:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Loading Overlay */
+    #loadingOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease;
+    }
+
+    #loadingOverlay.active {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .brain-loader {
+        font-size: 64px;
+        animation: pulse 1.5s infinite;
+        margin-bottom: 24px;
+    }
+
+    .loading-text {
+        font-size: 24px;
+        font-weight: 600;
+        color: #1e293b;
+        background: linear-gradient(90deg, #4f46e5, #0ea5e9, #4f46e5);
+        background-size: 200% auto;
+        color: #000;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shine 2s linear infinite;
+    }
+
+    /* Dashboard & Results */
+    #resultsScreen {
+        display: none;
+        animation: slideUp 0.8s ease forwards;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 32px;
+        margin-bottom: 40px;
+    }
+
+    @media(max-width: 900px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .score-display {
+        text-align: center;
+        padding: 40px;
+        background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 100%);
+        border-radius: 20px;
+        border: 1px solid #bae6fd;
+    }
+
+    .overall-percent {
+        font-size: 64px;
+        font-weight: 800;
+        color: #0369a1;
+        line-height: 1;
+    }
+
+    .grade-display {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0f766e;
+        margin-top: 12px;
+    }
+
+    .chart-container {
+        background: white;
+        padding: 24px;
+        border-radius: 20px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+
+    .badges-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: center;
+        margin: 40px 0;
+    }
+
+    .badge {
+        background: white;
+        border: 1px solid #e2e8f0;
+        padding: 12px 24px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        color: #334155;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .badge:nth-child(2) {
+        animation-delay: 0.5s;
+    }
+
+    .badge:nth-child(3) {
+        animation-delay: 1s;
+    }
+
+    .badge:nth-child(4) {
+        animation-delay: 1.5s;
+    }
+
+    .badge:nth-child(5) {
+        animation-delay: 2s;
+    }
+
+    /* Certificate */
+    .certificate-wrapper {
+        background: #f8fafc;
+        padding: 40px;
+        border-radius: 24px;
+        text-align: center;
+        border: 1px dashed #cbd5e1;
+    }
+
+    .certificate {
+        background: white;
+        width: 800px;
+        height: 600px;
+        margin: 0 auto;
+        position: relative;
+        padding: 40px;
+        box-sizing: border-box;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        font-family: 'Playfair Display', serif;
+        overflow: hidden;
+    }
+
+    @media(max-width: 900px) {
+        .certificate-wrapper {
+            overflow-x: auto;
+        }
+    }
+
+    .cert-border {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+        border: 2px solid #cbd5e1;
+        outline: 1px solid #cbd5e1;
+        outline-offset: -8px;
+        pointer-events: none;
+    }
+
+    .cert-header {
+        color: #1e293b;
+        font-size: 16px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-top: 20px;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+    }
+
+    .cert-title {
+        font-size: 42px;
+        color: #4f46e5;
+        margin: 30px 0 10px;
+        font-weight: 700;
+    }
+
+    .cert-body {
+        font-size: 18px;
+        color: #475569;
+        margin: 20px 0;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .cert-name {
+        font-size: 36px;
+        color: #1e293b;
+        font-weight: 700;
+        margin: 20px 0;
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+        border-bottom: 2px solid #e2e8f0;
+        display: inline-block;
+        padding-bottom: 8px;
+        min-width: 400px;
+    }
+
+    .cert-course {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0ea5e9;
+        margin: 20px 0;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .cert-topics {
+        font-size: 13px;
+        color: #64748b;
+        font-family: 'Inter', sans-serif;
+        line-height: 1.6;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .cert-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        position: absolute;
+        bottom: 50px;
+        left: 60px;
+        right: 60px;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .cert-sig {
+        border-top: 1px solid #cbd5e1;
+        padding-top: 8px;
+        font-size: 14px;
+        color: #475569;
+        text-align: center;
+        width: 200px;
+    }
+
+    .cert-sig-img {
+        font-family: 'Playfair Display', cursive;
+        font-size: 24px;
+        color: #1e293b;
+        margin-bottom: 5px;
+        font-style: italic;
+    }
+
+    .cert-seal {
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, #fbbf24 0%, #d97706 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
+        border: 4px dashed rgba(255, 255, 255, 0.5);
+    }
+
+    .cert-meta {
+        position: absolute;
+        bottom: 25px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 10px;
+        color: #94a3b8;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .download-actions {
+        margin-top: 30px;
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-pdf {
+        background: #ef4444;
+        color: white;
+    }
+
+    .btn-png {
+        background: #10b981;
+        color: white;
+    }
+
+    .btn-social {
+        background: #f1f5f9;
+        color: #334155;
+        border: 1px solid #cbd5e1;
+    }
+
+    .btn-action:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes shine {
+        0% {
+            background-position: 200% center;
+        }
+
+        100% {
+            background-position: -200% center;
+        }
+    }
+
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="module17-body">
+    <!-- Navbar (simplified for full focus) -->
+    <header
+        style="background: white; padding: 16px 24px; display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0;">
+        <div style="font-weight: 700; font-size: 20px; color: #1e293b; display: flex; align-items: center; gap: 12px;">
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
+                alt="Logo" style="height: 32px;">
+            Prompt Academy
+        </div>
+        <div>
+            <a href="/academy" style="color: #64748b; text-decoration: none; font-weight: 500;">&larr; Back to
+                Roadmap</a>
+        </div>
+    </header>
+
+    <div class="capstone-container" id="assessmentForm">
+        <div class="capstone-header">
+            <h1 class="text-gradient">🎓 Final Capstone Assessment</h1>
+            <p>Real World Prompt Engineering Challenge.<br>Apply everything you've learned from Modules 1–16 to solve
+                real-world projects.</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-modules">
+                <div class="module-pill">✅ Mod 1</div>
+                <div class="module-pill">✅ Mod 2</div>
+                <div class="module-pill" style="opacity: 0.5;">...</div>
+                <div class="module-pill">✅ Mod 16</div>
+                <div class="module-pill current">Mod 17 (Final)</div>
+            </div>
+            <div class="progress-bar-container">
+                <div
+                    style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; font-weight:600; color:#475569;">
+                    <span>Overall Progress</span>
+                    <span>95%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="mainProgress"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card">
+            <h2 style="margin-top:0; color:#1e293b; display:flex; align-items:center; gap:8px;">📋 Assessment
+                Instructions</h2>
+            <p style="color:#475569; font-size:16px; line-height:1.6;">
+                Write prompts using the Prompt Engineering Frameworks learned during the course. You may choose any
+                suitable framework (e.g., RTF, RISEN, COSTAR, CREATE).
+            </p>
+            <div
+                style="background:#f1f5f9; padding:16px; border-radius:8px; margin-top:20px; font-size:14px; color:#334155;">
+                <strong>Evaluation Criteria:</strong> Clarity • Structure • Context • Constraints • Output Format •
+                Creativity • Accuracy
+            </div>
+        </div>
+
+        <!-- Project 1 -->
+        <div class="glass-card">
+            <div class="project-header">
+                <h2>🚀 Project 1: Prompt Enhancer</h2>
+                <select class="framework-select" id="fw1" onchange="evaluatePrompt(1)">
+                    <option value="">Select Framework...</option>
+                    <option value="RTF">RTF</option>
+                    <option value="RISEN">RISEN</option>
+                    <option value="COSTAR">COSTAR</option>
+                    <option value="CREATE">CREATE</option>
+                    <option value="TRACE">TRACE</option>
+                    <option value="CLEAR">CLEAR</option>
+                    <option value="STAR">STAR</option>
+                    <option value="ReAct">ReAct</option>
+                </select>
+            </div>
+            <p style="color:#475569; margin-bottom:20px;">Build a professional prompt that improves weak prompts into
+                high-quality prompts. The AI should: Analyze, Improve, Explain, and Generate.</p>
+
+            <textarea id="p1_text" class="prompt-textarea" placeholder="Write your prompt here... Use any Framework."
+                oninput="evaluatePrompt(1)"></textarea>
+            <div class="char-counter"><span id="p1_count">0</span> characters</div>
+
+            <!-- Live Score P1 -->
+            <div class="live-score-card">
+                <div>
+                    <div class="score-circle" id="p1_circle">
+                        <span class="score-value" id="p1_score">0%</span>
+                    </div>
+                    <div class="score-stars" id="p1_stars">☆☆☆☆☆</div>
+                </div>
+                <div>
+                    <div class="score-metrics">
+                        <div>
+                            <div class="metric-item"><span>Structure</span><span id="p1_m1">0/10</span></div>
+                            <div class="metric-bar-bg">
+                                <div class="metric-bar-fill" id="p1_b1"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="metric-item"><span>Clarity</span><span id="p1_m2">0/10</span></div>
+                            <div class="metric-bar-bg">
+                                <div class="metric-bar-fill" id="p1_b2"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="metric-item"><span>Context</span><span id="p1_m3">0/10</span></div>
+                            <div class="metric-bar-bg">
+                                <div class="metric-bar-fill" id="p1_b3"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="metric-item"><span>Constraints</span><span id="p1_m4">0/10</span></div>
+                            <div class="metric-bar-bg">
+                                <div class="metric-bar-fill" id="p1_b4"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ai-feedback">
+                        <div class="feedback-box">
+                            <h4>AI Strengths</h4>
+                            <ul id="p1_strengths">
+                                <li>Start typing...</li>
+                            </ul>
+                        </div>
+                        <div class="feedback-box">
+                            <h4>AI Suggestions</h4>
+                            <ul id="p1_suggestions">
+                                <li>Select a framework.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="glass-card">
+            <div class="project-header">
+                <h2>⚡ Project 2: Prompt Optimizer</h2>
+                <select class="framework-select" id="fw2" onchange="evaluatePrompt(2)">
+                    <option value="">Select Framework...</option>
+                    <option value="CARE">CARE</option>
+                    <option value="TAG">TAG</option>
+                    <option value="APE">APE</option>
+                    <option value="SMART">SMART</option>
+                    <option value="CRISPE">CRISPE</option>
+                    <option value="PACE">PACE</option>
+                </select>
+            </div>
+            <p style="color:#475569; margin-bottom:20px;">Build an AI Prompt Optimizer. The prompt should: Reduce
+                Tokens, Increase Accuracy, Improve Structure, Reduce Cost.</p>
+
+            <textarea id="p2_text" class="prompt-textarea" placeholder="Write your optimized prompt..."
+                oninput="evaluatePrompt(2)"></textarea>
+            <div class="char-counter"><span id="p2_count">0</span> characters</div>
+
+            <!-- Live Score P2 -->
+            <div class="live-score-card">
+                <div>
+                    <div class="score-circle" id="p2_circle">
+                        <span class="score-value" id="p2_score">0%</span>
+                    </div>
+                    <div class="score-stars" id="p2_stars">☆☆☆☆☆</div>
+                </div>
+                <div>
+                    <div class="score-metrics">
+                        <div>
+                            <div class="metric-item"><span>Efficiency</span><span id="p2_m1">0/10</span></div>
+                            <div class="metric-bar-bg">
+                                <div class="metric-bar-fill" id="p2_b1"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="metric-item"><span>Format</span><span id="p2_m2">0/10</span></div>
+                            <div class="metric-bar-bg">
+                                <div class="metric-bar-fill" id="p2_b2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="glass-card">
+            <div class="project-header">
+                <h2>✅ Project 3: Prompt Validator</h2>
+                <select class="framework-select" id="fw3" onchange="evaluatePrompt(3)">
+                    <option value="">Select Framework...</option>
+                    <option value="ICE">ICE</option>
+                    <option value="RACE">RACE</option>
+                    <option value="BROKE">BROKE</option>
+                    <option value="Chain of Density">Chain of Density</option>
+                    <option value="Custom">Custom Framework</option>
+                </select>
+            </div>
+            <p style="color:#475569; margin-bottom:20px;">Build an AI Prompt Validator to Evaluate Quality, Detect
+                Problems, and Generate a Score.</p>
+
+            <textarea id="p3_text" class="prompt-textarea" placeholder="Write Prompt..."
+                oninput="evaluatePrompt(3)"></textarea>
+            <div class="char-counter"><span id="p3_count">0</span> characters</div>
+
+            <!-- Live Score P3 -->
+            <div class="live-score-card">
+                <div>
+                    <div class="score-circle" id="p3_circle">
+                        <span class="score-value" id="p3_score">0%</span>
+                    </div>
+                    <div class="score-stars" id="p3_stars">☆☆☆☆☆</div>
+                </div>
+                <div>
+                    <div class="score-metrics">
+                        <div>
+                            <div class="metric-item"><span>Security</span><span id="p3_m1">0/10</span></div>
+                            <div class="metric-bar-bg">
+                                <div class="metric-bar-fill" id="p3_b1"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="metric-item"><span>Resistance</span><span id="p3_m2">0/10</span></div>
+                            <div class="metric-bar-bg">
+                                <div class="metric-bar-fill" id="p3_b2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="submit-container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="/academy/module16" class="btn btn-secondary"
+                style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; text-decoration: none; color: var(--color-text-primary); border: 1px solid var(--color-border); background: var(--color-bg-secondary); margin-right: 15px;">&larr;
+                Back to Module 16</a>
+            <button class="btn-premium" id="submitBtn" onclick="submitAssessment()">Submit Final Assessment</button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <div class="brain-loader">🧠</div>
+        <div class="loading-text" id="loadingText">Evaluating...</div>
+        <div
+            style="width: 200px; height: 4px; background: #e2e8f0; margin-top:20px; border-radius:2px; overflow:hidden;">
+            <div style="height:100%; width:100%; background:#4f46e5; animation: slideRight 1s infinite alternate;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Dashboard -->
+    <div class="capstone-container" id="resultsScreen">
+        <div class="capstone-header">
+            <h1>🎉 Congratulations!</h1>
+            <p style="font-size: 24px; color: #0ea5e9; font-weight:600;">You are now a Certified Prompt Engineer.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="glass-card score-display">
+                <h3 style="margin-top:0; color:#475569; font-size:16px; text-transform:uppercase; letter-spacing:1px;">
+                    Overall Score</h3>
+                <div class="overall-percent" id="finalScoreDisplay">96%</div>
+                <div class="grade-display" id="finalGradeDisplay">Grade: A+</div>
+                <p style="margin-top:20px; color:#64748b; font-size:14px;">Outstanding Performance across all 17
+                    Modules.</p>
+            </div>
+
+            <div class="glass-card chart-container">
+                <h3 style="margin-top:0; margin-bottom:20px; color:#1e293b; text-align:center;">Skill Radar</h3>
+                <div style="position: relative; height:300px; width:100%;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="badges-section">
+            <div class="badge">🏆 Prompt Master</div>
+            <div class="badge">🧠 AI Thinker</div>
+            <div class="badge">⚡ Framework Expert</div>
+            <div class="badge">🚀 Production Ready</div>
+            <div class="badge">🤖 AI Agent Builder</div>
+        </div>
+
+        <!-- Certificate -->
+        <div class="certificate-wrapper" id="certWrapper">
+            <div class="certificate" id="certificateNode">
+                <div class="cert-border"></div>
+                <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
+                    alt="Logo" style="height: 50px;">
+                <div class="cert-header">Certificate of Completion</div>
+                <div class="cert-title">Professional Prompt Engineering Master Program</div>
+                <div class="cert-body">This certifies that</div>
+                <div class="cert-name">{{ user.displayName if user else 'Student Name' }}</div>
+                <div class="cert-body">has successfully completed the</div>
+                <div class="cert-course">Professional Prompt Engineering Master Program</div>
+
+                <div class="cert-topics">
+                    Covering Prompt Engineering, AI Image Prompting, Video Prompting, RAG, AI Agents, Automation, LLM
+                    APIs, Security, and PromptOps with an overall score of <strong id="certScore">96%</strong> (Grade:
+                    <strong id="certGrade">A+</strong>).
+                </div>
+
+                <div class="cert-footer">
+                    <div class="cert-sig">
+                        <div class="cert-sig-img">Antigravity</div>
+                        Instructor Signature
+                    </div>
+                    <div class="cert-seal">PROMPT<br>MASTER</div>
+                    <div class="cert-sig"
+                        style="border:none; padding:0; display:flex; flex-direction:column; align-items:center;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://promptbazaar.com/verify/12345"
+                            alt="QR" style="width:70px; height:70px; margin-bottom:10px;">
+                        <div style="font-size:10px;">Verify at promptbazaar.com</div>
+                    </div>
+                </div>
+
+                <div class="cert-meta">
+                    Certificate ID: PB-{{ range(10000, 99999) | random }} | Issued: <span id="issueDate"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="download-actions">
+            <button class="btn-action btn-pdf" onclick="downloadPDF()">📄 Download PDF</button>
+            <button class="btn-action btn-png" onclick="downloadPNG()">🖼️ Download PNG</button>
+            <button class="btn-action btn-social">🔗 Share LinkedIn</button>
+        </div>
+
+        <div style="text-align:center; margin-top:60px;">
+            <a href="/academy" class="btn-premium" style="text-decoration:none; display:inline-block;">Return to
+                Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Animate progress bar on load
+    setTimeout(() => {
+        document.getElementById('mainProgress').style.width = '95%';
+    }, 500);
+
+    // Set today's date on cert
+    const date = new Date();
+    document.getElementById('issueDate').innerText = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    // Simulated Prompt Evaluation Logic
+    function evaluatePrompt(pid) {
+        const text = document.getElementById(`p${pid}_text`).value;
+        const fw = document.getElementById(`fw${pid}`).value;
+        const count = text.length;
+        document.getElementById(`p${pid}_count`).innerText = count;
+
+        let score = 0;
+        let s_val = 0, c_val = 0, cx_val = 0, cn_val = 0;
+
+        if (count > 20) { score += 20; s_val = 4; c_val = 3; }
+        if (count > 100) { score += 30; s_val = 7; c_val = 8; cx_val = 6; cn_val = 5; }
+        if (count > 250) { score += 20; s_val = 9; c_val = 9; cx_val = 9; cn_val = 9; }
+
+        if (fw !== "") { score += 15; s_val = 10; }
+
+        // Keyword checking simulation
+        const lower = text.toLowerCase();
+        if (lower.includes("act as") || lower.includes("role")) score += 5;
+        if (lower.includes("format") || lower.includes("output")) { score += 5; cn_val = 10; }
+        if (lower.includes("constraint") || lower.includes("rule")) { score += 5; cx_val = 10; }
+
+        if (score > 98) score = 98; // Leave room for perfection
+        if (count === 0) score = 0;
+
+        // Update UI
+        document.getElementById(`p${pid}_score`).innerText = score + '%';
+        document.getElementById(`p${pid}_circle`).style.background = `conic-gradient(#4f46e5 ${score}%, #e2e8f0 ${score}%)`;
+
+        // Stars
+        let stars = "☆☆☆☆☆";
+        if (score > 20) stars = "★☆☆☆☆";
+        if (score > 40) stars = "★★☆☆☆";
+        if (score > 60) stars = "★★★☆☆";
+        if (score > 80) stars = "★★★★☆";
+        if (score > 90) stars = "★★★★★";
+        document.getElementById(`p${pid}_stars`).innerText = stars;
+
+        // Metrics
+        updateMetric(pid, 1, s_val);
+        updateMetric(pid, 2, c_val);
+        if (pid === 1) {
+            updateMetric(pid, 3, cx_val);
+            updateMetric(pid, 4, cn_val);
+        }
+
+        // Feedback logic
+        if (pid === 1) {
+            let str = "", sug = "";
+            if (fw) str += `<li>Used ${fw} framework.</li>`;
+            else sug += `<li>Select a framework to structure your prompt.</li>`;
+
+            if (count > 100) str += "<li>Good length and detail.</li>";
+            else if (count > 0) sug += "<li>Add more context and constraints.</li>";
+
+            if (lower.includes("format")) str += "<li>Output format specified.</li>";
+            else sug += "<li>Define the expected output format.</li>";
+
+            document.getElementById('p1_strengths').innerHTML = str || "<li>Keep writing...</li>";
+            document.getElementById('p1_suggestions').innerHTML = sug || "<li>Looking good!</li>";
+        }
+    }
+
+    function updateMetric(pid, mid, val) {
+        const m = document.getElementById(`p${pid}_m${mid}`);
+        const b = document.getElementById(`p${pid}_b${mid}`);
+        if (m && b) {
+            m.innerText = `${val}/10`;
+            b.style.width = `${val * 10}%`;
+        }
+    }
+
+    // Submit Logic
+    function submitAssessment() {
+        // Validate minimally
+        const fw1 = document.getElementById('fw1').value;
+        const fw2 = document.getElementById('fw2').value;
+        const fw3 = document.getElementById('fw3').value;
+        const t1 = document.getElementById('p1_text').value;
+
+        if (!t1 || !fw1 || !fw2 || !fw3) {
+            alert("Please complete all projects and select a framework for each.");
+            return;
+        }
+
+        document.getElementById('assessmentForm').style.display = 'none';
+        const loader = document.getElementById('loadingOverlay');
+        loader.classList.add('active');
+
+        let texts = ["Evaluating Frameworks...", "Analyzing Structure...", "Checking Constraints...", "Generating Certificate..."];
+        let i = 0;
+        let intv = setInterval(() => {
+            if (i < texts.length) {
+                document.getElementById('loadingText').innerText = texts[i];
+                i++;
+            }
+        }, 800);
+
+        setTimeout(() => {
+            clearInterval(intv);
+            loader.classList.remove('active');
+            showResults();
+        }, 4000);
+    }
+
+    function showResults() {
+        document.getElementById('resultsScreen').style.display = 'block';
+        window.scrollTo(0, 0);
+
+        // Confetti
+        var duration = 3 * 1000;
+        var animationEnd = Date.now() + duration;
+        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+
+        var interval = setInterval(function () {
+            var timeLeft = animationEnd - Date.now();
+            if (timeLeft <= 0) return clearInterval(interval);
+            var particleCount = 50 * (timeLeft / duration);
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+        }, 250);
+
+        // Generate Chart
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Prompt Design', 'Framework Usage', 'Optimization', 'Reasoning', 'Security', 'Creativity'],
+                datasets: [{
+                    label: 'Your Skill Level',
+                    data: [95, 98, 90, 88, 92, 96],
+                    backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                    borderColor: 'rgba(79, 70, 229, 1)',
+                    pointBackgroundColor: 'rgba(14, 165, 233, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(14, 165, 233, 1)'
+                }]
+            },
+            options: {
+                scales: { r: { angleLines: { color: 'rgba(0,0,0,0.1)' }, grid: { color: 'rgba(0,0,0,0.1)' }, pointLabels: { font: { size: 12, family: 'Inter' } }, suggestedMin: 50, suggestedMax: 100 } },
+                plugins: { legend: { display: false } },
+                maintainAspectRatio: false
+            }
+        });
+    }
+
+    // Download functions
+    function downloadPNG() {
+        const cert = document.getElementById('certificateNode');
+        html2canvas(cert, { scale: 2 }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = 'Prompt_Engineering_Certificate.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
+    }
+
+    function downloadPDF() {
+        const cert = document.getElementById('certificateNode');
+        html2canvas(cert, { scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            // jsPDF (orientation, unit, format) -> landscape, mm, a4 roughly 297x210
+            const pdf = new jspdf.jsPDF('l', 'mm', [211.6, 282.2]); // adjusted for 800x600 ratio
+            pdf.addImage(imgData, 'PNG', 0, 0, 282.2, 211.6);
+            pdf.save('Prompt_Engineering_Certificate.pdf');
+        });
+    }
+</script>
+{% endblock %}
