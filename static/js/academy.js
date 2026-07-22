@@ -83,6 +83,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dataLes = await resLes.json();
                 academyData.lessons = dataLes.data.results.sort((a,b) => a.OrderIndex - b.OrderIndex);
                 
+                // Fallback if API is empty or hasn't been populated via Admin Dashboard yet
+                if (academyData.courses.length === 0) {
+                    academyData.courses = [{
+                        CourseID: 'C1',
+                        CourseName: 'Prompt Engineering Master Course',
+                        CourseLevel: 'Beginner to Advanced',
+                        CourseDescription: 'Master Prompt Engineering from Scratch to Professional Level.',
+                        Status: 'PUBLISHED',
+                        OrderIndex: 0
+                    }];
+                    
+                    // Generate 17 Modules as placeholders
+                    academyData.modules = [];
+                    for(let i=1; i<=17; i++) {
+                        let title = `Module ${i}`;
+                        if(i===1) title = "AI & Generative AI Fundamentals";
+                        if(i===2) title = "Prompt Engineering Basics";
+                        if(i===3) title = "Advanced Prompting Techniques";
+                        if(i===17) title = "Final Capstone Project";
+                        
+                        academyData.modules.push({
+                            ModuleID: `M${i}`,
+                            CourseID: 'C1',
+                            ModuleNumber: i,
+                            ModuleTitle: title,
+                            OrderIndex: i
+                        });
+                    }
+                }
+                
                 // Initialize progress for first course if empty
                 if (academyData.courses.length > 0 && progress.unlockedCourses.length === 0) {
                     progress.unlockedCourses.push(academyData.courses[0].CourseID);
