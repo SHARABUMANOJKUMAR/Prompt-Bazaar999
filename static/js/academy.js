@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Generate 17 Modules as placeholders
                     academyData.modules = [];
+                    academyData.lessons = [];
                     for(let i=1; i<=17; i++) {
                         let title = `Module ${i}`;
                         if(i===1) title = "AI & Generative AI Fundamentals";
@@ -116,6 +117,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             ModuleTitle: title,
                             OrderIndex: i
                         });
+                        
+                        // Generate 2 placeholder lessons per module
+                        for(let j=1; j<=2; j++) {
+                            academyData.lessons.push({
+                                LessonID: `L${i}_${j}`,
+                                ModuleID: `M${i}`,
+                                LessonNumber: j,
+                                LessonTitle: j === 1 ? `Introduction to ${title}` : `Deep Dive: ${title}`,
+                                LessonDuration: j === 1 ? "10:00" : "25:00",
+                                LessonContent: "<p>This is a placeholder lesson for demonstration purposes. Once the database is populated, real content will appear here.</p>",
+                                OrderIndex: j
+                            });
+                        }
                     }
                 }
                 
