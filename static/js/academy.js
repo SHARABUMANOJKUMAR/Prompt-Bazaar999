@@ -72,16 +72,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             
             if (data.success) {
-                academyData.courses = data.data.results.filter(c => c.Status === 'PUBLISHED').sort((a,b) => a.OrderIndex - b.OrderIndex);
+                academyData.courses = (data && data.data && data.data.results)
+                    ? data.data.results.filter(c => c.Status === 'PUBLISHED').sort((a,b) => a.OrderIndex - b.OrderIndex)
+                    : [];
                 
                 // Fetch modules and lessons
                 const resMod = await fetch(GAS_ACADEMY_URL, { method: 'POST', body: JSON.stringify({ action: "searchModule" }) });
                 const dataMod = await resMod.json();
-                academyData.modules = dataMod.data.results.sort((a,b) => a.OrderIndex - b.OrderIndex);
+                academyData.modules = (dataMod && dataMod.data && dataMod.data.results)
+                    ? dataMod.data.results.sort((a,b) => a.OrderIndex - b.OrderIndex)
+                    : [];
                 
                 const resLes = await fetch(GAS_ACADEMY_URL, { method: 'POST', body: JSON.stringify({ action: "searchLesson" }) });
                 const dataLes = await resLes.json();
-                academyData.lessons = dataLes.data.results.sort((a,b) => a.OrderIndex - b.OrderIndex);
+                academyData.lessons = (dataLes && dataLes.data && dataLes.data.results)
+                    ? dataLes.data.results.sort((a,b) => a.OrderIndex - b.OrderIndex)
+                    : [];
                 
                 // Fallback if API is empty or hasn't been populated via Admin Dashboard yet
                 if (academyData.courses.length === 0) {
