@@ -1,0 +1,17 @@
+en layers.
+                </p>
+
+                <h4>3. Output Layer</h4>
+
+                <p>
+                    Produces the final prediction or result.
+                </p>
+
+                <h2>📖 Types of Neural Networks</h2>
+
+                <h3>1. Feed Forward Neural Network (FNN)</h3>
+
+                <h4>Definition</h4>
+
+                <p>
+                    A <strong>Feed Forward Neural

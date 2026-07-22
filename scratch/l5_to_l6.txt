@@ -1,0 +1,85 @@
+Lesson 5: NLP (Natural Language Processing)</h2>
+
+                <h3>Definition</h3>
+
+                <p>
+                    <strong>Natural Language Processing (NLP)</strong> is a branch of
+                    <strong>Artificial Intelligence (AI)</strong> that enables computers
+                    to understand, interpret, process, and generate human language, such
+                    as text and speech.
+                </p>
+
+                <h3>Real Examples</h3>
+
+                <ul>
+                    <li>💬 ChatGPT</li>
+                    <li>🌐 Google Translate</li>
+                    <li>✍️ Grammarly</li>
+                    <li>🗣️ Alexa</li>
+                    <li>📱 Siri</li>
+                </ul>
+
+                <h3>NLP Tasks</h3>
+
+                <ul>
+                    <li>🌍 Translation</li>
+                    <li>📂 Text Classification</li>
+                    <li>😊 Sentiment Analysis</li>
+                    <li>📝 Summarization</li>
+                    <li>❓ Question Answering</li>
+                    <li>🤖 Chatbots</li>
+                </ul>
+
+                <h3>Workflow</h3>
+
+                <div class="diagram-box">
+                    Text
+                    <br>↓
+                    <br>Tokenization
+                    <br>↓
+                    <br>Embedding
+                    <br>↓
+                    <br>Model
+                    <br>↓
+                    <br>Answer
+                </div>
+
+                <div class="highlight-box">
+                    <h3>📌 Interview Tip</h3>
+
+                    <p><strong>Q: What is the difference between NLP and LLM?</strong></p>
+
+                    <p><strong>Answer:</strong></p>
+
+                    <p>
+                        <strong>NLP (Natural Language Processing)</strong> is the field of
+                        AI that focuses on understanding and processing human language.
+                    </p>
+
+                    <p>
+                        <strong>LLMs (Large Language Models)</strong> are advanced AI
+                        models built using NLP techniques (especially Transformers) that
+                        can generate, summarize, translate, answer questions, and perform
+                        many language-related tasks.
+                    </p>
+
+                    <p>
+                        <strong>In simple words:</strong>
+                    </p>
+
+                    <ul>
+                        <li><strong>NLP</strong> = The field of study</li>
+                        <li><strong>LLM</strong> = A powerful application of NLP</li>
+                    </ul>
+                </div>
+
+                <!-- ========================= -->
+                <!-- Lesson 6 -->
+                <!-- ========================= -->
+
+                <h2>📖 Lesson 6: Transformers Explained</h2>
+
+                <h3>Definition</h3>
+
+                <p>
+    

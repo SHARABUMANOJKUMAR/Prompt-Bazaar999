@@ -3,9 +3,9 @@
 {% block title %}Prompt Academy - Module 14{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}?v=3">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/tools.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/academy.css') }}">
+<link href="{{ url_for('static', filename='css/gallery.css') }}?v=3" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/tools.css') }}" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/academy.css') }}" rel="stylesheet"/>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -114,468 +114,456 @@
 {% block content %}
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <aside class="sidebar-drawer" id="sidebarDrawer">
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-left">
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+<div class="sidebar-brand">
+<div class="sidebar-brand-left">
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="sidebar-section-label">Navigation</div>
-        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
-        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
-        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
-        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon">🎓</span> Prompt Academy</a>
-    </nav>
-    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+<button aria-label="Close menu" class="sidebar-close-btn" id="sidebarCloseBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</button>
+</div>
+<nav class="sidebar-nav">
+<div class="sidebar-section-label">Navigation</div>
+<a class="sidebar-nav-item" href="/"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Home</a>
+<a class="sidebar-nav-item" href="/gallery"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></span> Prompt Gallery</a>
+<a class="sidebar-nav-item" href="/tools"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span> Prompt Tools</a>
+<a class="sidebar-nav-item active" href="/academy"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span> Prompt Academy</a>
+</nav>
+<div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
 </aside>
-
 <div class="gallery-layout">
-    <header class="gallery-header">
-        <div class="header-left">
-            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+<header class="gallery-header">
+<div class="header-left">
+<button aria-label="Open menu" class="menu-toggle-btn" id="menuToggleBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <div class="header-right">
-            <div class="xp-badge" id="user-xp-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                </svg>
-                <span id="user-xp-amount">0</span> XP
+<div class="header-right">
+<div class="xp-badge" id="user-xp-badge">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+<span id="user-xp-amount">0</span> XP
             </div>
-            <a href="{{ url_for('profile') }}" class="user-avatar" title="Profile">
+<a class="user-avatar" href="{{ url_for('profile') }}" title="Profile">
                 {% if user and user.photoURL %}
-                <img src="{{ user.photoURL }}" alt="Avatar">
+                <img alt="Avatar" src="{{ user.photoURL }}"/>
                 {% else %}
                 {{ user.displayName[0] | upper if user else 'U' }}
                 {% endif %}
             </a>
-        </div>
-    </header>
+</div>
+</header>
+<main class="academy-main-content">
+<div class="module-container">
+<a class="btn btn-secondary" href="/academy" style="margin-bottom: 24px;">← Back to Academy Roadmap</a>
+<h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">📘 Module 14: Prompt Optimization &amp; Evaluation</h1>
 
-    <main class="academy-main-content">
-        <div class="module-container">
-            <a href="/academy" class="btn btn-secondary" style="margin-bottom: 24px;">&larr; Back to Academy Roadmap</a>
-            <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">📘 Module 14: Prompt Optimization & Evaluation</h1>
-            
-            <div class="lesson-card" style="border: 2px solid var(--primary-color);">
-                <h2>🎯 Module Objective</h2>
-                <p>Learn how to evaluate, optimize, benchmark, and test prompts for production AI applications. Understand techniques to reduce hallucinations, lower costs, improve speed, and increase response quality.</p>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 1: Prompt Evaluation</h2>
-                <h3>Definition</h3>
-                <p>Prompt Evaluation is the process of measuring how well a prompt performs by assessing the quality, accuracy, consistency, relevance, and usefulness of the AI's responses.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Prompt evaluation helps:</li>
-                    <li>Improve response quality.</li>
-                    <li>Detect weaknesses.</li>
-                    <li>Increase consistency.</li>
-                    <li>Reduce errors.</li>
-                    <li>Build reliable AI applications.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Repeatable</li>
-                    <li>Measurable</li>
-                    <li>Objective</li>
-                    <li>Data-driven</li>
-                </ul>
-                <h3>Evaluation Criteria</h3>
-                <ul>
-                    <li>Accuracy</li>
-                    <li>Relevance</li>
-                    <li>Completeness</li>
-                    <li>Consistency</li>
-                    <li>Safety</li>
-                    <li>Clarity</li>
-                    <li>Helpfulness</li>
-                </ul>
-                <h3>Uses</h3>
-                <ul>
-                    <li>AI Chatbots</li>
-                    <li>AI Agents</li>
-                    <li>Customer Support</li>
-                    <li>RAG Systems</li>
-                    <li>SaaS Applications</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt<br>↓<br>LLM<br>↓<br>Response<br>↓<br>Evaluate Quality<br>↓<br>Improve Prompt</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
-                    Two prompts ask an AI to summarize a research paper.<br>Prompt A produces a vague summary.<br>Prompt B includes audience, length, and formatting instructions, resulting in a clearer and more useful summary.<br>Prompt B receives the higher evaluation score.
+<div class="lesson-card"><h2>🎯 Module Objective</h2>
+<p>Learn how to evaluate, optimize, benchmark, and test prompts for production AI applications. Understand techniques to reduce hallucinations, lower costs, improve speed, and increase response quality.</p>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 1: Prompt Evaluation</h2>
+<h3>Definition</h3>
+<p>Prompt Evaluation is the process of measuring how well a prompt performs by assessing the quality, accuracy, consistency, relevance, and usefulness of the AI's responses.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Prompt evaluation helps:</li>
+<li>Improve response quality.</li>
+<li>Detect weaknesses.</li>
+<li>Increase consistency.</li>
+<li>Reduce errors.</li>
+<li>Build reliable AI applications.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Repeatable</li>
+<li>Measurable</li>
+<li>Objective</li>
+<li>Data-driven</li>
+</ul>
+<h3>Evaluation Criteria</h3>
+<ul>
+<li>Accuracy</li>
+<li>Relevance</li>
+<li>Completeness</li>
+<li>Consistency</li>
+<li>Safety</li>
+<li>Clarity</li>
+<li>Helpfulness</li>
+</ul>
+<h3>Uses</h3>
+<ul>
+<li>AI Chatbots</li>
+<li>AI Agents</li>
+<li>Customer Support</li>
+<li>RAG Systems</li>
+<li>SaaS Applications</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt<br/>↓<br/>LLM<br/>↓<br/>Response<br/>↓<br/>Evaluate Quality<br/>↓<br/>Improve Prompt</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
+                    Two prompts ask an AI to summarize a research paper.<br/>Prompt A produces a vague summary.<br/>Prompt B includes audience, length, and formatting instructions, resulting in a clearer and more useful summary.<br/>Prompt B receives the higher evaluation score.
                 </div>
-                <h3>Real-Life Analogy</h3>
-                <p>A teacher reviews exam answers before assigning grades. Similarly, Prompt Evaluation reviews AI outputs before deciding whether the prompt is good enough.</p>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<h3>Real-Life Analogy</h3>
+<p>A teacher reviews exam answers before assigning grades. Similarly, Prompt Evaluation reviews AI outputs before deciding whether the prompt is good enough.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Prompt Evaluation measures how effectively a prompt guides an AI model toward producing accurate, useful, and reliable responses.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Evaluate prompts using the same test cases multiple times to identify inconsistencies.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 2: Hallucination Reduction</h2>
-                <h3>Definition</h3>
-                <p>Hallucination Reduction is the process of minimizing false, fabricated, or unsupported information generated by an AI model.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Reducing hallucinations improves:</li>
-                    <li>Trust</li>
-                    <li>Accuracy</li>
-                    <li>Reliability</li>
-                    <li>User confidence</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Fact-based</li>
-                    <li>Context-aware</li>
-                    <li>Reliable</li>
-                    <li>Verifiable</li>
-                </ul>
-                <h3>Techniques</h3>
-                <p>Use RAG.<br>Provide reference documents.<br>Give clear instructions.<br>Ask the model to state uncertainty when appropriate.<br>Verify important outputs.</p>
-                <h3>Workflow</h3>
-                <div class="diagram-box">User Prompt<br>↓<br>Add Context<br>↓<br>LLM<br>↓<br>Fact Verification<br>↓<br>Reliable Response</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
-                    Instead of asking:<br>Explain company policy.<br>Use:<br>Based only on the attached company policy document, explain the employee leave policy. If the information is not available, state that clearly.
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 2: Hallucination Reduction</h2>
+<h3>Definition</h3>
+<p>Hallucination Reduction is the process of minimizing false, fabricated, or unsupported information generated by an AI model.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Reducing hallucinations improves:</li>
+<li>Trust</li>
+<li>Accuracy</li>
+<li>Reliability</li>
+<li>User confidence</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Fact-based</li>
+<li>Context-aware</li>
+<li>Reliable</li>
+<li>Verifiable</li>
+</ul>
+<h3>Techniques</h3>
+<p>Use RAG.<br/>Provide reference documents.<br/>Give clear instructions.<br/>Ask the model to state uncertainty when appropriate.<br/>Verify important outputs.</p>
+<h3>Workflow</h3>
+<div class="diagram-box">User Prompt<br/>↓<br/>Add Context<br/>↓<br/>LLM<br/>↓<br/>Fact Verification<br/>↓<br/>Reliable Response</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
+                    Instead of asking:<br/>Explain company policy.<br/>Use:<br/>Based only on the attached company policy document, explain the employee leave policy. If the information is not available, state that clearly.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Hallucinations occur when an AI confidently generates information that is incorrect or unsupported.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Ground prompts with trusted context whenever possible instead of relying solely on the model's internal knowledge.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 3: Prompt Compression</h2>
-                <h3>Definition</h3>
-                <p>Prompt Compression is the process of reducing the length of a prompt while preserving its meaning and required instructions.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Compression:</li>
-                    <li>Saves tokens.</li>
-                    <li>Reduces costs.</li>
-                    <li>Improves response speed.</li>
-                    <li>Makes prompts easier to maintain.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Shorter</li>
-                    <li>Clear</li>
-                    <li>Efficient</li>
-                    <li>High information density</li>
-                </ul>
-                <h3>Uses</h3>
-                <ul>
-                    <li>AI Chatbots</li>
-                    <li>SaaS Products</li>
-                    <li>Mobile Apps</li>
-                    <li>API Requests</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Long Prompt<br>↓<br>Remove Redundancy<br>↓<br>Compressed Prompt<br>↓<br>LLM</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
-                    Long Prompt:<br>You are a senior Python expert. Please explain Python functions in a simple way for beginners. Use examples and Markdown formatting.<br>Compressed Prompt:<br>Explain Python functions for beginners using Markdown and practical examples.
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 3: Prompt Compression</h2>
+<h3>Definition</h3>
+<p>Prompt Compression is the process of reducing the length of a prompt while preserving its meaning and required instructions.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Compression:</li>
+<li>Saves tokens.</li>
+<li>Reduces costs.</li>
+<li>Improves response speed.</li>
+<li>Makes prompts easier to maintain.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Shorter</li>
+<li>Clear</li>
+<li>Efficient</li>
+<li>High information density</li>
+</ul>
+<h3>Uses</h3>
+<ul>
+<li>AI Chatbots</li>
+<li>SaaS Products</li>
+<li>Mobile Apps</li>
+<li>API Requests</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Long Prompt<br/>↓<br/>Remove Redundancy<br/>↓<br/>Compressed Prompt<br/>↓<br/>LLM</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
+                    Long Prompt:<br/>You are a senior Python expert. Please explain Python functions in a simple way for beginners. Use examples and Markdown formatting.<br/>Compressed Prompt:<br/>Explain Python functions for beginners using Markdown and practical examples.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Prompt Compression reduces token usage without losing essential meaning or instructions.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Remove repetition but keep role, context, constraints, and output requirements when they are important.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 4: Latency Optimization</h2>
-                <h3>Definition</h3>
-                <p>Latency Optimization is the process of reducing the time it takes for an AI application to generate and deliver a response.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Lower latency:</li>
-                    <li>Improves user experience.</li>
-                    <li>Makes applications feel faster.</li>
-                    <li>Supports real-time AI systems.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Fast responses</li>
-                    <li>Efficient processing</li>
-                    <li>Better scalability</li>
-                </ul>
-                <h3>Techniques</h3>
-                <p>Streaming responses.<br>Shorter prompts.<br>Efficient retrieval.<br>Caching.<br>Selecting appropriate models.</p>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt<br>↓<br>Optimized Processing<br>↓<br>Faster Response</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 4: Latency Optimization</h2>
+<h3>Definition</h3>
+<p>Latency Optimization is the process of reducing the time it takes for an AI application to generate and deliver a response.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Lower latency:</li>
+<li>Improves user experience.</li>
+<li>Makes applications feel faster.</li>
+<li>Supports real-time AI systems.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Fast responses</li>
+<li>Efficient processing</li>
+<li>Better scalability</li>
+</ul>
+<h3>Techniques</h3>
+<p>Streaming responses.<br/>Shorter prompts.<br/>Efficient retrieval.<br/>Caching.<br/>Selecting appropriate models.</p>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt<br/>↓<br/>Optimized Processing<br/>↓<br/>Faster Response</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     A chatbot starts displaying generated text immediately through streaming instead of waiting for the complete response.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Latency is the time between sending a request and receiving the response.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Use the smallest capable model and stream responses when possible to improve responsiveness.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 5: Cost Optimization</h2>
-                <h3>Definition</h3>
-                <p>Cost Optimization is the practice of reducing AI operational costs while maintaining acceptable response quality.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Cost optimization helps:</li>
-                    <li>Lower API expenses.</li>
-                    <li>Improve scalability.</li>
-                    <li>Maximize return on investment.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Efficient</li>
-                    <li>Scalable</li>
-                    <li>Budget-friendly</li>
-                </ul>
-                <h3>Techniques</h3>
-                <ul>
-                    <li>Prompt Compression</li>
-                    <li>Caching</li>
-                    <li>Reusing embeddings</li>
-                    <li>Model selection</li>
-                    <li>Reducing unnecessary API calls</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Optimize Prompt<br>↓<br>Reduce Tokens<br>↓<br>Lower API Cost</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 5: Cost Optimization</h2>
+<h3>Definition</h3>
+<p>Cost Optimization is the practice of reducing AI operational costs while maintaining acceptable response quality.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Cost optimization helps:</li>
+<li>Lower API expenses.</li>
+<li>Improve scalability.</li>
+<li>Maximize return on investment.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Efficient</li>
+<li>Scalable</li>
+<li>Budget-friendly</li>
+</ul>
+<h3>Techniques</h3>
+<ul>
+<li>Prompt Compression</li>
+<li>Caching</li>
+<li>Reusing embeddings</li>
+<li>Model selection</li>
+<li>Reducing unnecessary API calls</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Optimize Prompt<br/>↓<br/>Reduce Tokens<br/>↓<br/>Lower API Cost</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     A customer support chatbot caches answers to frequently asked questions instead of repeatedly sending identical API requests.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Reducing tokens and unnecessary requests is one of the simplest ways to lower LLM API costs.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Measure cost together with quality. The cheapest prompt is not always the best prompt.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 6: Benchmarking</h2>
-                <h3>Definition</h3>
-                <p>Benchmarking is the process of comparing prompts, models, or AI systems against predefined metrics and test datasets to measure performance.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Benchmarking helps:</li>
-                    <li>Compare models.</li>
-                    <li>Compare prompts.</li>
-                    <li>Track improvements.</li>
-                    <li>Make informed deployment decisions.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Repeatable</li>
-                    <li>Quantitative</li>
-                    <li>Objective</li>
-                    <li>Comparable</li>
-                </ul>
-                <h3>Common Metrics</h3>
-                <ul>
-                    <li>Accuracy</li>
-                    <li>Precision</li>
-                    <li>Recall</li>
-                    <li>Response Time</li>
-                    <li>Cost</li>
-                    <li>User Satisfaction</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt A<br>Prompt B<br>↓<br>Run Test Cases<br>↓<br>Measure Results<br>↓<br>Compare Performance</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 6: Benchmarking</h2>
+<h3>Definition</h3>
+<p>Benchmarking is the process of comparing prompts, models, or AI systems against predefined metrics and test datasets to measure performance.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Benchmarking helps:</li>
+<li>Compare models.</li>
+<li>Compare prompts.</li>
+<li>Track improvements.</li>
+<li>Make informed deployment decisions.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Repeatable</li>
+<li>Quantitative</li>
+<li>Objective</li>
+<li>Comparable</li>
+</ul>
+<h3>Common Metrics</h3>
+<ul>
+<li>Accuracy</li>
+<li>Precision</li>
+<li>Recall</li>
+<li>Response Time</li>
+<li>Cost</li>
+<li>User Satisfaction</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt A<br/>Prompt B<br/>↓<br/>Run Test Cases<br/>↓<br/>Measure Results<br/>↓<br/>Compare Performance</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     A team compares the same prompt using GPT, Claude, and Gemini to evaluate accuracy, response time, and cost before choosing a production model.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Benchmarking helps identify the most effective prompt or model for a specific task.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Use the same dataset and evaluation criteria when comparing prompts or models.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 7: Prompt Testing</h2>
-                <h3>Definition</h3>
-                <p>Prompt Testing is the process of validating prompts using different inputs and scenarios to ensure they consistently produce accurate and reliable outputs.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Testing helps:</li>
-                    <li>Detect failures.</li>
-                    <li>Improve robustness.</li>
-                    <li>Handle edge cases.</li>
-                    <li>Increase reliability.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Systematic</li>
-                    <li>Repeatable</li>
-                    <li>Comprehensive</li>
-                </ul>
-                <h3>Types of Tests</h3>
-                <ul>
-                    <li>Normal cases</li>
-                    <li>Edge cases</li>
-                    <li>Invalid inputs</li>
-                    <li>Stress tests</li>
-                    <li>Safety tests</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt<br>↓<br>Multiple Test Inputs<br>↓<br>AI Responses<br>↓<br>Analyze Results<br>↓<br>Improve Prompt</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
-                    A resume-generation prompt is tested with:<br>Fresh graduates<br>Experienced professionals<br>Career changers<br>Missing information<br>International applicants<br>to verify consistent quality across different scenarios.
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 7: Prompt Testing</h2>
+<h3>Definition</h3>
+<p>Prompt Testing is the process of validating prompts using different inputs and scenarios to ensure they consistently produce accurate and reliable outputs.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Testing helps:</li>
+<li>Detect failures.</li>
+<li>Improve robustness.</li>
+<li>Handle edge cases.</li>
+<li>Increase reliability.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Systematic</li>
+<li>Repeatable</li>
+<li>Comprehensive</li>
+</ul>
+<h3>Types of Tests</h3>
+<ul>
+<li>Normal cases</li>
+<li>Edge cases</li>
+<li>Invalid inputs</li>
+<li>Stress tests</li>
+<li>Safety tests</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt<br/>↓<br/>Multiple Test Inputs<br/>↓<br/>AI Responses<br/>↓<br/>Analyze Results<br/>↓<br/>Improve Prompt</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
+                    A resume-generation prompt is tested with:<br/>Fresh graduates<br/>Experienced professionals<br/>Career changers<br/>Missing information<br/>International applicants<br/>to verify consistent quality across different scenarios.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Prompt Testing ensures a prompt works reliably across a wide variety of inputs, not just one example.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Create a reusable test suite with representative user scenarios before deploying prompts to production.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>🚀 Mini Project: AI Prompt Optimizer</h2>
-                <h3>Project Objective</h3>
-                <p>Build an AI system that automatically evaluates, improves, and optimizes prompts for quality, speed, and cost.</p>
-                <h3>Features</h3>
-                <ul>
-                    <li>Prompt Quality Scoring</li>
-                    <li>Hallucination Risk Analysis</li>
-                    <li>Prompt Compression</li>
-                    <li>Token Estimation</li>
-                    <li>Cost Estimation</li>
-                    <li>Latency Suggestions</li>
-                    <li>Prompt Comparison</li>
-                    <li>Benchmark Dashboard</li>
-                    <li>Prompt Testing Suite</li>
-                    <li>Optimization Recommendations</li>
-                </ul>
-                <h3>Technology Stack</h3>
-                <ul>
-                    <li>Python</li>
-                    <li>FastAPI or Flask</li>
-                    <li>OpenAI / Claude / Gemini API</li>
-                    <li>LangChain (optional)</li>
-                    <li>Streamlit or React</li>
-                    <li>PostgreSQL or Supabase</li>
-                </ul>
-                <h3>Sample Workflow</h3>
-                <div class="highlight-box">
-                    Original Prompt<br>↓<br>Evaluate<br>↓<br>Compress<br>↓<br>Estimate Cost<br>↓<br>Benchmark<br>↓<br>Run Tests<br>↓<br>Optimized Prompt
+
+
+</div><div class="lesson-card"><h2>🚀 Mini Project: AI Prompt Optimizer</h2>
+<h3>Project Objective</h3>
+<p>Build an AI system that automatically evaluates, improves, and optimizes prompts for quality, speed, and cost.</p>
+<h3>Features</h3>
+<ul>
+<li>Prompt Quality Scoring</li>
+<li>Hallucination Risk Analysis</li>
+<li>Prompt Compression</li>
+<li>Token Estimation</li>
+<li>Cost Estimation</li>
+<li>Latency Suggestions</li>
+<li>Prompt Comparison</li>
+<li>Benchmark Dashboard</li>
+<li>Prompt Testing Suite</li>
+<li>Optimization Recommendations</li>
+</ul>
+<h3>Technology Stack</h3>
+<ul>
+<li>Python</li>
+<li>FastAPI or Flask</li>
+<li>OpenAI / Claude / Gemini API</li>
+<li>LangChain (optional)</li>
+<li>Streamlit or React</li>
+<li>PostgreSQL or Supabase</li>
+</ul>
+<h3>Sample Workflow</h3>
+<div class="highlight-box">
+                    Original Prompt<br/>↓<br/>Evaluate<br/>↓<br/>Compress<br/>↓<br/>Estimate Cost<br/>↓<br/>Benchmark<br/>↓<br/>Run Tests<br/>↓<br/>Optimized Prompt
                 </div>
-            </div>
 
-            <!-- Module Summary -->
-            <div class="lesson-card" style="background: rgba(34, 197, 94, 0.05); border-left: 4px solid #22c55e;">
-                <h2>🎓 Skills Learned</h2>
-                <p>This module provides a comprehensive understanding of evaluating AI responses, preventing hallucinations, compressing prompts for efficiency, optimizing latency and costs, and benchmarking and testing prompts for reliable production use.</p>
-            </div>
+<!-- Module Summary -->
 
-            <!-- Quiz Section -->
-            <div class="lesson-card" style="border: 2px solid var(--primary-color); background: rgba(37,99,235,0.02);">
-                <h2 style="border-bottom: none; margin-bottom: 10px;">📝 Module 14 Assessment</h2>
-                <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
-                
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <!-- MCQ 1 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q1. What is the main purpose of Prompt Evaluation?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="A" style="margin-right: 10px;">A) Train new AI models</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="B" style="margin-right: 10px;">B) Measure the quality and effectiveness of prompts</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="C" style="margin-right: 10px;">C) Generate embeddings</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="D" style="margin-right: 10px;">D) Create images</label>
-                        </div>
-                    </div>
+<h2><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg> Skills Learned</h2>
+<p>This module provides a comprehensive understanding of evaluating AI responses, preventing hallucinations, compressing prompts for efficiency, optimizing latency and costs, and benchmarking and testing prompts for reliable production use.</p>
 
-                    <!-- MCQ 2 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q2. Which technique is commonly used to reduce AI hallucinations?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="A" style="margin-right: 10px;">A) Remove all context</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="B" style="margin-right: 10px;">B) Use Retrieval-Augmented Generation (RAG) and trusted reference documents</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="C" style="margin-right: 10px;">C) Increase randomness</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="D" style="margin-right: 10px;">D) Ignore factual verification</label>
-                        </div>
-                    </div>
+<!-- Quiz Section -->
 
-                    <!-- MCQ 3 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q3. What is Prompt Compression?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="A" style="margin-right: 10px;">A) Compressing image files</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="B" style="margin-right: 10px;">B) Reducing prompt length while preserving meaning and essential instructions</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="C" style="margin-right: 10px;">C) Encrypting prompts</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="D" style="margin-right: 10px;">D) Translating prompts</label>
-                        </div>
-                    </div>
-
-                    <!-- MCQ 4 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q4. What does Latency Optimization primarily improve?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="A" style="margin-right: 10px;">A) Disk storage</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="B" style="margin-right: 10px;">B) AI response time and user experience</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="C" style="margin-right: 10px;">C) Monitor resolution</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="D" style="margin-right: 10px;">D) Database size</label>
-                        </div>
-                    </div>
-                    
-                    <!-- MCQ 5 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q5. Why is Benchmarking important?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="A" style="margin-right: 10px;">A) It compares prompts or models using consistent evaluation metrics to identify the best-performing option.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="B" style="margin-right: 10px;">B) It automatically trains an LLM.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="C" style="margin-right: 10px;">C) It replaces testing.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="D" style="margin-right: 10px;">D) It eliminates API costs.</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation to Next Module -->
-            <div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
-                <a href="/academy/module15" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
-                    Move Next Module 15 &rarr;
-                </a>
-            </div>
-        </div>
-    </main>
+</div><div class="lesson-card"><h2 style="border-bottom: none; margin-bottom: 10px;">📝 Module 14 Assessment</h2>
+<p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
+<div style="display: flex; flex-direction: column; gap: 20px;">
+<!-- MCQ 1 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q1. What is the main purpose of Prompt Evaluation?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="A"/>A) Train new AI models</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="B"/>B) Measure the quality and effectiveness of prompts</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="C"/>C) Generate embeddings</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="D"/>D) Create images</label>
+</div>
+</div>
+<!-- MCQ 2 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q2. Which technique is commonly used to reduce AI hallucinations?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="A"/>A) Remove all context</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="B"/>B) Use Retrieval-Augmented Generation (RAG) and trusted reference documents</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="C"/>C) Increase randomness</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="D"/>D) Ignore factual verification</label>
+</div>
+</div>
+<!-- MCQ 3 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q3. What is Prompt Compression?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="A"/>A) Compressing image files</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="B"/>B) Reducing prompt length while preserving meaning and essential instructions</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="C"/>C) Encrypting prompts</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="D"/>D) Translating prompts</label>
+</div>
+</div>
+<!-- MCQ 4 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q4. What does Latency Optimization primarily improve?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="A"/>A) Disk storage</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="B"/>B) AI response time and user experience</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="C"/>C) Monitor resolution</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="D"/>D) Database size</label>
+</div>
+</div>
+<!-- MCQ 5 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q5. Why is Benchmarking important?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="A"/>A) It compares prompts or models using consistent evaluation metrics to identify the best-performing option.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="B"/>B) It automatically trains an LLM.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="C"/>C) It replaces testing.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="D"/>D) It eliminates API costs.</label>
+</div>
+</div>
 </div>
 
+<!-- Navigation to Next Module -->
+<div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
+<a class="btn btn-primary" href="/academy/module15" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    Move Next Module 15 →
+                </a>
+</div>
+</div></div>
+</main>
+</div>
 <script>
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');

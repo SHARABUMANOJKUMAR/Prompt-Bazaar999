@@ -1,0 +1,25 @@
+ons</td>
+</tr>
+<tr>
+<td>Face Unlock</td>
+<td>Face Recognition</td>
+</tr>
+<tr>
+<td>Gmail</td>
+<td>Spam Detection</td>
+</tr>
+<tr>
+<td>Tesla</td>
+<td>Self Driving</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>How AI Works</h3>
+<div class="diagram-box">Data<br/>↓<br/>Learning Algorithm<br/>↓<br/>AI Model<br/>↓<br/>Prediction / Answer
+                </div>
+<p><strong>Example:</strong> Thousands of cat photos → AI learns cat features → Shows new image → AI
+                    says "It's a Cat"</p>
+<h3>Types of AI</h3>
+<h4>1. Narrow AI (Weak AI)</h4>
+<p>Narrow AI is an AI system that is built to do one jo

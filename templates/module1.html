@@ -3,9 +3,9 @@
 {% block title %}Prompt Academy - Module 1{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}?v=3">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/tools.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/academy.css') }}">
+<link href="{{ url_for('static', filename='css/gallery.css') }}?v=3" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/tools.css') }}" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/academy.css') }}" rel="stylesheet"/>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -180,2047 +180,1604 @@
 <!-- Sidebar Drawer (shared) -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <aside class="sidebar-drawer" id="sidebarDrawer">
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-left">
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
-                alt="Logo">
+<div class="sidebar-brand">
+<div class="sidebar-brand-left">
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="sidebar-section-label">Navigation</div>
-        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
-        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
-        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
-        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon">🎓</span> Prompt Academy</a>
-    </nav>
-    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+<button aria-label="Close menu" class="sidebar-close-btn" id="sidebarCloseBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</button>
+</div>
+<nav class="sidebar-nav">
+<div class="sidebar-section-label">Navigation</div>
+<a class="sidebar-nav-item" href="/"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Home</a>
+<a class="sidebar-nav-item" href="/gallery"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></span> Prompt Gallery</a>
+<a class="sidebar-nav-item" href="/tools"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span> Prompt Tools</a>
+<a class="sidebar-nav-item active" href="/academy"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span> Prompt Academy</a>
+</nav>
+<div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
 </aside>
-
 <div class="gallery-layout">
-    <!-- Top Navbar -->
-    <header class="gallery-header">
-        <div class="header-left">
-            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
-                alt="Logo">
+<!-- Top Navbar -->
+<header class="gallery-header">
+<div class="header-left">
+<button aria-label="Open menu" class="menu-toggle-btn" id="menuToggleBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <div class="header-right">
-            <div class="xp-badge" id="user-xp-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon
-                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                    </polygon>
-                </svg>
-                <span id="user-xp-amount">0</span> XP
+<div class="header-right">
+<div class="xp-badge" id="user-xp-badge">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+</polygon>
+</svg>
+<span id="user-xp-amount">0</span> XP
             </div>
-            <a href="{{ url_for('profile') }}" class="user-avatar" title="Profile">
+<a class="user-avatar" href="{{ url_for('profile') }}" title="Profile">
                 {% if user and user.photoURL %}
-                <img src="{{ user.photoURL }}" alt="Avatar">
+                <img alt="Avatar" src="{{ user.photoURL }}"/>
                 {% else %}
                 {{ user.displayName[0] | upper if user else 'U' }}
                 {% endif %}
             </a>
-        </div>
-    </header>
-
-    <main class="academy-main-content">
-        <div class="module-container">
-            <a href="/academy" class="btn btn-secondary" style="margin-bottom: 24px;">&larr; Back to Academy Roadmap</a>
-            <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">Module 1: AI &
+</div>
+</header>
+<main class="academy-main-content">
+<div class="module-container">
+<a class="btn btn-secondary" href="/academy" style="margin-bottom: 24px;">← Back to Academy Roadmap</a>
+<h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">Module 1: AI &amp;
                 Generative AI Foundations</h1>
-
-            <!-- Lesson 1 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 1: What is Artificial Intelligence (AI)?</h2>
-                <h3>Definition</h3>
-                <p>Artificial Intelligence (AI) is the technology that enables computers and machines to think, learn,
+<!-- Lesson 1 -->
+<div class="lesson-card"><h2>📖 Lesson 1: What is Artificial Intelligence (AI)?</h2>
+<h3>Definition</h3>
+<p>Artificial Intelligence (AI) is the technology that enables computers and machines to think, learn,
                     solve problems, and make decisions in a way that is similar to humans.</p>
-                <p>These tasks include:</p>
-                <ul>
-                    <li>Learning</li>
-                    <li>Thinking</li>
-                    <li>Understanding language</li>
-                    <li>Solving problems</li>
-                    <li>Making decisions</li>
-                    <li>Recognizing images and voices</li>
-                </ul>
-                <h3>Simple Definition</h3>
-                <p>AI is teaching computers to think and learn like humans.</p>
-                <div class="highlight-box">
-                    <strong>💡 Easy Trick to Remember</strong><br><br>
-                    AI = Artificial + Intelligence<br>
-                    Artificial = Man-made (created by humans)<br>
+<p>These tasks include:</p>
+<ul>
+<li>Learning</li>
+<li>Thinking</li>
+<li>Understanding language</li>
+<li>Solving problems</li>
+<li>Making decisions</li>
+<li>Recognizing images and voices</li>
+</ul>
+<h3>Simple Definition</h3>
+<p>AI is teaching computers to think and learn like humans.</p>
+<div class="highlight-box">
+<strong>💡 Easy Trick to Remember</strong><br/><br/>
+                    AI = Artificial + Intelligence<br/>
+                    Artificial = Man-made (created by humans)<br/>
                     Intelligence = Ability to learn, think, reason, and solve problems.
                 </div>
-                <h3>Real-Life Examples</h3>
-                <div class="table-container">
-                    <table class="styled-table">
-                    <thead>
-                        <tr>
-                            <th>Example</th>
-                            <th>AI Task</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>ChatGPT</td>
-                            <td>Answers questions</td>
-                        </tr>
-                        <tr>
-                            <td>Siri</td>
-                            <td>Voice Assistant</td>
-                        </tr>
-                        <tr>
-                            <td>Google Maps</td>
-                            <td>Finds shortest route</td>
-                        </tr>
-                        <tr>
-                            <td>Netflix</td>
-                            <td>Movie Recommendations</td>
-                        </tr>
-                        <tr>
-                            <td>Amazon</td>
-                            <td>Product Suggestions</td>
-                        </tr>
-                        <tr>
-                            <td>Face Unlock</td>
-                            <td>Face Recognition</td>
-                        </tr>
-                        <tr>
-                            <td>Gmail</td>
-                            <td>Spam Detection</td>
-                        </tr>
-                        <tr>
-                            <td>Tesla</td>
-                            <td>Self Driving</td>
-                        </tr>
-                    </tbody>
-                </table>
+<h3>Real-Life Examples</h3>
+<div class="table-container">
+<table class="styled-table">
+<thead>
+<tr>
+<th>Example</th>
+<th>AI Task</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ChatGPT</td>
+<td>Answers questions</td>
+</tr>
+<tr>
+<td>Siri</td>
+<td>Voice Assistant</td>
+</tr>
+<tr>
+<td>Google Maps</td>
+<td>Finds shortest route</td>
+</tr>
+<tr>
+<td>Netflix</td>
+<td>Movie Recommendations</td>
+</tr>
+<tr>
+<td>Amazon</td>
+<td>Product Suggestions</td>
+</tr>
+<tr>
+<td>Face Unlock</td>
+<td>Face Recognition</td>
+</tr>
+<tr>
+<td>Gmail</td>
+<td>Spam Detection</td>
+</tr>
+<tr>
+<td>Tesla</td>
+<td>Self Driving</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3>How AI Works</h3>
+<div class="diagram-box" style="padding: 0; background: none; border: none; box-shadow: none;">
+                    <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1784734108/Gemini_Generated_Image_u3jiowu3jiowu3ji_pypywc.png" alt="How AI Works" style="width: 100%; max-width: 600px; display: block; margin: 0 auto; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
                 </div>
-                <h3>How AI Works</h3>
-                <div class="diagram-box">Data<br>↓<br>Learning Algorithm<br>↓<br>AI Model<br>↓<br>Prediction / Answer
-                </div>
-                <p><strong>Example:</strong> Thousands of cat photos → AI learns cat features → Shows new image → AI
+<p><strong>Example:</strong> Thousands of cat photos → AI learns cat features → Shows new image → AI
                     says "It's a Cat"</p>
-
-                <h3>Types of AI</h3>
-                <h4>1. Narrow AI (Weak AI)</h4>
-                <p>Narrow AI is an AI system that is built to do one job very well, but it cannot do other tasks like a
+<h3>Types of AI</h3>
+<h4>1. Narrow AI (Weak AI)</h4>
+<p>Narrow AI is an AI system that is built to do one job very well, but it cannot do other tasks like a
                     human.</p>
-                <p><strong>Examples:</strong> ChatGPT, Google Translate, Alexa, Face Unlock</p>
-                <p><strong>Simple Example:</strong> Think of a calculator. It can solve mathematical calculations very
+<p><strong>Examples:</strong> ChatGPT, Google Translate, Alexa, Face Unlock</p>
+<p><strong>Simple Example:</strong> Think of a calculator. It can solve mathematical calculations very
                     accurately. But it cannot write an essay, drive a car, or diagnose a disease. Similarly, Google
                     Translate can translate languages but cannot independently manage a business or cook food. This is
                     Narrow AI.</p>
-                <p>✅ Most AI today is Narrow AI.</p>
-                <div class="highlight-box"><strong>Easy Trick to Remember</strong><br>Narrow = One Task<br>Narrow AI →
+<p>✅ Most AI today is Narrow AI.</p>
+<div class="highlight-box"><strong>Easy Trick to Remember</strong><br/>Narrow = One Task<br/>Narrow AI →
                     One specific task</div>
-
-                <h4>2. General AI (AGI)</h4>
-                <p>General AI is an AI that can think, learn, and solve different kinds of problems just like a human,
+<h4>2. General AI (AGI)</h4>
+<p>General AI is an AI that can think, learn, and solve different kinds of problems just like a human,
                     instead of being limited to one specific task.</p>
-                <p><strong>Real-Time Example (Hypothetical):</strong> Imagine an AI named Alex. You ask it to: Teach
+<p><strong>Real-Time Example (Hypothetical):</strong> Imagine an AI named Alex. You ask it to: Teach
                     mathematics, Write software code, Drive a car, Diagnose diseases, Cook a recipe, Translate
                     languages, Manage a company. It can perform all of these tasks with human-like understanding and
                     adapt to new situations. ➡️ This is General AI (AGI).</p>
-                <p><strong>Important:</strong> AGI does not exist yet. Current AI systems, including ChatGPT, Claude,
+<p><strong>Important:</strong> AGI does not exist yet. Current AI systems, including ChatGPT, Claude,
                     Gemini, Grok, and DeepSeek, are not AGI. ❌ Not yet available.</p>
-                <div class="highlight-box"><strong>Easy Trick to Remember</strong><br>General = Many Tasks<br>General AI
+<div class="highlight-box"><strong>Easy Trick to Remember</strong><br/>General = Many Tasks<br/>General AI
                     (AGI) → Many tasks like a human</div>
-
-                <h4>3. Super AI</h4>
-                <p>Super AI is an AI that is smarter than the smartest human and can perform every task better than
+<h4>3. Super AI</h4>
+<p>Super AI is an AI that is smarter than the smartest human and can perform every task better than
                     humans.</p>
-                <p><strong>Example:</strong> Movies like I, Robot. ❌ Still theoretical.</p>
-
-                <h3>AI Categories</h3>
-                <ul>
-                    <li><strong>Reactive Machines:</strong> No memory. (Example: Chess AI.)</li>
-                    <li><strong>Limited Memory AI:</strong> Uses past information. (Example: Self-driving cars.)</li>
-                    <li><strong>Theory of Mind AI:</strong> Can understand emotions. (Not available yet.)</li>
-                    <li><strong>Self-Aware AI:</strong> AI with consciousness. (Still science fiction.)</li>
-                </ul>
-
-                <h3>Uses of AI</h3>
-                <p>Healthcare, Banking, Education, Agriculture, Robotics, Cybersecurity, Finance, Law, Marketing,
+<p><strong>Example:</strong> Movies like I, Robot. ❌ Still theoretical.</p>
+<h3>AI Categories</h3>
+<ul>
+<li><strong>Reactive Machines:</strong> No memory. (Example: Chess AI.)</li>
+<li><strong>Limited Memory AI:</strong> Uses past information. (Example: Self-driving cars.)</li>
+<li><strong>Theory of Mind AI:</strong> Can understand emotions. (Not available yet.)</li>
+<li><strong>Self-Aware AI:</strong> AI with consciousness. (Still science fiction.)</li>
+</ul>
+<h3>Uses of AI</h3>
+<p>Healthcare, Banking, Education, Agriculture, Robotics, Cybersecurity, Finance, Law, Marketing,
                     Software Development.</p>
-
-                <h3>Advantages & Limitations</h3>
-                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 250px;">
-                        <h4>Advantages</h4>
-                        <ul>
-                            <li>Fast</li>
-                            <li>Accurate</li>
-                            <li>Works 24/7</li>
-                            <li>Reduces human effort</li>
-                            <li>Automates repetitive tasks</li>
-                        </ul>
-                    </div>
-                    <div style="flex: 1; min-width: 250px;">
-                        <h4>Limitations</h4>
-                        <ul>
-                            <li>Needs lots of data</li>
-                            <li>Can make mistakes</li>
-                            <li>No emotions</li>
-                            <li>Depends on humans</li>
-                            <li>Can be biased</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="highlight-box">
-                    <strong>Interview Questions</strong><br><br>
-                    <strong>Q: What is AI?</strong><br>
-                    <strong>Answer:</strong> AI is the simulation of human intelligence by machines that can learn,
+<h3>Advantages &amp; Limitations</h3>
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+<div style="flex: 1; min-width: 250px;">
+<h4>Advantages</h4>
+<ul>
+<li>Fast</li>
+<li>Accurate</li>
+<li>Works 24/7</li>
+<li>Reduces human effort</li>
+<li>Automates repetitive tasks</li>
+</ul>
+</div>
+<div style="flex: 1; min-width: 250px;">
+<h4>Limitations</h4>
+<ul>
+<li>Needs lots of data</li>
+<li>Can make mistakes</li>
+<li>No emotions</li>
+<li>Depends on humans</li>
+<li>Can be biased</li>
+</ul>
+</div>
+</div>
+<div class="highlight-box">
+<strong>Interview Questions</strong><br/><br/>
+<strong>Q: What is AI?</strong><br/>
+<strong>Answer:</strong> AI is the simulation of human intelligence by machines that can learn,
                     reason, and make decisions.
                 </div>
-            </div>
-
-            <!-- Lesson 2 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 2: Machine Learning Basics</h2>
-                <h3>Definition</h3>
-                <p>Machine Learning (ML) is a branch of Artificial Intelligence (AI) that enables computers to learn
+<!-- Lesson 2 -->
+</div><div class="lesson-card"><h2>📖 Lesson 2: Machine Learning Basics</h2>
+<h3>Definition</h3>
+<p>Machine Learning (ML) is a branch of Artificial Intelligence (AI) that enables computers to learn
                     from data and improve their performance without being explicitly programmed for every task.</p>
-                <h3>Simple Definition</h3>
-                <p>ML teaches computers to learn from experience.</p>
-                <div class="diagram-box">Thousands of spam emails<br>↓<br>ML learns patterns<br>↓<br>New
-                    email<br>↓<br>Spam / Not Spam</div>
-
-                <h3>Types of Machine Learning</h3>
-                <h4>1. Supervised Learning</h4>
-                <p>Supervised Learning is a type of Machine Learning in which the model learns from labeled data, where
+<h3>Simple Definition</h3>
+<p>ML teaches computers to learn from experience.</p>
+<div class="diagram-box" style="padding: 0; background: none; border: none; box-shadow: none;">
+                    <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1784734598/Gemini_Generated_Image_5zmjr65zmjr65zmj_irgcwz.png" alt="How ML Works" style="width: 100%; max-width: 600px; display: block; margin: 0 auto; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
+                </div>
+<h3>Types of Machine Learning</h3>
+<h4>1. Supervised Learning</h4>
+<p>Supervised Learning is a type of Machine Learning in which the model learns from labeled data, where
                     both the input data and the correct output (target) are already known.</p>
-                <div class="diagram-box">Labeled Data (Input + Correct Output)<br>↓<br>Train ML Model<br>↓<br>Model
-                    Learns Patterns<br>↓<br>Predict New Output</div>
-
-                <div class="table-container">
-                    <table class="styled-table">
-                    <thead>
-                        <tr>
-                            <th>House Size</th>
-                            <th>Price</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1000 sq.ft</td>
-                            <td>₹20 Lakhs</td>
-                        </tr>
-                        <tr>
-                            <td>1200 sq.ft</td>
-                            <td>₹25 Lakhs</td>
-                        </tr>
-                        <tr>
-                            <td>1500 sq.ft</td>
-                            <td>₹30 Lakhs</td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-                <p><strong>Algorithms Used:</strong></p>
-                <ul>
-                    <li><strong>Linear Regression:</strong> Used to predict continuous numerical values.</li>
-                    <li><strong>Logistic Regression:</strong> Used for classification problems where output belongs to
+<div class="diagram-box">Labeled Data (Input + Correct Output)<br/>↓<br/>Train ML Model<br/>↓<br/>Model
+                    Learns Patterns<br/>↓<br/>Predict New Output</div>
+<div class="table-container">
+<table class="styled-table">
+<thead>
+<tr>
+<th>House Size</th>
+<th>Price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1000 sq.ft</td>
+<td>₹20 Lakhs</td>
+</tr>
+<tr>
+<td>1200 sq.ft</td>
+<td>₹25 Lakhs</td>
+</tr>
+<tr>
+<td>1500 sq.ft</td>
+<td>₹30 Lakhs</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Algorithms Used:</strong></p>
+<ul>
+<li><strong>Linear Regression:</strong> Used to predict continuous numerical values.</li>
+<li><strong>Logistic Regression:</strong> Used for classification problems where output belongs to
                         predefined categories.</li>
-                    <li><strong>Decision Tree:</strong> Makes predictions by splitting data into branches based on
+<li><strong>Decision Tree:</strong> Makes predictions by splitting data into branches based on
                         decision rules.</li>
-                    <li><strong>Random Forest:</strong> Combines multiple decision trees and uses majority voting.</li>
-                    <li><strong>Support Vector Machine (SVM):</strong> Separates different classes by finding the best
+<li><strong>Random Forest:</strong> Combines multiple decision trees and uses majority voting.</li>
+<li><strong>Support Vector Machine (SVM):</strong> Separates different classes by finding the best
                         possible boundary.</li>
-                </ul>
-
-                <h4>2. Unsupervised Learning</h4>
-                <p>Unsupervised Learning is a type of Machine Learning in which the model learns from unlabeled data and
+</ul>
+<h4>2. Unsupervised Learning</h4>
+<p>Unsupervised Learning is a type of Machine Learning in which the model learns from unlabeled data and
                     discovers hidden patterns or groups without knowing the correct outputs.</p>
-                <p><strong>Algorithms Used:</strong> K-Means Clustering, DBSCAN, Hierarchical Clustering.</p>
-
-                <h4>3. Reinforcement Learning</h4>
-                <p>Reinforcement Learning is a type of Machine Learning in which an agent learns by interacting with an
+<p><strong>Algorithms Used:</strong> K-Means Clustering, DBSCAN, Hierarchical Clustering.</p>
+<h4>3. Reinforcement Learning</h4>
+<p>Reinforcement Learning is a type of Machine Learning in which an agent learns by interacting with an
                     environment and improves its behavior through rewards and penalties.</p>
-                <p><strong>Example:</strong> Self-Driving Car (Stops at a red light → ✅ Reward | Crosses a red light → ❌
+<p><strong>Example:</strong> Self-Driving Car (Stops at a red light → ✅ Reward | Crosses a red light → ❌
                     Penalty)</p>
-
-                <h3>Interview Summary Table</h3>
-                <div class="table-container">
-                    <table class="styled-table">
-                    <thead>
-                        <tr>
-                            <th>Learning Type</th>
-                            <th>Data Used</th>
-                            <th>Goal</th>
-                            <th>Example</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Supervised Learning</td>
-                            <td>Labeled Data</td>
-                            <td>Predict known outputs</td>
-                            <td>Spam Detection, House Price Prediction</td>
-                        </tr>
-                        <tr>
-                            <td>Unsupervised Learning</td>
-                            <td>Unlabeled Data</td>
-                            <td>Find hidden patterns or groups</td>
-                            <td>Customer Segmentation</td>
-                        </tr>
-                        <tr>
-                            <td>Reinforcement Learning</td>
-                            <td>Reward & Penalty Feedback</td>
-                            <td>Learn the best actions through interaction</td>
-                            <td>Self-Driving Cars, Game AI</td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-            </div>
-
-            <!-- ========================================= -->
-            <!-- Lesson 3 : Deep Learning Basics -->
-            <!-- ========================================= -->
-            <div class="lesson-card">
-
-                <h2>📖 Lesson 3: Deep Learning Basics</h2>
-
-                <h3>Definition</h3>
-
-                <p>
-                    <strong>Deep Learning (DL)</strong> is a subset of
+<h3>Interview Summary Table</h3>
+<div class="table-container">
+<table class="styled-table">
+<thead>
+<tr>
+<th>Learning Type</th>
+<th>Data Used</th>
+<th>Goal</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Supervised Learning</td>
+<td>Labeled Data</td>
+<td>Predict known outputs</td>
+<td>Spam Detection, House Price Prediction</td>
+</tr>
+<tr>
+<td>Unsupervised Learning</td>
+<td>Unlabeled Data</td>
+<td>Find hidden patterns or groups</td>
+<td>Customer Segmentation</td>
+</tr>
+<tr>
+<td>Reinforcement Learning</td>
+<td>Reward &amp; Penalty Feedback</td>
+<td>Learn the best actions through interaction</td>
+<td>Self-Driving Cars, Game AI</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- ========================================= -->
+<!-- Lesson 3 : Deep Learning Basics -->
+<!-- ========================================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 3: Deep Learning Basics</h2>
+<h3>Definition</h3>
+<p>
+<strong>Deep Learning (DL)</strong> is a subset of
                     <strong>Machine Learning (ML)</strong> that uses
                     <strong>Artificial Neural Networks (ANNs)</strong> with multiple
                     hidden layers to automatically learn complex patterns from large
                     amounts of data without manual feature extraction.
                 </p>
-
-                <p>
+<p>
                     Deep Learning is inspired by the human brain and is widely used in
                     Artificial Intelligence applications such as image recognition,
                     speech recognition, self-driving cars, and AI chatbots.
                 </p>
-
-                <h3>Structure</h3>
-
-                <div class="diagram-box">
+<h3>Structure</h3>
+<div class="diagram-box">
                     Input Layer
-                    <br>↓
-                    <br>Hidden Layer 1
-                    <br>↓
-                    <br>Hidden Layer 2
-                    <br>↓
-                    <br>Hidden Layer 3
-                    <br>↓
-                    <br>Output Layer
+                    <br/>↓
+                    <br/>Hidden Layer 1
+                    <br/>↓
+                    <br/>Hidden Layer 2
+                    <br/>↓
+                    <br/>Hidden Layer 3
+                    <br/>↓
+                    <br/>Output Layer
                 </div>
-
-                <h3>Example</h3>
-
-                <p><strong>Input:</strong> Face Image</p>
-
-                <div class="diagram-box">
-                    Face Image
-                    <br>↓
-                    <br>Hidden Layer 1
-                    <br>(Detect Edges)
-                    <br>↓
-                    <br>Hidden Layer 2
-                    <br>(Detect Eyes, Nose, Mouth)
-                    <br>↓
-                    <br>Hidden Layer 3
-                    <br>(Complete Face)
-                    <br>↓
-                    <br>Output
-                    <br>Person Identified
+<h3>Example</h3>
+<p><strong>Input:</strong> Face Image</p>
+<div class="diagram-box" style="padding: 0; background: none; border: none; box-shadow: none;">
+                    <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1784735298/ChatGPT_Image_Jul_22_2026_09_17_44_PM_zomvdl.png" alt="Deep Learning Facial Recognition" style="width: 100%; max-width: 600px; display: block; margin: 0 auto; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
                 </div>
-
-                <h3>How Deep Learning Works</h3>
-
-                <ol>
-                    <li><strong>Input Layer</strong> receives the data.</li>
-                    <li><strong>Hidden Layers</strong> learn important features automatically.</li>
-                    <li><strong>Output Layer</strong> predicts the final result.</li>
-                </ol>
-
-                <h3>Applications of Deep Learning</h3>
-
-                <ul>
-                    <li>🖼️ Image Recognition</li>
-                    <li>🎤 Speech Recognition</li>
-                    <li>🤖 AI Chatbots</li>
-                    <li>🚗 Self-Driving Cars</li>
-                    <li>🏥 Medical Diagnosis</li>
-                    <li>🌐 Language Translation</li>
-                </ul>
-
-            </div>
-
-            <!-- ========================================= -->
-            <!-- Lesson 4 : Neural Networks -->
-            <!-- ========================================= -->
-            <div class="lesson-card">
-
-                <h2>📖 Lesson 4: Neural Networks</h2>
-
-                <h3>Definition</h3>
-
-                <p>
+<h3>How Deep Learning Works</h3>
+<ol>
+<li><strong>Input Layer</strong> receives the data.</li>
+<li><strong>Hidden Layers</strong> learn important features automatically.</li>
+<li><strong>Output Layer</strong> predicts the final result.</li>
+</ol>
+<h3>Applications of Deep Learning</h3>
+<ul>
+<li><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Image Recognition</li>
+<li>🎤 Speech Recognition</li>
+<li>🤖 AI Chatbots</li>
+<li>🚗 Self-Driving Cars</li>
+<li>🏥 Medical Diagnosis</li>
+<li>🌐 Language Translation</li>
+</ul>
+<!-- ========================================= -->
+<!-- Lesson 4 : Neural Networks -->
+<!-- ========================================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 4: Neural Networks</h2>
+<h3>Definition</h3>
+<p>
                     A <strong>Neural Network (Artificial Neural Network - ANN)</strong>
                     is a computer model inspired by the human brain that learns patterns
                     from data using interconnected artificial neurons to make predictions
                     and decisions.
                 </p>
-
-                <p>
+<p>
                     It consists of connected artificial neurons.
                 </p>
-
-                <h3>Structure</h3>
-
-                <div class="diagram-box">
+<h3>Structure</h3>
+<div class="diagram-box">
                     Input Layer
-                    <br>↓
-                    <br>Hidden Layer(s)
-                    <br>↓
-                    <br>Output Layer
+                    <br/>↓
+                    <br/>Hidden Layer(s)
+                    <br/>↓
+                    <br/>Output Layer
                 </div>
-
-                <h3>Example</h3>
-
-                <div class="diagram-box">
-                    Input:
-                    <br>Dog Image
-                    <br>↓
-                    <br>Hidden Layers Detect
-                    <br>• Eyes
-                    <br>• Nose
-                    <br>• Legs
-                    <br>• Tail
-                    <br>↓
-                    <br>Output:
-                    <br>Dog
+<h3>Example</h3>
+<div class="diagram-box" style="padding: 0; background: none; border: none; box-shadow: none;">
+                    <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1784735742/ChatGPT_Image_Jul_22_2026_09_25_21_PM_ps79i1.png" alt="Neural Network Example" style="width: 100%; max-width: 600px; display: block; margin: 0 auto; border-radius: 12px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);">
                 </div>
-
-                <h3>Structure of a Neural Network</h3>
-
-                <p>A neural network usually has three types of layers:</p>
-
-                <div class="diagram-box">
+<h3>Structure of a Neural Network</h3>
+<p>A neural network usually has three types of layers:</p>
+<div class="diagram-box">
                     Input Layer
-                    <br>↓
-                    <br>Hidden Layer(s)
-                    <br>↓
-                    <br>Output Layer
+                    <br/>↓
+                    <br/>Hidden Layer(s)
+                    <br/>↓
+                    <br/>Output Layer
                 </div>
-
-                <h4>1. Input Layer</h4>
-
-                <p>
+<h4>1. Input Layer</h4>
+<p>
                     Receives the input data.
-                    <br><strong>Example:</strong> Image pixels, text, numbers.
+                    <br/><strong>Example:</strong> Image pixels, text, numbers.
                 </p>
-
-                <h4>2. Hidden Layer(s)</h4>
-
-                <p>
-                    Processes the information.<br>
-                    Learns patterns and relationships in the data.<br>
+<h4>2. Hidden Layer(s)</h4>
+<p>
+                    Processes the information.<br/>
+                    Learns patterns and relationships in the data.<br/>
                     A network can have one or many hidden layers.
                 </p>
-
-                <h4>3. Output Layer</h4>
-
-                <p>
+<h4>3. Output Layer</h4>
+<p>
                     Produces the final prediction or result.
                 </p>
-
-                <h2>📖 Types of Neural Networks</h2>
-
-                <h3>1. Feed Forward Neural Network (FNN)</h3>
-
-                <h4>Definition</h4>
-
-                <p>
+</div><div class="lesson-card"><h2>📖 Types of Neural Networks</h2>
+<h3>1. Feed Forward Neural Network (FNN)</h3>
+<h4>Definition</h4>
+<p>
                     A <strong>Feed Forward Neural Network (FNN)</strong> is the simplest
                     type of neural network in which data flows in one direction—from the
                     input layer, through the hidden layer(s), to the output layer—without
                     any feedback loops.
                 </p>
-
-                <h3>2. Convolutional Neural Network (CNN)</h3>
-
-                <h4>Definition</h4>
-
-                <p>
+<h3>2. Convolutional Neural Network (CNN)</h3>
+<h4>Definition</h4>
+<p>
                     A <strong>Convolutional Neural Network (CNN)</strong> is a type of
                     deep neural network specifically designed to recognize and analyze
                     images by automatically detecting features such as edges, shapes, and
                     objects.
                 </p>
-
-                <h3>3. Recurrent Neural Network (RNN)</h3>
-
-                <h4>Definition</h4>
-
-                <p>
+<h3>3. Recurrent Neural Network (RNN)</h3>
+<h4>Definition</h4>
+<p>
                     A <strong>Recurrent Neural Network (RNN)</strong> is a type of neural
                     network designed to process sequential data by remembering information
                     from previous inputs, making it suitable for tasks involving time or
                     ordered sequences.
                 </p>
-
-                <h3>4. Long Short-Term Memory (LSTM)</h3>
-
-                <h4>Definition</h4>
-
-                <p>
-                    <strong>Long Short-Term Memory (LSTM)</strong> is an advanced type of
+<h3>4. Long Short-Term Memory (LSTM)</h3>
+<h4>Definition</h4>
+<p>
+<strong>Long Short-Term Memory (LSTM)</strong> is an advanced type of
                     Recurrent Neural Network (RNN) that can remember important information
                     for long periods while forgetting unnecessary information, making it
                     effective for long sequences of data.
                 </p>
-
-                <h3>5. Transformer Networks</h3>
-
-                <h4>Definition</h4>
-
-                <p>
-                    <strong>Transformer Networks</strong> are advanced deep learning
+<h3>5. Transformer Networks</h3>
+<h4>Definition</h4>
+<p>
+<strong>Transformer Networks</strong> are advanced deep learning
                     models that process entire sequences in parallel using a
                     self-attention mechanism, enabling them to understand relationships
                     between words or data efficiently. They are the foundation of modern
                     <strong>Large Language Models (LLMs)</strong> such as ChatGPT, Claude,
                     and Gemini.
                 </p>
-
-                <h2>📖 Applications of Neural Networks</h2>
-
-                <h3>1. Image Recognition</h3>
-
-                <h4>Definition</h4>
-
-                <p>
+</div><div class="lesson-card"><h2>📖 Applications of Neural Networks</h2>
+<h3>1. Image Recognition</h3>
+<h4>Definition</h4>
+<p>
                     Image Recognition is the application of neural networks to identify,
                     classify, and recognize objects, people, or scenes in digital images.
                 </p>
-
-                <h3>2. Voice Recognition</h3>
-
-                <h4>Definition</h4>
-
-                <p>
+<h3>2. Voice Recognition</h3>
+<h4>Definition</h4>
+<p>
                     Voice Recognition is the application of neural networks that enables
                     computers to recognize, understand, and convert human speech into text
                     or commands.
                 </p>
-
-                <h3>3. AI Chatbots</h3>
-
-                <h4>Definition</h4>
-
-                <p>
+<h3>3. AI Chatbots</h3>
+<h4>Definition</h4>
+<p>
                     AI Chatbots are intelligent software applications powered by neural
                     networks and Large Language Models (LLMs) that can understand,
                     process, and generate human-like conversations.
                 </p>
-
-                <h3>4. Medical Diagnosis</h3>
-
-                <h4>Definition</h4>
-
-                <p>
+<h3>4. Medical Diagnosis</h3>
+<h4>Definition</h4>
+<p>
                     Medical Diagnosis is the application of neural networks to analyze
                     medical data, images, and patient records to help detect diseases,
                     predict health conditions, and support doctors in making accurate
                     diagnoses.
                 </p>
-
-            </div>
-            <!-- ========================================= -->
-            <!-- Lesson 5, 6 & 7 -->
-            <!-- ========================================= -->
-            <div class="lesson-card">
-
-                <!-- ========================= -->
-                <!-- Lesson 5 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 5: NLP (Natural Language Processing)</h2>
-
-                <h3>Definition</h3>
-
-                <p>
-                    <strong>Natural Language Processing (NLP)</strong> is a branch of
+<!-- ========================================= -->
+<!-- Lesson 5, 6 & 7 -->
+<!-- ========================================= -->
+<!-- ========================= -->
+<!-- Lesson 5 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 5: NLP (Natural Language Processing)</h2>
+<h3>Definition</h3>
+<p>
+<strong>Natural Language Processing (NLP)</strong> is a branch of
                     <strong>Artificial Intelligence (AI)</strong> that enables computers
                     to understand, interpret, process, and generate human language, such
                     as text and speech.
                 </p>
-
-                <h3>Real Examples</h3>
-
-                <ul>
-                    <li>💬 ChatGPT</li>
-                    <li>🌐 Google Translate</li>
-                    <li>✍️ Grammarly</li>
-                    <li>🗣️ Alexa</li>
-                    <li>📱 Siri</li>
-                </ul>
-
-                <h3>NLP Tasks</h3>
-
-                <ul>
-                    <li>🌍 Translation</li>
-                    <li>📂 Text Classification</li>
-                    <li>😊 Sentiment Analysis</li>
-                    <li>📝 Summarization</li>
-                    <li>❓ Question Answering</li>
-                    <li>🤖 Chatbots</li>
-                </ul>
-
-                <h3>Workflow</h3>
-
-                <div class="diagram-box">
+<h3>Real Examples</h3>
+<ul>
+<li>💬 ChatGPT</li>
+<li>🌐 Google Translate</li>
+<li>✍️ Grammarly</li>
+<li>🗣️ Alexa</li>
+<li>📱 Siri</li>
+</ul>
+<h3>NLP Tasks</h3>
+<ul>
+<li>🌍 Translation</li>
+<li>📂 Text Classification</li>
+<li>😊 Sentiment Analysis</li>
+<li>📝 Summarization</li>
+<li>❓ Question Answering</li>
+<li>🤖 Chatbots</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">
                     Text
-                    <br>↓
-                    <br>Tokenization
-                    <br>↓
-                    <br>Embedding
-                    <br>↓
-                    <br>Model
-                    <br>↓
-                    <br>Answer
+                    <br/>↓
+                    <br/>Tokenization
+                    <br/>↓
+                    <br/>Embedding
+                    <br/>↓
+                    <br/>Model
+                    <br/>↓
+                    <br/>Answer
                 </div>
-
-                <div class="highlight-box">
-                    <h3>📌 Interview Tip</h3>
-
-                    <p><strong>Q: What is the difference between NLP and LLM?</strong></p>
-
-                    <p><strong>Answer:</strong></p>
-
-                    <p>
-                        <strong>NLP (Natural Language Processing)</strong> is the field of
+<div class="highlight-box">
+<h3>📌 Interview Tip</h3>
+<p><strong>Q: What is the difference between NLP and LLM?</strong></p>
+<p><strong>Answer:</strong></p>
+<p>
+<strong>NLP (Natural Language Processing)</strong> is the field of
                         AI that focuses on understanding and processing human language.
                     </p>
-
-                    <p>
-                        <strong>LLMs (Large Language Models)</strong> are advanced AI
+<p>
+<strong>LLMs (Large Language Models)</strong> are advanced AI
                         models built using NLP techniques (especially Transformers) that
                         can generate, summarize, translate, answer questions, and perform
                         many language-related tasks.
                     </p>
-
-                    <p>
-                        <strong>In simple words:</strong>
-                    </p>
-
-                    <ul>
-                        <li><strong>NLP</strong> = The field of study</li>
-                        <li><strong>LLM</strong> = A powerful application of NLP</li>
-                    </ul>
-                </div>
-
-                <!-- ========================= -->
-                <!-- Lesson 6 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 6: Transformers Explained</h2>
-
-                <h3>Definition</h3>
-
-                <p>
+<p>
+<strong>In simple words:</strong>
+</p>
+<ul>
+<li><strong>NLP</strong> = The field of study</li>
+<li><strong>LLM</strong> = A powerful application of NLP</li>
+</ul>
+</div>
+<!-- ========================= -->
+<!-- Lesson 6 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 6: Transformers Explained</h2>
+<h3>Definition</h3>
+<p>
                     A <strong>Transformer</strong> is a deep learning model architecture
                     that understands the relationships between words in a sentence using a
                     mechanism called <strong>Attention</strong>, allowing it to process
                     text efficiently and accurately.
                 </p>
-
-                <h3>Why Transformers?</h3>
-
-                <p>
+<h3>Why Transformers?</h3>
+<p>
                     The model transforms input text into meaningful numerical
                     representations and then transforms those representations into useful
                     outputs, such as translations, summaries, or answers.
                 </p>
-
-                <p>
+<p>
                     Transformers process many words together using attention, making them
                     faster and better at understanding context.
                 </p>
-
-                <h3>Key Components</h3>
-
-                <ul>
-                    <li>🔹 Input Tokens</li>
-                    <li>🔹 Embeddings</li>
-                    <li>🔹 Positional Encoding</li>
-                    <li>🔹 Self-Attention</li>
-                    <li>🔹 Feed Forward Layers</li>
-                </ul>
-
-                <h3>Real Examples</h3>
-
-                <ul>
-                    <li>💬 ChatGPT</li>
-                    <li>🤖 Claude</li>
-                    <li>✨ Gemini</li>
-                    <li>🚀 DeepSeek</li>
-                </ul>
-
-                <h3>Why Were Transformers Introduced?</h3>
-
-                <p>Before Transformers, AI models mainly used:</p>
-
-                <ul>
-                    <li>Recurrent Neural Networks (RNN)</li>
-                    <li>Long Short-Term Memory (LSTM)</li>
-                </ul>
-
-                <p>
+<h3>Key Components</h3>
+<ul>
+<li>🔹 Input Tokens</li>
+<li>🔹 Embeddings</li>
+<li>🔹 Positional Encoding</li>
+<li>🔹 Self-Attention</li>
+<li>🔹 Feed Forward Layers</li>
+</ul>
+<h3>Real Examples</h3>
+<ul>
+<li>💬 ChatGPT</li>
+<li>🤖 Claude</li>
+<li>✨ Gemini</li>
+<li>🚀 DeepSeek</li>
+</ul>
+<h3>Why Were Transformers Introduced?</h3>
+<p>Before Transformers, AI models mainly used:</p>
+<ul>
+<li>Recurrent Neural Networks (RNN)</li>
+<li>Long Short-Term Memory (LSTM)</li>
+</ul>
+<p>
                     These models processed words one by one, making them slower and making
                     it harder to remember information from long sentences.
                 </p>
-
-                <p>Transformers solve these problems by:</p>
-
-                <ul>
-                    <li>✅ Processing all words at the same time (Parallel Processing)</li>
-                    <li>✅ Understanding long-distance relationships between words</li>
-                    <li>✅ Training much faster</li>
-                    <li>✅ Scaling to very large datasets</li>
-                </ul>
-
-                <h3>Key Components of a Transformer</h3>
-
-                <h4>1. Tokenization</h4>
-
-                <p>Splits text into smaller units (tokens).</p>
-
-                <p><strong>Example:</strong></p>
-
-                <div class="diagram-box">
+<p>Transformers solve these problems by:</p>
+<ul>
+<li>✅ Processing all words at the same time (Parallel Processing)</li>
+<li>✅ Understanding long-distance relationships between words</li>
+<li>✅ Training much faster</li>
+<li>✅ Scaling to very large datasets</li>
+</ul>
+<h3>Key Components of a Transformer</h3>
+<h4>1. Tokenization</h4>
+<p>Splits text into smaller units (tokens).</p>
+<p><strong>Example:</strong></p>
+<div class="diagram-box">
                     "I love AI"
-                    <br>↓
-                    <br>I | love | AI
+                    <br/>↓
+                    <br/>I | love | AI
                 </div>
-
-                <h4>2. Embeddings</h4>
-
-                <p>
+<h4>2. Embeddings</h4>
+<p>
                     Converts each token into numerical vectors that represent meaning.
                 </p>
-
-                <h4>3. Positional Encoding</h4>
-
-                <p>
+<h4>3. Positional Encoding</h4>
+<p>
                     Adds information about the position of each token because Transformers
                     process tokens in parallel.
                 </p>
-
-                <h4>4. Self-Attention ⭐ (Most Important)</h4>
-
-                <p>
+<h4>4. Self-Attention ⭐ (Most Important)</h4>
+<p>
                     Self-attention helps the model determine which words are most important
                     when understanding a sentence.
                 </p>
-
-                <p><strong>Example:</strong></p>
-
-                <div class="diagram-box">
+<p><strong>Example:</strong></p>
+<div class="diagram-box">
                     "The cat chased the mouse because it was hungry."
-                    <br><br>
+                    <br/><br/>
                     "it" → refers to "the cat"
                 </div>
-
-                <h4>5. Feed Forward Neural Network</h4>
-
-                <p>
+<h4>5. Feed Forward Neural Network</h4>
+<p>
                     Processes the information further to produce the final output.
                 </p>
-
-                <h3>Characteristics of Transformers</h3>
-
-                <ul>
-                    <li>✅ Understands context very well</li>
-                    <li>✅ Processes all words simultaneously</li>
-                    <li>✅ Learns long-range relationships</li>
-                    <li>✅ Faster training than RNNs/LSTMs</li>
-                    <li>✅ Foundation of modern Large Language Models (LLMs)</li>
-                </ul>
-
-                <!-- ========================= -->
-                <!-- Lesson 7 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 7: Large Language Models (LLMs)</h2>
-
-                <h3>Definition</h3>
-
-                <p>
-                    <strong>Large Language Models (LLMs)</strong> are advanced
+<h3>Characteristics of Transformers</h3>
+<ul>
+<li>✅ Understands context very well</li>
+<li>✅ Processes all words simultaneously</li>
+<li>✅ Learns long-range relationships</li>
+<li>✅ Faster training than RNNs/LSTMs</li>
+<li>✅ Foundation of modern Large Language Models (LLMs)</li>
+</ul>
+<!-- ========================= -->
+<!-- Lesson 7 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 7: Large Language Models (LLMs)</h2>
+<h3>Definition</h3>
+<p>
+<strong>Large Language Models (LLMs)</strong> are advanced
                     <strong>Artificial Intelligence (AI)</strong> models trained on massive
                     amounts of text data to understand, generate, and respond to human
                     language.
                 </p>
-
-                <h3>Why is it Called a "Large Language Model"?</h3>
-
-                <p>It has three parts:</p>
-
-                <ul>
-                    <li>
-                        <strong>Large</strong> → Trained on huge amounts of data (books,
+<h3>Why is it Called a "Large Language Model"?</h3>
+<p>It has three parts:</p>
+<ul>
+<li>
+<strong>Large</strong> → Trained on huge amounts of data (books,
                         websites, articles, code, research papers, etc.).
                     </li>
-
-                    <li>
-                        <strong>Language</strong> → Works with human languages such as
+<li>
+<strong>Language</strong> → Works with human languages such as
                         English, Telugu, Hindi, French, and more.
                     </li>
-
-                    <li>
-                        <strong>Model</strong> → A trained AI system that learns patterns
+<li>
+<strong>Model</strong> → A trained AI system that learns patterns
                         from data and makes predictions.
                     </li>
-                </ul>
-
-                <p>
-                    <strong>Therefore:</strong>
-                </p>
-
-                <div class="highlight-box">
+</ul>
+<p>
+<strong>Therefore:</strong>
+</p>
+<div class="highlight-box">
                     Large Language Model (LLM) = A large AI model trained on massive
                     amounts of human language data.
                 </div>
-
-                <h3>How an LLM Works</h3>
-
-                <div class="diagram-box">
+<h3>How an LLM Works</h3>
+<div class="diagram-box">
                     Books + Websites + Code + Articles
-                    <br>↓
-                    <br>Data Preprocessing
-                    <br>↓
-                    <br>Tokenization
-                    <br>↓
-                    <br>Transformer Model Training
-                    <br>↓
-                    <br>Large Language Model (LLM)
-                    <br>↓
-                    <br>User Prompt
-                    <br>↓
-                    <br>AI Generates Response
+                    <br/>↓
+                    <br/>Data Preprocessing
+                    <br/>↓
+                    <br/>Tokenization
+                    <br/>↓
+                    <br/>Transformer Model Training
+                    <br/>↓
+                    <br/>Large Language Model (LLM)
+                    <br/>↓
+                    <br/>User Prompt
+                    <br/>↓
+                    <br/>AI Generates Response
                 </div>
-
-                <h3>Examples</h3>
-
-                <ul>
-                    <li>💬 ChatGPT</li>
-                    <li>🤖 Claude</li>
-                    <li>✨ Gemini</li>
-                    <li>🚀 DeepSeek</li>
-                    <li>🧠 Llama</li>
-                </ul>
-
-                <h3>Example: ChatGPT</h3>
-
-                <p><strong>You ask:</strong></p>
-
-                <div class="diagram-box">
+<h3>Examples</h3>
+<ul>
+<li>💬 ChatGPT</li>
+<li>🤖 Claude</li>
+<li>✨ Gemini</li>
+<li>🚀 DeepSeek</li>
+<li>🧠 Llama</li>
+</ul>
+<h3>Example: ChatGPT</h3>
+<p><strong>You ask:</strong></p>
+<div class="diagram-box">
                     "Write a Python program to sort a list."
                 </div>
-
-                <p><strong>The LLM:</strong></p>
-
-                <ul>
-                    <li>✅ Understands your question.</li>
-                    <li>✅ Recognizes it is about Python programming.</li>
-                    <li>✅ Predicts the most appropriate next tokens.</li>
-                    <li>✅ Generates a correct Python program.</li>
-                </ul>
-
-                <div class="highlight-box">
-                    <strong>➡️ This entire process is powered by a Large Language Model (LLM).</strong>
-                </div>
-
-            </div>
-
-            <!-- ========================================= -->
-            <!-- Lesson 8, 9 & 10 -->
-            <!-- ========================================= -->
-
-            <div class="lesson-card">
-
-                <!-- ========================= -->
-                <!-- Lesson 8 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 8: Tokens & Tokenization</h2>
-
-                <h3>Definition</h3>
-
-                <p>
+<p><strong>The LLM:</strong></p>
+<ul>
+<li>✅ Understands your question.</li>
+<li>✅ Recognizes it is about Python programming.</li>
+<li>✅ Predicts the most appropriate next tokens.</li>
+<li>✅ Generates a correct Python program.</li>
+</ul>
+<div class="highlight-box">
+<strong>➡️ This entire process is powered by a Large Language Model (LLM).</strong>
+</div>
+<!-- ========================================= -->
+<!-- Lesson 8, 9 & 10 -->
+<!-- ========================================= -->
+<!-- ========================= -->
+<!-- Lesson 8 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 8: Tokens &amp; Tokenization</h2>
+<h3>Definition</h3>
+<p>
                     A <strong>Token</strong> is the smallest unit of text that an AI model
                     processes. A token can be a word, part of a word, a number, a punctuation
                     mark, or a symbol.
                 </p>
-
-                <h3>🔹 What is Tokenization?</h3>
-
-                <h4>Simple Definition</h4>
-
-                <p>
-                    <strong>Tokenization</strong> is the process of breaking text into
+<h3>🔹 What is Tokenization?</h3>
+<h4>Simple Definition</h4>
+<p>
+<strong>Tokenization</strong> is the process of breaking text into
                     smaller units called <strong>tokens</strong>.
                 </p>
-
-                <h3>Example for Token</h3>
-
-                <p><strong>Sentence</strong></p>
-
-                <div class="diagram-box">
+<h3>Example for Token</h3>
+<p><strong>Sentence</strong></p>
+<div class="diagram-box">
                     I love Artificial Intelligence.
                 </div>
-
-                <p>The AI may split it into tokens like:</p>
-
-                <ul>
-                    <li>I</li>
-                    <li>love</li>
-                    <li>Artificial</li>
-                    <li>Intelligence</li>
-                    <li>.</li>
-                </ul>
-
-                <p><strong>Here:</strong></p>
-
-                <ul>
-                    <li>"I" → Token</li>
-                    <li>"love" → Token</li>
-                    <li>"Artificial" → Token</li>
-                    <li>"Intelligence" → Token</li>
-                    <li>"." → Token</li>
-                </ul>
-
-                <div class="highlight-box">
-                    <strong>Total = 5 Tokens</strong> (Simplified Example)
+<p>The AI may split it into tokens like:</p>
+<ul>
+<li>I</li>
+<li>love</li>
+<li>Artificial</li>
+<li>Intelligence</li>
+<li>.</li>
+</ul>
+<p><strong>Here:</strong></p>
+<ul>
+<li>"I" → Token</li>
+<li>"love" → Token</li>
+<li>"Artificial" → Token</li>
+<li>"Intelligence" → Token</li>
+<li>"." → Token</li>
+</ul>
+<div class="highlight-box">
+<strong>Total = 5 Tokens</strong> (Simplified Example)
                 </div>
-
-                <h3>How Tokenization Works</h3>
-
-                <div class="diagram-box">
+<h3>How Tokenization Works</h3>
+<div class="diagram-box">
                     Input Sentence
-                    <br>↓
-                    <br>Tokenization
-                    <br>↓
-                    <br>Tokens
-                    <br>↓
-                    <br>Embeddings
-                    <br>↓
-                    <br>AI Model (LLM)
-                    <br>↓
-                    <br>Response
+                    <br/>↓
+                    <br/>Tokenization
+                    <br/>↓
+                    <br/>Tokens
+                    <br/>↓
+                    <br/>Embeddings
+                    <br/>↓
+                    <br/>AI Model (LLM)
+                    <br/>↓
+                    <br/>Response
                 </div>
-
-                <h3>Real-Time Example</h3>
-
-                <p><strong>User Prompt</strong></p>
-
-                <div class="diagram-box">
+<h3>Real-Time Example</h3>
+<p><strong>User Prompt</strong></p>
+<div class="diagram-box">
                     "What is Artificial Intelligence?"
                 </div>
-
-                <p>After Tokenization (Simplified):</p>
-
-                <ul>
-                    <li>What</li>
-                    <li>is</li>
-                    <li>Artificial</li>
-                    <li>Intelligence</li>
-                    <li>?</li>
-                </ul>
-
-                <p>
+<p>After Tokenization (Simplified):</p>
+<ul>
+<li>What</li>
+<li>is</li>
+<li>Artificial</li>
+<li>Intelligence</li>
+<li>?</li>
+</ul>
+<p>
                     These tokens are then converted into numerical vectors (Embeddings)
                     before being processed by the AI model.
                 </p>
-
-                <h3>Why are Tokens Important?</h3>
-
-                <ul>
-                    <li>✅ AI models understand tokens, not raw sentences.</li>
-                    <li>✅ Context window size is measured in tokens.</li>
-                    <li>✅ API usage and pricing are often based on the number of tokens.</li>
-                    <li>✅ Longer prompts use more tokens.</li>
-                </ul>
-
-                <!-- ========================= -->
-                <!-- Lesson 9 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 9: Context Window</h2>
-
-                <h3>Definition</h3>
-
-                <p>
+<h3>Why are Tokens Important?</h3>
+<ul>
+<li>✅ AI models understand tokens, not raw sentences.</li>
+<li>✅ Context window size is measured in tokens.</li>
+<li>✅ API usage and pricing are often based on the number of tokens.</li>
+<li>✅ Longer prompts use more tokens.</li>
+</ul>
+<!-- ========================= -->
+<!-- Lesson 9 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 9: Context Window</h2>
+<h3>Definition</h3>
+<p>
                     A <strong>Context Window</strong> is the maximum amount of information
                     (measured in tokens) that an AI model can remember and process at one
                     time while generating a response.
                 </p>
-
-                <h3>Example</h3>
-
-                <p><strong>ChatGPT Conversation</strong></p>
-
-                <p>Imagine you're chatting with ChatGPT.</p>
-
-                <div class="highlight-box">
+<h3>Example</h3>
+<p><strong>ChatGPT Conversation</strong></p>
+<p>Imagine you're chatting with ChatGPT.</p>
+<div class="highlight-box">
                     👤 <strong>You:</strong> Who is Elon Musk?
-                    <br><br>
+                    <br/><br/>
                     🤖 <strong>ChatGPT:</strong> Explains about Elon Musk.
-                    <br><br>
+                    <br/><br/>
                     👤 <strong>You:</strong> Where was he born?
                 </div>
-
-                <p>
+<p>
                     ChatGPT understands that <strong>"he"</strong> refers to
                     <strong>Elon Musk</strong> because the earlier conversation is still
                     inside the context window.
                 </p>
-
-                <h3>How Context Window Works</h3>
-
-                <div class="diagram-box">
+<h3>How Context Window Works</h3>
+<div class="diagram-box">
                     User Prompt
-                    <br>↓
-                    <br>Conversation History
-                    <br>↓
-                    <br>Documents / Files
-                    <br>↓
-                    <br>Total Tokens
-                    <br>↓
-                    <br>Context Window
-                    <br>↓
-                    <br>LLM Generates Response
+                    <br/>↓
+                    <br/>Conversation History
+                    <br/>↓
+                    <br/>Documents / Files
+                    <br/>↓
+                    <br/>Total Tokens
+                    <br/>↓
+                    <br/>Context Window
+                    <br/>↓
+                    <br/>LLM Generates Response
                 </div>
-
-                <h3>Why is Context Window Important?</h3>
-
-                <p>A larger context window allows the AI to:</p>
-
-                <ul>
-                    <li>✅ Remember more of the conversation.</li>
-                    <li>✅ Understand long documents.</li>
-                    <li>✅ Write large programs.</li>
-                    <li>✅ Summarize lengthy reports.</li>
-                    <li>✅ Answer questions with better context.</li>
-                </ul>
-
-                <h3>Characteristics of Context Window</h3>
-
-                <ul>
-                    <li>✅ Measured in tokens, not words.</li>
-                    <li>✅ Includes both input tokens and output tokens.</li>
-                    <li>✅ Larger context windows improve long conversations.</li>
-                    <li>✅ If the limit is exceeded, older information may no longer be considered.</li>
-                </ul>
-
-                <!-- ========================= -->
-                <!-- Lesson 10 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 10: Embeddings</h2>
-
-                <h3>Definition</h3>
-
-                <p>
-                    <strong>Embeddings</strong> convert text into numerical vectors that
+<h3>Why is Context Window Important?</h3>
+<p>A larger context window allows the AI to:</p>
+<ul>
+<li>✅ Remember more of the conversation.</li>
+<li>✅ Understand long documents.</li>
+<li>✅ Write large programs.</li>
+<li>✅ Summarize lengthy reports.</li>
+<li>✅ Answer questions with better context.</li>
+</ul>
+<h3>Characteristics of Context Window</h3>
+<ul>
+<li>✅ Measured in tokens, not words.</li>
+<li>✅ Includes both input tokens and output tokens.</li>
+<li>✅ Larger context windows improve long conversations.</li>
+<li>✅ If the limit is exceeded, older information may no longer be considered.</li>
+</ul>
+<!-- ========================= -->
+<!-- Lesson 10 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 10: Embeddings</h2>
+<h3>Definition</h3>
+<p>
+<strong>Embeddings</strong> convert text into numerical vectors that
                     capture meaning, so similar ideas are placed close together.
                 </p>
-
-                <p>
+<p>
                     Embeddings are numbers that represent the meaning of words or
                     sentences. They help AI understand that words with similar meanings
                     are related, even if they are different words.
                 </p>
-
-                <h3>Example 1</h3>
-
-                <p>Words like:</p>
-
-                <ul>
-                    <li>Dog</li>
-                    <li>Puppy</li>
-                </ul>
-
-                <p>will have similar embeddings.</p>
-
-                <p>Words like:</p>
-
-                <ul>
-                    <li>Dog</li>
-                    <li>Airplane</li>
-                </ul>
-
-                <p>will be much farther apart.</p>
-
-                <h3>Example 2</h3>
-
-                <p>Suppose we have these words:</p>
-
-                <ul>
-                    <li>Dog</li>
-                    <li>Puppy</li>
-                    <li>Cat</li>
-                    <li>Car</li>
-                </ul>
-
-                <p>The embedding model converts them into vectors (Simplified):</p>
-
-                <div class="diagram-box">
+<h3>Example 1</h3>
+<p>Words like:</p>
+<ul>
+<li>Dog</li>
+<li>Puppy</li>
+</ul>
+<p>will have similar embeddings.</p>
+<p>Words like:</p>
+<ul>
+<li>Dog</li>
+<li>Airplane</li>
+</ul>
+<p>will be much farther apart.</p>
+<h3>Example 2</h3>
+<p>Suppose we have these words:</p>
+<ul>
+<li>Dog</li>
+<li>Puppy</li>
+<li>Cat</li>
+<li>Car</li>
+</ul>
+<p>The embedding model converts them into vectors (Simplified):</p>
+<div class="diagram-box">
                     Dog → [0.21, 0.45, 0.67]
-                    <br>
+                    <br/>
                     Puppy → [0.22, 0.44, 0.66]
-                    <br>
+                    <br/>
                     Cat → [0.20, 0.48, 0.70]
-                    <br>
+                    <br/>
                     Car → [0.91, 0.15, 0.08]
                 </div>
-
-                <p><strong>Notice:</strong></p>
-
-                <ul>
-                    <li>Dog and Puppy have very similar vectors because their meanings are similar.</li>
-                    <li>Car has a very different vector because its meaning is unrelated.</li>
-                </ul>
-
-                <div class="highlight-box">
-                    <strong>➡️ This is how AI understands meaning, not just exact words.</strong>
-                </div>
-
-                <h3>How Embeddings Work</h3>
-
-                <div class="diagram-box">
+<p><strong>Notice:</strong></p>
+<ul>
+<li>Dog and Puppy have very similar vectors because their meanings are similar.</li>
+<li>Car has a very different vector because its meaning is unrelated.</li>
+</ul>
+<div class="highlight-box">
+<strong>➡️ This is how AI understands meaning, not just exact words.</strong>
+</div>
+<h3>How Embeddings Work</h3>
+<div class="diagram-box">
                     Text
-                    <br>↓
-                    <br>Tokenization
-                    <br>↓
-                    <br>Embedding Model
-                    <br>↓
-                    <br>Numerical Vectors
-                    <br>↓
-                    <br>AI Model
-                    <br>↓
-                    <br>Response
+                    <br/>↓
+                    <br/>Tokenization
+                    <br/>↓
+                    <br/>Embedding Model
+                    <br/>↓
+                    <br/>Numerical Vectors
+                    <br/>↓
+                    <br/>AI Model
+                    <br/>↓
+                    <br/>Response
                 </div>
-
-                <h3>Uses of Embeddings</h3>
-
-                <ul>
-                    <li>🔍 Semantic Search</li>
-                    <li>📚 RAG (Retrieval-Augmented Generation)</li>
-                    <li>🎯 Recommendation Systems</li>
-                    <li>📊 Clustering</li>
-                    <li>📄 Duplicate Detection</li>
-                </ul>
-
-            </div>
-            <!-- ========================================= -->
-            <!-- Lesson 11, 12, 13 & 14 -->
-            <!-- ========================================= -->
-
-            <div class="lesson-card">
-
-                <!-- ========================= -->
-                <!-- Lesson 11 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 11: Hallucinations</h2>
-
-                <h3>Definition</h3>
-
-                <p>
+<h3>Uses of Embeddings</h3>
+<ul>
+<li>🔍 Semantic Search</li>
+<li>📚 RAG (Retrieval-Augmented Generation)</li>
+<li>🎯 Recommendation Systems</li>
+<li>📊 Clustering</li>
+<li>📄 Duplicate Detection</li>
+</ul>
+<!-- ========================================= -->
+<!-- Lesson 11, 12, 13 & 14 -->
+<!-- ========================================= -->
+<!-- ========================= -->
+<!-- Lesson 11 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 11: Hallucinations</h2>
+<h3>Definition</h3>
+<p>
                     A <strong>hallucination</strong> happens when an AI generates
                     information that sounds correct but is false, made up, or unsupported.
                 </p>
-
-                <p>
+<p>
                     Hallucination happens when an AI gives a wrong answer with confidence
                     because it does not know the correct information or misunderstands the
                     question.
                 </p>
-
-                <h3>Why Do Hallucinations Happen?</h3>
-
-                <p>
+<h3>Why Do Hallucinations Happen?</h3>
+<p>
                     AI does not <strong>"know"</strong> facts the way humans do.
                 </p>
-
-                <p>
+<p>
                     Instead, it predicts the most likely next token based on patterns it
                     learned during training.
                 </p>
-
-                <p>
+<p>
                     If the correct information is unavailable or the prompt is unclear, it
                     may generate a convincing but incorrect answer.
                 </p>
-
-                <h3>How Hallucination Happens</h3>
-
-                <div class="diagram-box">
+<h3>How Hallucination Happens</h3>
+<div class="diagram-box">
                     User Question
-                    <br>↓
-                    <br>LLM Predicts Next Tokens
-                    <br>↓
-                    <br>Insufficient Knowledge or Context
-                    <br>↓
-                    <br>Incorrect / Fabricated Information
-                    <br>↓
-                    <br>Hallucination
+                    <br/>↓
+                    <br/>LLM Predicts Next Tokens
+                    <br/>↓
+                    <br/>Insufficient Knowledge or Context
+                    <br/>↓
+                    <br/>Incorrect / Fabricated Information
+                    <br/>↓
+                    <br/>Hallucination
                 </div>
-
-                <h3>Example</h3>
-
-                <p><strong>Question:</strong></p>
-
-                <div class="diagram-box">
+<h3>Example</h3>
+<p><strong>Question:</strong></p>
+<div class="diagram-box">
                     Who won the 2035 Cricket World Cup?
                 </div>
-
-                <p>
+<p>
                     If the event has not happened yet, an AI might invent a winner instead
                     of saying it does not know.
                 </p>
-
-                <h3>Easy Trick to Remember</h3>
-
-                <div class="highlight-box">
-                    <strong>Memory Formula</strong>
-                    <br><br>
+<h3>Easy Trick to Remember</h3>
+<div class="highlight-box">
+<strong>Memory Formula</strong>
+<br/><br/>
                     Wrong Prediction
-                    <br>↓
-                    <br>False Information
-                    <br>↓
-                    <br>Hallucination
+                    <br/>↓
+                    <br/>False Information
+                    <br/>↓
+                    <br/>Hallucination
                 </div>
-
-                <div class="highlight-box">
-
-                    <h3>📌 Interview Tip</h3>
-
-                    <p><strong>Q: What is the difference between an AI Error and an AI Hallucination?</strong></p>
-
-                    <p><strong>Answer:</strong></p>
-
-                    <p>
-                        <strong>AI Error:</strong> A mistake caused by incorrect input,
+<div class="highlight-box">
+<h3>📌 Interview Tip</h3>
+<p><strong>Q: What is the difference between an AI Error and an AI Hallucination?</strong></p>
+<p><strong>Answer:</strong></p>
+<p>
+<strong>AI Error:</strong> A mistake caused by incorrect input,
                         software bugs, or poor-quality data.
                     </p>
-
-                    <p>
-                        <strong>AI Hallucination:</strong> A specific type of AI error where
+<p>
+<strong>AI Hallucination:</strong> A specific type of AI error where
                         the model creates false or unsupported information but presents it
                         confidently as if it were true.
                     </p>
-
-                </div>
-
-                <h3>Easy Formula</h3>
-
-                <div class="diagram-box">
+</div>
+<h3>Easy Formula</h3>
+<div class="diagram-box">
                     Question
-                    <br>↓
-                    <br>LLM Predicts Response
-                    <br>↓
-                    <br>Correct Information?
-                    <br>│
-                    <br>├── Yes → Accurate Answer
-                    <br>│
-                    <br>└── No
-                    <br>↓
-                    <br>Hallucination
+                    <br/>↓
+                    <br/>LLM Predicts Response
+                    <br/>↓
+                    <br/>Correct Information?
+                    <br/>│
+                    <br/>├── Yes → Accurate Answer
+                    <br/>│
+                    <br/>└── No
+                    <br/>↓
+                    <br/>Hallucination
                 </div>
-
-                <div class="highlight-box">
-
-                    <h3>💡 Prompt Engineer Tip</h3>
-
-                    <p>To reduce hallucinations:</p>
-
-                    <ul>
-                        <li>✅ Give clear, specific instructions.</li>
-                        <li>✅ Provide relevant context or reference documents.</li>
-                        <li>✅ Use RAG for knowledge-intensive applications.</li>
-                        <li>✅ Ask the model to indicate uncertainty when appropriate.</li>
-                        <li>✅ Verify critical outputs before using them in medical, legal, financial, or other
+<div class="highlight-box">
+<h3>💡 Prompt Engineer Tip</h3>
+<p>To reduce hallucinations:</p>
+<ul>
+<li>✅ Give clear, specific instructions.</li>
+<li>✅ Provide relevant context or reference documents.</li>
+<li>✅ Use RAG for knowledge-intensive applications.</li>
+<li>✅ Ask the model to indicate uncertainty when appropriate.</li>
+<li>✅ Verify critical outputs before using them in medical, legal, financial, or other
                             high-stakes situations.</li>
-                    </ul>
-
-                </div>
-
-                <!-- ========================= -->
-                <!-- Lesson 12 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 12: Temperature</h2>
-
-                <h3>Definition</h3>
-
-                <p>
-                    <strong>Temperature</strong> is a parameter in a
+</ul>
+</div>
+<!-- ========================= -->
+<!-- Lesson 12 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 12: Temperature</h2>
+<h3>Definition</h3>
+<p>
+<strong>Temperature</strong> is a parameter in a
                     <strong>Large Language Model (LLM)</strong> that controls how random,
                     creative, or predictable the AI's responses are.
                 </p>
-
-                <p>
+<p>
                     Temperature controls how creative or predictable an AI's responses are.
                 </p>
-
-                <h3>Temperature Values</h3>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Temperature</th>
-                            <th>Behavior</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>0.0</td>
-                            <td>Very consistent and factual</td>
-                        </tr>
-                        <tr>
-                            <td>0.2</td>
-                            <td>Mostly factual</td>
-                        </tr>
-                        <tr>
-                            <td>0.7</td>
-                            <td>Balanced</td>
-                        </tr>
-                        <tr>
-                            <td>1.0</td>
-                            <td>More creative</td>
-                        </tr>
-                        <tr>
-                            <td>1.5+</td>
-                            <td>Very creative but less reliable</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>Why is Temperature Important?</h3>
-
-                <p>
+<h3>Temperature Values</h3>
+<table>
+<thead>
+<tr>
+<th>Temperature</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.0</td>
+<td>Very consistent and factual</td>
+</tr>
+<tr>
+<td>0.2</td>
+<td>Mostly factual</td>
+</tr>
+<tr>
+<td>0.7</td>
+<td>Balanced</td>
+</tr>
+<tr>
+<td>1.0</td>
+<td>More creative</td>
+</tr>
+<tr>
+<td>1.5+</td>
+<td>Very creative but less reliable</td>
+</tr>
+</tbody>
+</table>
+<h3>Why is Temperature Important?</h3>
+<p>
                     When an AI generates text, it predicts the next token.
                 </p>
-
-                <p>
+<p>
                     Sometimes there are many possible next tokens.
                 </p>
-
-                <p>Temperature decides whether the AI should:</p>
-
-                <ul>
-                    <li>Choose the most likely next token.</li>
-                    <li>Explore less likely tokens to generate more creative responses.</li>
-                </ul>
-
-                <h3>How Temperature Works</h3>
-
-                <div class="diagram-box">
+<p>Temperature decides whether the AI should:</p>
+<ul>
+<li>Choose the most likely next token.</li>
+<li>Explore less likely tokens to generate more creative responses.</li>
+</ul>
+<h3>How Temperature Works</h3>
+<div class="diagram-box">
                     User Prompt
-                    <br>↓
-                    <br>LLM Predicts Many Possible Words
-                    <br>↓
-                    <br>Temperature Controls Randomness
-                    <br>↓
-                    <br>Final Response
+                    <br/>↓
+                    <br/>LLM Predicts Many Possible Words
+                    <br/>↓
+                    <br/>Temperature Controls Randomness
+                    <br/>↓
+                    <br/>Final Response
                 </div>
-
-                <h3>Real-Life Analogy</h3>
-
-                <p><strong>Imagine 100 students taking the same exam.</strong></p>
-
-                <div class="highlight-box">
+<h3>Real-Life Analogy</h3>
+<p><strong>Imagine 100 students taking the same exam.</strong></p>
+<div class="highlight-box">
                     👨‍🏫 <strong>Strict Teacher (Low Temperature)</strong>
-                    <br><br>
+<br/><br/>
                     Every student writes almost the same correct answer.
-                    <br><br>
+                    <br/><br/>
                     ➜ Responses are consistent and accurate.
                 </div>
-
-                <h3>Uses</h3>
-
-                <ul>
-                    <li>💻 Coding → Low Temperature</li>
-                    <li>⚖️ Legal Writing → Low Temperature</li>
-                    <li>📝 Poetry → High Temperature</li>
-                    <li>📖 Story Writing → High Temperature</li>
-                </ul>
-
-                <div class="highlight-box">
-
-                    <h3>💡 Prompt Engineer Tip</h3>
-
-                    <ul>
-                        <li><strong>0.0 – 0.2</strong> → Coding, Mathematics, Legal, Financial, Factual Answers</li>
-                        <li><strong>0.5 – 0.7</strong> → General Conversations, Emails, Documentation</li>
-                        <li><strong>0.8 – 1.0</strong> → Brainstorming, Marketing Copy, Storytelling, Creative Writing
+<h3>Uses</h3>
+<ul>
+<li>💻 Coding → Low Temperature</li>
+<li>⚖️ Legal Writing → Low Temperature</li>
+<li>📝 Poetry → High Temperature</li>
+<li>📖 Story Writing → High Temperature</li>
+</ul>
+<div class="highlight-box">
+<h3>💡 Prompt Engineer Tip</h3>
+<ul>
+<li><strong>0.0 – 0.2</strong> → Coding, Mathematics, Legal, Financial, Factual Answers</li>
+<li><strong>0.5 – 0.7</strong> → General Conversations, Emails, Documentation</li>
+<li><strong>0.8 – 1.0</strong> → Brainstorming, Marketing Copy, Storytelling, Creative Writing
                         </li>
-                    </ul>
-
-                    <strong>
+</ul>
+<strong>
                         Remember:
-                        <br>
+                        <br/>
                         Lower Temperature = Higher Accuracy
-                        <br>
+                        <br/>
                         Higher Temperature = Higher Creativity
                     </strong>
-
-                </div>
-
-                <!-- ========================= -->
-                <!-- Lesson 13 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 13: Top-P</h2>
-
-                <h3>Definition</h3>
-
-                <p>
-                    <strong>Top-P</strong>, also known as
+</div>
+<!-- ========================= -->
+<!-- Lesson 13 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 13: Top-P</h2>
+<h3>Definition</h3>
+<p>
+<strong>Top-P</strong>, also known as
                     <strong>Nucleus Sampling</strong>, is a text generation parameter that
                     limits token selection to the smallest set of high-probability tokens
                     whose cumulative probability reaches the specified threshold,
                     improving the balance between diversity and response quality.
                 </p>
-
-                <h3>Simple Idea</h3>
-
-                <p>
+<h3>Simple Idea</h3>
+<p>
                     Instead of considering every possible next word, the model focuses only
                     on the most likely group of words.
                 </p>
-
-                <h3>How Top-P Works</h3>
-
-                <div class="diagram-box">
+<h3>How Top-P Works</h3>
+<div class="diagram-box">
                     User Prompt
-                    <br>↓
-                    <br>LLM Predicts Many Possible Words
-                    <br>↓
-                    <br>Top-P Selects Most Probable Group
-                    <br>↓
-                    <br>AI Chooses Next Word
-                    <br>↓
-                    <br>Response
+                    <br/>↓
+                    <br/>LLM Predicts Many Possible Words
+                    <br/>↓
+                    <br/>Top-P Selects Most Probable Group
+                    <br/>↓
+                    <br/>AI Chooses Next Word
+                    <br/>↓
+                    <br/>Response
                 </div>
-
-                <h3>Real-Time Example</h3>
-
-                <p><strong>Prompt:</strong></p>
-
-                <div class="diagram-box">
+<h3>Real-Time Example</h3>
+<p><strong>Prompt:</strong></p>
+<div class="diagram-box">
                     Artificial Intelligence is...
                 </div>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Word</th>
-                            <th>Probability</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>changing</td>
-                            <td>40%</td>
-                        </tr>
-                        <tr>
-                            <td>transforming</td>
-                            <td>30%</td>
-                        </tr>
-                        <tr>
-                            <td>improving</td>
-                            <td>20%</td>
-                        </tr>
-                        <tr>
-                            <td>cooking</td>
-                            <td>5%</td>
-                        </tr>
-                        <tr>
-                            <td>dancing</td>
-                            <td>3%</td>
-                        </tr>
-                        <tr>
-                            <td>sleeping</td>
-                            <td>2%</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p><strong>Top-P = 0.90</strong></p>
-
-                <p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>changing</td>
+<td>40%</td>
+</tr>
+<tr>
+<td>transforming</td>
+<td>30%</td>
+</tr>
+<tr>
+<td>improving</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>cooking</td>
+<td>5%</td>
+</tr>
+<tr>
+<td>dancing</td>
+<td>3%</td>
+</tr>
+<tr>
+<td>sleeping</td>
+<td>2%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Top-P = 0.90</strong></p>
+<p>
                     The AI selects words until the cumulative probability reaches
                     <strong>90%</strong>.
                 </p>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Selected Word</th>
-                            <th>Probability</th>
-                            <th>Cumulative</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>changing</td>
-                            <td>40%</td>
-                            <td>40%</td>
-                        </tr>
-                        <tr>
-                            <td>transforming</td>
-                            <td>30%</td>
-                            <td>70%</td>
-                        </tr>
-                        <tr>
-                            <td>improving</td>
-                            <td>20%</td>
-                            <td>90%</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div class="highlight-box">
+<table>
+<thead>
+<tr>
+<th>Selected Word</th>
+<th>Probability</th>
+<th>Cumulative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>changing</td>
+<td>40%</td>
+<td>40%</td>
+</tr>
+<tr>
+<td>transforming</td>
+<td>30%</td>
+<td>70%</td>
+</tr>
+<tr>
+<td>improving</td>
+<td>20%</td>
+<td>90%</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-box">
                     AI chooses only from:
-                    <br><br>
+                    <br/><br/>
                     ✅ changing
-                    <br>
+                    <br/>
                     ✅ transforming
-                    <br>
+                    <br/>
                     ✅ improving
-                    <br><br>
+                    <br/><br/>
                     Ignores:
-                    <br>
+                    <br/>
                     ❌ cooking
-                    <br>
+                    <br/>
                     ❌ dancing
-                    <br>
+                    <br/>
                     ❌ sleeping
                 </div>
-
-                <!-- ========================= -->
-                <!-- Lesson 14 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 14: Top-K</h2>
-
-                <h3>Definition</h3>
-
-                <p>
-                    <strong>Top-K</strong> tells the AI to choose the next word only from a
+<!-- ========================= -->
+<!-- Lesson 14 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 14: Top-K</h2>
+<h3>Definition</h3>
+<p>
+<strong>Top-K</strong> tells the AI to choose the next word only from a
                     fixed number (<strong>K</strong>) of the most likely words, instead of
                     considering every possible word.
                 </p>
-
-                <p>
+<p>
                     Top-K limits the model to selecting from the <strong>K</strong> most
                     likely next words.
                 </p>
-
-                <h3>Example</h3>
-
-                <div class="highlight-box">
-                    <strong>Top-K = 5</strong>
-                    <br><br>
+<h3>Example</h3>
+<div class="highlight-box">
+<strong>Top-K = 5</strong>
+<br/><br/>
                     The model only considers the <strong>5</strong> most probable next
                     words.
                 </div>
-
-                <h3>Top-P vs Top-K</h3>
-
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Top-P</th>
-                            <th>Top-K</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Dynamic number of choices</td>
-                            <td>Fixed number of choices</td>
-                        </tr>
-                        <tr>
-                            <td>Adapts to probability distribution</td>
-                            <td>Always uses exactly K candidates</td>
-                        </tr>
-                        <tr>
-                            <td>Common in modern LLMs</td>
-                            <td>Simpler sampling strategy</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3>How Top-K Works</h3>
-
-                <div class="diagram-box">
+<h3>Top-P vs Top-K</h3>
+<table>
+<thead>
+<tr>
+<th>Top-P</th>
+<th>Top-K</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dynamic number of choices</td>
+<td>Fixed number of choices</td>
+</tr>
+<tr>
+<td>Adapts to probability distribution</td>
+<td>Always uses exactly K candidates</td>
+</tr>
+<tr>
+<td>Common in modern LLMs</td>
+<td>Simpler sampling strategy</td>
+</tr>
+</tbody>
+</table>
+<h3>How Top-K Works</h3>
+<div class="diagram-box">
                     User Prompt
-                    <br>↓
-                    <br>LLM Predicts Many Possible Words
-                    <br>↓
-                    <br>Top-K Keeps Only K Highest Probability Words
-                    <br>↓
-                    <br>AI Selects One Word
-                    <br>↓
-                    <br>Response
+                    <br/>↓
+                    <br/>LLM Predicts Many Possible Words
+                    <br/>↓
+                    <br/>Top-K Keeps Only K Highest Probability Words
+                    <br/>↓
+                    <br/>AI Selects One Word
+                    <br/>↓
+                    <br/>Response
                 </div>
-
-            </div>
-
-            <!-- ========================================= -->
-            <!-- Lesson 15, 16 & 17 -->
-            <!-- ========================================= -->
-
-            <div class="lesson-card">
-
-                <!-- ========================= -->
-                <!-- Lesson 15 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 15: AI Limitations</h2>
-
-                <h3>Definition</h3>
-
-                <p>
+<!-- ========================================= -->
+<!-- Lesson 15, 16 & 17 -->
+<!-- ========================================= -->
+<!-- ========================= -->
+<!-- Lesson 15 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 15: AI Limitations</h2>
+<h3>Definition</h3>
+<p>
                     Artificial Intelligence (AI) is powerful, but it has several
                     limitations. AI learns from data and patterns rather than thinking like
                     humans.
                 </p>
-
-                <h3>AI cannot:</h3>
-
-                <ul>
-                    <li>❌ Think like humans.</li>
-                    <li>❌ Feel emotions.</li>
-                    <li>❌ Always know the latest information.</li>
-                    <li>❌ Guarantee perfect accuracy.</li>
-                    <li>❌ Replace human judgment in critical decisions.</li>
-                </ul>
-
-                <h3>Real Example</h3>
-
-                <div class="highlight-box">
+<h3>AI cannot:</h3>
+<ul>
+<li>❌ Think like humans.</li>
+<li>❌ Feel emotions.</li>
+<li>❌ Always know the latest information.</li>
+<li>❌ Guarantee perfect accuracy.</li>
+<li>❌ Replace human judgment in critical decisions.</li>
+</ul>
+<h3>Real Example</h3>
+<div class="highlight-box">
                     An AI may write code very quickly, but it can still introduce bugs or
                     security issues that require human review before deployment.
                 </div>
-
-                <h3>Real-Life Analogy</h3>
-
-                <p>
+<h3>Real-Life Analogy</h3>
+<p>
                     Imagine a company receives <strong>1,000 job applications.</strong>
-                </p>
-
-                <p>
+</p>
+<p>
                     Instead of interviewing all 1,000 applicants, the company first selects
                     the <strong>Top 10 candidates</strong> based on their qualifications.
                 </p>
-
-                <p>
+<p>
                     Then it chooses one person from those Top 10.
                 </p>
-
-                <div class="highlight-box">
+<div class="highlight-box">
                     🧠 This is exactly how <strong>Top-K</strong> works.
-                    <br><br>
+                    <br/><br/>
                     ✅ Low K → Fewer choices → More accurate and focused.
-                    <br>
+                    <br/>
                     ✅ High K → More choices → More creative and diverse.
                 </div>
-
-                <!-- ========================= -->
-                <!-- Lesson 16 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 16: Responsible AI</h2>
-
-                <h3>Definition</h3>
-
-                <p>
-                    <strong>Responsible AI</strong> means designing, developing, deploying,
+<!-- ========================= -->
+<!-- Lesson 16 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 16: Responsible AI</h2>
+<h3>Definition</h3>
+<p>
+<strong>Responsible AI</strong> means designing, developing, deploying,
                     and using Artificial Intelligence safely, fairly, transparently, and
                     with accountability.
                 </p>
-
-                <h3>Principles</h3>
-
-                <ul>
-                    <li>⚖️ Fairness</li>
-                    <li>🔒 Privacy</li>
-                    <li>🔍 Transparency</li>
-                    <li>🛡️ Safety</li>
-                    <li>✅ Accountability</li>
-                    <li>👨‍⚖️ Human Oversight</li>
-                </ul>
-
-                <h3>Example</h3>
-
-                <div class="highlight-box">
+<h3>Principles</h3>
+<ul>
+<li>⚖️ Fairness</li>
+<li>🔒 Privacy</li>
+<li>🔍 Transparency</li>
+<li>🛡️ Safety</li>
+<li>✅ Accountability</li>
+<li>👨‍⚖️ Human Oversight</li>
+</ul>
+<h3>Example</h3>
+<div class="highlight-box">
                     A bank should regularly test its AI loan approval system to ensure it
                     does not unfairly reject applicants because of biased training data.
                 </div>
-
-                <div class="highlight-box">
-
-                    <h3>💡 Prompt Engineer Tip</h3>
-
-                    <ul>
-                        <li>Use lower <strong>Top-K</strong> for coding, mathematics, and technical documentation.</li>
-                        <li>Use higher <strong>Top-K</strong> for creative writing, storytelling, brainstorming, and
+<div class="highlight-box">
+<h3>💡 Prompt Engineer Tip</h3>
+<ul>
+<li>Use lower <strong>Top-K</strong> for coding, mathematics, and technical documentation.</li>
+<li>Use higher <strong>Top-K</strong> for creative writing, storytelling, brainstorming, and
                             marketing content.</li>
-                    </ul>
-
-                </div>
-
-                <div class="highlight-box">
-
-                    <h3>🎯 Easy Memory Trick</h3>
-
-                    <strong>
+</ul>
+</div>
+<div class="highlight-box">
+<h3>🎯 Easy Memory Trick</h3>
+<strong>
                         Top-K = Keep K Words
-                        <br><br>
+                        <br/><br/>
                         Top-P = Keep Words Until Probability (P) Is Reached
                     </strong>
-
-                </div>
-
-                <!-- ========================= -->
-                <!-- Lesson 17 -->
-                <!-- ========================= -->
-
-                <h2>📖 Lesson 17: AI Ethics</h2>
-
-                <h3>Definition</h3>
-
-                <p>
-                    <strong>AI Ethics</strong> is the set of moral principles and
+</div>
+<!-- ========================= -->
+<!-- Lesson 17 -->
+<!-- ========================= -->
+</div><div class="lesson-card"><h2>📖 Lesson 17: AI Ethics</h2>
+<h3>Definition</h3>
+<p>
+<strong>AI Ethics</strong> is the set of moral principles and
                     guidelines that ensure Artificial Intelligence (AI) is designed,
                     developed, and used in a fair, safe, transparent, and responsible
                     manner.
                 </p>
-
-                <p>
+<p>
                     AI Ethics is the study of moral principles for creating and using AI
                     responsibly.
                 </p>
-
-                <h3>Ethical Questions</h3>
-
-                <ul>
-                    <li>❓ Is the AI fair?</li>
-                    <li>🔒 Is user data protected?</li>
-                    <li>🔍 Can people understand important AI decisions?</li>
-                    <li>⚖️ Who is responsible if the AI makes a harmful mistake?</li>
-                </ul>
-
-                <h3>Why is AI Ethics Important?</h3>
-
-                <p>AI is increasingly used in:</p>
-
-                <ul>
-                    <li>🏥 Healthcare</li>
-                    <li>🏦 Banking</li>
-                    <li>⚖️ Law</li>
-                    <li>🎓 Education</li>
-                    <li>🚗 Self-Driving Cars</li>
-                    <li>💼 Hiring</li>
-                    <li>🛒 E-commerce</li>
-                </ul>
-
-                <p>
+<h3>Ethical Questions</h3>
+<ul>
+<li>❓ Is the AI fair?</li>
+<li>🔒 Is user data protected?</li>
+<li>🔍 Can people understand important AI decisions?</li>
+<li>⚖️ Who is responsible if the AI makes a harmful mistake?</li>
+</ul>
+<h3>Why is AI Ethics Important?</h3>
+<p>AI is increasingly used in:</p>
+<ul>
+<li>🏥 Healthcare</li>
+<li>🏦 Banking</li>
+<li>⚖️ Law</li>
+<li><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg> Education</li>
+<li>🚗 Self-Driving Cars</li>
+<li>💼 Hiring</li>
+<li>🛒 E-commerce</li>
+</ul>
+<p>
                     If AI is unfair, biased, or unsafe, it can negatively affect many
                     people's lives.
                 </p>
-
-                <div class="highlight-box">
+<div class="highlight-box">
                     ➜ AI Ethics helps ensure AI is developed and used responsibly,
                     fairly, and safely.
                 </div>
-
-                <h3>Core Principles of AI Ethics</h3>
-
-                <h4>1. Fairness</h4>
-
-                <p>AI should treat everyone equally.</p>
-
-                <p><strong>Example:</strong></p>
-
-                <p>
+<h3>Core Principles of AI Ethics</h3>
+<h4>1. Fairness</h4>
+<p>AI should treat everyone equally.</p>
+<p><strong>Example:</strong></p>
+<p>
                     A recruitment AI should evaluate candidates based on their skills and
                     qualifications, not unfairly favor or disadvantage people because of
                     gender, race, or age.
                 </p>
-
-                <h4>2. Transparency</h4>
-
-                <p>AI decisions should be understandable.</p>
-
-                <p><strong>Example:</strong></p>
-
-                <p>
+<h4>2. Transparency</h4>
+<p>AI decisions should be understandable.</p>
+<p><strong>Example:</strong></p>
+<p>
                     If a bank's AI rejects a loan application, it should clearly explain
                     the reasons for that decision.
                 </p>
-
-                <h4>3. Accountability</h4>
-
-                <p>
+<h4>3. Accountability</h4>
+<p>
                     Humans and organizations remain responsible for AI systems and their
                     outcomes.
                 </p>
-
-                <p><strong>Example:</strong></p>
-
-                <p>
+<p><strong>Example:</strong></p>
+<p>
                     If an AI system causes harm, the company that developed or deployed it
                     must address the issue.
                 </p>
-
-                <h4>4. Privacy</h4>
-
-                <p>AI should protect users' personal information.</p>
-
-                <p><strong>Example:</strong></p>
-
-                <p>
+<h4>4. Privacy</h4>
+<p>AI should protect users' personal information.</p>
+<p><strong>Example:</strong></p>
+<p>
                     A healthcare AI should keep patient medical records confidential and
                     secure.
                 </p>
-
-                <h4>5. Safety</h4>
-
-                <p>AI should be reliable and should not create unnecessary risks.</p>
-
-                <p><strong>Example:</strong></p>
-
-                <p>
+<h4>5. Safety</h4>
+<p>AI should be reliable and should not create unnecessary risks.</p>
+<p><strong>Example:</strong></p>
+<p>
                     A self-driving car should be thoroughly tested before operating on
                     public roads.
                 </p>
-
-                <h4>6. Human Oversight</h4>
-
-                <p>
+<h4>6. Human Oversight</h4>
+<p>
                     Humans should supervise important AI decisions, especially in
                     high-risk situations.
                 </p>
-
-                <p><strong>Example:</strong></p>
-
-                <p>
+<p><strong>Example:</strong></p>
+<p>
                     A doctor should review an AI's medical recommendation before making
                     the final diagnosis.
                 </p>
-
-                <h3>Real Example</h3>
-
-                <div class="highlight-box">
+<h3>Real Example</h3>
+<div class="highlight-box">
                     A hiring AI should evaluate applicants based on their skills and
                     qualifications—not unfairly favor or disadvantage groups of people.
                 </div>
-
-                <h3>Easy Trick to Remember</h3>
-
-                <div class="diagram-box">
+<h3>Easy Trick to Remember</h3>
+<div class="diagram-box">
                     AI Ethics
-                    <br>↓
-                    <br>Fairness
-                    <br>↓
-                    <br>Transparency
-                    <br>↓
-                    <br>Privacy
-                    <br>↓
-                    <br>Accountability
-                    <br>↓
-                    <br>Safety
-                    <br>↓
-                    <br>Responsible AI
+                    <br/>↓
+                    <br/>Fairness
+                    <br/>↓
+                    <br/>Transparency
+                    <br/>↓
+                    <br/>Privacy
+                    <br/>↓
+                    <br/>Accountability
+                    <br/>↓
+                    <br/>Safety
+                    <br/>↓
+                    <br/>Responsible AI
                 </div>
-
-                <h3>Real-Life Analogy</h3>
-
-                <p>Imagine a doctor.</p>
-
-                <p>
+<h3>Real-Life Analogy</h3>
+<p>Imagine a doctor.</p>
+<p>
                     A doctor has the knowledge to treat patients, but must also follow
                     medical ethics:
                 </p>
-
-                <ul>
-                    <li>✅ Treat every patient fairly.</li>
-                    <li>✅ Keep patient information private.</li>
-                    <li>✅ Do no harm.</li>
-                    <li>✅ Act responsibly.</li>
-                </ul>
-
-                <p>
+<ul>
+<li>✅ Treat every patient fairly.</li>
+<li>✅ Keep patient information private.</li>
+<li>✅ Do no harm.</li>
+<li>✅ Act responsibly.</li>
+</ul>
+<p>
                     Similarly, AI Ethics ensures AI is developed and used in a way that
                     benefits people while minimizing harm.
                 </p>
-
-                <div class="highlight-box">
-
-                    <h3>📌 Interview Tip</h3>
-
-                    <p>
-                        <strong>Q: What is the difference between AI Ethics and Responsible AI?</strong>
-                    </p>
-
-                    <p><strong>Answer:</strong></p>
-
-                    <p>
-                        <strong>AI Ethics</strong> defines the moral principles that AI
+<div class="highlight-box">
+<h3>📌 Interview Tip</h3>
+<p>
+<strong>Q: What is the difference between AI Ethics and Responsible AI?</strong>
+</p>
+<p><strong>Answer:</strong></p>
+<p>
+<strong>AI Ethics</strong> defines the moral principles that AI
                         should follow.
                     </p>
-
-                    <p>
-                        <strong>Responsible AI</strong> is the practical implementation of
+<p>
+<strong>Responsible AI</strong> is the practical implementation of
                         those principles throughout the AI lifecycle.
                     </p>
-
-                </div>
-
-                <h3>Easy Formula</h3>
-
-                <div class="diagram-box">
+</div>
+<h3>Easy Formula</h3>
+<div class="diagram-box">
                     AI Ethics
-                    <br>↓
-                    <br>Defines Principles
-                    <br>↓
-                    <br>Responsible AI
-                    <br>↓
-                    <br>Implements Those Principles
-                    <br>↓
-                    <br>Trustworthy AI
+                    <br/>↓
+                    <br/>Defines Principles
+                    <br/>↓
+                    <br/>Responsible AI
+                    <br/>↓
+                    <br/>Implements Those Principles
+                    <br/>↓
+                    <br/>Trustworthy AI
                 </div>
-
-                <div class="highlight-box">
-
-                    <h3>💡 Prompt Engineer Tip</h3>
-
-                    <p>
+<div class="highlight-box">
+<h3>💡 Prompt Engineer Tip</h3>
+<p>
                         When building AI applications such as chatbots, legal assistants,
                         healthcare systems, or recommendation engines:
                     </p>
-
-                    <ul>
-                        <li>✅ Avoid biased prompts and datasets.</li>
-                        <li>✅ Protect user privacy.</li>
-                        <li>✅ Be transparent about AI limitations.</li>
-                        <li>✅ Verify important information.</li>
-                        <li>✅ Keep humans involved in high-stakes decisions.</li>
-                    </ul>
-
-                    <strong>
+<ul>
+<li>✅ Avoid biased prompts and datasets.</li>
+<li>✅ Protect user privacy.</li>
+<li>✅ Be transparent about AI limitations.</li>
+<li>✅ Verify important information.</li>
+<li>✅ Keep humans involved in high-stakes decisions.</li>
+</ul>
+<strong>
                         These practices help create AI systems that are both ethical and
                         trustworthy.
                     </strong>
-
-                </div>
-
-            </div>
-
-            <!-- Mini Project -->
-            <div class="lesson-card" style="border: 2px solid var(--primary-color);">
-                <h2>🛠 Mini Project: Compare AI Models</h2>
-                <p>Compare ChatGPT, Claude, Gemini, Grok, and DeepSeek.</p>
-                <div class="table-container">
-                    <table class="styled-table">
-                        <thead>
-                            <tr>
-                                <th>Feature</th>
-                                <th>ChatGPT</th>
-                                <th>Claude</th>
-                                <th>Gemini</th>
-                                <th>Grok</th>
-                                <th>DeepSeek</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Best For</strong></td>
-                                <td>General AI, coding, writing</td>
-                                <td>Long documents, reasoning</td>
-                                <td>Google ecosystem, multimodal</td>
-                                <td>Real-time social insights</td>
-                                <td>Coding and cost-effective AI</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Strength</strong></td>
-                                <td>Balanced performance</td>
-                                <td>Excellent long-context</td>
-                                <td>Google integration</td>
-                                <td>Access to recent information</td>
-                                <td>Strong programming abilities</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Coding</strong></td>
-                                <td>⭐⭐⭐⭐⭐</td>
-                                <td>⭐⭐⭐⭐☆</td>
-                                <td>⭐⭐⭐⭐☆</td>
-                                <td>⭐⭐⭐⭐☆</td>
-                                <td>⭐⭐⭐⭐⭐</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Writing</strong></td>
-                                <td>⭐⭐⭐⭐⭐</td>
-                                <td>⭐⭐⭐⭐⭐</td>
-                                <td>⭐⭐⭐⭐☆</td>
-                                <td>⭐⭐⭐⭐☆</td>
-                                <td>⭐⭐⭐⭐☆</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Reasoning</strong></td>
-                                <td>⭐⭐⭐⭐⭐</td>
-                                <td>⭐⭐⭐⭐⭐</td>
-                                <td>⭐⭐⭐⭐☆</td>
-                                <td>⭐⭐⭐⭐☆</td>
-                                <td>⭐⭐⭐⭐☆</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Navigation to Next Module -->
-            <div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
-                <a href="/academy/module2" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
-                    Move Next Module 2 &rarr;
-                </a>
-            </div>
-        </div>
-    </main>
 </div>
-
+<!-- Mini Project -->
+</div><div class="lesson-card"><h2>🛠 Mini Project: Compare AI Models</h2>
+<p>Compare ChatGPT, Claude, Gemini, Grok, and DeepSeek.</p>
+<div class="table-container">
+<table class="styled-table">
+<thead>
+<tr>
+<th>Feature</th>
+<th>ChatGPT</th>
+<th>Claude</th>
+<th>Gemini</th>
+<th>Grok</th>
+<th>DeepSeek</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Best For</strong></td>
+<td>General AI, coding, writing</td>
+<td>Long documents, reasoning</td>
+<td>Google ecosystem, multimodal</td>
+<td>Real-time social insights</td>
+<td>Coding and cost-effective AI</td>
+</tr>
+<tr>
+<td><strong>Strength</strong></td>
+<td>Balanced performance</td>
+<td>Excellent long-context</td>
+<td>Google integration</td>
+<td>Access to recent information</td>
+<td>Strong programming abilities</td>
+</tr>
+<tr>
+<td><strong>Coding</strong></td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⭐⭐⭐⭐☆</td>
+<td>⭐⭐⭐⭐☆</td>
+<td>⭐⭐⭐⭐☆</td>
+<td>⭐⭐⭐⭐⭐</td>
+</tr>
+<tr>
+<td><strong>Writing</strong></td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⭐⭐⭐⭐☆</td>
+<td>⭐⭐⭐⭐☆</td>
+<td>⭐⭐⭐⭐☆</td>
+</tr>
+<tr>
+<td><strong>Reasoning</strong></td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>⭐⭐⭐⭐☆</td>
+<td>⭐⭐⭐⭐☆</td>
+<td>⭐⭐⭐⭐☆</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Navigation to Next Module -->
+<div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
+<a class="btn btn-primary" href="/academy/module2" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    Move Next Module 2 →
+                </a>
+</div>
+</div></div>
+</main>
+</div>
 <script>
     // Include sidebar toggle functionality
     const menuToggleBtn = document.getElementById('menuToggleBtn');

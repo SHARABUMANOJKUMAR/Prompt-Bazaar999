@@ -1,0 +1,4 @@
+📋 Assessment Instructions
+🚀 Project 1: Prompt Enhancer
+⚡ Project 2: Prompt Optimizer
+✅ Project 3: Prompt Validator

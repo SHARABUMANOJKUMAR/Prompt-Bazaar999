@@ -1,0 +1,19 @@
+
+                    <br/>↓
+                    <br/>Hidden Layer 3
+                    <br/>↓
+                    <br/>Output Layer
+                </div>
+<h3>Example</h3>
+<p><strong>Input:</strong> Face Image</p>
+<div class="diagram-box">
+                    Face Image
+                    <br/>↓
+                    <br/>Hidden Layer 1
+                    <br/>(Detect Edges)
+                    <br/>↓
+                    <br/>Hidden Layer 2
+                    <br/>(Detect Eyes, Nose, Mouth)
+                    <br/>↓
+                    <br/>Hidden Layer 3
+                    <br/>(Complete 

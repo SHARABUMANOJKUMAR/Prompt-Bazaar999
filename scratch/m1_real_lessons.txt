@@ -1,0 +1,9 @@
+📖 Lesson 1: What is Artificial Intelligence (AI)?
+📖 Lesson 2: Machine Learning Basics
+📖 Lesson 3: Deep Learning Basics
+📖 Lesson 4: Neural Networks
+📖 Lesson 5: NLP (Natural Language Processing)
+📖 Lesson 8: Tokens & Tokenization
+📖 Lesson 11: Hallucinations
+📖 Lesson 15: AI Limitations
+🛠 Mini Project: Compare AI Models

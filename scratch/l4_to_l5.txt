@@ -1,0 +1,190 @@
+Lesson 4: Neural Networks</h2>
+
+                <h3>Definition</h3>
+
+                <p>
+                    A <strong>Neural Network (Artificial Neural Network - ANN)</strong>
+                    is a computer model inspired by the human brain that learns patterns
+                    from data using interconnected artificial neurons to make predictions
+                    and decisions.
+                </p>
+
+                <p>
+                    It consists of connected artificial neurons.
+                </p>
+
+                <h3>Structure</h3>
+
+                <div class="diagram-box">
+                    Input Layer
+                    <br>↓
+                    <br>Hidden Layer(s)
+                    <br>↓
+                    <br>Output Layer
+                </div>
+
+                <h3>Example</h3>
+
+                <div class="diagram-box">
+                    Input:
+                    <br>Dog Image
+                    <br>↓
+                    <br>Hidden Layers Detect
+                    <br>• Eyes
+                    <br>• Nose
+                    <br>• Legs
+                    <br>• Tail
+                    <br>↓
+                    <br>Output:
+                    <br>Dog
+                </div>
+
+                <h3>Structure of a Neural Network</h3>
+
+                <p>A neural network usually has three types of layers:</p>
+
+                <div class="diagram-box">
+                    Input Layer
+                    <br>↓
+                    <br>Hidden Layer(s)
+                    <br>↓
+                    <br>Output Layer
+                </div>
+
+                <h4>1. Input Layer</h4>
+
+                <p>
+                    Receives the input data.
+                    <br><strong>Example:</strong> Image pixels, text, numbers.
+                </p>
+
+                <h4>2. Hidden Layer(s)</h4>
+
+                <p>
+                    Processes the information.<br>
+                    Learns patterns and relationships in the data.<br>
+                    A network can have one or many hidden layers.
+                </p>
+
+                <h4>3. Output Layer</h4>
+
+                <p>
+                    Produces the final prediction or result.
+                </p>
+
+                <h2>📖 Types of Neural Networks</h2>
+
+                <h3>1. Feed Forward Neural Network (FNN)</h3>
+
+                <h4>Definition</h4>
+
+                <p>
+                    A <strong>Feed Forward Neural Network (FNN)</strong> is the simplest
+                    type of neural network in which data flows in one direction—from the
+                    input layer, through the hidden layer(s), to the output layer—without
+                    any feedback loops.
+                </p>
+
+                <h3>2. Convolutional Neural Network (CNN)</h3>
+
+                <h4>Definition</h4>
+
+                <p>
+                    A <strong>Convolutional Neural Network (CNN)</strong> is a type of
+                    deep neural network specifically designed to recognize and analyze
+                    images by automatically detecting features such as edges, shapes, and
+                    objects.
+                </p>
+
+                <h3>3. Recurrent Neural Network (RNN)</h3>
+
+                <h4>Definition</h4>
+
+                <p>
+                    A <strong>Recurrent Neural Network (RNN)</strong> is a type of neural
+                    network designed to process sequential data by remembering information
+                    from previous inputs, making it suitable for tasks involving time or
+                    ordered sequences.
+                </p>
+
+                <h3>4. Long Short-Term Memory (LSTM)</h3>
+
+                <h4>Definition</h4>
+
+                <p>
+                    <strong>Long Short-Term Memory (LSTM)</strong> is an advanced type of
+                    Recurrent Neural Network (RNN) that can remember important information
+                    for long periods while forgetting unnecessary information, making it
+                    effective for long sequences of data.
+                </p>
+
+                <h3>5. Transformer Networks</h3>
+
+                <h4>Definition</h4>
+
+                <p>
+                    <strong>Transformer Networks</strong> are advanced deep learning
+                    models that process entire sequences in parallel using a
+                    self-attention mechanism, enabling them to understand relationships
+                    between words or data efficiently. They are the foundation of modern
+                    <strong>Large Language Models (LLMs)</strong> such as ChatGPT, Claude,
+                    and Gemini.
+                </p>
+
+                <h2>📖 Applications of Neural Networks</h2>
+
+                <h3>1. Image Recognition</h3>
+
+                <h4>Definition</h4>
+
+                <p>
+                    Image Recognition is the application of neural networks to identify,
+                    classify, and recognize objects, people, or scenes in digital images.
+                </p>
+
+                <h3>2. Voice Recognition</h3>
+
+                <h4>Definition</h4>
+
+                <p>
+                    Voice Recognition is the application of neural networks that enables
+                    computers to recognize, understand, and convert human speech into text
+                    or commands.
+                </p>
+
+                <h3>3. AI Chatbots</h3>
+
+                <h4>Definition</h4>
+
+                <p>
+                    AI Chatbots are intelligent software applications powered by neural
+                    networks and Large Language Models (LLMs) that can understand,
+                    process, and generate human-like conversations.
+                </p>
+
+                <h3>4. Medical Diagnosis</h3>
+
+                <h4>Definition</h4>
+
+                <p>
+                    Medical Diagnosis is the application of neural networks to analyze
+                    medical data, images, and patient records to help detect diseases,
+                    predict health conditions, and support doctors in making accurate
+                    diagnoses.
+                </p>
+
+            </div>
+            <!-- ========================================= -->
+            <!-- Lesson 5, 6 & 7 -->
+            <!-- ========================================= -->
+            <div class="lesson-card">
+
+                <!-- ========================= -->
+                <!-- Lesson 5 -->
+                <!-- ========================= -->
+
+                <h2>📖 Lesson 5: NLP (Natural Language Processing)</h2>
+
+                <h3>Definition</h3>
+
+             

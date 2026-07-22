@@ -1,0 +1,21 @@
+                 <p>
+                        <strong>In simple words:</strong>
+                    </p>
+
+                    <ul>
+                        <li><strong>NLP</strong> = The field of study</li>
+                        <li><strong>LLM</strong> = A powerful application of NLP</li>
+                    </ul>
+                </div>
+
+                <!-- ========================= -->
+                <!-- Lesson 6 -->
+                <!-- ========================= -->
+
+                <h2>📖 Lesson 6: Transformers Explained</h2>
+
+                <h3>Definition</h3>
+
+                <p>
+                    A <strong>Transformer</strong> is a deep learning model architecture
+               

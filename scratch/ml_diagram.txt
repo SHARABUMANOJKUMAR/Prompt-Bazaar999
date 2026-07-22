@@ -1,0 +1,10 @@
+om data and improve their performance without being explicitly programmed for every task.</p>
+<h3>Simple Definition</h3>
+<p>ML teaches computers to learn from experience.</p>
+<div class="diagram-box">Thousands of spam emails<br/>↓<br/>ML learns patterns<br/>↓<br/>New
+                    email<br/>↓<br/>Spam / Not Spam</div>
+<h3>Types of Machine Learning</h3>
+<h4>1. Supervised Learning</h4>
+<p>Supervised Learning is a type of Machine Learning in which the model learns from labeled data, where
+                    both the input data and the correct output (target) are already known.</p>
+<div cla

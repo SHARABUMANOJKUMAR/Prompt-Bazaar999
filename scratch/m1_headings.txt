@@ -1,0 +1,18 @@
+📖 Lesson 1: What is Artificial Intelligence (AI)?
+📖 Lesson 2: Machine Learning Basics
+📖 Lesson 3: Deep Learning Basics
+📖 Lesson 4: Neural Networks
+📖 Lesson 5: NLP (Natural Language Processing)
+📖 Lesson 6: Transformers Explained
+📖 Lesson 7: Large Language Models (LLMs)
+📖 Lesson 8: Tokens & Tokenization
+📖 Lesson 9: Context Window
+📖 Lesson 10: Embeddings
+📖 Lesson 11: Hallucinations
+📖 Lesson 12: Temperature
+📖 Lesson 13: Top-P
+📖 Lesson 14: Top-K
+📖 Lesson 15: AI Limitations
+📖 Lesson 16: Responsible AI
+📖 Lesson 17: AI Ethics
+🛠 Mini Project: Compare AI Models

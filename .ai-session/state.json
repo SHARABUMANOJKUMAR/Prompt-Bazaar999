@@ -23,7 +23,11 @@
         "Implemented full responsiveness for mobile (<768px) with center alignment, maximum logo scaling controls, and stacked layouts",
         "Implemented tablet (768px-1024px) 2-column balanced layouts and desktop (>1024px) 4-column layouts with a 1200px container boundary",
         "Restored and beautifully styled the glassmorphic newsletter subscription box with interactive slide-in submit alerts",
-        "Designed high-fidelity circular glow buttons for Instagram, LinkedIn, YouTube, and WhatsApp"
+        "Designed high-fidelity circular glow buttons for Instagram, LinkedIn, YouTube, and WhatsApp",
+        "Upgraded the Prompt Academy landing page with a gamified overall progress panel and a dashed visual vertical timeline connecting modules",
+        "Created an interactive client-side progress tracker module_progress.js that dynamically appends checkpoints and Mark Complete buttons to textbook lesson cards",
+        "Injected module_progress.js dynamically in base.html for unified textbook lesson completion across all 17 static module templates",
+        "Engineered automatic progression mapping that calculates module percentages, lock states, and next learning landmarks"
     ],
     "in_progress": [],
     "pending": [
@@ -36,7 +40,9 @@
         "Used a custom VAPID public key and implemented automatic doc ID merging in Firestore to prevent token duplicates",
         "Designed FCM notifications to trigger asynchronously from the Admin JS submit handler to keep dashboard responsiveness extremely fast",
         "Implemented automated invalid/unregistered token purging on the Flask backend during multicast broadcasting to optimize database storage",
-        "Restored and redesigned the newsletter block as a 4th column in the premium footer to fulfill full SaaS aesthetic requirements"
+        "Restored and redesigned the newsletter block as a 4th column in the premium footer to fulfill full SaaS aesthetic requirements",
+        "Decided to inject progress buttons dynamically inside textbook lessons to avoid duplicate manual code maintenance across 17 static files",
+        "Overrode accordion expansion for locked modules to prevent skipping sequence, matching the core roadmap progression guidelines"
     ],
     "blockers": [
         "System command execution (run_command) is constrained by sandboxing limits on this environment host"

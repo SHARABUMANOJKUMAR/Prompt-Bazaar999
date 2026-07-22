@@ -1,0 +1,20 @@
+>Hidden Layer(s)
+                    <br/>↓
+                    <br/>Output Layer
+                </div>
+<h3>Example</h3>
+<div class="diagram-box">
+                    Input:
+                    <br/>Dog Image
+                    <br/>↓
+                    <br/>Hidden Layers Detect
+                    <br/>• Eyes
+                    <br/>• Nose
+                    <br/>• Legs
+                    <br/>• Tail
+                    <br/>↓
+                    <br/>Output:
+                    <br/>Dog
+                </div>
+<h3>Structure of a Neural Network</h3>
+<p>A neural network usually has three 

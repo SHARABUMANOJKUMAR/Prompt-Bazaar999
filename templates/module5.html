@@ -3,9 +3,9 @@
 {% block title %}Prompt Academy - Module 5{% endblock %}
 
 {% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}?v=3">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/tools.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/academy.css') }}">
+<link href="{{ url_for('static', filename='css/gallery.css') }}?v=3" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/tools.css') }}" rel="stylesheet"/>
+<link href="{{ url_for('static', filename='css/academy.css') }}" rel="stylesheet"/>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -180,578 +180,482 @@
 <!-- Sidebar Drawer (shared) -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <aside class="sidebar-drawer" id="sidebarDrawer">
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-left">
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
-                alt="Logo">
+<div class="sidebar-brand">
+<div class="sidebar-brand-left">
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="sidebar-section-label">Navigation</div>
-        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
-        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
-        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
-        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon">🎓</span> Prompt Academy</a>
-    </nav>
-    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+<button aria-label="Close menu" class="sidebar-close-btn" id="sidebarCloseBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</button>
+</div>
+<nav class="sidebar-nav">
+<div class="sidebar-section-label">Navigation</div>
+<a class="sidebar-nav-item" href="/"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Home</a>
+<a class="sidebar-nav-item" href="/gallery"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></span> Prompt Gallery</a>
+<a class="sidebar-nav-item" href="/tools"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span> Prompt Tools</a>
+<a class="sidebar-nav-item active" href="/academy"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span> Prompt Academy</a>
+</nav>
+<div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
 </aside>
-
 <div class="gallery-layout">
-    <!-- Top Navbar -->
-    <header class="gallery-header">
-        <div class="header-left">
-            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
-                alt="Logo">
+<!-- Top Navbar -->
+<header class="gallery-header">
+<div class="header-left">
+<button aria-label="Open menu" class="menu-toggle-btn" id="menuToggleBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <div class="header-right">
-            <div class="xp-badge" id="user-xp-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon
-                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                    </polygon>
-                </svg>
-                <span id="user-xp-amount">0</span> XP
+<div class="header-right">
+<div class="xp-badge" id="user-xp-badge">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+</polygon>
+</svg>
+<span id="user-xp-amount">0</span> XP
             </div>
-            <a href="{{ url_for('profile') }}" class="user-avatar" title="Profile">
+<a class="user-avatar" href="{{ url_for('profile') }}" title="Profile">
                 {% if user and user.photoURL %}
-                <img src="{{ user.photoURL }}" alt="Avatar">
+                <img alt="Avatar" src="{{ user.photoURL }}"/>
                 {% else %}
                 {{ user.displayName[0] | upper if user else 'U' }}
                 {% endif %}
             </a>
-        </div>
-    </header>
+</div>
+</header>
+<main class="academy-main-content">
+<div class="module-container">
+<a class="btn btn-secondary" href="/academy" style="margin-bottom: 24px;">← Back to Academy Roadmap</a>
+<h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">Module 5: Professional Prompt Engineering</h1>
+<!-- Lesson 1 -->
 
-    <main class="academy-main-content">
-        <div class="module-container">
-            <a href="/academy" class="btn btn-secondary" style="margin-bottom: 24px;">&larr; Back to Academy Roadmap</a>
-            <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">Module 5: Professional Prompt Engineering</h1>
-
-            <!-- Lesson 1 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 1: Meta Prompting</h2>
-                <h3>Definition</h3>
-                <p>Meta Prompting is a prompting technique where the AI is asked to create, improve, analyze, or optimize prompts instead of directly solving the original task.</p>
-                <p>In simple words, the AI generates better prompts for other AI tasks.</p>
-                
-                <h3>Why is it Important?</h3>
-                <p>Meta Prompting helps:</p>
-                <ul>
-                    <li>Create high-quality prompts.</li>
-                    <li>Improve prompt clarity.</li>
-                    <li>Save time.</li>
-                    <li>Optimize AI performance.</li>
-                    <li>Standardize prompt design.</li>
-                </ul>
-
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Prompt about prompts</li>
-                    <li>Self-improving</li>
-                    <li>Reusable</li>
-                    <li>Structured</li>
-                    <li>Efficient</li>
-                </ul>
-
-                <h3>Uses</h3>
-                <p>Prompt optimization, AI automation, Prompt libraries, Enterprise AI</p>
-
-                <h3>Workflow</h3>
-                <div class="diagram-box">User Goal<br>↓<br>Meta Prompt<br>↓<br>AI Generates Better Prompt<br>↓<br>Final AI Task<br>↓<br>Response</div>
-
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
-                    <strong>Prompt:</strong><br>
+<div class="lesson-card"><h2>📖 Lesson 1: Meta Prompting</h2>
+<h3>Definition</h3>
+<p>Meta Prompting is a prompting technique where the AI is asked to create, improve, analyze, or optimize prompts instead of directly solving the original task.</p>
+<p>In simple words, the AI generates better prompts for other AI tasks.</p>
+<h3>Why is it Important?</h3>
+<p>Meta Prompting helps:</p>
+<ul>
+<li>Create high-quality prompts.</li>
+<li>Improve prompt clarity.</li>
+<li>Save time.</li>
+<li>Optimize AI performance.</li>
+<li>Standardize prompt design.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Prompt about prompts</li>
+<li>Self-improving</li>
+<li>Reusable</li>
+<li>Structured</li>
+<li>Efficient</li>
+</ul>
+<h3>Uses</h3>
+<p>Prompt optimization, AI automation, Prompt libraries, Enterprise AI</p>
+<h3>Workflow</h3>
+<div class="diagram-box">User Goal<br/>↓<br/>Meta Prompt<br/>↓<br/>AI Generates Better Prompt<br/>↓<br/>Final AI Task<br/>↓<br/>Response</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
+<strong>Prompt:</strong><br/>
                     Create the best prompt for generating a professional resume.
                 </div>
-
-                <h3>Real-Life Analogy</h3>
-                <p>Instead of writing an essay yourself, you ask an expert teacher to design the perfect essay question first.</p>
-
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<h3>Real-Life Analogy</h3>
+<p>Instead of writing an essay yourself, you ask an expert teacher to design the perfect essay question first.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Meta Prompting means using AI to create or improve prompts rather than directly solving the task.
                 </div>
-                
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Use Meta Prompting whenever you build reusable prompt libraries.
                 </div>
-            </div>
 
-            <!-- Lesson 2 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 2: Dynamic Prompting</h2>
-                <h3>Definition</h3>
-                <p>Dynamic Prompting is a prompting technique where parts of the prompt change automatically based on user input, variables, external data, or application logic.</p>
-                <p>Unlike static prompts, dynamic prompts adapt to different situations.</p>
+<!-- Lesson 2 -->
 
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Personalization</li>
-                    <li>Automation</li>
-                    <li>Flexible AI systems</li>
-                    <li>Better user experience</li>
-                </ul>
-
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Variable-based</li>
-                    <li>Personalized</li>
-                    <li>Adaptive</li>
-                    <li>Automated</li>
-                    <li>Reusable</li>
-                </ul>
-
-                <h3>Uses</h3>
-                <p>Chatbots, CRM Systems, AI Assistants, Email Automation, Customer Support</p>
-
-                <h3>Workflow</h3>
-                <div class="diagram-box">User Input<br>↓<br>Variables Updated<br>↓<br>Dynamic Prompt<br>↓<br>LLM<br>↓<br>Response</div>
-
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
-                    Hello {{UserName}}<br><br>
+</div><div class="lesson-card"><h2>📖 Lesson 2: Dynamic Prompting</h2>
+<h3>Definition</h3>
+<p>Dynamic Prompting is a prompting technique where parts of the prompt change automatically based on user input, variables, external data, or application logic.</p>
+<p>Unlike static prompts, dynamic prompts adapt to different situations.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Personalization</li>
+<li>Automation</li>
+<li>Flexible AI systems</li>
+<li>Better user experience</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Variable-based</li>
+<li>Personalized</li>
+<li>Adaptive</li>
+<li>Automated</li>
+<li>Reusable</li>
+</ul>
+<h3>Uses</h3>
+<p>Chatbots, CRM Systems, AI Assistants, Email Automation, Customer Support</p>
+<h3>Workflow</h3>
+<div class="diagram-box">User Input<br/>↓<br/>Variables Updated<br/>↓<br/>Dynamic Prompt<br/>↓<br/>LLM<br/>↓<br/>Response</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
+                    Hello {{UserName}}<br/><br/>
                     Generate today's learning plan for {{Course}}.
                 </div>
-
-                <h3>Real-Life Analogy</h3>
-                <p>Netflix recommends different movies to different users based on their interests.</p>
-
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<h3>Real-Life Analogy</h3>
+<p>Netflix recommends different movies to different users based on their interests.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Dynamic prompts change automatically according to the user's information or context.
                 </div>
-                
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Store variables separately instead of hardcoding values inside prompts.
                 </div>
-            </div>
 
-            <!-- Lesson 3 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 3: Structured Prompting</h2>
-                <h3>Definition</h3>
-                <p>Structured Prompting is the practice of organizing prompts into clearly defined sections such as role, objective, context, instructions, constraints, and output format.</p>
-                <p>A structured prompt is easier for both humans and AI to understand.</p>
+<!-- Lesson 3 -->
 
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Readability</li>
-                    <li>Consistency</li>
-                    <li>Accuracy</li>
-                    <li>Maintainability</li>
-                    <li>Scalability</li>
-                </ul>
-
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Organized</li>
-                    <li>Modular</li>
-                    <li>Easy to edit</li>
-                    <li>Professional</li>
-                    <li>Reusable</li>
-                </ul>
-
-                <h3>Uses</h3>
-                <p>Enterprise AI, AI Agents, Business Applications, Documentation</p>
-
-                <h3>Workflow</h3>
-                <div class="diagram-box">Role<br>↓<br>Goal<br>↓<br>Context<br>↓<br>Instructions<br>↓<br>Constraints<br>↓<br>Output Format<br>↓<br>Response</div>
-
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
-                    <strong>Role:</strong><br>Senior Data Scientist<br><br>
-                    <strong>Task:</strong><br>Explain Linear Regression.<br><br>
-                    <strong>Constraints:</strong><br>Simple English.<br><br>
-                    <strong>Output:</strong><br>Markdown.
+</div><div class="lesson-card"><h2>📖 Lesson 3: Structured Prompting</h2>
+<h3>Definition</h3>
+<p>Structured Prompting is the practice of organizing prompts into clearly defined sections such as role, objective, context, instructions, constraints, and output format.</p>
+<p>A structured prompt is easier for both humans and AI to understand.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Readability</li>
+<li>Consistency</li>
+<li>Accuracy</li>
+<li>Maintainability</li>
+<li>Scalability</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Organized</li>
+<li>Modular</li>
+<li>Easy to edit</li>
+<li>Professional</li>
+<li>Reusable</li>
+</ul>
+<h3>Uses</h3>
+<p>Enterprise AI, AI Agents, Business Applications, Documentation</p>
+<h3>Workflow</h3>
+<div class="diagram-box">Role<br/>↓<br/>Goal<br/>↓<br/>Context<br/>↓<br/>Instructions<br/>↓<br/>Constraints<br/>↓<br/>Output Format<br/>↓<br/>Response</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
+<strong>Role:</strong><br/>Senior Data Scientist<br/><br/>
+<strong>Task:</strong><br/>Explain Linear Regression.<br/><br/>
+<strong>Constraints:</strong><br/>Simple English.<br/><br/>
+<strong>Output:</strong><br/>Markdown.
                 </div>
-
-                <h3>Real-Life Analogy</h3>
-                <p>Building a house using an architectural blueprint instead of randomly placing bricks.</p>
-
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<h3>Real-Life Analogy</h3>
+<p>Building a house using an architectural blueprint instead of randomly placing bricks.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Structured prompting divides prompts into logical sections, making them easier to maintain.
                 </div>
-                
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Always organize long prompts using headings and sections.
                 </div>
-            </div>
 
-            <!-- Lesson 4 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 4: XML Prompting</h2>
-                <h3>Definition</h3>
-                <p>XML Prompting uses XML tags to organize prompts into structured sections that are easy for AI systems and applications to understand.</p>
-                <p>XML stands for eXtensible Markup Language.</p>
-                
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Clear structure</li>
-                    <li>Better parsing</li>
-                    <li>Easier automation</li>
-                    <li>Reduced ambiguity</li>
-                </ul>
+<!-- Lesson 4 -->
 
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Tag-based</li>
-                    <li>Hierarchical</li>
-                    <li>Structured</li>
-                    <li>Machine-readable</li>
-                </ul>
-
-                <h3>Uses</h3>
-                <p>AI Agents, Enterprise Applications, APIs, Workflow Automation</p>
-
-                <h3>Workflow</h3>
-                <div class="diagram-box">XML Tags<br>↓<br>AI Reads Structure<br>↓<br>Processes Instructions<br>↓<br>Response</div>
-
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box" style="font-family: monospace;">
-                    &lt;role&gt;Python Teacher&lt;/role&gt;<br><br>
-                    &lt;task&gt;Explain Functions&lt;/task&gt;<br><br>
+</div><div class="lesson-card"><h2>📖 Lesson 4: XML Prompting</h2>
+<h3>Definition</h3>
+<p>XML Prompting uses XML tags to organize prompts into structured sections that are easy for AI systems and applications to understand.</p>
+<p>XML stands for eXtensible Markup Language.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Clear structure</li>
+<li>Better parsing</li>
+<li>Easier automation</li>
+<li>Reduced ambiguity</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Tag-based</li>
+<li>Hierarchical</li>
+<li>Structured</li>
+<li>Machine-readable</li>
+</ul>
+<h3>Uses</h3>
+<p>AI Agents, Enterprise Applications, APIs, Workflow Automation</p>
+<h3>Workflow</h3>
+<div class="diagram-box">XML Tags<br/>↓<br/>AI Reads Structure<br/>↓<br/>Processes Instructions<br/>↓<br/>Response</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box" style="font-family: monospace;">
+                    &lt;role&gt;Python Teacher&lt;/role&gt;<br/><br/>
+                    &lt;task&gt;Explain Functions&lt;/task&gt;<br/><br/>
                     &lt;level&gt;Beginner&lt;/level&gt;
                 </div>
-
-                <h3>Real-Life Analogy</h3>
-                <p>Folders and subfolders organize files neatly on a computer.</p>
-
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<h3>Real-Life Analogy</h3>
+<p>Folders and subfolders organize files neatly on a computer.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     XML Prompting organizes prompts using custom tags.
                 </div>
-                
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Use XML when prompts contain many sections and nested information.
                 </div>
-            </div>
 
-            <!-- Lesson 5 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 5: JSON Prompting</h2>
-                <h3>Definition</h3>
-                <p>JSON Prompting organizes prompts using JSON (JavaScript Object Notation), making them easy for applications, APIs, and AI systems to exchange structured information.</p>
+<!-- Lesson 5 -->
 
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Easy integration</li>
-                    <li>Machine readability</li>
-                    <li>API compatibility</li>
-                    <li>Structured responses</li>
-                </ul>
-
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Key-value pairs</li>
-                    <li>Lightweight</li>
-                    <li>Structured</li>
-                    <li>Widely supported</li>
-                </ul>
-
-                <h3>Uses</h3>
-                <p>OpenAI APIs, Chatbots, Backend Applications, AI Agents</p>
-
-                <h3>Workflow</h3>
-                <div class="diagram-box">JSON Prompt<br>↓<br>LLM<br>↓<br>Structured Response</div>
-
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box" style="font-family: monospace;">
-                    {<br>
-                    &nbsp;&nbsp;"role":"Teacher",<br>
-                    &nbsp;&nbsp;"task":"Explain Python",<br>
-                    &nbsp;&nbsp;"level":"Beginner"<br>
+</div><div class="lesson-card"><h2>📖 Lesson 5: JSON Prompting</h2>
+<h3>Definition</h3>
+<p>JSON Prompting organizes prompts using JSON (JavaScript Object Notation), making them easy for applications, APIs, and AI systems to exchange structured information.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Easy integration</li>
+<li>Machine readability</li>
+<li>API compatibility</li>
+<li>Structured responses</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Key-value pairs</li>
+<li>Lightweight</li>
+<li>Structured</li>
+<li>Widely supported</li>
+</ul>
+<h3>Uses</h3>
+<p>OpenAI APIs, Chatbots, Backend Applications, AI Agents</p>
+<h3>Workflow</h3>
+<div class="diagram-box">JSON Prompt<br/>↓<br/>LLM<br/>↓<br/>Structured Response</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box" style="font-family: monospace;">
+                    {<br/>
+                      "role":"Teacher",<br/>
+                      "task":"Explain Python",<br/>
+                      "level":"Beginner"<br/>
                     }
                 </div>
-
-                <h3>Real-Life Analogy</h3>
-                <p>A contact list where every person has fixed fields like Name, Phone, and Email.</p>
-
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<h3>Real-Life Analogy</h3>
+<p>A contact list where every person has fixed fields like Name, Phone, and Email.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     JSON is the most commonly used structured format for AI APIs.
                 </div>
-                
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Validate JSON before sending it to an API.
                 </div>
-            </div>
 
-            <!-- Lesson 6 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 6: Markdown Prompting</h2>
-                <h3>Definition</h3>
-                <p>Markdown Prompting uses Markdown formatting to organize prompts and responses with headings, lists, tables, code blocks, and emphasis for better readability.</p>
-                
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Readability</li>
-                    <li>Documentation</li>
-                    <li>Reports</li>
-                    <li>Technical communication</li>
-                </ul>
+<!-- Lesson 6 -->
 
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Human-readable</li>
-                    <li>Lightweight</li>
-                    <li>Structured</li>
-                    <li>Easy to edit</li>
-                </ul>
-
-                <h3>Uses</h3>
-                <p>GitHub, Documentation, Reports, AI-generated notes</p>
-
-                <h3>Workflow</h3>
-                <div class="diagram-box">Markdown Prompt<br>↓<br>LLM<br>↓<br>Formatted Markdown Response</div>
-
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box" style="font-family: monospace;">
-                    # Python<br><br>
-                    ## Functions<br><br>
-                    - Definition<br>
-                    - Example<br>
+</div><div class="lesson-card"><h2>📖 Lesson 6: Markdown Prompting</h2>
+<h3>Definition</h3>
+<p>Markdown Prompting uses Markdown formatting to organize prompts and responses with headings, lists, tables, code blocks, and emphasis for better readability.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Readability</li>
+<li>Documentation</li>
+<li>Reports</li>
+<li>Technical communication</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Human-readable</li>
+<li>Lightweight</li>
+<li>Structured</li>
+<li>Easy to edit</li>
+</ul>
+<h3>Uses</h3>
+<p>GitHub, Documentation, Reports, AI-generated notes</p>
+<h3>Workflow</h3>
+<div class="diagram-box">Markdown Prompt<br/>↓<br/>LLM<br/>↓<br/>Formatted Markdown Response</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box" style="font-family: monospace;">
+                    # Python<br/><br/>
+                    ## Functions<br/><br/>
+                    - Definition<br/>
+                    - Example<br/>
                     - Advantages
                 </div>
-
-                <h3>Real-Life Analogy</h3>
-                <p>Formatting a book with chapters and headings instead of one long paragraph.</p>
-
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<h3>Real-Life Analogy</h3>
+<p>Formatting a book with chapters and headings instead of one long paragraph.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Markdown helps AI generate well-organized documentation.
                 </div>
-                
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Use Markdown for reports and educational content.
                 </div>
-            </div>
 
-            <!-- Lesson 7 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 7: Function Calling</h2>
-                <h3>Definition</h3>
-                <p>Function Calling is a feature that allows an AI model to identify when a predefined function should be used and generate the required arguments instead of answering directly.</p>
-                <p>The actual function is executed by your application, not by the AI itself.</p>
+<!-- Lesson 7 -->
 
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Reliable automation</li>
-                    <li>External system integration</li>
-                    <li>Accurate data handling</li>
-                    <li>API execution</li>
-                </ul>
-
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Structured arguments</li>
-                    <li>Predictable</li>
-                    <li>API-friendly</li>
-                    <li>Secure</li>
-                </ul>
-
-                <h3>Uses</h3>
-                <p>Weather apps, Calendar assistants, Booking systems, Banking applications</p>
-
-                <h3>Workflow</h3>
-                <div class="diagram-box">User Request<br>↓<br>LLM Detects Function<br>↓<br>Generate Arguments<br>↓<br>Application Executes Function<br>↓<br>Result Returned</div>
-
-                <h3>Real-Time Example</h3>
-                <p><strong>User:</strong> "Book a meeting tomorrow at 3 PM."</p>
-                <p>AI identifies the calendar booking function and provides the required arguments.</p>
-
-                <h3>Real-Life Analogy</h3>
-                <p>A receptionist receives a request and forwards it to the correct department to complete the work.</p>
-
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+</div><div class="lesson-card"><h2>📖 Lesson 7: Function Calling</h2>
+<h3>Definition</h3>
+<p>Function Calling is a feature that allows an AI model to identify when a predefined function should be used and generate the required arguments instead of answering directly.</p>
+<p>The actual function is executed by your application, not by the AI itself.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Reliable automation</li>
+<li>External system integration</li>
+<li>Accurate data handling</li>
+<li>API execution</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Structured arguments</li>
+<li>Predictable</li>
+<li>API-friendly</li>
+<li>Secure</li>
+</ul>
+<h3>Uses</h3>
+<p>Weather apps, Calendar assistants, Booking systems, Banking applications</p>
+<h3>Workflow</h3>
+<div class="diagram-box">User Request<br/>↓<br/>LLM Detects Function<br/>↓<br/>Generate Arguments<br/>↓<br/>Application Executes Function<br/>↓<br/>Result Returned</div>
+<h3>Real-Time Example</h3>
+<p><strong>User:</strong> "Book a meeting tomorrow at 3 PM."</p>
+<p>AI identifies the calendar booking function and provides the required arguments.</p>
+<h3>Real-Life Analogy</h3>
+<p>A receptionist receives a request and forwards it to the correct department to complete the work.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Function Calling does not execute code; it prepares structured arguments for your application to execute.
                 </div>
-                
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Define function schemas clearly so the AI generates accurate arguments.
                 </div>
-            </div>
 
-            <!-- Lesson 8 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 8: Tool Calling</h2>
-                <h3>Definition</h3>
-                <p>Tool Calling allows an AI model to use external tools or services—such as web search, databases, calculators, or APIs—to gather information or perform actions beyond its built-in knowledge.</p>
+<!-- Lesson 8 -->
 
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Access live information.</li>
-                    <li>Perform calculations.</li>
-                    <li>Retrieve external data.</li>
-                    <li>Automate workflows.</li>
-                </ul>
-
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>External tools</li>
-                    <li>Real-time data</li>
-                    <li>Action-oriented</li>
-                    <li>Extensible</li>
-                </ul>
-
-                <h3>Uses</h3>
-                <p>Web Search, Database Queries, Weather Services, Email Automation, File Retrieval</p>
-
-                <h3>Workflow</h3>
-                <div class="diagram-box">User Request<br>↓<br>LLM Chooses Tool<br>↓<br>Tool Executes<br>↓<br>Result Returned<br>↓<br>Final Response</div>
-
-                <h3>Real-Time Example</h3>
-                <p><strong>User:</strong> "What's today's weather in Hyderabad?"</p>
-                <p>The AI calls a weather service, retrieves live data, and then responds.</p>
-
-                <h3>Real-Life Analogy</h3>
-                <p>A manager delegates specialized tasks to different employees and combines their results into a final answer.</p>
-
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+</div><div class="lesson-card"><h2>📖 Lesson 8: Tool Calling</h2>
+<h3>Definition</h3>
+<p>Tool Calling allows an AI model to use external tools or services—such as web search, databases, calculators, or APIs—to gather information or perform actions beyond its built-in knowledge.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Access live information.</li>
+<li>Perform calculations.</li>
+<li>Retrieve external data.</li>
+<li>Automate workflows.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>External tools</li>
+<li>Real-time data</li>
+<li>Action-oriented</li>
+<li>Extensible</li>
+</ul>
+<h3>Uses</h3>
+<p>Web Search, Database Queries, Weather Services, Email Automation, File Retrieval</p>
+<h3>Workflow</h3>
+<div class="diagram-box">User Request<br/>↓<br/>LLM Chooses Tool<br/>↓<br/>Tool Executes<br/>↓<br/>Result Returned<br/>↓<br/>Final Response</div>
+<h3>Real-Time Example</h3>
+<p><strong>User:</strong> "What's today's weather in Hyderabad?"</p>
+<p>The AI calls a weather service, retrieves live data, and then responds.</p>
+<h3>Real-Life Analogy</h3>
+<p>A manager delegates specialized tasks to different employees and combines their results into a final answer.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Tool Calling extends AI capabilities by connecting it to external services.
                 </div>
-                
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Use Tool Calling whenever the task requires current information or external actions.
                 </div>
-            </div>
 
-            <!-- Lesson 9 -->
-            <div class="lesson-card">
-                <h2>📖 Lesson 9: Schema-based Prompting</h2>
-                <h3>Definition</h3>
-                <p>Schema-based Prompting defines a fixed structure (schema) that specifies exactly how the AI should organize its input or output.</p>
-                <p>A schema ensures every response follows the same format, making it easy for applications to process.</p>
+<!-- Lesson 9 -->
 
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Consistency</li>
-                    <li>Validation</li>
-                    <li>Automation</li>
-                    <li>Reliable integrations</li>
-                </ul>
-
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Fixed structure</li>
-                    <li>Predictable output</li>
-                    <li>Easy validation</li>
-                    <li>Machine-readable</li>
-                </ul>
-
-                <h3>Uses</h3>
-                <p>APIs, AI Agents, Databases, Enterprise Systems, Workflow Automation</p>
-
-                <h3>Workflow</h3>
-                <div class="diagram-box">Schema Definition<br>↓<br>AI Generates Data<br>↓<br>Validate Schema<br>↓<br>Application Uses Output</div>
-
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box" style="font-family: monospace;">
-                    {<br>
-                    &nbsp;&nbsp;"name": "",<br>
-                    &nbsp;&nbsp;"email": "",<br>
-                    &nbsp;&nbsp;"skills": [],<br>
-                    &nbsp;&nbsp;"experience": 0<br>
+</div><div class="lesson-card"><h2>📖 Lesson 9: Schema-based Prompting</h2>
+<h3>Definition</h3>
+<p>Schema-based Prompting defines a fixed structure (schema) that specifies exactly how the AI should organize its input or output.</p>
+<p>A schema ensures every response follows the same format, making it easy for applications to process.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Consistency</li>
+<li>Validation</li>
+<li>Automation</li>
+<li>Reliable integrations</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Fixed structure</li>
+<li>Predictable output</li>
+<li>Easy validation</li>
+<li>Machine-readable</li>
+</ul>
+<h3>Uses</h3>
+<p>APIs, AI Agents, Databases, Enterprise Systems, Workflow Automation</p>
+<h3>Workflow</h3>
+<div class="diagram-box">Schema Definition<br/>↓<br/>AI Generates Data<br/>↓<br/>Validate Schema<br/>↓<br/>Application Uses Output</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box" style="font-family: monospace;">
+                    {<br/>
+                      "name": "",<br/>
+                      "email": "",<br/>
+                      "skills": [],<br/>
+                      "experience": 0<br/>
                     }
                 </div>
-                <p><em>Every AI response follows this schema.</em></p>
-
-                <h3>Real-Life Analogy</h3>
-                <p>A passport application form has fixed fields that everyone must complete in the same format.</p>
-
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<p><em>Every AI response follows this schema.</em></p>
+<h3>Real-Life Analogy</h3>
+<p>A passport application form has fixed fields that everyone must complete in the same format.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     A schema defines the expected structure of data, ensuring consistent and valid AI outputs.
                 </div>
-                
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Use schemas whenever AI output will be consumed by software instead of humans.
                 </div>
-            </div>
 
-            <!-- Mini Project Section -->
-            <div class="lesson-card" style="border: 2px solid var(--primary-color);">
-                <h2>🚀 Module 5 Mini Project: AI Prompt Generator</h2>
-                <h3>Project Objective</h3>
-                <p>Build an AI-powered Prompt Generator that creates high-quality prompts for different tasks.</p>
-                
-                <h3>Features</h3>
-                <ul>
-                    <li>Generate Coding Prompts</li>
-                    <li>Generate Content Writing Prompts</li>
-                    <li>Generate Image Generation Prompts</li>
-                    <li>Generate Resume Prompts</li>
-                    <li>Generate Marketing Prompts</li>
-                    <li>Generate Prompt Templates</li>
-                    <li>Improve Existing Prompts</li>
-                    <li>Export Prompts in Markdown, JSON, or XML</li>
-                </ul>
+<!-- Mini Project Section -->
 
-                <h3>Prompting Techniques Used</h3>
-                <ul style="list-style-type: none; padding-left: 0;">
-                    <li>✅ Meta Prompting</li>
-                    <li>✅ Dynamic Prompting</li>
-                    <li>✅ Structured Prompting</li>
-                    <li>✅ XML Prompting</li>
-                    <li>✅ JSON Prompting</li>
-                    <li>✅ Markdown Prompting</li>
-                    <li>✅ Function Calling</li>
-                    <li>✅ Tool Calling</li>
-                    <li>✅ Schema-based Prompting</li>
-                </ul>
-
-                <h3 style="margin-top: 30px;">Interactive Prompt Field</h3>
-                <p>Write your Meta Prompt below (e.g., <em>"Create an optimized JSON schema prompt for a marketing assistant."</em>):</p>
-                
-                <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 15px;">
-                    <textarea id="project-prompt-input" rows="5" style="width: 100%; padding: 16px; border-radius: 8px; border: 1px solid var(--color-border); background: var(--color-bg-primary); color: var(--color-text-primary); font-family: 'Inter', sans-serif; font-size: 16px; resize: vertical;" placeholder="Type your Meta Prompt here..."></textarea>
-                    
-                    <button id="run-prompt-btn" style="align-self: flex-start; background: blue; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,255,0.2);">Run Prompt</button>
-                    
-                    <div id="project-prompt-output" style="display: none; margin-top: 15px; padding: 20px; background: rgba(34, 197, 94, 0.1); border-left: 4px solid #22c55e; border-radius: 0 8px 8px 0; color: var(--color-text-primary);">
-                        <strong>AI Response (Generated Prompt):</strong><br><br>
-                        <span style="font-family: monospace; font-size: 14px; background: rgba(0,0,0,0.05); padding: 10px; display: block; border-radius: 5px;">
-{<br>
-&nbsp;&nbsp;"role": "Marketing Expert",<br>
-&nbsp;&nbsp;"task": "Write ad copy",<br>
-&nbsp;&nbsp;"constraints": ["Under 100 words", "Professional tone"]<br>
+</div><div class="lesson-card"><h2>🚀 Module 5 Mini Project: AI Prompt Generator</h2>
+<h3>Project Objective</h3>
+<p>Build an AI-powered Prompt Generator that creates high-quality prompts for different tasks.</p>
+<h3>Features</h3>
+<ul>
+<li>Generate Coding Prompts</li>
+<li>Generate Content Writing Prompts</li>
+<li>Generate Image Generation Prompts</li>
+<li>Generate Resume Prompts</li>
+<li>Generate Marketing Prompts</li>
+<li>Generate Prompt Templates</li>
+<li>Improve Existing Prompts</li>
+<li>Export Prompts in Markdown, JSON, or XML</li>
+</ul>
+<h3>Prompting Techniques Used</h3>
+<ul style="list-style-type: none; padding-left: 0;">
+<li>✅ Meta Prompting</li>
+<li>✅ Dynamic Prompting</li>
+<li>✅ Structured Prompting</li>
+<li>✅ XML Prompting</li>
+<li>✅ JSON Prompting</li>
+<li>✅ Markdown Prompting</li>
+<li>✅ Function Calling</li>
+<li>✅ Tool Calling</li>
+<li>✅ Schema-based Prompting</li>
+</ul>
+<h3 style="margin-top: 30px;">Interactive Prompt Field</h3>
+<p>Write your Meta Prompt below (e.g., <em>"Create an optimized JSON schema prompt for a marketing assistant."</em>):</p>
+<div style="margin-top: 15px; display: flex; flex-direction: column; gap: 15px;">
+<textarea id="project-prompt-input" placeholder="Type your Meta Prompt here..." rows="5" style="width: 100%; padding: 16px; border-radius: 8px; border: 1px solid var(--color-border); background: var(--color-bg-primary); color: var(--color-text-primary); font-family: 'Inter', sans-serif; font-size: 16px; resize: vertical;"></textarea>
+<button id="run-prompt-btn" style="align-self: flex-start; background: blue; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,255,0.2);">Run Prompt</button>
+<div id="project-prompt-output" style="display: none; margin-top: 15px; padding: 20px; background: rgba(34, 197, 94, 0.1); border-left: 4px solid #22c55e; border-radius: 0 8px 8px 0; color: var(--color-text-primary);">
+<strong>AI Response (Generated Prompt):</strong><br/><br/>
+<span style="font-family: monospace; font-size: 14px; background: rgba(0,0,0,0.05); padding: 10px; display: block; border-radius: 5px;">
+{<br/>
+  "role": "Marketing Expert",<br/>
+  "task": "Write ad copy",<br/>
+  "constraints": ["Under 100 words", "Professional tone"]<br/>
 }
                         </span>
-                        <br>
-                        <small style="color: var(--color-text-secondary);">(Note: This is a simulated response demonstrating how Meta Prompting generates structured prompts.)</small>
-                    </div>
-                </div>
-                
-                <script>
+<br/>
+<small style="color: var(--color-text-secondary);">(Note: This is a simulated response demonstrating how Meta Prompting generates structured prompts.)</small>
+</div>
+</div>
+<script>
                     document.getElementById('run-prompt-btn').addEventListener('click', function() {
                         const input = document.getElementById('project-prompt-input').value;
                         if(input.trim() === '') {
@@ -765,80 +669,72 @@
                         }, 1000);
                     });
                 </script>
-            </div>
 
-            <!-- Quiz Section -->
-            <div class="lesson-card" style="border: 2px solid var(--primary-color); background: rgba(37,99,235,0.02);">
-                <h2 style="border-bottom: none; margin-bottom: 10px;">🧠 Module 5 Quiz: Test Your Knowledge!</h2>
-                <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
-                
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <!-- MCQ 1 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">1. What is Meta Prompting?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="A" style="margin-right: 10px;">A) A prompt asking the AI to create, improve, or optimize other prompts.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="B" style="margin-right: 10px;">B) A prompt used only to generate images.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="C" style="margin-right: 10px;">C) Formatting the output in JSON.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="D" style="margin-right: 10px;">D) Breaking a task down into reasoning steps.</label>
-                        </div>
-                    </div>
+<!-- Quiz Section -->
 
-                    <!-- MCQ 2 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">2. Which format uses tags like &lt;role&gt; and &lt;task&gt; to organize prompts?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="A" style="margin-right: 10px;">A) JSON Prompting</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="B" style="margin-right: 10px;">B) Markdown Prompting</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="C" style="margin-right: 10px;">C) XML Prompting</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="D" style="margin-right: 10px;">D) Python Prompting</label>
-                        </div>
-                    </div>
-
-                    <!-- MCQ 3 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">3. What is the purpose of Tool Calling?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="A" style="margin-right: 10px;">A) To make the AI type faster.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="B" style="margin-right: 10px;">B) To allow the AI to use external services (like a web search or calculator) to gather live information.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="C" style="margin-right: 10px;">C) To change the color palette of an application.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="D" style="margin-right: 10px;">D) To prevent users from sending long messages.</label>
-                        </div>
-                    </div>
-                    
-                    <!-- MCQ 4 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">4. How does Dynamic Prompting differ from Static Prompting?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="A" style="margin-right: 10px;">A) Dynamic Prompting is written only in Python.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="B" style="margin-right: 10px;">B) Dynamic Prompting automatically adapts based on variables or user input, whereas Static Prompting stays the same.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="C" style="margin-right: 10px;">C) They are the exact same thing.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="D" style="margin-right: 10px;">D) Dynamic Prompting forces the output to be XML.</label>
-                        </div>
-                    </div>
-                    
-                    <!-- MCQ 5 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">5. What is the purpose of Schema-based Prompting?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="A" style="margin-right: 10px;">A) It defines a fixed structure (like JSON fields) that the AI must strictly follow, making it easy for apps to process.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="B" style="margin-right: 10px;">B) It prevents the AI from providing long explanations.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="C" style="margin-right: 10px;">C) It connects multiple prompts into a workflow chain.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="D" style="margin-right: 10px;">D) It asks the AI to evaluate its own output.</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation to Next Module -->
-            <div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
-                <a href="/academy/module6" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
-                    Move Next Module 6 &rarr;
-                </a>
-            </div>
-        </div></main>
+</div><div class="lesson-card"><h2 style="border-bottom: none; margin-bottom: 10px;">🧠 Module 5 Quiz: Test Your Knowledge!</h2>
+<p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
+<div style="display: flex; flex-direction: column; gap: 20px;">
+<!-- MCQ 1 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">1. What is Meta Prompting?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="A"/>A) A prompt asking the AI to create, improve, or optimize other prompts.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="B"/>B) A prompt used only to generate images.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="C"/>C) Formatting the output in JSON.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="D"/>D) Breaking a task down into reasoning steps.</label>
+</div>
+</div>
+<!-- MCQ 2 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">2. Which format uses tags like &lt;role&gt; and &lt;task&gt; to organize prompts?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="A"/>A) JSON Prompting</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="B"/>B) Markdown Prompting</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="C"/>C) XML Prompting</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="D"/>D) Python Prompting</label>
+</div>
+</div>
+<!-- MCQ 3 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">3. What is the purpose of Tool Calling?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="A"/>A) To make the AI type faster.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="B"/>B) To allow the AI to use external services (like a web search or calculator) to gather live information.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="C"/>C) To change the color palette of an application.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="D"/>D) To prevent users from sending long messages.</label>
+</div>
+</div>
+<!-- MCQ 4 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">4. How does Dynamic Prompting differ from Static Prompting?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="A"/>A) Dynamic Prompting is written only in Python.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="B"/>B) Dynamic Prompting automatically adapts based on variables or user input, whereas Static Prompting stays the same.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="C"/>C) They are the exact same thing.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="D"/>D) Dynamic Prompting forces the output to be XML.</label>
+</div>
+</div>
+<!-- MCQ 5 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">5. What is the purpose of Schema-based Prompting?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="A"/>A) It defines a fixed structure (like JSON fields) that the AI must strictly follow, making it easy for apps to process.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="B"/>B) It prevents the AI from providing long explanations.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="C"/>C) It connects multiple prompts into a workflow chain.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="D"/>D) It asks the AI to evaluate its own output.</label>
+</div>
+</div>
 </div>
 
+<!-- Navigation to Next Module -->
+<div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
+<a class="btn btn-primary" href="/academy/module6" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    Move Next Module 6 →
+                </a>
+</div>
+</div></div></main>
+</div>
 <script>
     // Include sidebar toggle functionality
     const menuToggleBtn = document.getElementById('menuToggleBtn');

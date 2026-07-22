@@ -333,9 +333,243 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize
     updateXPDisplay();
     fetchAcademyData();
-    
-    // Bind Hero Start Learning Button
-    document.getElementById('startLearningBtn').addEventListener('click', () => {
-        window.location.href = '/academy/module1';
-    });
+    renderRoadmapFromData();
+
+    // === Dynamic Roadmap Rendering & Progress Dashboard ===
+    function renderRoadmapFromData() {
+        const wrapper = document.getElementById('roadmap-curriculum-wrapper');
+        if (!wrapper) return;
+
+        wrapper.innerHTML = '';
+        let lastPhase = null;
+        let nextIncompleteModuleNum = null;
+        
+        let totalLessonsCourse = 0;
+        let totalCompletedLessonsCourse = 0;
+        let completedModulesCount = 0;
+
+        ACADEMY_CURRICULUM.forEach((module, index) => {
+            const moduleNum = index + 1;
+            const moduleId = `M${moduleNum}`;
+
+            // Phase Separator
+            if (module.phase && module.phase !== lastPhase) {
+                const phaseLabel = document.createElement('div');
+                phaseLabel.className = 'rm-phase-label';
+                phaseLabel.innerText = module.phase;
+                wrapper.appendChild(phaseLabel);
+                lastPhase = module.phase;
+            }
+
+            // Count lesson completion
+            const totalLessons = module.lessons.length;
+            totalLessonsCourse += totalLessons;
+            
+            let completedInModule = 0;
+            module.lessons.forEach((l, lessonIndex) => {
+                const lessonId = `${moduleId}_L${lessonIndex + 1}`;
+                if (progress.completedLessons.includes(lessonId)) {
+                    completedInModule++;
+                    totalCompletedLessonsCourse++;
+                }
+            });
+
+            const modulePercent = totalLessons === 0 ? 0 : Math.round((completedInModule / totalLessons) * 100);
+
+            // Determine Lock State
+            let isUnlocked = true;
+            if (moduleNum > 1) {
+                const prevModule = ACADEMY_CURRICULUM[index - 1];
+                const prevModuleId = `M${moduleNum - 1}`;
+                let prevCompleted = 0;
+                prevModule.lessons.forEach((pl, pli) => {
+                    if (progress.completedLessons.includes(`${prevModuleId}_L${pli + 1}`)) {
+                        prevCompleted++;
+                    }
+                });
+                const prevPercent = prevModule.lessons.length === 0 ? 0 : Math.round((prevCompleted / prevModule.lessons.length) * 100);
+                isUnlocked = prevPercent === 100;
+            }
+
+            // Sync unlockedModules array in progress
+            if (isUnlocked && !progress.unlockedModules.includes(moduleId)) {
+                progress.unlockedModules.push(moduleId);
+            }
+
+            // Track first incomplete module
+            if (modulePercent < 100 && nextIncompleteModuleNum === null && isUnlocked) {
+                nextIncompleteModuleNum = moduleNum;
+            }
+
+            // Track completed modules
+            if (modulePercent === 100) {
+                completedModulesCount++;
+                if (!progress.completedModules.includes(moduleId)) {
+                    progress.completedModules.push(moduleId);
+                }
+            }
+
+            const card = document.createElement('div');
+            card.className = `rm-module-card ${isUnlocked ? '' : 'is-locked'} ${moduleNum === 17 ? 'rm-capstone' : ''}`;
+            card.setAttribute('data-module-num', moduleNum);
+
+            // Header status badge
+            let badgeHtml = '';
+            if (!isUnlocked) {
+                badgeHtml = '<span class="rm-module-progress-badge">🔒 Locked</span>';
+            } else if (modulePercent === 100) {
+                badgeHtml = '<span class="rm-module-progress-badge completed">✓ Completed</span>';
+            } else if (modulePercent > 0) {
+                badgeHtml = `<span class="rm-module-progress-badge in-progress">⏳ ${modulePercent}%</span>`;
+            } else {
+                badgeHtml = '<span class="rm-module-progress-badge">0%</span>';
+            }
+
+            const metaText = totalLessons > 0 
+                ? `${totalLessons} Lessons` 
+                : 'Capstone Assessment';
+
+            card.innerHTML = `
+                <div class="rm-module-header" onclick="toggleRoadmapModule(this)">
+                    <div class="rm-module-left">
+                        <div class="rm-module-num ${moduleNum === 17 ? 'rm-capstone-num' : ''}">${moduleNum < 10 ? '0' + moduleNum : moduleNum}</div>
+                        <div>
+                            <div class="rm-module-title">${module.title}</div>
+                            <div class="rm-module-meta">
+                                <span>${metaText}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        ${badgeHtml}
+                        <svg class="rm-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                </div>
+                <div class="rm-module-body">
+                    <div class="rm-lessons-grid"></div>
+                    <div class="rm-action-row"></div>
+                </div>
+            `;
+
+            // Append lessons inside body
+            const lessonsGrid = card.querySelector('.rm-lessons-grid');
+            const actionRow = card.querySelector('.rm-action-row');
+
+            if (totalLessons === 0) {
+                lessonsGrid.style.display = 'none';
+                card.querySelector('.rm-module-body').innerHTML = `
+                    <div class="rm-project-tag">🏆 Final Deliverable: Prompt Bazaar SaaS Platform — Live & Deployed</div>
+                    <div class="rm-action-row">
+                        <span class="rm-action-hint">Graduation Reward: +500 XP & Certificate</span>
+                        ${isUnlocked 
+                            ? `<a href="/academy/module17" class="btn btn-primary btn-sm rm-study-btn" style="background:#7C3AED; border-color:#7C3AED;">Launch Capstone Assessment →</a>`
+                            : `<button class="btn btn-secondary btn-sm rm-study-btn locked" disabled>Locked 🔒</button>`
+                        }
+                    </div>
+                `;
+            } else {
+                module.lessons.forEach((lessonTitle, lessonIndex) => {
+                    const lessonNum = lessonIndex + 1;
+                    const lessonId = `${moduleId}_L${lessonNum}`;
+                    const isLessonCompleted = progress.completedLessons.includes(lessonId);
+
+                    const span = document.createElement('span');
+                    span.className = `rm-lesson ${isLessonCompleted ? 'completed' : ''}`;
+                    span.setAttribute('data-lesson-id', lessonId);
+                    span.innerText = lessonTitle;
+                    lessonsGrid.appendChild(span);
+                });
+
+                if (isUnlocked) {
+                    actionRow.innerHTML = `
+                        <span class="rm-action-hint">Potential Reward: +${totalLessons * 50} XP</span>
+                        <a href="/academy/module${moduleNum}" class="btn btn-primary btn-sm rm-study-btn">Study Module ${moduleNum} →</a>
+                    `;
+                } else {
+                    actionRow.innerHTML = `
+                        <span class="rm-action-hint" style="color: var(--color-danger);">Prerequisite: Complete Module ${moduleNum - 1} first</span>
+                        <button class="btn btn-secondary btn-sm rm-study-btn locked" disabled>Locked 🔒</button>
+                    `;
+                }
+            }
+
+            wrapper.appendChild(card);
+        });
+
+        // Update overall Progress Dashboard UI
+        const overallPercent = totalLessonsCourse === 0 ? 0 : Math.round((totalCompletedLessonsCourse / totalLessonsCourse) * 100);
+
+        const dbPctEl = document.getElementById('db-progress-percentage');
+        const dbFillBar = document.getElementById('db-progress-fill-bar');
+        const dbModulesEl = document.getElementById('db-completed-modules');
+        const dbLessonsEl = document.getElementById('db-completed-lessons');
+        const dbXpEl = document.getElementById('db-current-xp');
+        const dbBadgesEl = document.getElementById('db-earned-badges');
+        const dbRankEl = document.getElementById('db-user-rank-text');
+
+        if (dbPctEl) dbPctEl.innerText = `${overallPercent}%`;
+        if (dbFillBar) dbFillBar.style.width = `${overallPercent}%`;
+        if (dbModulesEl) dbModulesEl.innerText = `${completedModulesCount} / 17`;
+        if (dbLessonsEl) dbLessonsEl.innerText = `${totalCompletedLessonsCourse} / ${totalLessonsCourse}`;
+        if (dbXpEl) dbXpEl.innerText = `${progress.xp} XP`;
+        if (dbBadgesEl) dbBadgesEl.innerText = completedModulesCount;
+
+        // Level Formula
+        const userLevel = Math.floor(progress.xp / 500) + 1;
+        let rankName = "Novice Prompt Engineer";
+        if (userLevel >= 15) rankName = "Grandmaster AI Architect";
+        else if (userLevel >= 10) rankName = "Master AI Developer";
+        else if (userLevel >= 6) rankName = "Advanced Prompt Engineer";
+        else if (userLevel >= 3) rankName = "Specialist Prompt Engineer";
+        else if (userLevel >= 2) rankName = "Apprentice Prompt Engineer";
+
+        if (dbRankEl) {
+            dbRankEl.innerText = `Level ${userLevel}: ${rankName}`;
+        }
+
+        // Save progress updates
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+
+        // Bind Resume Learning button
+        const resumeBtn = document.getElementById('db-resume-btn');
+        if (resumeBtn) {
+            resumeBtn.onclick = (e) => {
+                e.preventDefault();
+                const targetModule = nextIncompleteModuleNum || 1;
+                window.location.href = `/academy/module${targetModule}`;
+            };
+        }
+
+        // Bind Start Learning Hero Button
+        const startBtn = document.getElementById('startLearningBtn');
+        if (startBtn) {
+            startBtn.onclick = (e) => {
+                e.preventDefault();
+                const targetModule = nextIncompleteModuleNum || 1;
+                window.location.href = `/academy/module${targetModule}`;
+            };
+        }
+    }
+
+    // Dynamic toggle handler
+    window.toggleRoadmapModule = function (headerElement) {
+        const parentCard = headerElement.closest('.rm-module-card');
+        if (parentCard && parentCard.classList.contains('is-locked')) {
+            const moduleNum = parentCard.getAttribute('data-module-num') || 'next';
+            alert(`🔒 Module ${moduleNum} is locked. Complete the previous module's lessons to unlock it!`);
+            return;
+        }
+
+        // Close all other expanded cards
+        const allCards = document.querySelectorAll('.rm-module-card');
+        allCards.forEach(card => {
+            if (card !== parentCard) {
+                card.classList.remove('expanded');
+            }
+        });
+
+        // Toggle current card
+        parentCard.classList.toggle('expanded');
+    }
 });
+
