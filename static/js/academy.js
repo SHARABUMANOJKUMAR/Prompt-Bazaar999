@@ -95,41 +95,36 @@ document.addEventListener('DOMContentLoaded', () => {
                         CourseID: 'C1',
                         CourseName: 'Prompt Engineering Master Course',
                         CourseLevel: 'Beginner to Advanced',
-                        CourseDescription: 'Master Prompt Engineering from Scratch to Professional Level.',
+                        CourseDescription: 'Master Prompt Engineering from Scratch to Professional Level. Build real AI-powered projects. Learn enterprise-grade techniques used by top companies worldwide.',
                         Status: 'PUBLISHED',
                         OrderIndex: 0
                     }];
-                    
-                    // Generate 17 Modules as placeholders
+
                     academyData.modules = [];
                     academyData.lessons = [];
-                    for(let i=1; i<=17; i++) {
-                        let title = `Module ${i}`;
-                        if(i===1) title = "AI & Generative AI Fundamentals";
-                        if(i===2) title = "Prompt Engineering Basics";
-                        if(i===3) title = "Advanced Prompting Techniques";
-                        if(i===17) title = "Final Capstone Project";
-                        
-                        academyData.modules.push({
-                            ModuleID: `M${i}`,
-                            CourseID: 'C1',
-                            ModuleNumber: i,
-                            ModuleTitle: title,
-                            OrderIndex: i
-                        });
-                        
-                        // Generate 2 placeholder lessons per module
-                        for(let j=1; j<=2; j++) {
-                            academyData.lessons.push({
-                                LessonID: `L${i}_${j}`,
-                                ModuleID: `M${i}`,
-                                LessonNumber: j,
-                                LessonTitle: j === 1 ? `Introduction to ${title}` : `Deep Dive: ${title}`,
-                                LessonDuration: j === 1 ? "10:00" : "25:00",
-                                LessonContent: "<p>This is a placeholder lesson for demonstration purposes. Once the database is populated, real content will appear here.</p>",
-                                OrderIndex: j
+
+                    if (typeof ACADEMY_CURRICULUM !== 'undefined') {
+                        ACADEMY_CURRICULUM.forEach(mod => {
+                            academyData.modules.push({
+                                ModuleID: mod.id,
+                                CourseID: 'C1',
+                                ModuleNumber: mod.num,
+                                ModuleTitle: mod.title,
+                                Phase: mod.phase,
+                                OrderIndex: mod.num
                             });
-                        }
+                            mod.lessons.forEach(les => {
+                                academyData.lessons.push({
+                                    LessonID: les.id,
+                                    ModuleID: mod.id,
+                                    LessonNumber: les.num,
+                                    LessonTitle: les.title,
+                                    LessonDuration: les.dur,
+                                    LessonContent: les.content,
+                                    OrderIndex: les.num
+                                });
+                            });
+                        });
                     }
                 }
                 
