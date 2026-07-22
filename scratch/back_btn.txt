@@ -1,0 +1,11 @@
+           {% endif %}
+            </a>
+</div>
+</header>
+<main class="academy-main-content">
+<div class="module-container">
+<a class="btn btn-secondary" href="/academy" style="margin-bottom: 24px;">← Back to Academy Roadmap</a>
+<h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">Module 2: Prompt Engineering Fundamentals</h1>
+<!-- Lesson 1 -->
+
+<div class="lesson-car

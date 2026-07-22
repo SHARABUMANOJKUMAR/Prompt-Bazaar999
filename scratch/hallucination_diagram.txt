@@ -1,0 +1,20 @@
+       confidently as if it were true.
+                    </p>
+</div>
+<h3>Easy Formula</h3>
+<div class="diagram-box">
+                    Question
+                    <br/>↓
+                    <br/>LLM Predicts Response
+                    <br/>↓
+                    <br/>Correct Information?
+                    <br/>│
+                    <br/>├── Yes → Accurate Answer
+                    <br/>│
+                    <br/>└── No
+                    <br/>↓
+                    <br/>Hallucination
+                </div>
+<div class="highlight-box">
+<h3>💡 Prompt Engineer Tip</h3>
+<p>To reduce halluci

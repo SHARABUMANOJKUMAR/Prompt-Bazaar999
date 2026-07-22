@@ -1,0 +1,16 @@
+
+<div class="module17-body">
+    <!-- Navbar (simplified for full focus) -->
+    <header style="background: white; padding: 16px 24px; display: flex; justify-content: space-between; border-bottom: 1px solid #e2e8f0;">
+        <div style="font-weight: 700; font-size: 20px; color: #1e293b; display: flex; align-items: center; gap: 12px;">
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo" style="height: 32px;">
+            Prompt Academy
+        </div>
+        <div>
+            <a href="/academy" style="color: #64748b; text-decoration: none; font-weight: 500;">&larr; Back to Roadmap</a>
+        </div>
+    </header>
+
+    <div class="capstone-container" id="assessmentForm">
+        <div class="capstone-header">
+            <h1 class="text-gradient"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoi
