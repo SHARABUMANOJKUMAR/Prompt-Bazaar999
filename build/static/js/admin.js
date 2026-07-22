@@ -11,6 +11,7 @@ const API_BASE_URL = (window.location.hostname === 'localhost' || window.locatio
 const GAS_PROMPTS_URL = "https://script.google.com/macros/s/AKfycbx17A9cGKQk70Uf1ysoYqBjjBxfDcyMywNtA7-PaAflmff_hFp9C3mQjS4K7qZk_Wsb/exec";
 const GAS_USERS_URL = "https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6hIj1A7ErMlqXwxAyCSXajDO2Zc4x9a9jR-wnU9DQWdUxdMVDtTn/exec";
 const GAS_PAYMENTS_URL = "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--FmcKBivrsJEGarfEALgf6GLY_S-8y8VvtehVSlSjy7DWs_/exec";
+const GAS_ACADEMY_URL = "https://script.google.com/macros/s/AKfycbwSbT589gY6HbzPxjeuN3JDzJ5iskug5aWDB4IFGFO84lp9UBMr81KxiHxYMHv3Ml2rfA/exec";
 
 const CACHE_TTL = 60 * 1000; // 60 seconds
 const REFRESH_INTERVAL = 60 * 1000; // 60 seconds
@@ -172,6 +173,8 @@ function switchSection(sectionName) {
         fetchUsers();
     } else if (sectionName === 'payments') {
         loadPayments();
+    } else if (sectionName === 'academy-admin') {
+        refreshAcademyData();
     }
 }
 
@@ -477,7 +480,7 @@ async function submitPromptForm(event) {
                 const title = formData.get('title') || 'New Prompt Added!';
                 const priceValue = formData.get('price');
                 const price = (priceValue !== null && priceValue !== '') ? priceValue : '9';
-                const image_url = formData.get('image_url') || 'https://prompt-bazaar.web.app/static/images/logo.png';
+                const image_url = formData.get('image_url') || 'https://promptbazzar.netlify.app/static/images/logo.png';
                 const prompt_id = result.prompt_id || '';
                 const prompt_text = formData.get('prompt_text') || '';
                 const category = formData.get('category') || '';
@@ -677,18 +680,22 @@ function openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
         modal.style.display = 'flex';
+        modal.style.visibility = 'visible';
+        modal.style.transform = 'none';
         // Trigger reflow for animation
         modal.offsetHeight;
-        modal.classList.add('active');
+        modal.classList.add('active', 'open');
     }
 }
 
 function closeModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.remove('active');
+        modal.classList.remove('active', 'open');
+        modal.style.transform = '';
         setTimeout(() => {
             modal.style.display = 'none';
+            modal.style.visibility = '';
         }, 300);
     }
 }
@@ -1353,3 +1360,286 @@ window.bulkDeletePrompts = async function() {
         updateBulkDeleteButton();
     }
 };
+
+// =========================================================
+// ACADEMY MANAGEMENT LOGIC
+// =========================================================
+let currentAcademyTab = 'courses';
+let academyDataCache = {
+    courses: [],
+    modules: [],
+    lessons: []
+};
+
+window.switchAcademyTab = function(tabName) {
+    currentAcademyTab = tabName;
+    document.querySelectorAll('.academy-tab').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.academy-tab[data-tab="${tabName}"]`).classList.add('active');
+    renderAcademyTable();
+};
+
+window.refreshAcademyData = async function() {
+    const tbody = document.getElementById('academy-table-body');
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center">Fetching latest data...</td></tr>';
+    
+    try {
+        // We will fetch all published & draft courses directly via search endpoint which gets all by default
+        const res = await fetch(GAS_ACADEMY_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: "searchCourse" })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+            academyDataCache.courses = data.data.results || [];
+            
+            // To be comprehensive, fetch modules and lessons too
+            const resMod = await fetch(GAS_ACADEMY_URL, { method: 'POST', body: JSON.stringify({ action: "searchModule" }) });
+            const dataMod = await resMod.json();
+            academyDataCache.modules = dataMod.data.results || [];
+            
+            const resLes = await fetch(GAS_ACADEMY_URL, { method: 'POST', body: JSON.stringify({ action: "searchLesson" }) });
+            const dataLes = await resLes.json();
+            academyDataCache.lessons = dataLes.data.results || [];
+            
+            renderAcademyTable();
+        } else {
+            showToast("Failed to fetch Academy data: " + data.message, "error");
+        }
+    } catch (err) {
+        showToast("Error connecting to Academy API. Please check URL.", "error");
+    }
+};
+
+window.renderAcademyTable = function() {
+    const thead = document.getElementById('academy-table-head');
+    const tbody = document.getElementById('academy-table-body');
+    
+    if (currentAcademyTab === 'courses') {
+        thead.innerHTML = `<tr><th>Course ID</th><th>Course Name</th><th>Level & Category</th><th>Status</th><th>Actions</th></tr>`;
+        if (academyDataCache.courses.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center">No courses found.</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = academyDataCache.courses.map(course => `
+            <tr>
+                <td><code style="background:var(--color-bg-secondary); padding:2px 4px; border-radius:4px;">${course.CourseID}</code></td>
+                <td><strong>${course.CourseName}</strong></td>
+                <td>${course.CourseLevel || 'N/A'} • ${course.CourseCategory || 'N/A'}</td>
+                <td><span class="status-badge ${course.Status === 'PUBLISHED' ? 'active' : ''}">${course.Status}</span></td>
+                <td>
+                    <button class="btn btn-outline btn-sm" onclick="openAcademyModal('course', '${course.CourseID}')">Edit</button>
+                    ${course.Status !== 'PUBLISHED' ? `<button class="btn btn-outline btn-sm" onclick="publishAcademyCourse('${course.CourseID}')">Publish</button>` : `<button class="btn btn-outline btn-sm" onclick="unpublishAcademyCourse('${course.CourseID}')">Unpublish</button>`}
+                    <button class="btn btn-outline btn-sm" onclick="deleteAcademyEntity('deleteCourse', {CourseID: '${course.CourseID}'})" style="color:var(--danger-color); border-color:var(--danger-color);">Delete</button>
+                </td>
+            </tr>
+        `).join('');
+    } else if (currentAcademyTab === 'modules') {
+        thead.innerHTML = `<tr><th>Module ID</th><th>Module Title</th><th>Parent Course</th><th>Status</th><th>Actions</th></tr>`;
+        if (academyDataCache.modules.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center">No modules found.</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = academyDataCache.modules.map(mod => {
+            const parent = academyDataCache.courses.find(c => c.CourseID === mod.CourseID);
+            return `
+            <tr>
+                <td><code style="background:var(--color-bg-secondary); padding:2px 4px; border-radius:4px;">${mod.ModuleID}</code></td>
+                <td><strong>${mod.ModuleNumber}. ${mod.ModuleTitle}</strong></td>
+                <td>${parent ? parent.CourseName : mod.CourseID}</td>
+                <td><span class="status-badge active">${mod.Status}</span></td>
+                <td>
+                    <button class="btn btn-outline btn-sm" onclick="openAcademyModal('module', '${mod.ModuleID}')">Edit</button>
+                    <button class="btn btn-outline btn-sm" onclick="deleteAcademyEntity('deleteModule', {ModuleID: '${mod.ModuleID}'})" style="color:var(--danger-color); border-color:var(--danger-color);">Delete</button>
+                </td>
+            </tr>
+            `;
+        }).join('');
+    } else if (currentAcademyTab === 'lessons') {
+        thead.innerHTML = `<tr><th>Lesson ID</th><th>Lesson Title</th><th>Parent Module</th><th>Duration</th><th>Actions</th></tr>`;
+        if (academyDataCache.lessons.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center">No lessons found.</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = academyDataCache.lessons.map(les => {
+            const parent = academyDataCache.modules.find(m => m.ModuleID === les.ModuleID);
+            return `
+            <tr>
+                <td><code style="background:var(--color-bg-secondary); padding:2px 4px; border-radius:4px;">${les.LessonID}</code></td>
+                <td><strong>${les.LessonNumber}. ${les.LessonTitle}</strong></td>
+                <td>${parent ? parent.ModuleTitle : les.ModuleID}</td>
+                <td>${les.LessonDuration}</td>
+                <td>
+                    <button class="btn btn-outline btn-sm" onclick="openAcademyModal('lesson', '${les.LessonID}')">Edit</button>
+                    <button class="btn btn-outline btn-sm" onclick="deleteAcademyEntity('deleteLesson', {LessonID: '${les.LessonID}'})" style="color:var(--danger-color); border-color:var(--danger-color);">Delete</button>
+                </td>
+            </tr>
+            `;
+        }).join('');
+    }
+};
+
+window.openAcademyModal = function(type, existingId = null) {
+    const modal = document.getElementById('academyModal');
+    const title = document.getElementById('academyModalTitle');
+    const body = document.getElementById('academyModalBody');
+    document.getElementById('academy-entity-type').value = type;
+    document.getElementById('academy-entity-id').value = existingId || '';
+    
+    let html = '';
+    
+    if (type === 'course') {
+        title.textContent = existingId ? 'Edit Course' : 'Create New Course';
+        const c = existingId ? academyDataCache.courses.find(x => x.CourseID === existingId) || {} : {};
+        html = `
+            <div class="form-group mb-4"><label class="form-label">Course Name</label><input type="text" class="form-control" name="CourseName" value="${c.CourseName||''}" required></div>
+            <div style="display:flex; gap:16px;" class="mb-4">
+                <div class="form-group flex-1"><label class="form-label">Category</label><input type="text" class="form-control" name="CourseCategory" value="${c.CourseCategory||''}"></div>
+                <div class="form-group flex-1"><label class="form-label">Level</label>
+                    <select class="form-control" name="CourseLevel">
+                        <option value="Beginner" ${c.CourseLevel==='Beginner'?'selected':''}>Beginner</option>
+                        <option value="Intermediate" ${c.CourseLevel==='Intermediate'?'selected':''}>Intermediate</option>
+                        <option value="Advanced" ${c.CourseLevel==='Advanced'?'selected':''}>Advanced</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group mb-4"><label class="form-label">Thumbnail URL</label><input type="url" class="form-control" name="CourseThumbnail" value="${c.CourseThumbnail||''}"></div>
+            <div class="form-group mb-4"><label class="form-label">Description</label><textarea class="form-control" name="CourseDescription" rows="4">${c.CourseDescription||''}</textarea></div>
+            <div class="form-group mb-4"><label class="form-label">Order Index</label><input type="number" class="form-control" name="OrderIndex" value="${c.OrderIndex||0}"></div>
+        `;
+    } else if (type === 'module') {
+        title.textContent = existingId ? 'Edit Module' : 'Create New Module';
+        const m = existingId ? academyDataCache.modules.find(x => x.ModuleID === existingId) || {} : {};
+        const courseOpts = academyDataCache.courses.map(c => `<option value="${c.CourseID}" ${m.CourseID===c.CourseID?'selected':''}>${c.CourseName}</option>`).join('');
+        html = `
+            <div class="form-group mb-4"><label class="form-label">Parent Course</label><select class="form-control" name="CourseID" required>${courseOpts}</select></div>
+            <div style="display:flex; gap:16px;" class="mb-4">
+                <div class="form-group flex-1"><label class="form-label">Module Number</label><input type="number" class="form-control" name="ModuleNumber" value="${m.ModuleNumber||1}" required></div>
+                <div class="form-group" style="flex:2"><label class="form-label">Module Title</label><input type="text" class="form-control" name="ModuleTitle" value="${m.ModuleTitle||''}" required></div>
+            </div>
+            <div class="form-group mb-4"><label class="form-label">Description</label><textarea class="form-control" name="ModuleDescription" rows="3">${m.ModuleDescription||''}</textarea></div>
+            <div class="form-group mb-4"><label class="form-label">Order Index</label><input type="number" class="form-control" name="OrderIndex" value="${m.OrderIndex||0}"></div>
+        `;
+    } else if (type === 'lesson') {
+        title.textContent = existingId ? 'Edit Lesson' : 'Create New Lesson';
+        const l = existingId ? academyDataCache.lessons.find(x => x.LessonID === existingId) || {} : {};
+        const moduleOpts = academyDataCache.modules.map(m => {
+            const parent = academyDataCache.courses.find(c => c.CourseID === m.CourseID);
+            return `<option value="${m.ModuleID}" ${l.ModuleID===m.ModuleID?'selected':''}>${parent ? parent.CourseName : ''} > ${m.ModuleTitle}</option>`;
+        }).join('');
+        html = `
+            <div class="form-group mb-4"><label class="form-label">Parent Module</label><select class="form-control" name="ModuleID" required>${moduleOpts}</select></div>
+            <div style="display:flex; gap:16px;" class="mb-4">
+                <div class="form-group flex-1"><label class="form-label">Lesson Number</label><input type="number" class="form-control" name="LessonNumber" value="${l.LessonNumber||1}" required></div>
+                <div class="form-group" style="flex:2"><label class="form-label">Lesson Title</label><input type="text" class="form-control" name="LessonTitle" value="${l.LessonTitle||''}" required></div>
+            </div>
+            <div class="form-group mb-4"><label class="form-label">Duration (MM:SS)</label><input type="text" class="form-control" name="LessonDuration" placeholder="10:00" value="${l.LessonDuration||''}"></div>
+            <div class="form-group mb-4"><label class="form-label">Content (HTML Supported)</label><textarea class="form-control" name="LessonContent" rows="8">${l.LessonContent||''}</textarea></div>
+            <div class="form-group mb-4"><label class="form-label">Video URL</label><input type="url" class="form-control" name="LessonVideoURL" value="${l.LessonVideoURL||''}"></div>
+            <div class="form-group mb-4"><label class="form-label">Order Index</label><input type="number" class="form-control" name="OrderIndex" value="${l.OrderIndex||0}"></div>
+        `;
+    }
+    
+    body.innerHTML = html;
+    openModal('academyModal');
+};
+
+window.saveAcademyEntity = async function(e) {
+    e.preventDefault();
+    const type = document.getElementById('academy-entity-type').value;
+    const existingId = document.getElementById('academy-entity-id').value;
+    
+    const formData = new FormData(e.target);
+    const payload = Object.fromEntries(formData.entries());
+    
+    const isUpdate = !!existingId;
+    let action = '';
+    if (type === 'course') action = isUpdate ? 'updateCourse' : 'createCourse';
+    if (type === 'module') action = isUpdate ? 'updateModule' : 'createModule';
+    if (type === 'lesson') action = isUpdate ? 'updateLesson' : 'createLesson';
+    
+    if (isUpdate) {
+        if(type==='course') payload.CourseID = existingId;
+        if(type==='module') payload.ModuleID = existingId;
+        if(type==='lesson') payload.LessonID = existingId;
+    }
+    
+    payload.action = action;
+    
+    const saveBtn = document.getElementById('save-academy-btn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = 'Saving...';
+    
+    try {
+        const res = await fetch(GAS_ACADEMY_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+            showToast(data.message, 'success');
+            closeModal('academyModal');
+            refreshAcademyData(); // Refresh table
+        } else {
+            showToast("Failed to save: " + data.message, 'error');
+        }
+    } catch (err) {
+        showToast("Error communicating with Academy API", 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<span class="btn-text">Save</span>';
+    }
+};
+
+window.deleteAcademyEntity = async function(action, payloadObj) {
+    if(!confirm("Are you sure you want to delete this entity? This action cannot be undone.")) return;
+    
+    payloadObj.action = action;
+    try {
+        const res = await fetch(GAS_ACADEMY_URL, {
+            method: 'POST',
+            body: JSON.stringify(payloadObj)
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast(data.message, 'success');
+            refreshAcademyData();
+        } else {
+            showToast("Failed to delete: " + data.message, 'error');
+        }
+    } catch (err) {
+        showToast("Error communicating with Academy API", 'error');
+    }
+};
+
+window.publishAcademyCourse = async function(courseId) {
+    await sendAcademyAction('publishCourse', {CourseID: courseId});
+};
+
+window.unpublishAcademyCourse = async function(courseId) {
+    await sendAcademyAction('unpublishCourse', {CourseID: courseId});
+};
+
+async function sendAcademyAction(action, payloadObj) {
+    payloadObj.action = action;
+    try {
+        const res = await fetch(GAS_ACADEMY_URL, {
+            method: 'POST',
+            body: JSON.stringify(payloadObj)
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast(data.message, 'success');
+            refreshAcademyData();
+        } else {
+            showToast("Action failed: " + data.message, 'error');
+        }
+    } catch (err) {
+        showToast("API error.", 'error');
+    }
+}
+

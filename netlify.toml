@@ -69,5 +69,5 @@
   status = 200
 
 [build]
-  command = "echo 'Netlify static deploy'"
-  publish = "."
+  command = "pip install -r requirements.txt && python custom_freeze.py"
+  publish = "build"

@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Academy - Module 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=9">
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
+    
+<link rel="stylesheet" href="/static/css/gallery.css?v=3">
+<link rel="stylesheet" href="/static/css/tools.css">
+<link rel="stylesheet" href="/static/css/academy.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+    .module-container {
+        max-width: 960px;
+        margin: 60px auto;
+        padding: 0 24px;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .lesson-card {
+        background: var(--color-bg-secondary);
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 40px;
+        border: 1px solid var(--color-border);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .lesson-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .lesson-card h2 {
+        color: var(--primary-color);
+        margin-top: 0;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: 700;
+        border-bottom: 2px solid rgba(37, 99, 235, 0.1);
+        padding-bottom: 16px;
+        line-height: 1.3;
+    }
+
+    .lesson-card h3 {
+        margin-top: 32px;
+        margin-bottom: 16px;
+        color: var(--color-text-primary);
+        font-size: 22px;
+        font-weight: 600;
+    }
+    
+    .lesson-card h4 {
+        margin-top: 24px;
+        margin-bottom: 12px;
+        color: var(--color-text-primary);
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .lesson-card p,
+    .lesson-card ul,
+    .lesson-card li {
+        color: var(--color-text-secondary);
+        line-height: 1.8;
+        font-size: 16px;
+    }
+
+    .lesson-card ul,
+    .lesson-card ol {
+        padding-left: 24px;
+        margin-bottom: 24px;
+    }
+
+    .lesson-card li {
+        margin-bottom: 12px;
+    }
+
+    .highlight-box {
+        background: linear-gradient(90deg, rgba(37, 99, 235, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%);
+        border-left: 4px solid var(--primary-color);
+        padding: 24px;
+        margin: 24px 0;
+        border-radius: 0 12px 12px 0;
+    }
+    
+    .highlight-box h3 {
+        margin-top: 0;
+        color: var(--primary-color);
+    }
+
+    /* Responsive Tables */
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        margin: 24px 0;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    table.styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 15px;
+        min-width: 600px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    table.styled-table thead tr {
+        background-color: var(--primary-color);
+        color: #ffffff;
+        text-align: left;
+    }
+
+    table.styled-table th,
+    table.styled-table td {
+        padding: 16px 20px;
+        border: 1px solid var(--color-border);
+        color: var(--color-text-primary);
+    }
+
+    table.styled-table tbody tr {
+        border-bottom: 1px solid var(--color-border);
+        transition: background-color 0.2s ease;
+    }
+
+    table.styled-table tbody tr:nth-of-type(even) {
+        background-color: var(--color-bg-primary);
+    }
+    
+    table.styled-table tbody tr:hover {
+        background-color: rgba(37, 99, 235, 0.04);
+    }
+
+    .diagram-box {
+        background: var(--color-bg-primary);
+        padding: 24px;
+        border-radius: 12px;
+        font-family: monospace;
+        white-space: pre-line;
+        margin: 24px 0;
+        border: 1px dashed var(--color-border);
+        color: var(--color-text-primary);
+        text-align: center;
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+        line-height: 1.6;
+        font-size: 15px;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .module-container {
+            margin: 30px auto;
+            padding: 0 16px;
+        }
+        .lesson-card {
+            padding: 24px;
+            border-radius: 12px;
+        }
+        .lesson-card h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .lesson-card h3 {
+            font-size: 20px;
+        }
+        .diagram-box {
+            font-size: 14px;
+            padding: 16px;
+        }
+        .highlight-box {
+            padding: 16px;
+        }
+    }
+</style>
+
+    
+    <script>
+        window.FIREBASE_CONFIG = {"apiKey": "YOUR_FIREBASE_API_KEY", "appId": "YOUR_FIREBASE_APP_ID", "authDomain": "YOUR_FIREBASE_AUTH_DOMAIN", "messagingSenderId": "YOUR_FIREBASE_MESSAGING_SENDER_ID", "projectId": "YOUR_FIREBASE_PROJECT_ID", "storageBucket": "YOUR_FIREBASE_STORAGE_BUCKET"};
+    </script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <!-- Global Modal Backdrop -->
+    <div id="modal-backdrop" class="modal-backdrop"></div>
+
+    <!-- Global Prompt Preview Modal -->
+    <div id="prompt-modal" class="modal-overlay">
+        <div class="modal-header">
+            <div id="modal-platform" class="platform-badge">MIDJOURNEY</div>
+            <button id="close-modal" class="close-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="modal-image-container">
+            <img id="modal-image" src="" alt="Prompt Preview">
+        </div>
+        <div class="modal-content">
+            <h2 id="modal-title" class="text-h3 mb-2">Prompt Title</h2>
+            <div id="modal-price" class="price-badge mb-4" style="position:static; display:inline-block">₹2</div>
+            
+            <div class="modal-actions">
+                <button class="action-btn" id="modal-wishlist">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                    <span>Wishlist</span>
+                </button>
+                <button class="action-btn" id="modal-share" onclick="sharePrompt(currentPrompt)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    <span>Share</span>
+                </button>
+                <button class="action-btn" id="modal-report" onclick="openReportModal(currentPrompt)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                    <span>Report</span>
+                </button>
+            </div>
+            
+            <button id="modal-primary-action" class="btn btn-primary mt-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span class="btn-text">🔒 UNLOCK PROMPT</span>
+            </button>
+        </div>
+    </div>
+
+    
+<!-- Sidebar Drawer (shared) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar-drawer" id="sidebarDrawer">
+    <div class="sidebar-brand">
+        <div class="sidebar-brand-left">
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
+                alt="Logo">
+            Prompt Bazaar
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="sidebar-section-label">Navigation</div>
+        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon">🏠</span> Home</a>
+        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon">🖼️</span> Prompt Gallery</a>
+        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon">🛠️</span> Prompt Tools</a>
+        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon">🎓</span> Prompt Academy</a>
+    </nav>
+    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+</aside>
+
+<div class="gallery-layout">
+    <!-- Top Navbar -->
+    <header class="gallery-header">
+        <div class="header-left">
+            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"
+                alt="Logo">
+            Prompt Bazaar
+        </div>
+        <div class="header-right">
+            <div class="xp-badge" id="user-xp-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                    </polygon>
+                </svg>
+                <span id="user-xp-amount">0</span> XP
+            </div>
+            <a href="/profile" class="user-avatar" title="Profile">
+                
+                U
+                
+            </a>
+        </div>
+    </header>
+
+    <main class="academy-main-content">
+        <div class="module-container">
+            <a href="/academy" class="btn btn-secondary" style="margin-bottom: 24px;">&larr; Back to Academy Roadmap</a>
+            <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">Module 2: Prompt Engineering Fundamentals</h1>
+
+            <!-- Lesson 1 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 1: What is Prompt Engineering?</h2>
+                <h3>Definition</h3>
+                <p>Prompt Engineering is the process of designing, writing, testing, and improving prompts (instructions) to help Artificial Intelligence (AI) generate accurate, useful, and high-quality responses.</p>
+                <p>A prompt engineer communicates with AI by giving clear instructions, context, examples, and constraints.</p>
+                
+                <h3>Why is Prompt Engineering Important?</h3>
+                <p>Prompt Engineering helps:</p>
+                <ul>
+                    <li>Improve AI response quality.</li>
+                    <li>Reduce incorrect or irrelevant answers.</li>
+                    <li>Save time by getting better results in one prompt.</li>
+                    <li>Increase consistency.</li>
+                    <li>Build AI applications like chatbots and assistants.</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Clear</li>
+                    <li>Specific</li>
+                    <li>Context-aware</li>
+                    <li>Goal-oriented</li>
+                    <li>Easy to understand</li>
+                    <li>Repeatable</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <ul>
+                    <li>ChatGPT, Claude, Gemini</li>
+                    <li>AI Coding Assistants</li>
+                    <li>AI Content Writing</li>
+                    <li>AI Customer Support</li>
+                </ul>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">User Goal<br>↓<br>Write Prompt<br>↓<br>AI Processes Prompt<br>↓<br>AI Generates Response<br>↓<br>User Reviews Result</div>
+
+                <h3>Real-Time Example</h3>
+                <div class="highlight-box">
+                    <strong>Prompt:</strong><br>
+                    Explain Machine Learning in simple English using one real-life example.<br><br>
+                    <strong>Good Prompt &rarr; Good AI Response</strong>
+                </div>
+
+                <h3>Real-Life Analogy</h3>
+                <p>Imagine ordering food.</p>
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Bad Prompt</th>
+                                <th>Good Prompt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Give me food.</td>
+                                <td>Give me one medium Veg Pizza with extra cheese.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>The better your instructions, the better your result.</strong></p>
+
+                <div class="highlight-box">
+                    <strong>📌 Interview Tip</strong><br><br>
+                    <strong>Q: What is Prompt Engineering?</strong><br>
+                    <strong>Answer:</strong> Prompt Engineering is the process of designing effective prompts that help AI generate accurate, relevant, and high-quality responses.
+                </div>
+            </div>
+
+            <!-- Lesson 2 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 2: Prompt Anatomy</h2>
+                <h3>Definition</h3>
+                <p>Prompt Anatomy refers to the different parts that make up a well-designed AI prompt. A complete prompt usually contains several components that guide the AI.</p>
+                
+                <h3>Main Components</h3>
+                <ul>
+                    <li><strong>Role:</strong> Who the AI should act as</li>
+                    <li><strong>Task:</strong> What the AI needs to do</li>
+                    <li><strong>Context:</strong> Background information</li>
+                    <li><strong>Constraints:</strong> Rules to follow</li>
+                    <li><strong>Output Format:</strong> How to present the answer</li>
+                    <li><strong>Examples:</strong> Samples of expected output</li>
+                </ul>
+
+                <h3>Structure</h3>
+                <div class="diagram-box">Role<br>↓<br>Task<br>↓<br>Context<br>↓<br>Constraints<br>↓<br>Output Format<br>↓<br>Response</div>
+
+                <h3>Example</h3>
+                <div class="highlight-box" style="font-family: monospace;">
+                    [Role] You are a Python Teacher.<br>
+                    [Task] Explain Lists.<br>
+                    [Context] Use simple English.<br>
+                    [Examples] Give 3 examples.<br>
+                    [Output Format] Answer in bullet points.
+                </div>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Organized & Structured</li>
+                    <li>Easy to modify</li>
+                    <li>Easy to understand</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>AI Chatbots, Coding, Report Writing, Content Creation.</p>
+            </div>
+
+            <!-- Lesson 3 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 3: Prompt Lifecycle</h2>
+                <h3>Definition</h3>
+                <p>Prompt Lifecycle is the complete process of creating, testing, improving, and maintaining prompts.</p>
+                
+                <h3>Stages</h3>
+                <ol>
+                    <li>Define Goal</li>
+                    <li>Write Prompt</li>
+                    <li>Test Prompt</li>
+                    <li>Evaluate Output</li>
+                    <li>Improve Prompt</li>
+                    <li>Final Prompt</li>
+                </ol>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Goal<br>↓<br>Draft Prompt<br>↓<br>AI Response<br>↓<br>Evaluate<br>↓<br>Improve Prompt<br>↓<br>Final Prompt</div>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Iterative</li>
+                    <li>Continuous Improvement</li>
+                    <li>Quality Focused</li>
+                </ul>
+
+                <h3>Real Example</h3>
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Version 1</th>
+                                <th>Version 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Write Python.</td>
+                                <td>Write a Python program to sort numbers using Bubble Sort with comments.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>Note:</strong> Version 2 produces much better results.</p>
+            </div>
+
+            <!-- Lesson 4 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 4: Prompt Design Principles</h2>
+                <h3>Definition</h3>
+                <p>Prompt Design Principles are best practices for writing clear, structured, and effective prompts.</p>
+                
+                <h3>Principles</h3>
+                <ul>
+                    <li>Be Clear</li>
+                    <li>Be Specific</li>
+                    <li>Give Context</li>
+                    <li>Define Goal</li>
+                    <li>Specify Output Format</li>
+                    <li>Add Constraints</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Simple, Precise, Consistent, Easy to follow</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Business AI, Education, Programming, Content Writing.</p>
+
+                <h3>Example</h3>
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Bad Prompt</th>
+                                <th>Good Prompt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Explain AI.</td>
+                                <td>Explain Artificial Intelligence to a Class 10 student using simple English and one real-life example.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Lesson 5 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 5: Instructions vs Context</h2>
+                <h3>Definition</h3>
+                <p><strong>Instructions</strong> tell AI what to do. <strong>Context</strong> gives AI background information.</p>
+                
+                <h3>Difference</h3>
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Instructions</th>
+                                <th>Context</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Task</td>
+                                <td>Background</td>
+                            </tr>
+                            <tr>
+                                <td>Direct command</td>
+                                <td>Supporting information</td>
+                            </tr>
+                            <tr>
+                                <td>Short</td>
+                                <td>Detailed</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Example</h3>
+                <div class="highlight-box">
+                    <strong>Instruction:</strong> Summarize the article.<br><br>
+                    <strong>Context:</strong> The article is about Climate Change.
+                </div>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Instruction<br>↓<br>Context<br>↓<br>AI Understanding<br>↓<br>Response</div>
+
+                <h3>Uses</h3>
+                <p>Better AI responses, Accurate outputs, Personalized AI.</p>
+            </div>
+
+            <!-- Lesson 6 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 6: Delimiters</h2>
+                <h3>Definition</h3>
+                <p>Delimiters are special symbols used to separate different parts of a prompt.</p>
+                
+                <h3>Common Delimiters</h3>
+                <div class="diagram-box">&quot;&quot;&quot;<br>'''<br>---<br>###<br>&lt;&lt;&lt; &gt;&gt;&gt;<br>[]<br>{}</div>
+
+                <h3>Example</h3>
+                <div class="highlight-box" style="font-family: monospace;">
+                    Summarize this text:<br><br>
+                    &quot;&quot;&quot;<br>
+                    Artificial Intelligence is...<br>
+                    &quot;&quot;&quot;
+                </div>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Organized</li>
+                    <li>Cleaner prompts</li>
+                    <li>Less confusion</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Long Documents, RAG, APIs, Coding.</p>
+            </div>
+
+            <!-- Lesson 7 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 7: Variables</h2>
+                <h3>Definition</h3>
+                <p>Variables are placeholders that can change dynamically inside prompts.</p>
+                
+                <h3>Example</h3>
+                <div class="highlight-box">
+                    <strong>Name = Ravi</strong><br><br>
+                    <strong>Prompt:</strong> Write a birthday message for <br><br>
+                    <strong>Output:</strong> Happy Birthday Ravi!
+                </div>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Reusable</li>
+                    <li>Flexible</li>
+                    <li>Dynamic</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Email Automation, Chatbots, CRM, Personalized AI.</p>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Variable<br>↓<br>Prompt Template<br>↓<br>AI<br>↓<br>Personalized Response</div>
+            </div>
+
+            <!-- Lesson 8 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 8: Constraints</h2>
+                <h3>Definition</h3>
+                <p>Constraints are rules or limitations that tell AI what it should or should not do.</p>
+                
+                <h3>Examples</h3>
+                <ul>
+                    <li>Maximum 100 words</li>
+                    <li>Use bullet points</li>
+                    <li>Don't use technical terms</li>
+                    <li>Only English</li>
+                    <li>Include examples</li>
+                </ul>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Controlled, Consistent, Accurate</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Exams, Reports, Legal Writing, Coding.</p>
+
+                <h3>Example</h3>
+                <div class="highlight-box">
+                    Explain AI in 50 words.<br>
+                    Use simple English.<br>
+                    Do not use technical jargon.
+                </div>
+            </div>
+
+            <!-- Lesson 9 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 9: Output Formatting</h2>
+                <h3>Definition</h3>
+                <p>Output Formatting specifies how AI should present its response.</p>
+                
+                <h3>Formats</h3>
+                <ul>
+                    <li>Bullet Points</li>
+                    <li>Table</li>
+                    <li>JSON</li>
+                    <li>HTML</li>
+                    <li>Markdown</li>
+                    <li>CSV, XML</li>
+                </ul>
+
+                <h3>Example</h3>
+                <div class="highlight-box">
+                    Return the answer as a Markdown Table.
+                </div>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Readable, Structured, Professional</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>APIs, Reports, Dashboards, Documentation.</p>
+            </div>
+
+            <!-- Lesson 10 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 10: Examples (Few-Shot Prompting)</h2>
+                <h3>Definition</h3>
+                <p>Examples are sample inputs and outputs provided inside a prompt to help AI understand the expected response format.</p>
+                
+                <h3>Example</h3>
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Input</th>
+                                <th>Output</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Apple</td>
+                                <td>Fruit</td>
+                            </tr>
+                            <tr>
+                                <td>Dog</td>
+                                <td>Animal</td>
+                            </tr>
+                            <tr>
+                                <td>Rose</td>
+                                <td>Flower</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Consistent</li>
+                    <li>Better Accuracy</li>
+                    <li>Easy Learning</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Classification, Translation, Coding, Data Labeling.</p>
+            </div>
+
+            <!-- Lesson 11 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 11: Negative Prompting</h2>
+                <h3>Definition</h3>
+                <p>Negative Prompting tells AI what not to include in its response.</p>
+                
+                <h3>Example</h3>
+                <div class="highlight-box">
+                    Explain AI.<br>
+                    Do not use technical terms.<br>
+                    Do not write more than 100 words.
+                </div>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Removes unwanted output, Better control, Cleaner responses</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>Image Generation, Chatbots, Content Writing, Coding.</p>
+
+                <h3>Real Example</h3>
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Without Negative Prompt</th>
+                                <th>With Negative Prompt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Generate a logo.</td>
+                                <td>Generate a logo.<br>Do not use black color.<br>Do not add shadows.<br>Do not use gradients.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Lesson 12 -->
+            <div class="lesson-card">
+                <h2>📖 Lesson 12: Prompt Evaluation</h2>
+                <h3>Definition</h3>
+                <p>Prompt Evaluation is the process of checking whether a prompt produces accurate, useful, consistent, and high-quality responses.</p>
+                
+                <h3>Evaluation Criteria</h3>
+                <ul>
+                    <li>Accuracy, Relevance, Completeness, Consistency, Clarity, Safety</li>
+                </ul>
+
+                <h3>Workflow</h3>
+                <div class="diagram-box">Prompt<br>↓<br>AI Response<br>↓<br>Evaluate<br>↓<br>Improve Prompt<br>↓<br>Better Response</div>
+
+                <h3>Characteristics</h3>
+                <ul>
+                    <li>Objective, Repeatable, Quality-focused</li>
+                </ul>
+
+                <h3>Uses</h3>
+                <p>AI Products, Enterprise Chatbots, Testing, Prompt Optimization.</p>
+
+                <h3>Real-Time Example</h3>
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Prompt 1</th>
+                                <th>Prompt 2</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Explain Python.</td>
+                                <td>Explain Python for beginners using simple English, one real-life example, and fewer than 150 words.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>Note:</strong> The second prompt is more effective because it is clearer, more specific, and easier for the AI to follow.</p>
+            </div>
+
+            <!-- Quiz Section -->
+            <div class="lesson-card" style="border: 2px solid var(--primary-color); background: rgba(37,99,235,0.02);">
+                <h2 style="border-bottom: none; margin-bottom: 10px;">🧠 Module 2 Quiz: Test Your Knowledge!</h2>
+                <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- MCQ 1 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">1. What is Prompt Engineering?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="A" style="margin-right: 10px;">A) Writing code for AI models.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="B" style="margin-right: 10px;">B) Designing and improving instructions for AI.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="C" style="margin-right: 10px;">C) Training AI to speak.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="D" style="margin-right: 10px;">D) Building hardware for robots.</label>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 2 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">2. Which of the following is NOT a main component of Prompt Anatomy?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="A" style="margin-right: 10px;">A) Role and Task</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="B" style="margin-right: 10px;">B) Context and Constraints</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="C" style="margin-right: 10px;">C) Output Format</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="D" style="margin-right: 10px;">D) Hardware Specifications</label>
+                        </div>
+                    </div>
+
+                    <!-- MCQ 3 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">3. What is the difference between Instructions and Context?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="A" style="margin-right: 10px;">A) They are exactly the same thing.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="B" style="margin-right: 10px;">B) Instructions tell AI what to do, Context gives background information.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="C" style="margin-right: 10px;">C) Context tells AI what to do, Instructions provide examples.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="D" style="margin-right: 10px;">D) Instructions are only for coding tasks.</label>
+                        </div>
+                    </div>
+                    
+                    <!-- MCQ 4 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">4. Why do we use delimiters like &quot;&quot;&quot; or ### in a prompt?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="A" style="margin-right: 10px;">A) To confuse the AI intentionally.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="B" style="margin-right: 10px;">B) To add styling to the prompt.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="C" style="margin-right: 10px;">C) To cleanly separate different parts of the prompt.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="D" style="margin-right: 10px;">D) To create dynamic variables.</label>
+                        </div>
+                    </div>
+                    
+                    <!-- MCQ 5 -->
+                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                        <h4 style="margin-top: 0; color: var(--color-text-primary);">5. What is Negative Prompting?</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="A" style="margin-right: 10px;">A) Telling the AI what NOT to include in its response.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="B" style="margin-right: 10px;">B) Using negative words to insult the AI.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="C" style="margin-right: 10px;">C) Erasing the prompt completely.</label>
+                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="D" style="margin-right: 10px;">D) Giving AI a bad rating.</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation to Next Module -->
+            <div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
+                <a href="/academy/module3" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    Move Next Module 3 &rarr;
+                </a>
+            </div>
+        </div></main>
+</div>
+
+<script>
+    // Include sidebar toggle functionality
+    const menuToggleBtn = document.getElementById('menuToggleBtn');
+    const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarDrawer = document.getElementById('sidebarDrawer');
+
+    if (menuToggleBtn) menuToggleBtn.addEventListener('click', () => { sidebarDrawer.classList.add('open'); sidebarOverlay.classList.add('show'); });
+    if (sidebarCloseBtn) sidebarCloseBtn.addEventListener('click', () => { sidebarDrawer.classList.remove('open'); sidebarOverlay.classList.remove('show'); });
+    if (sidebarOverlay) sidebarOverlay.addEventListener('click', () => { sidebarDrawer.classList.remove('open'); sidebarOverlay.classList.remove('show'); });
+</script>
+
+    
+    <!-- Web Push Notifications -->
+    <script type="module" src="/static/js/notifications.js?v=3"></script>
+
+    
+</body>
+</html>
