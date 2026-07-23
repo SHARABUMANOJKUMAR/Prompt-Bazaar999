@@ -3,7 +3,7 @@
  * Dynamically fetches data from Google Apps Script Backend
  */
 
-const GAS_ACADEMY_URL = "https://script.google.com/macros/s/AKfycbwVm4Hjb9FoS8fQr9hG4o20_lWMIKIRfGb565AQuiEewO44rKHaKNxsAmwmd6WwO6GN/exec";
+const GAS_ACADEMY_URL = "https://script.google.com/macros/s/AKfycbxpQvDzPrtbR56oV9QUNerOQ5mN3W2c-x0ra-BDs-IBsFJ--SIml-2srIf-ydnmaC42/exec";
 
 document.addEventListener('DOMContentLoaded', () => {
     // === Data Cache ===
