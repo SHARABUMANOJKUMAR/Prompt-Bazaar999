@@ -273,6 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 
                 let allCorrect = true;
+                let correctCount = 0;
+                let totalQuestions = Object.keys(radioGroups).length;
                 Object.keys(radioGroups).forEach(groupName => {
                     const radios = radioGroups[groupName];
                     let groupCorrect = false;
@@ -298,12 +300,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     if (!hasSelection || !groupCorrect) {
                         allCorrect = false;
+                    } else {
+                        correctCount++;
                     }
                 });
                 
                 if (!allCorrect) {
-                    alert(\"Some answers are incorrect or missing. Please review your answers (highlighted in red) and try again.\");
+                    let wrongCount = totalQuestions - correctCount;
+                    alert(`Quiz Evaluation:\nCorrect: ${correctCount}\nWrong/Missing: ${wrongCount}\n\nPlease review your incorrect answers (highlighted in red) and try again.`);
                     return; // Do not mark as complete!
+                } else {
+                    alert(`Perfect Score! (${correctCount}/${totalQuestions})\n\nYou earned +100 XP!`);
                 }
             }
 
@@ -344,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statusBadge.innerHTML = 'Completed ✓';
 
             // Show a floating visual indicator
-            showFloatIndicator(e.clientX, e.clientY);
+            showFloatIndicator(e.clientX, e.clientY, isQuiz ? 100 : 50);
         });
 
         card.appendChild(completeBtn);
@@ -416,10 +423,10 @@ document.addEventListener('DOMContentLoaded', () => {
         bottomBar.classList.add('show');
     }
 
-    // Float +50 XP animation
-    function showFloatIndicator(x, y) {
+    // Float XP animation
+    function showFloatIndicator(x, y, xpAmount = 50) {
         const floatEl = document.createElement('div');
-        floatEl.innerText = '+50 XP';
+        floatEl.innerText = `+${xpAmount} XP`;
         floatEl.style.position = 'fixed';
         floatEl.style.left = `${x || window.innerWidth / 2}px`;
         floatEl.style.top = `${y || window.innerHeight / 2}px`;
