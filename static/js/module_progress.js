@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const moduleNum = parseInt(moduleMatch[1]);
     const moduleId = `M${moduleNum}`;
-    
+
     // === LocalStorage Key ===
     const STORAGE_KEY = 'prompt_academy_progress';
     let progress = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
@@ -38,15 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function syncToGoogleSheets() {
         if (!progress.userId) return; // Only sync if enrolled
-        
+
         const totalModules = 16;
         let pct = Math.round((progress.completedModules.length / totalModules) * 100);
         let lastMod = progress.completedModules.length > 0 ? progress.completedModules[progress.completedModules.length - 1] : "";
         let lastLesson = progress.completedLessons.length > 0 ? progress.completedLessons[progress.completedLessons.length - 1] : "";
-        
+
         // Convert quizScores and assignmentLinks to nice readable strings
-        let quizStr = Object.entries(progress.quizScores || {}).map(([k,v]) => `${k}: ${v}`).join(", ");
-        let assignStr = Object.entries(progress.assignmentLinks || {}).map(([k,v]) => `${k}: ${v}`).join(", ");
+        let quizStr = Object.entries(progress.quizScores || {}).map(([k, v]) => `${k}: ${v}`).join(", ");
+        let assignStr = Object.entries(progress.assignmentLinks || {}).map(([k, v]) => `${k}: ${v}`).join(", ");
 
         const payload = {
             action: 'update_academy',
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             completedModules: progress.completedModules.length,
             progressPct: pct,
             xp: progress.xp,
-            phases: "", 
+            phases: "",
             lastCompletedModule: lastMod,
             lastCompletedLesson: lastLesson,
             quizScores: quizStr,
@@ -65,11 +65,11 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            fetch("https://script.google.com/macros/s/AKfycbwVm4Hjb9FoS8fQr9hG4o20_lWMIKIRfGb565AQuiEewO44rKHaKNxsAmwmd6WwO6GN/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbxpQvDzPrtbR56oV9QUNerOQ5mN3W2c-x0ra-BDs-IBsFJ--SIml-2srIf-ydnmaC42/exec", {
                 method: "POST",
                 body: JSON.stringify(payload)
             }).catch(e => console.log("Sync error", e));
-        } catch(e) {}
+        } catch (e) { }
     }
 
     // Update Header XP if present
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 2. Inject Bottom Completion Button
         const completeBtn = document.createElement('button');
         completeBtn.className = `btn-lesson-complete ${isCompleted ? 'completed' : 'pending'}`;
-        
+
         if (isQuiz) {
             completeBtn.innerHTML = isCompleted ? 'Quiz Passed ✓' : 'Submit Final Quiz';
         } else {
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!radioGroups[r.name]) radioGroups[r.name] = [];
                     radioGroups[r.name].push(r);
                 });
-                
+
                 let allCorrect = true;
                 let correctCount = 0;
                 let totalQuestions = Object.keys(radioGroups).length;
@@ -321,12 +321,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const radios = radioGroups[groupName];
                     let groupCorrect = false;
                     let hasSelection = false;
-                    
+
                     radios.forEach(r => {
                         // Reset parent label style
                         r.parentElement.style.borderColor = 'var(--color-border)';
                         r.parentElement.style.backgroundColor = 'var(--color-bg-secondary)';
-                        
+
                         if (r.checked) {
                             hasSelection = true;
                             if (r.getAttribute('data-correct') === 'true') {
@@ -339,14 +339,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         }
                     });
-                    
+
                     if (!hasSelection || !groupCorrect) {
                         allCorrect = false;
                     } else {
                         correctCount++;
                     }
                 });
-                
+
                 if (!allCorrect) {
                     let wrongCount = totalQuestions - correctCount;
                     alert(`Quiz Evaluation:\nCorrect: ${correctCount}\nWrong/Missing: ${wrongCount}\n\nPlease review your incorrect answers (highlighted in red) and try again.`);
@@ -390,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             completeBtn.disabled = true;
             card.classList.add('is-completed');
-            
+
             statusBadge.className = 'lesson-status-badge completed';
             statusBadge.innerHTML = 'Completed ✓';
 
@@ -445,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const percentage = Math.round((completedCount / totalLessons) * 100);
-        
+
         const fillEl = document.getElementById('bottom-bar-progress-fill-el');
         const percentEl = document.getElementById('bottom-bar-percentage-el');
         const titleEl = document.getElementById('bottom-bar-title-text');
@@ -559,7 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 questionNames.forEach(qName => {
                     const options = quizCard.querySelectorAll(`input[name="${qName}"]`);
                     let selected = null;
-                    
+
                     // Reset styles first
                     options.forEach(opt => {
                         const label = opt.closest('label');
@@ -576,7 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         // Otherwise, fallback to assuming the selected answer is correct for UX demo purposes.
                         let hasCorrectAttr = false;
                         let correctOpt = null;
-                        
+
                         options.forEach(opt => {
                             if (opt.getAttribute('data-correct') === 'true') {
                                 hasCorrectAttr = true;
@@ -585,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
 
                         const selectedLabel = selected.closest('label');
-                        
+
                         if (hasCorrectAttr) {
                             if (selected === correctOpt) {
                                 score++;
@@ -618,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultText.style.display = 'inline-block';
                 resultText.innerText = `Result: ${score}/${questionNames.length} Correct`;
                 resultText.style.color = score === questionNames.length ? '#15803d' : '#b45309';
-                
+
                 // Disable radios
                 radios.forEach(r => r.disabled = true);
             });
@@ -629,7 +629,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     r.disabled = false;
                     r.checked = false;
                     const label = r.closest('label');
-                    if(label) {
+                    if (label) {
                         label.style.backgroundColor = 'var(--color-bg-secondary)';
                         label.style.borderColor = 'var(--color-border)';
                     }
