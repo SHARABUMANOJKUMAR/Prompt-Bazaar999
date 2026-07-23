@@ -87,10 +87,10 @@
         if (!sheet) {
           // Create sheet and headers if it doesn't exist
           sheet = ss.insertSheet("Academy");
-          sheet.appendRow(["User ID", "Name", "Email", "Course ID", "Current Module", "Completed Modules", "M1 Quiz", "M2 Quiz", "M3 Quiz", "M4 Quiz", "M5 Quiz", "M6 Quiz", "M7 Quiz", "M8 Quiz", "Assignment 1", "Assignment 2", "Assignment 3", "Assignment 4", "Progress %", "Certificate Status", "Certificate ID", "QR URL", "Completion Date", "Last Updated", "XP Score", "Phases", "Last Completed Module", "Last Completed Lesson", "Quiz Scores", "Assignment Links"]);
+          sheet.appendRow(["User ID", "Name", "Email", "Course ID", "Current Module", "Completed Modules", "M1 Quiz", "M2 Quiz", "M3 Quiz", "M4 Quiz", "M5 Quiz", "M6 Quiz", "M7 Quiz", "M8 Quiz", "Assignment 1", "Assignment 2", "Assignment 3", "Assignment 4", "Progress %", "Certificate Status", "Certificate ID", "QR URL", "Completion Date", "Last Updated"]);
           // Freeze header
           sheet.setFrozenRows(1);
-          sheet.getRange(1, 1, 1, 30).setFontWeight("bold").setBackground("#f3f4f6");
+          sheet.getRange(1, 1, 1, 24).setFontWeight("bold").setBackground("#f3f4f6");
         }
         
         var data = sheet.getDataRange().getValues();
@@ -111,50 +111,65 @@
         var current = parseInt(postData.currentModule) || 1;
         var pct = parseInt(postData.progressPct) || 0;
         
-        var xp = parseInt(postData.xp) || 0;
-        var phases = postData.phases || "";
-        var lastCompletedModule = postData.lastCompletedModule || "";
-        var lastCompletedLesson = postData.lastCompletedLesson || "";
-        var quizScores = postData.quizScores || "";
-        var assignmentLinks = postData.assignmentLinks || "";
+        // Helper function to safely set column value dynamically by header name
+        function setColValue(rowNum, colName, value) {
+          var colIdx = headers.indexOf(colName);
+          if (colIdx > -1) {
+            sheet.getRange(rowNum, colIdx + 1).setValue(value);
+          } else {
+            // Add new header
+            headers.push(colName);
+            sheet.getRange(1, headers.length).setValue(colName);
+            sheet.getRange(1, headers.length).setFontWeight("bold").setBackground("#f3f4f6");
+            sheet.getRange(rowNum, headers.length).setValue(value);
+          }
+        }
         
         if (rowIndex > -1) {
           // Update existing user
-          sheet.getRange(rowIndex, headers.indexOf("Current Module") + 1).setValue(current);
-          sheet.getRange(rowIndex, headers.indexOf("Completed Modules") + 1).setValue(completed);
-          sheet.getRange(rowIndex, headers.indexOf("Progress %") + 1).setValue(pct);
-          sheet.getRange(rowIndex, headers.indexOf("Last Updated") + 1).setValue(now);
+          setColValue(rowIndex, "Current Module", current);
+          setColValue(rowIndex, "Completed Modules", completed);
+          setColValue(rowIndex, "Progress %", pct);
+          setColValue(rowIndex, "Last Updated", now);
           
-          if (headers.indexOf("XP Score") > -1) sheet.getRange(rowIndex, headers.indexOf("XP Score") + 1).setValue(xp);
-          if (headers.indexOf("Phases") > -1) sheet.getRange(rowIndex, headers.indexOf("Phases") + 1).setValue(phases);
-          if (headers.indexOf("Last Completed Module") > -1) sheet.getRange(rowIndex, headers.indexOf("Last Completed Module") + 1).setValue(lastCompletedModule);
-          if (headers.indexOf("Last Completed Lesson") > -1) sheet.getRange(rowIndex, headers.indexOf("Last Completed Lesson") + 1).setValue(lastCompletedLesson);
-          if (headers.indexOf("Quiz Scores") > -1) sheet.getRange(rowIndex, headers.indexOf("Quiz Scores") + 1).setValue(quizScores);
-          if (headers.indexOf("Assignment Links") > -1) sheet.getRange(rowIndex, headers.indexOf("Assignment Links") + 1).setValue(assignmentLinks);
+          if (postData.xp !== undefined) setColValue(rowIndex, "XP Score", postData.xp);
+          if (postData.phases !== undefined) setColValue(rowIndex, "Phases", postData.phases);
+          if (postData.lastCompletedModule !== undefined) setColValue(rowIndex, "Last Completed Module", postData.lastCompletedModule);
+          if (postData.lastCompletedLesson !== undefined) setColValue(rowIndex, "Last Completed Lesson", postData.lastCompletedLesson);
+          if (postData.quizScores !== undefined) setColValue(rowIndex, "Quiz Scores", postData.quizScores);
+          if (postData.assignmentLinks !== undefined) setColValue(rowIndex, "Assignment Links", postData.assignmentLinks);
           
           if (pct === 100) {
-            sheet.getRange(rowIndex, headers.indexOf("Completion Date") + 1).setValue(now);
+            var compDateCol = headers.indexOf("Completion Date");
+            if (compDateCol > -1) {
+              if (!sheet.getRange(rowIndex, compDateCol + 1).getValue()) {
+                sheet.getRange(rowIndex, compDateCol + 1).setValue(now);
+              }
+            }
           }
         } else {
           // New user (Enrolment)
-          var newRow = new Array(30).fill('');
-          newRow[0] = userId;
-          newRow[1] = postData.name || '';
-          newRow[2] = postData.email || '';
-          newRow[3] = "PROMPT_ENG_MASTER"; // Course ID
-          newRow[4] = current;
-          newRow[5] = completed;
-          newRow[18] = pct;
-          newRow[19] = "Not Started"; // Cert Status
-          newRow[23] = now; // Last Updated
-          newRow[24] = xp;
-          newRow[25] = phases;
-          newRow[26] = lastCompletedModule;
-          newRow[27] = lastCompletedLesson;
-          newRow[28] = quizScores;
-          newRow[29] = assignmentLinks;
+          var newRow = new Array(headers.length).fill('');
+          newRow[headers.indexOf("User ID")] = userId;
+          if (headers.indexOf("Name") > -1) newRow[headers.indexOf("Name")] = postData.name || '';
+          if (headers.indexOf("Email") > -1) newRow[headers.indexOf("Email")] = postData.email || '';
+          if (headers.indexOf("Course ID") > -1) newRow[headers.indexOf("Course ID")] = "PROMPT_ENG_MASTER";
+          if (headers.indexOf("Current Module") > -1) newRow[headers.indexOf("Current Module")] = current;
+          if (headers.indexOf("Completed Modules") > -1) newRow[headers.indexOf("Completed Modules")] = completed;
+          if (headers.indexOf("Progress %") > -1) newRow[headers.indexOf("Progress %")] = pct;
+          if (headers.indexOf("Certificate Status") > -1) newRow[headers.indexOf("Certificate Status")] = "Not Started";
+          if (headers.indexOf("Last Updated") > -1) newRow[headers.indexOf("Last Updated")] = now;
           
+          // Also handle new fields if enrolling (though they might not exist yet)
           sheet.appendRow(newRow);
+          rowIndex = sheet.getLastRow();
+          
+          if (postData.xp !== undefined) setColValue(rowIndex, "XP Score", postData.xp);
+          if (postData.phases !== undefined) setColValue(rowIndex, "Phases", postData.phases);
+          if (postData.lastCompletedModule !== undefined) setColValue(rowIndex, "Last Completed Module", postData.lastCompletedModule);
+          if (postData.lastCompletedLesson !== undefined) setColValue(rowIndex, "Last Completed Lesson", postData.lastCompletedLesson);
+          if (postData.quizScores !== undefined) setColValue(rowIndex, "Quiz Scores", postData.quizScores);
+          if (postData.assignmentLinks !== undefined) setColValue(rowIndex, "Assignment Links", postData.assignmentLinks);
           
           // Send Welcome Email
           try {

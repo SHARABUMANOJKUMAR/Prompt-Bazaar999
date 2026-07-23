@@ -20,7 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
         unlockedCourses: [],
         completedCourses: [],
         unlockedModules: [],
-        completedModules: []
+        completedModules: [],
+        quizScores: {},
+        assignmentLinks: {},
+        userName: "",
+        userEmail: "",
+        userId: ""
     };
 
     // Save Progress Helper
@@ -28,47 +33,43 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
         updateHeaderXP();
         updateProgressUI();
-        syncProgressToBackend();
+        syncToGoogleSheets();
     }
-    
-    function syncProgressToBackend() {
-        const GAS_ACADEMY_URL = "https://script.google.com/macros/s/AKfycbwVm4Hjb9FoS8fQr9hG4o20_lWMIKIRfGb565AQuiEewO44rKHaKNxsAmwmd6WwO6GN/exec";
+
+    async function syncToGoogleSheets() {
+        if (!progress.userId) return; // Only sync if enrolled
         
-        // We might not have a userId if they haven't enrolled on this browser session, 
-        // but we'll try to sync if possible. If userId is missing, try to find it.
-        let uId = progress.userId || localStorage.getItem('currentUser') || "";
-        if (!uId) {
-            try {
-                let userObj = JSON.parse(localStorage.getItem('user'));
-                if (userObj && userObj.id) uId = userObj.id;
-            } catch (e) {}
-        }
+        const totalModules = 16;
+        let pct = Math.round((progress.completedModules.length / totalModules) * 100);
+        let lastMod = progress.completedModules.length > 0 ? progress.completedModules[progress.completedModules.length - 1] : "";
+        let lastLesson = progress.completedLessons.length > 0 ? progress.completedLessons[progress.completedLessons.length - 1] : "";
         
-        if (!uId) return; // Cannot sync without User ID
-        
-        let completedModulesCount = progress.completedModules.length;
-        let pct = Math.round((completedModulesCount / 16) * 100);
-        let lastCompletedLesson = progress.completedLessons.length > 0 ? progress.completedLessons[progress.completedLessons.length - 1] : "";
-        let lastCompletedModule = progress.completedModules.length > 0 ? progress.completedModules[progress.completedModules.length - 1] : "";
-        
-        let payload = {
+        // Convert quizScores and assignmentLinks to nice readable strings
+        let quizStr = Object.entries(progress.quizScores || {}).map(([k,v]) => `${k}: ${v}`).join(", ");
+        let assignStr = Object.entries(progress.assignmentLinks || {}).map(([k,v]) => `${k}: ${v}`).join(", ");
+
+        const payload = {
             action: 'update_academy',
-            user_id: uId,
-            completedModules: completedModulesCount,
+            user_id: progress.userId,
+            name: progress.userName,
+            email: progress.userEmail,
             currentModule: moduleNum,
+            completedModules: progress.completedModules.length,
             progressPct: pct,
             xp: progress.xp,
             phases: "", 
-            lastCompletedModule: lastCompletedModule,
-            lastCompletedLesson: lastCompletedLesson,
-            quizScores: "", 
-            assignmentLinks: ""
+            lastCompletedModule: lastMod,
+            lastCompletedLesson: lastLesson,
+            quizScores: quizStr,
+            assignmentLinks: assignStr
         };
-        
-        fetch(GAS_ACADEMY_URL, {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        }).catch(err => console.error("Failed to sync progress:", err));
+
+        try {
+            fetch("https://script.google.com/macros/s/AKfycbwVm4Hjb9FoS8fQr9hG4o20_lWMIKIRfGb565AQuiEewO44rKHaKNxsAmwmd6WwO6GN/exec", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            }).catch(e => console.log("Sync error", e));
+        } catch(e) {}
     }
 
     // Update Header XP if present
@@ -351,6 +352,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(`Quiz Evaluation:\nCorrect: ${correctCount}\nWrong/Missing: ${wrongCount}\n\nPlease review your incorrect answers (highlighted in red) and try again.`);
                     return; // Do not mark as complete!
                 } else {
+                    progress.quizScores = progress.quizScores || {};
+                    progress.quizScores[moduleId] = `${correctCount}/${totalQuestions}`;
                     alert(`Perfect Score! (${correctCount}/${totalQuestions})\n\nYou earned +100 XP!`);
                 }
             }
