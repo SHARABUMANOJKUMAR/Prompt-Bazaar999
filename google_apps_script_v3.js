@@ -59,9 +59,9 @@
         var sheet = ss.getSheetByName("Academy");
         if (!sheet) {
           sheet = ss.insertSheet("Academy");
-          sheet.appendRow(["User ID", "Name", "Email", "Course ID", "Current Module", "Completed Modules", "Progress %", "Certificate Status", "Certificate ID", "QR URL", "Completion Date", "Last Updated"]);
+          sheet.appendRow(["User_ID", "Email", "Full_Name", "Registration_Date", "Last_Active_Date", "Overall_Progress_Percent", "Current_Phase", "Last_Completed_Module", "Last_Completed_Lesson", "Quiz_Scores", "Assignment_Links", "Course_Completed", "Certificate_Issued_Date", "Certificate_ID", "Certificate_URL"]);
           sheet.setFrozenRows(1);
-          sheet.getRange(1, 1, 1, 12).setFontWeight("bold").setBackground("#f3f4f6");
+          sheet.getRange(1, 1, 1, 15).setFontWeight("bold").setBackground("#f3f4f6");
         }
         
         var data = sheet.getDataRange().getValues();
@@ -70,7 +70,7 @@
         for (var i = 1; i < data.length; i++) {
           var emailIdx = headers.indexOf("Email");
           if (emailIdx > -1 && data[i][emailIdx] === email) {
-            var existingUserId = headers.indexOf("User ID") > -1 ? data[i][headers.indexOf("User ID")] : "";
+            var existingUserId = headers.indexOf("User_ID") > -1 ? data[i][headers.indexOf("User_ID")] : "";
             return ContentService.createTextOutput(JSON.stringify({
               success: true,
               message: "User already enrolled",
@@ -84,16 +84,13 @@
         var newRow = new Array(headers.length).fill('');
         
         function getIdx(col) { return headers.indexOf(col); }
-        if (getIdx("User ID") > -1) newRow[getIdx("User ID")] = userId;
-        if (getIdx("Name") > -1) newRow[getIdx("Name")] = fullName;
-        if (getIdx("Full_Name") > -1) newRow[getIdx("Full_Name")] = fullName;
+        if (getIdx("User_ID") > -1) newRow[getIdx("User_ID")] = userId;
         if (getIdx("Email") > -1) newRow[getIdx("Email")] = email;
-        if (getIdx("Course ID") > -1) newRow[getIdx("Course ID")] = "PROMPT_ENG_MASTER";
-        if (getIdx("Current Module") > -1) newRow[getIdx("Current Module")] = 1;
-        if (getIdx("Completed Modules") > -1) newRow[getIdx("Completed Modules")] = 0;
-        if (getIdx("Progress %") > -1) newRow[getIdx("Progress %")] = 0;
-        if (getIdx("Certificate Status") > -1) newRow[getIdx("Certificate Status")] = "Not Started";
-        if (getIdx("Last Updated") > -1) newRow[getIdx("Last Updated")] = now;
+        if (getIdx("Full_Name") > -1) newRow[getIdx("Full_Name")] = fullName;
+        if (getIdx("Registration_Date") > -1) newRow[getIdx("Registration_Date")] = now;
+        if (getIdx("Last_Active_Date") > -1) newRow[getIdx("Last_Active_Date")] = now;
+        if (getIdx("Overall_Progress_Percent") > -1) newRow[getIdx("Overall_Progress_Percent")] = 0;
+        if (getIdx("Course_Completed") > -1) newRow[getIdx("Course_Completed")] = "FALSE";
         
         sheet.appendRow(newRow);
         
@@ -107,11 +104,9 @@
               <div style="padding: 40px 30px; background: white; color: #0f172a;">
                 <p style="font-size: 16px; line-height: 1.6;">Hi ${fullName || 'there'},</p>
                 <p style="font-size: 16px; line-height: 1.6;">You have successfully enrolled in the <strong>Prompt Engineering Master Course</strong>.</p>
-                
                 <div style="text-align: center; margin: 40px 0;">
                   <a href="https://promptbazaar.netlify.app/academy" style="background-color: #2563eb; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Start Learning Now</a>
                 </div>
-                
                 <p style="font-size: 16px; line-height: 1.6;">Happy Prompting,<br><strong>The Prompt Bazaar Team</strong></p>
               </div>
             </div>
@@ -137,10 +132,10 @@
         
         var data = sheet.getDataRange().getValues();
         var headers = data[0];
-        var userIdIdx = headers.indexOf("User ID");
-        var currentModuleIdx = headers.indexOf("Current Module");
-        var completedModulesIdx = headers.indexOf("Completed Modules");
-        var progressPctIdx = headers.indexOf("Progress %");
+        var userIdIdx = headers.indexOf("User_ID");
+        var currentModuleIdx = headers.indexOf("Current_Phase");
+        var completedModulesIdx = headers.indexOf("Last_Completed_Module");
+        var progressPctIdx = headers.indexOf("Overall_Progress_Percent");
         
         var userId = postData.user_id;
         var progress = { currentModule: 1, completedModules: 0, progressPct: 0 };
@@ -165,39 +160,31 @@
         var ss = SpreadsheetApp.getActiveSpreadsheet();
         var sheet = ss.getSheetByName("Academy");
         if (!sheet) {
-          // Create sheet and headers if it doesn't exist
           sheet = ss.insertSheet("Academy");
-          sheet.appendRow(["User ID", "Name", "Email", "Course ID", "Current Module", "Completed Modules", "M1 Quiz", "M2 Quiz", "M3 Quiz", "M4 Quiz", "M5 Quiz", "M6 Quiz", "M7 Quiz", "M8 Quiz", "Assignment 1", "Assignment 2", "Assignment 3", "Assignment 4", "Progress %", "Certificate Status", "Certificate ID", "QR URL", "Completion Date", "Last Updated"]);
-          // Freeze header
+          sheet.appendRow(["User_ID", "Email", "Full_Name", "Registration_Date", "Last_Active_Date", "Overall_Progress_Percent", "Current_Phase", "Last_Completed_Module", "Last_Completed_Lesson", "Quiz_Scores", "Assignment_Links", "Course_Completed", "Certificate_Issued_Date", "Certificate_ID", "Certificate_URL"]);
           sheet.setFrozenRows(1);
-          sheet.getRange(1, 1, 1, 24).setFontWeight("bold").setBackground("#f3f4f6");
+          sheet.getRange(1, 1, 1, 15).setFontWeight("bold").setBackground("#f3f4f6");
         }
         
         var data = sheet.getDataRange().getValues();
         var headers = data[0];
         var userId = postData.user_id;
         
-        // Find if user exists
         var rowIndex = -1;
         for (var i = 1; i < data.length; i++) {
           if (data[i][0] === userId) {
-            rowIndex = i + 1; // 1-indexed for SpreadsheetApp
+            rowIndex = i + 1;
             break;
           }
         }
         
         var now = new Date();
-        var completed = parseInt(postData.completedModules) || 0;
-        var current = parseInt(postData.currentModule) || 1;
-        var pct = parseInt(postData.progressPct) || 0;
         
-        // Helper function to safely set column value dynamically by header name
         function setColValue(rowNum, colName, value) {
           var colIdx = headers.indexOf(colName);
           if (colIdx > -1) {
             sheet.getRange(rowNum, colIdx + 1).setValue(value);
           } else {
-            // Add new header
             headers.push(colName);
             sheet.getRange(1, headers.length).setValue(colName);
             sheet.getRange(1, headers.length).setFontWeight("bold").setBackground("#f3f4f6");
@@ -206,132 +193,33 @@
         }
         
         if (rowIndex > -1) {
-          // Update existing user
-          setColValue(rowIndex, "Current Module", current);
-          setColValue(rowIndex, "Completed Modules", completed);
-          setColValue(rowIndex, "Progress %", pct);
-          setColValue(rowIndex, "Last Updated", now);
+          setColValue(rowIndex, "Last_Active_Date", now);
+          if (postData.progressPct !== undefined) setColValue(rowIndex, "Overall_Progress_Percent", postData.progressPct);
+          if (postData.currentModule !== undefined) setColValue(rowIndex, "Current_Phase", postData.currentModule);
+          if (postData.completedModules !== undefined) setColValue(rowIndex, "Last_Completed_Module", postData.completedModules);
+          if (postData.lastCompletedLesson !== undefined) setColValue(rowIndex, "Last_Completed_Lesson", postData.lastCompletedLesson);
+          if (postData.quizScores !== undefined) setColValue(rowIndex, "Quiz_Scores", postData.quizScores);
+          if (postData.assignmentLinks !== undefined) setColValue(rowIndex, "Assignment_Links", postData.assignmentLinks);
           
-          if (postData.xp !== undefined) setColValue(rowIndex, "XP Score", postData.xp);
-          if (postData.phases !== undefined) setColValue(rowIndex, "Phases", postData.phases);
-          if (postData.lastCompletedModule !== undefined) setColValue(rowIndex, "Last Completed Module", postData.lastCompletedModule);
-          if (postData.lastCompletedLesson !== undefined) setColValue(rowIndex, "Last Completed Lesson", postData.lastCompletedLesson);
-          if (postData.quizScores !== undefined) setColValue(rowIndex, "Quiz Scores", postData.quizScores);
-          if (postData.assignmentLinks !== undefined) setColValue(rowIndex, "Assignment Links", postData.assignmentLinks);
-          
-          if (pct === 100) {
-            var compDateCol = headers.indexOf("Completion Date");
-            if (compDateCol > -1) {
-              if (!sheet.getRange(rowIndex, compDateCol + 1).getValue()) {
-                sheet.getRange(rowIndex, compDateCol + 1).setValue(now);
-              }
+          if (postData.progressPct === 100) {
+            setColValue(rowIndex, "Course_Completed", "TRUE");
+            
+            // Check if certificate exists, if not generate it
+            var certIdx = headers.indexOf("Certificate_ID");
+            if (certIdx > -1 && !sheet.getRange(rowIndex, certIdx + 1).getValue()) {
+                var emailIdx = headers.indexOf("Email");
+                var nameIdx = headers.indexOf("Full_Name");
+                var emailStr = emailIdx > -1 ? sheet.getRange(rowIndex, emailIdx + 1).getValue() : '';
+                var nameStr = nameIdx > -1 ? sheet.getRange(rowIndex, nameIdx + 1).getValue() : '';
+                processUserCompletion(userId, nameStr, emailStr, sheet, rowIndex, headers);
             }
           }
-        } else {
-          // New user (Enrolment)
-          var newRow = new Array(headers.length).fill('');
-          newRow[headers.indexOf("User ID")] = userId;
-          if (headers.indexOf("Name") > -1) newRow[headers.indexOf("Name")] = postData.name || '';
-          if (headers.indexOf("Email") > -1) newRow[headers.indexOf("Email")] = postData.email || '';
-          if (headers.indexOf("Course ID") > -1) newRow[headers.indexOf("Course ID")] = "PROMPT_ENG_MASTER";
-          if (headers.indexOf("Current Module") > -1) newRow[headers.indexOf("Current Module")] = current;
-          if (headers.indexOf("Completed Modules") > -1) newRow[headers.indexOf("Completed Modules")] = completed;
-          if (headers.indexOf("Progress %") > -1) newRow[headers.indexOf("Progress %")] = pct;
-          if (headers.indexOf("Certificate Status") > -1) newRow[headers.indexOf("Certificate Status")] = "Not Started";
-          if (headers.indexOf("Last Updated") > -1) newRow[headers.indexOf("Last Updated")] = now;
           
-          // Also handle new fields if enrolling (though they might not exist yet)
-          sheet.appendRow(newRow);
-          rowIndex = sheet.getLastRow();
-          
-          if (postData.xp !== undefined) setColValue(rowIndex, "XP Score", postData.xp);
-          if (postData.phases !== undefined) setColValue(rowIndex, "Phases", postData.phases);
-          if (postData.lastCompletedModule !== undefined) setColValue(rowIndex, "Last Completed Module", postData.lastCompletedModule);
-          if (postData.lastCompletedLesson !== undefined) setColValue(rowIndex, "Last Completed Lesson", postData.lastCompletedLesson);
-          if (postData.quizScores !== undefined) setColValue(rowIndex, "Quiz Scores", postData.quizScores);
-          if (postData.assignmentLinks !== undefined) setColValue(rowIndex, "Assignment Links", postData.assignmentLinks);
-          
-          // Send Welcome Email
-          try {
-            var emailStr = postData.email;
-            if (emailStr) {
-              var subject = "Welcome to Prompt Bazaar Academy! 🎓";
-              var htmlBody = `
-                <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                  <div style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); padding: 40px 20px; text-align: center; color: white;">
-                    <h1 style="margin: 0; font-size: 24px;">Welcome to Prompt Bazaar Academy!</h1>
-                  </div>
-                  <div style="padding: 40px 30px; background: white; color: #0f172a;">
-                    <p style="font-size: 16px; line-height: 1.6;">Hi ${postData.name || 'there'},</p>
-                    <p style="font-size: 16px; line-height: 1.6;">You have successfully enrolled in the <strong>Prompt Engineering Master Course</strong>. We are excited to have you on board.</p>
-                    <p style="font-size: 16px; line-height: 1.6;">In this 8-module course, you will learn everything from prompt fundamentals to advanced AI agent workflows.</p>
-                    
-                    <div style="text-align: center; margin: 40px 0;">
-                      <a href="https://promptbazzar.netlify.app/academy" style="background-color: #2563eb; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Start Learning Now</a>
-                    </div>
-                    
-                    <p style="font-size: 16px; line-height: 1.6;">Happy Prompting,<br><strong>The Prompt Bazaar Team</strong></p>
-                  </div>
-                  <div style="background: #f8fafc; padding: 20px; text-align: center; color: #64748b; font-size: 12px; border-top: 1px solid #e2e8f0;">
-                    &copy; ${new Date().getFullYear()} Prompt Bazaar. All rights reserved.
-                  </div>
-                </div>
-              `;
-              MailApp.sendEmail({
-                to: emailStr,
-                subject: subject,
-                htmlBody: htmlBody
-              });
-            }
-          } catch (emailErr) {
-            logErrorToSheet("Welcome Email Failed for " + userId, emailErr);
-          }
         }
         
         return ContentService.createTextOutput(JSON.stringify({
           success: true,
           message: "Progress updated"
-        })).setMimeType(ContentService.MimeType.JSON);
-        
-      } else if (action === 'generate_certificate') {
-        var email = postData.email;
-        var ss = SpreadsheetApp.getActiveSpreadsheet();
-        var sheet = ss.getSheetByName("Academy");
-        if (!sheet) {
-          return ContentService.createTextOutput(JSON.stringify({ success: false, error: "Academy sheet not found" })).setMimeType(ContentService.MimeType.JSON);
-        }
-        var data = sheet.getDataRange().getValues();
-        var headers = data[0];
-        
-        for (var i = 1; i < data.length; i++) {
-          var userEmailIdx = headers.indexOf("Email");
-          if (userEmailIdx > -1 && data[i][userEmailIdx] === email) {
-            var userIdIdx = headers.indexOf("User ID") > -1 ? headers.indexOf("User ID") : headers.indexOf("User_ID");
-            var userId = userIdIdx > -1 ? data[i][userIdIdx] : Utilities.getUuid();
-            
-            var nameIdx = headers.indexOf("Name") > -1 ? headers.indexOf("Name") : (headers.indexOf("Full_Name") > -1 ? headers.indexOf("Full_Name") : headers.indexOf("Full Name"));
-            var fullName = nameIdx > -1 ? data[i][nameIdx] : email;
-            if (!fullName || fullName.trim() === '') fullName = email;
-            
-            // Generate certificate
-            var result = processUserCompletion(userId, fullName, email, sheet, i + 1, headers);
-            
-            if (result.success) {
-              return ContentService.createTextOutput(JSON.stringify({
-                success: true,
-                certificateUrl: result.fileUrl
-              })).setMimeType(ContentService.MimeType.JSON);
-            } else {
-              return ContentService.createTextOutput(JSON.stringify({
-                success: false,
-                error: "Internal Error: " + result.error
-              })).setMimeType(ContentService.MimeType.JSON);
-            }
-          }
-        }
-        return ContentService.createTextOutput(JSON.stringify({
-          success: false,
-          error: "User not found"
         })).setMimeType(ContentService.MimeType.JSON);
         
       } else if (action === 'verify') {
@@ -348,27 +236,25 @@
         var data = sheet.getDataRange().getValues();
         var headers = data[0];
         
-        var certIdCol = headers.indexOf("Certificate ID") > -1 ? headers.indexOf("Certificate ID") : headers.indexOf("Certificate_ID");
-        
+        var certIdCol = headers.indexOf("Certificate_ID");
         if (certIdCol === -1) {
           return ContentService.createTextOutput(JSON.stringify({ valid: false, error: "Database not configured properly" })).setMimeType(ContentService.MimeType.JSON);
         }
         
         for (var i = 1; i < data.length; i++) {
           if (data[i][certIdCol] === certIdToVerify) {
-            var certUrlCol = headers.indexOf("Certificate_URL") > -1 ? headers.indexOf("Certificate_URL") : headers.indexOf("QR URL");
-            var issueDateCol = headers.indexOf("Certificate_Issued_Date") > -1 ? headers.indexOf("Certificate_Issued_Date") : headers.indexOf("Completion Date");
-            var nameCol = headers.indexOf("Name") > -1 ? headers.indexOf("Name") : headers.indexOf("Full_Name");
+            var certUrlCol = headers.indexOf("Certificate_URL");
+            var issueDateCol = headers.indexOf("Certificate_Issued_Date");
+            var nameCol = headers.indexOf("Full_Name");
             return ContentService.createTextOutput(JSON.stringify({
               valid: true,
-              studentName: data[i][nameCol],
-              issueDate: data[i][issueDateCol],
-              certificateUrl: data[i][certUrlCol]
+              studentName: nameCol > -1 ? data[i][nameCol] : "",
+              issueDate: issueDateCol > -1 ? data[i][issueDateCol] : "",
+              certificateUrl: certUrlCol > -1 ? data[i][certUrlCol] : ""
             })).setMimeType(ContentService.MimeType.JSON);
           }
         }
         
-        // Not found
         return ContentService.createTextOutput(JSON.stringify({ valid: false, error: "Certificate not found" })).setMimeType(ContentService.MimeType.JSON);
 
       } else if (action === 'save_portfolio') {
@@ -732,7 +618,8 @@ function generateCertificatePDF(userName, courseName, certId) {
     slidePresentation.replaceAllText('{{CERT_ID}}', certId); 
     
     step = "Fetching QR Code";
-    var verificationUrl = "https://promptbazaar.netlify.app/verify?id=" + certId;
+    // Fixed QR URL to point to /academy/verify instead of just /verify, and encode properly
+    var verificationUrl = "https://promptbazaar.netlify.app/academy/verify?certId=" + encodeURIComponent(certId);
     var qrApiUrl = "https://quickchart.io/qr?text=" + encodeURIComponent(verificationUrl) + "&size=150";
     var qrBlob = UrlFetchApp.fetch(qrApiUrl).getBlob();
     
@@ -781,7 +668,6 @@ function processUserCompletion(userId, userName, userEmail, sheet, rowIndex, hea
   var certResult = generateCertificatePDF(userName, "Prompt Engineering Master Course", certId);
   
   if (certResult.success) {
-    // Helper to dynamically set column values
     function setColValue(rowNum, colName, value) {
       var colIdx = headers.indexOf(colName);
       if (colIdx > -1) {
@@ -794,11 +680,40 @@ function processUserCompletion(userId, userName, userEmail, sheet, rowIndex, hea
       }
     }
 
-    setColValue(rowIndex, "Certificate Status", "Issued");
-    setColValue(rowIndex, "Certificate ID", certId);
+    setColValue(rowIndex, "Certificate_ID", certId);
     setColValue(rowIndex, "Certificate_URL", certResult.fileUrl);
     setColValue(rowIndex, "Certificate_Issued_Date", new Date());
     setColValue(rowIndex, "Course_Completed", "TRUE");
+
+    // Send attractive certificate email
+    if (userEmail) {
+        try {
+          var subject = "Congratulations! Your Prompt Bazaar Certificate \ud83c\udf93";
+          var htmlBody = `
+            <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+              <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 20px; text-align: center; color: white;">
+                <h1 style="margin: 0; font-size: 24px;">Congratulations, ${userName || 'Student'}!</h1>
+                <p style="margin: 10px 0 0 0; font-size: 16px;">You have successfully completed the course.</p>
+              </div>
+              <div style="padding: 40px 30px; background: white; color: #0f172a;">
+                <p style="font-size: 16px; line-height: 1.6;">Your hard work has paid off. We are thrilled to award you your official <strong>Prompt Engineering Master Course</strong> Certificate.</p>
+                <div style="text-align: center; margin: 40px 0;">
+                  <a href="${certResult.fileUrl}" style="background-color: #10b981; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">View & Download Certificate</a>
+                </div>
+                <p style="font-size: 16px; line-height: 1.6;">You can also verify your certificate online using this ID: <strong>${certId}</strong>.</p>
+                <p style="font-size: 16px; line-height: 1.6;">Keep building amazing things,<br><strong>The Prompt Bazaar Team</strong></p>
+              </div>
+            </div>
+          `;
+          // Attach PDF
+          MailApp.sendEmail({ 
+              to: userEmail, 
+              subject: subject, 
+              htmlBody: htmlBody,
+              attachments: [certResult.fileBlob]
+          });
+        } catch(e) {}
+    }
 
     return { success: true, fileUrl: certResult.fileUrl };
   }
