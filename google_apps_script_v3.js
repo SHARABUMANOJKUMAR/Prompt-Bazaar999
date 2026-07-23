@@ -618,7 +618,6 @@ function generateCertificatePDF(userName, courseName, certId) {
     slidePresentation.replaceAllText('{{CERT_ID}}', certId); 
     
     step = "Fetching QR Code";
-    // Fixed QR URL to point to /academy/verify instead of just /verify, and encode properly
     var verificationUrl = "https://promptbazzar.netlify.app/academy/verify?certId=" + encodeURIComponent(certId);
     var qrApiUrl = "https://quickchart.io/qr?text=" + encodeURIComponent(verificationUrl) + "&size=150";
     var qrBlob = UrlFetchApp.fetch(qrApiUrl).getBlob();
@@ -632,9 +631,7 @@ function generateCertificatePDF(userName, courseName, certId) {
           shapes[i].remove();
           break;
         }
-      } catch (shapeErr) {
-        // Ignore shapes that don't support text
-      }
+      } catch (shapeErr) {}
     }
     
     step = "Saving Slides";
@@ -642,10 +639,11 @@ function generateCertificatePDF(userName, courseName, certId) {
     
     step = "Converting to PDF";
     var pdfBlob = tempFile.getAs(MimeType.PDF);
+    // CRITICAL: Name the blob properly with .pdf so Gmail accepts it as an attachment
+    pdfBlob.setName(userName + ' - Prompt Academy Certificate.pdf');
     
     step = "Creating final PDF file";
     var finalPdfFile = folder.createFile(pdfBlob);
-    finalPdfFile.setName(userName + ' - Prompt Academy Certificate.pdf');
     
     step = "Setting file sharing permissions";
     try {
@@ -686,7 +684,7 @@ function processUserCompletion(userId, userName, userEmail, sheet, rowIndex, hea
     setColValue(rowIndex, "Course_Completed", "TRUE");
 
     // Send attractive certificate email
-    if (userEmail) {
+    if (userEmail && userEmail.indexOf('@') !== -1) {
         try {
           var subject = "Congratulations! Your Prompt Bazaar Certificate \ud83c\udf93";
           var htmlBody = `
@@ -712,7 +710,9 @@ function processUserCompletion(userId, userName, userEmail, sheet, rowIndex, hea
               htmlBody: htmlBody,
               attachments: [certResult.fileBlob]
           });
-        } catch(e) {}
+        } catch(e) {
+          logErrorToSheet("Certificate Email Failed for " + userEmail, e);
+        }
     }
 
     return { success: true, fileUrl: certResult.fileUrl };
