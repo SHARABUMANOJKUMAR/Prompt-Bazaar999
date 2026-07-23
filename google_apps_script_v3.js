@@ -196,7 +196,7 @@
           setColValue(rowIndex, "Last_Active_Date", now);
           if (postData.progressPct !== undefined) setColValue(rowIndex, "Overall_Progress_Percent", postData.progressPct);
           if (postData.currentModule !== undefined) setColValue(rowIndex, "Current_Phase", postData.currentModule);
-          if (postData.completedModules !== undefined) setColValue(rowIndex, "Last_Completed_Module", postData.completedModules);
+          if (postData.lastCompletedModule !== undefined) setColValue(rowIndex, "Last_Completed_Module", postData.lastCompletedModule);
           if (postData.lastCompletedLesson !== undefined) setColValue(rowIndex, "Last_Completed_Lesson", postData.lastCompletedLesson);
           if (postData.quizScores !== undefined) setColValue(rowIndex, "Quiz_Scores", postData.quizScores);
           if (postData.assignmentLinks !== undefined) setColValue(rowIndex, "Assignment_Links", postData.assignmentLinks);
@@ -618,6 +618,7 @@ function generateCertificatePDF(userName, courseName, certId) {
     slidePresentation.replaceAllText('{{CERT_ID}}', certId); 
     
     step = "Fetching QR Code";
+    // Fixed QR URL to point to /academy/verify instead of just /verify, and encode properly
     var verificationUrl = "https://promptbazzar.netlify.app/academy/verify?certId=" + encodeURIComponent(certId);
     var qrApiUrl = "https://quickchart.io/qr?text=" + encodeURIComponent(verificationUrl) + "&size=150";
     var qrBlob = UrlFetchApp.fetch(qrApiUrl).getBlob();
@@ -631,7 +632,9 @@ function generateCertificatePDF(userName, courseName, certId) {
           shapes[i].remove();
           break;
         }
-      } catch (shapeErr) {}
+      } catch (shapeErr) {
+        // Ignore shapes that don't support text
+      }
     }
     
     step = "Saving Slides";
@@ -639,7 +642,6 @@ function generateCertificatePDF(userName, courseName, certId) {
     
     step = "Converting to PDF";
     var pdfBlob = tempFile.getAs(MimeType.PDF);
-    // CRITICAL: Name the blob properly with .pdf so Gmail accepts it as an attachment
     pdfBlob.setName(userName + ' - Prompt Academy Certificate.pdf');
     
     step = "Creating final PDF file";
@@ -684,7 +686,7 @@ function processUserCompletion(userId, userName, userEmail, sheet, rowIndex, hea
     setColValue(rowIndex, "Course_Completed", "TRUE");
 
     // Send attractive certificate email
-    if (userEmail && userEmail.indexOf('@') !== -1) {
+    if (userEmail) {
         try {
           var subject = "Congratulations! Your Prompt Bazaar Certificate \ud83c\udf93";
           var htmlBody = `
@@ -710,9 +712,7 @@ function processUserCompletion(userId, userName, userEmail, sheet, rowIndex, hea
               htmlBody: htmlBody,
               attachments: [certResult.fileBlob]
           });
-        } catch(e) {
-          logErrorToSheet("Certificate Email Failed for " + userEmail, e);
-        }
+        } catch(e) {}
     }
 
     return { success: true, fileUrl: certResult.fileUrl };
