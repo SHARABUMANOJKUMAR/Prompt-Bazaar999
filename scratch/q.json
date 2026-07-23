@@ -1,0 +1,422 @@
+{
+  "1. What is Prompt Engineering?": {
+    "A": "A) Writing code for AI models.",
+    "B": "B) Designing and improving instructions for AI.",
+    "C": "C) Training AI to speak.",
+    "D": "D) Building hardware for robots."
+  },
+  "2. Which of the following is NOT a main component of Prompt Anatomy?": {
+    "A": "A) Role and Task",
+    "B": "B) Context and Constraints",
+    "C": "C) Output Format",
+    "D": "D) Hardware Specifications"
+  },
+  "3. What is the difference between Instructions and Context?": {
+    "A": "A) They are exactly the same thing.",
+    "B": "B) Instructions tell AI what to do, Context gives background information.",
+    "C": "C) Context tells AI what to do, Instructions provide examples.",
+    "D": "D) Instructions are only for coding tasks."
+  },
+  "4. Why do we use delimiters like \"\"\" or ### in a prompt?": {
+    "A": "A) To confuse the AI intentionally.",
+    "B": "B) To add styling to the prompt.",
+    "C": "C) To cleanly separate different parts of the prompt.",
+    "D": "D) To create dynamic variables."
+  },
+  "5. What is Negative Prompting?": {
+    "A": "A) Telling the AI what NOT to include in its response.",
+    "B": "B) Using negative words to insult the AI.",
+    "C": "C) Erasing the prompt completely.",
+    "D": "D) Giving AI a bad rating."
+  },
+  "1. What is Zero-shot Prompting?": {
+    "A": "A) Providing 10 examples.",
+    "B": "B) Asking the AI to perform a task without giving any examples.",
+    "C": "C) Providing exactly one example.",
+    "D": "D) Asking the AI to forget previous prompts."
+  },
+  "2. Which prompting technique uses exactly one example before the task?": {
+    "A": "A) Multi-shot Prompting",
+    "B": "B) Few-shot Prompting",
+    "C": "C) One-shot Prompting",
+    "D": "D) Zero-shot Prompting"
+  },
+  "3. What is Persona Prompting?": {
+    "A": "A) Asking the AI to solve mathematical equations.",
+    "B": "B) Assigning a specific role or identity to the AI before giving it a task.",
+    "C": "C) Changing the CSS of the chat interface.",
+    "D": "D) Using examples to train the AI."
+  },
+  "4. Why is Step Prompting useful?": {
+    "A": "A) It breaks problems into steps, improving clarity and reducing mistakes.",
+    "B": "B) It forces the AI to answer instantly without thinking.",
+    "C": "C) It only works when translating languages.",
+    "D": "D) It prevents the AI from using technical jargon."
+  },
+  "5. What does Style Control do in a prompt?": {
+    "A": "A) It determines the color scheme of the output.",
+    "B": "B) It defines the final goal of the project.",
+    "C": "C) It guides the AI to write in a specific tone, writing style, or communication format.",
+    "D": "D) It restricts the AI to only output JSON data."
+  },
+  "1. What is Chain of Thought Prompting?": {
+    "A": "A) Asking AI to guess the answer instantly.",
+    "B": "B) Encouraging the AI to solve a problem using logical step-by-step reasoning.",
+    "C": "C) Connecting multiple prompts together.",
+    "D": "D) Removing constraints from a prompt."
+  },
+  "2. How does Tree of Thought differ from Chain of Thought?": {
+    "A": "A) Tree of Thought does not use logic.",
+    "B": "B) Tree of Thought explores multiple reasoning branches before deciding, while Chain of Thought follows a single path.",
+    "C": "C) Chain of Thought is only used for image generation.",
+    "D": "D) They are exactly the same thing."
+  },
+  "3. What is Prompt Chaining?": {
+    "A": "A) Using multiple examples in one prompt.",
+    "B": "B) Limiting the AI's output format.",
+    "C": "C) Connecting multiple prompts so the output of one becomes the input for the next.",
+    "D": "D) Repeating the same prompt infinitely."
+  },
+  "4. Which technique involves the AI checking its own answer for mistakes before finalizing it?": {
+    "A": "A) Prompt Chaining",
+    "B": "B) Zero-shot Prompting",
+    "C": "C) Self Critique",
+    "D": "D) Output Templates"
+  },
+  "5. What is the main goal of Verification Prompting?": {
+    "A": "A) To generate images faster.",
+    "B": "B) To reduce hallucinations and improve factual accuracy by checking evidence.",
+    "C": "C) To ask the user to verify their identity.",
+    "D": "D) To limit output length."
+  },
+  "1. What is Meta Prompting?": {
+    "A": "A) A prompt asking the AI to create, improve, or optimize other prompts.",
+    "B": "B) A prompt used only to generate images.",
+    "C": "C) Formatting the output in JSON.",
+    "D": "D) Breaking a task down into reasoning steps."
+  },
+  "2. Which format uses tags like &lt;role&gt; and &lt;task&gt; to organize prompts?": {
+    "A": "A) JSON Prompting",
+    "B": "B) Markdown Prompting",
+    "C": "C) XML Prompting",
+    "D": "D) Python Prompting"
+  },
+  "3. What is the purpose of Tool Calling?": {
+    "A": "A) To make the AI type faster.",
+    "B": "B) To allow the AI to use external services (like a web search or calculator) to gather live information.",
+    "C": "C) To change the color palette of an application.",
+    "D": "D) To prevent users from sending long messages."
+  },
+  "4. How does Dynamic Prompting differ from Static Prompting?": {
+    "A": "A) Dynamic Prompting is written only in Python.",
+    "B": "B) Dynamic Prompting automatically adapts based on variables or user input, whereas Static Prompting stays the same.",
+    "C": "C) They are the exact same thing.",
+    "D": "D) Dynamic Prompting forces the output to be XML."
+  },
+  "5. What is the purpose of Schema-based Prompting?": {
+    "A": "A) It defines a fixed structure (like JSON fields) that the AI must strictly follow, making it easy for apps to process.",
+    "B": "B) It prevents the AI from providing long explanations.",
+    "C": "C) It connects multiple prompts into a workflow chain.",
+    "D": "D) It asks the AI to evaluate its own output."
+  },
+  "Q1. Which domain commonly uses prompts to generate product descriptions and SEO titles?": {
+    "A": "A) Healthcare",
+    "B": "B) E-commerce",
+    "C": "C) Finance",
+    "D": "D) HR"
+  },
+  "Q2. Which prompt is most suitable for UI/UX Design?": {
+    "A": "A) Generate Python code.",
+    "B": "B) Create a modern dashboard with glassmorphism and responsive layout.",
+    "C": "C) Explain accounting principles.",
+    "D": "D) Write a legal notice."
+  },
+  "Q3. In Software Development prompting, which information is most important to include?": {
+    "A": "A) Favorite color",
+    "B": "B) Programming language, framework, and requirements",
+    "C": "C) User's age",
+    "D": "D) Weather conditions"
+  },
+  "Q4. Why is Prompt Engineering valuable in Education?": {
+    "A": "A) To replace teachers completely",
+    "B": "B) To create learning materials, quizzes, and personalized explanations",
+    "C": "C) To manage banking transactions",
+    "D": "D) To diagnose diseases"
+  },
+  "Q5. Which statement is correct about Healthcare and Legal Prompting?": {
+    "A": "A) AI should make all final decisions without human involvement.",
+    "B": "B) AI should support professionals, and important decisions should be reviewed by qualified experts.",
+    "C": "C) AI outputs never need verification.",
+    "D": "D) AI is always legally responsible for its advice."
+  },
+  "Q1. Which platform is especially known for accurate text rendering in logos and posters?": {
+    "A": "A) Stable Diffusion",
+    "B": "B) Ideogram",
+    "C": "C) FLUX",
+    "D": "D) Midjourney"
+  },
+  "Q2. What is the primary purpose of a negative prompt?": {
+    "A": "A) Increase image size",
+    "B": "B) Tell the AI what to avoid in the generated image",
+    "C": "C) Improve internet speed",
+    "D": "D) Change the file format"
+  },
+  "Q3. Which aspect ratio is commonly used for Instagram posts and logos?": {
+    "A": "A) 16:9",
+    "B": "B) 9:16",
+    "C": "C) 1:1",
+    "D": "D) 3:2"
+  },
+  "Q4. Why is character consistency important?": {
+    "A": "A) To reduce file size",
+    "B": "B) To keep a character's appearance the same across multiple images",
+    "C": "C) To improve internet connectivity",
+    "D": "D) To increase prompt length"
+  },
+  "Q5. Which topic focuses on arranging visual elements to create balance and guide the viewer's attention?": {
+    "A": "A) Lighting",
+    "B": "B) Aspect Ratio",
+    "C": "C) Composition",
+    "D": "D) Negative Prompting"
+  },
+  "Q1. Which platform is developed by Google for AI video generation?": {
+    "A": "A) Kling",
+    "B": "B) Runway",
+    "C": "C) Veo",
+    "D": "D) Pika"
+  },
+  "Q2. Which topic focuses on how the virtual camera moves during a video?": {
+    "A": "A) Character Consistency",
+    "B": "B) Camera Motion",
+    "C": "C) Scene Control",
+    "D": "D) Lighting"
+  },
+  "Q3. Why is Character Consistency important in AI-generated videos?": {
+    "A": "A) To reduce video file size",
+    "B": "B) To keep the same character appearance across multiple scenes",
+    "C": "C) To increase rendering speed",
+    "D": "D) To improve internet connectivity"
+  },
+  "Q4. Which platform combines AI video generation with powerful editing tools?": {
+    "A": "A) Runway",
+    "B": "B) Ideogram",
+    "C": "C) Midjourney",
+    "D": "D) FLUX"
+  },
+  "Q5. What is the main purpose of Scene Control?": {
+    "A": "A) Change video resolution automatically",
+    "B": "B) Maintain continuity of environments, objects, lighting, and actions across scenes",
+    "C": "C) Increase frame rate",
+    "D": "D) Compress video files"
+  },
+  "Q1. What is the primary purpose of RAG?": {
+    "A": "A) Train an LLM from scratch",
+    "B": "B) Retrieve external knowledge before generating an answer",
+    "C": "C) Compress documents",
+    "D": "D) Create images"
+  },
+  "Q2. Why is chunking used in RAG?": {
+    "A": "A) To reduce internet usage",
+    "B": "B) To split large documents into smaller meaningful sections for better retrieval",
+    "C": "C) To translate documents",
+    "D": "D) To encrypt files"
+  },
+  "Q3. What do embeddings represent?": {
+    "A": "A) Images",
+    "B": "B) Numerical vectors that capture the semantic meaning of text",
+    "C": "C) PDF files",
+    "D": "D) HTML pages"
+  },
+  "Q4. Which type of database is commonly used in RAG systems?": {
+    "A": "A) Relational Database",
+    "B": "B) Graph Database",
+    "C": "C) Vector Database",
+    "D": "D) Time-Series Database"
+  },
+  "Q5. What is the purpose of Hybrid Search?": {
+    "A": "A) Use only keyword search",
+    "B": "B) Use only semantic search",
+    "C": "C) Combine keyword search and semantic search for better retrieval",
+    "D": "D) Compress embeddings"
+  },
+  "Q1. What is the primary purpose of an AI Agent?": {
+    "A": "A) Only answer questions",
+    "B": "B) Autonomously plan, use tools, and complete goals",
+    "C": "C) Store images",
+    "D": "D) Translate documents only"
+  },
+  "Q2. Which component enables an AI Agent to remember previous interactions?": {
+    "A": "A) Planning",
+    "B": "B) Tool Use",
+    "C": "C) Agent Memory",
+    "D": "D) Orchestration"
+  },
+  "Q3. What is the role of Agent Orchestration?": {
+    "A": "A) Increase internet speed",
+    "B": "B) Coordinate agents, tools, and workflows to complete tasks efficiently",
+    "C": "C) Translate programming languages",
+    "D": "D) Compress data"
+  },
+  "Q4. Which framework is specifically designed for graph-based, stateful AI workflows?": {
+    "A": "A) CrewAI",
+    "B": "B) AutoGen",
+    "C": "C) LangGraph",
+    "D": "D) Pinecone"
+  },
+  "Q5. Which statement best describes a Multi-Agent System?": {
+    "A": "A) One AI model answering every question independently",
+    "B": "B) Multiple specialized AI Agents collaborating to solve a shared task",
+    "C": "C) A vector database storing embeddings",
+    "D": "D) A chatbot without external tools"
+  },
+  "Q1. What is the primary purpose of n8n?": {
+    "A": "A) Train machine learning models",
+    "B": "B) Build workflow automations connecting multiple applications",
+    "C": "C) Store vector embeddings",
+    "D": "D) Edit videos"
+  },
+  "Q2. What is an API?": {
+    "A": "A) A database",
+    "B": "B) A programming language",
+    "C": "C) A set of rules that allows software applications to communicate and exchange data",
+    "D": "D) A spreadsheet"
+  },
+  "Q3. What is the main difference between an API and a Webhook?": {
+    "A": "A) APIs are only used for AI.",
+    "B": "B) Webhooks automatically push data when an event occurs, while APIs usually respond to requests.",
+    "C": "C) Webhooks replace databases.",
+    "D": "D) APIs cannot send data."
+  },
+  "Q4. Why is Google Sheets commonly used in AI workflows?": {
+    "A": "A) It trains LLMs.",
+    "B": "B) It serves as a lightweight cloud-based database for storing and managing structured data.",
+    "C": "C) It generates images.",
+    "D": "D) It replaces APIs."
+  },
+  "Q5. In an AI automation workflow, what is Slack commonly used for?": {
+    "A": "A) Training AI models",
+    "B": "B) Vector similarity search",
+    "C": "C) Team communication, notifications, and workflow updates",
+    "D": "D) Image generation"
+  },
+  "Q1. What is the primary purpose of an LLM API?": {
+    "A": "A) Store embeddings",
+    "B": "B) Enable applications to communicate with AI models programmatically",
+    "C": "C) Train new AI models automatically",
+    "D": "D) Generate videos"
+  },
+  "Q2. What is the main advantage of streaming responses?": {
+    "A": "A) Reduces storage requirements",
+    "B": "B) Sends the entire response only after completion",
+    "C": "C) Displays generated text progressively, improving responsiveness",
+    "D": "D) Compresses prompts"
+  },
+  "Q3. What is Function Calling used for?": {
+    "A": "A) Training neural networks",
+    "B": "B) Allowing an AI model to request predefined functions that the application executes",
+    "C": "C) Storing documents",
+    "D": "D) Creating vector embeddings"
+  },
+  "Q4. Why are Structured Outputs useful?": {
+    "A": "A) They increase internet speed.",
+    "B": "B) They ensure responses follow a predefined format, making them easier for software to process.",
+    "C": "C) They reduce GPU usage.",
+    "D": "D) They replace APIs."
+  },
+  "Q5. Which practice is most important for production AI applications?": {
+    "A": "A) Ignoring API errors",
+    "B": "B) Disabling authentication",
+    "C": "C) Implementing proper error handling and recovery strategies",
+    "D": "D) Returning raw responses without validation"
+  },
+  "Q1. What is the main purpose of Prompt Evaluation?": {
+    "A": "A) Train new AI models",
+    "B": "B) Measure the quality and effectiveness of prompts",
+    "C": "C) Generate embeddings",
+    "D": "D) Create images"
+  },
+  "Q2. Which technique is commonly used to reduce AI hallucinations?": {
+    "A": "A) Remove all context",
+    "B": "B) Use Retrieval-Augmented Generation (RAG) and trusted reference documents",
+    "C": "C) Increase randomness",
+    "D": "D) Ignore factual verification"
+  },
+  "Q3. What is Prompt Compression?": {
+    "A": "A) Compressing image files",
+    "B": "B) Reducing prompt length while preserving meaning and essential instructions",
+    "C": "C) Encrypting prompts",
+    "D": "D) Translating prompts"
+  },
+  "Q4. What does Latency Optimization primarily improve?": {
+    "A": "A) Disk storage",
+    "B": "B) AI response time and user experience",
+    "C": "C) Monitor resolution",
+    "D": "D) Database size"
+  },
+  "Q5. Why is Benchmarking important?": {
+    "A": "A) It compares prompts or models using consistent evaluation metrics to identify the best-performing option.",
+    "B": "B) It automatically trains an LLM.",
+    "C": "C) It replaces testing.",
+    "D": "D) It eliminates API costs."
+  },
+  "Q1. What is Prompt Injection?": {
+    "A": "A) Compressing prompts",
+    "B": "B) An attempt to manipulate an AI model by overriding or interfering with its intended instructions",
+    "C": "C) Storing prompts in a database",
+    "D": "D) Translating prompts"
+  },
+  "Q2. What is the goal of a Jailbreak Attack?": {
+    "A": "A) Improve model accuracy",
+    "B": "B) Bypass the AI model's safety restrictions",
+    "C": "C) Compress prompts",
+    "D": "D) Reduce latency"
+  },
+  "Q3. What is Prompt Leaking?": {
+    "A": "A) Encrypting prompts",
+    "B": "B) The unintended disclosure of confidential system prompts or hidden instructions",
+    "C": "C) Shortening prompts",
+    "D": "D) Creating embeddings"
+  },
+  "Q4. Which practice best protects sensitive information in AI applications?": {
+    "A": "A) Store passwords directly in prompts",
+    "B": "B) Share system prompts with users",
+    "C": "C) Apply data privacy principles, restrict access, and avoid embedding secrets in prompts",
+    "D": "D) Disable authentication"
+  },
+  "Q5. What is the main objective of Secure Prompt Design?": {
+    "A": "A) Increase prompt length",
+    "B": "B) Reduce security risks while improving reliability and protecting sensitive information",
+    "C": "C) Replace APIs",
+    "D": "D) Train new language models"
+  },
+  "Q1. What is PromptOps?": {
+    "A": "A) A programming language",
+    "B": "B) The discipline of managing prompts throughout their lifecycle using engineering best practices",
+    "C": "C) A vector database",
+    "D": "D) An image generation model"
+  },
+  "Q2. Why is Prompt Versioning important?": {
+    "A": "A) It increases internet speed.",
+    "B": "B) It tracks prompt changes and allows rollback to previous versions.",
+    "C": "C) It replaces testing.",
+    "D": "D) It generates embeddings."
+  },
+  "Q3. What is the primary purpose of a Prompt Library?": {
+    "A": "A) Store images",
+    "B": "B) Organize reusable prompts for efficient and consistent use",
+    "C": "C) Replace APIs",
+    "D": "D) Compress prompts"
+  },
+  "Q4. Which metric is commonly monitored in Prompt Analytics?": {
+    "A": "A) CPU temperature only",
+    "B": "B) User satisfaction, token usage, latency, and cost",
+    "C": "C) Screen resolution",
+    "D": "D) File extension"
+  },
+  "Q5. What is the goal of CI/CD for Prompts?": {
+    "A": "A) Train new LLMs automatically",
+    "B": "B) Automate testing, validation, and deployment of prompt updates",
+    "C": "C) Replace version control",
+    "D": "D) Eliminate monitoring"
+  }
+}
