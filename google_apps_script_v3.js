@@ -11,6 +11,12 @@
    * 5. Copy the Web App URL and update your configuration if needed.
    */
 
+  const CONFIG = {
+    CERTIFICATE_TEMPLATE_ID: '1s4zylo0gzqmEId9nfPR9CCD9CfvhmAjXdxGZdaIo2W4', 
+    CERTIFICATE_FOLDER_ID: '1TIa4W-gb0_S4xGBNbDTNbCDoPgl6_rvg', 
+    SHEET_NAME: 'Academy'
+  };
+
   function normalizeDriveUrl(url) {
     if (!url || typeof url !== 'string') return '';
     const t = url.trim();
@@ -213,6 +219,80 @@
           message: "Progress updated"
         })).setMimeType(ContentService.MimeType.JSON);
         
+      } else if (action === 'generate_certificate') {
+        var email = postData.email;
+        var ss = SpreadsheetApp.getActiveSpreadsheet();
+        var sheet = ss.getSheetByName("Academy");
+        if (!sheet) {
+          return ContentService.createTextOutput(JSON.stringify({ success: false, error: "Academy sheet not found" })).setMimeType(ContentService.MimeType.JSON);
+        }
+        var data = sheet.getDataRange().getValues();
+        var headers = data[0];
+        
+        for (var i = 1; i < data.length; i++) {
+          var userEmailIdx = headers.indexOf("Email");
+          if (userEmailIdx > -1 && data[i][userEmailIdx] === email) {
+            var userId = data[i][headers.indexOf("User ID")];
+            var fullName = data[i][headers.indexOf("Name")] || email;
+            
+            // Generate certificate
+            var result = processUserCompletion(userId, fullName, email, sheet, i + 1, headers);
+            
+            if (result.success) {
+              return ContentService.createTextOutput(JSON.stringify({
+                success: true,
+                certificateUrl: result.fileUrl
+              })).setMimeType(ContentService.MimeType.JSON);
+            } else {
+              return ContentService.createTextOutput(JSON.stringify({
+                success: false,
+                error: "Internal Error: " + result.error
+              })).setMimeType(ContentService.MimeType.JSON);
+            }
+          }
+        }
+        return ContentService.createTextOutput(JSON.stringify({
+          success: false,
+          error: "User not found"
+        })).setMimeType(ContentService.MimeType.JSON);
+        
+      } else if (action === 'verify') {
+        var certIdToVerify = postData.certificateId;
+        if (!certIdToVerify) {
+          return ContentService.createTextOutput(JSON.stringify({ valid: false, error: "No certificate ID provided" })).setMimeType(ContentService.MimeType.JSON);
+        }
+        
+        var ss = SpreadsheetApp.getActiveSpreadsheet();
+        var sheet = ss.getSheetByName("Academy");
+        if (!sheet) {
+           return ContentService.createTextOutput(JSON.stringify({ valid: false, error: "Database not configured properly" })).setMimeType(ContentService.MimeType.JSON);
+        }
+        var data = sheet.getDataRange().getValues();
+        var headers = data[0];
+        
+        var certIdCol = headers.indexOf("Certificate ID") > -1 ? headers.indexOf("Certificate ID") : headers.indexOf("Certificate_ID");
+        
+        if (certIdCol === -1) {
+          return ContentService.createTextOutput(JSON.stringify({ valid: false, error: "Database not configured properly" })).setMimeType(ContentService.MimeType.JSON);
+        }
+        
+        for (var i = 1; i < data.length; i++) {
+          if (data[i][certIdCol] === certIdToVerify) {
+            var certUrlCol = headers.indexOf("Certificate_URL") > -1 ? headers.indexOf("Certificate_URL") : headers.indexOf("QR URL");
+            var issueDateCol = headers.indexOf("Certificate_Issued_Date") > -1 ? headers.indexOf("Certificate_Issued_Date") : headers.indexOf("Completion Date");
+            var nameCol = headers.indexOf("Name") > -1 ? headers.indexOf("Name") : headers.indexOf("Full_Name");
+            return ContentService.createTextOutput(JSON.stringify({
+              valid: true,
+              studentName: data[i][nameCol],
+              issueDate: data[i][issueDateCol],
+              certificateUrl: data[i][certUrlCol]
+            })).setMimeType(ContentService.MimeType.JSON);
+          }
+        }
+        
+        // Not found
+        return ContentService.createTextOutput(JSON.stringify({ valid: false, error: "Certificate not found" })).setMimeType(ContentService.MimeType.JSON);
+
       } else if (action === 'save_portfolio') {
         const userId = postData.user_id || Utilities.getUuid();
         const rawData = postData.portfolio_data || postData.data || {};
@@ -555,6 +635,94 @@
     }
   }
 
+function generateCertificatePDF(userName, courseName, certId) {
+  var step = "Initializing";
+  try {
+    step = "Getting Folder";
+    var folder = DriveApp.getFolderById(CONFIG.CERTIFICATE_FOLDER_ID);
+    
+    step = "Getting Template File and Copying";
+    var tempFile = DriveApp.getFileById(CONFIG.CERTIFICATE_TEMPLATE_ID).makeCopy(userName + ' - Certificate', folder);
+    
+    step = "Opening Slides";
+    var slidePresentation = SlidesApp.openById(tempFile.getId());
+    var slide = slidePresentation.getSlides()[0];
+    
+    step = "Replacing Text";
+    slidePresentation.replaceAllText('{{NAME}}', userName);
+    slidePresentation.replaceAllText('{{DATE}}', new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }));
+    slidePresentation.replaceAllText('{{CERT_ID}}', certId); 
+    
+    step = "Fetching QR Code";
+    var verificationUrl = "https://promptbazaar.netlify.app/verify?id=" + certId;
+    var qrApiUrl = "https://quickchart.io/qr?text=" + encodeURIComponent(verificationUrl) + "&size=150";
+    var qrBlob = UrlFetchApp.fetch(qrApiUrl).getBlob();
+    
+    step = "Inserting QR Code";
+    var shapes = slide.getShapes();
+    for (var i = 0; i < shapes.length; i++) {
+      try {
+        if (shapes[i].getText().asString().indexOf("{{QR}}") !== -1) {
+          slide.insertImage(qrBlob, shapes[i].getLeft(), shapes[i].getTop(), shapes[i].getWidth(), shapes[i].getHeight());
+          shapes[i].remove();
+          break;
+        }
+      } catch (shapeErr) {
+        // Ignore shapes that don't support text
+      }
+    }
+    
+    step = "Saving Slides";
+    slidePresentation.saveAndClose();
+    
+    step = "Converting to PDF";
+    var pdfBlob = tempFile.getAs(MimeType.PDF);
+    
+    step = "Creating final PDF file";
+    var finalPdfFile = folder.createFile(pdfBlob);
+    finalPdfFile.setName(userName + ' - Prompt Academy Certificate.pdf');
+    
+    step = "Setting file sharing permissions";
+    try {
+      finalPdfFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    } catch (sharingErr) {
+      Logger.log("Could not set sharing permissions: " + sharingErr);
+    }
+    
+    step = "Trashing temporary slide file";
+    tempFile.setTrashed(true);
+    
+    return { success: true, fileUrl: finalPdfFile.getUrl(), fileBlob: pdfBlob };
+  } catch (e) {
+    return { success: false, error: e.toString() + " at step: " + step };
+  }
+}
 
+function processUserCompletion(userId, userName, userEmail, sheet, rowIndex, headers) {
+  var certId = "PB-" + Utilities.getUuid().split('-')[0].toUpperCase() + "-" + new Date().getFullYear();
+  var certResult = generateCertificatePDF(userName, "Prompt Engineering Master Course", certId);
+  
+  if (certResult.success) {
+    // Helper to dynamically set column values
+    function setColValue(rowNum, colName, value) {
+      var colIdx = headers.indexOf(colName);
+      if (colIdx > -1) {
+        sheet.getRange(rowNum, colIdx + 1).setValue(value);
+      } else {
+        headers.push(colName);
+        sheet.getRange(1, headers.length).setValue(colName);
+        sheet.getRange(1, headers.length).setFontWeight("bold").setBackground("#f3f4f6");
+        sheet.getRange(rowNum, headers.length).setValue(value);
+      }
+    }
 
+    setColValue(rowIndex, "Certificate Status", "Issued");
+    setColValue(rowIndex, "Certificate ID", certId);
+    setColValue(rowIndex, "Certificate_URL", certResult.fileUrl);
+    setColValue(rowIndex, "Certificate_Issued_Date", new Date());
+    setColValue(rowIndex, "Course_Completed", "TRUE");
 
+    return { success: true, fileUrl: certResult.fileUrl };
+  }
+  return { success: false, error: certResult.error };
+}
