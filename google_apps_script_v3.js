@@ -105,7 +105,7 @@
                 <p style="font-size: 16px; line-height: 1.6;">Hi ${fullName || 'there'},</p>
                 <p style="font-size: 16px; line-height: 1.6;">You have successfully enrolled in the <strong>Prompt Engineering Master Course</strong>.</p>
                 <div style="text-align: center; margin: 40px 0;">
-                  <a href="https://promptbazaar.netlify.app/academy" style="background-color: #2563eb; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Start Learning Now</a>
+                  <a href="https://promptbazzar.netlify.app/academy" style="background-color: #2563eb; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Start Learning Now</a>
                 </div>
                 <p style="font-size: 16px; line-height: 1.6;">Happy Prompting,<br><strong>The Prompt Bazaar Team</strong></p>
               </div>
@@ -619,7 +619,7 @@ function generateCertificatePDF(userName, courseName, certId) {
     
     step = "Fetching QR Code";
     // Fixed QR URL to point to /academy/verify instead of just /verify, and encode properly
-    var verificationUrl = "https://promptbazaar.netlify.app/academy/verify?certId=" + encodeURIComponent(certId);
+    var verificationUrl = "https://promptbazzar.netlify.app/academy/verify?certId=" + encodeURIComponent(certId);
     var qrApiUrl = "https://quickchart.io/qr?text=" + encodeURIComponent(verificationUrl) + "&size=150";
     var qrBlob = UrlFetchApp.fetch(qrApiUrl).getBlob();
     
