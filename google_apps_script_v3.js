@@ -232,8 +232,12 @@
         for (var i = 1; i < data.length; i++) {
           var userEmailIdx = headers.indexOf("Email");
           if (userEmailIdx > -1 && data[i][userEmailIdx] === email) {
-            var userId = data[i][headers.indexOf("User ID")];
-            var fullName = data[i][headers.indexOf("Name")] || email;
+            var userIdIdx = headers.indexOf("User ID") > -1 ? headers.indexOf("User ID") : headers.indexOf("User_ID");
+            var userId = userIdIdx > -1 ? data[i][userIdIdx] : Utilities.getUuid();
+            
+            var nameIdx = headers.indexOf("Name") > -1 ? headers.indexOf("Name") : (headers.indexOf("Full_Name") > -1 ? headers.indexOf("Full_Name") : headers.indexOf("Full Name"));
+            var fullName = nameIdx > -1 ? data[i][nameIdx] : email;
+            if (!fullName || fullName.trim() === '') fullName = email;
             
             // Generate certificate
             var result = processUserCompletion(userId, fullName, email, sheet, i + 1, headers);
