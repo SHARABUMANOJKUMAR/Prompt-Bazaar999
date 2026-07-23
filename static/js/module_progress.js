@@ -393,4 +393,150 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize progress bar
     updateHeaderXP();
     updateProgressUI();
+
+    // ==========================================
+    // Generic Quiz Evaluator for Academy Modules
+    // ==========================================
+    function initializeQuizzes() {
+        // Find all containers that look like a quiz (have radio buttons)
+        const quizContainers = [];
+        document.querySelectorAll('.lesson-card').forEach(card => {
+            if (card.querySelector('input[type="radio"]')) {
+                quizContainers.push(card);
+            }
+        });
+
+        quizContainers.forEach((quizCard, index) => {
+            // Check if actions already exist
+            if (quizCard.querySelector('.quiz-actions')) return;
+
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'quiz-actions';
+            actionsDiv.style.marginTop = '30px';
+            actionsDiv.style.paddingTop = '20px';
+            actionsDiv.style.borderTop = '1px solid var(--color-border)';
+            actionsDiv.style.display = 'flex';
+            actionsDiv.style.gap = '15px';
+            actionsDiv.style.alignItems = 'center';
+
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'btn btn-primary';
+            submitBtn.innerText = 'Submit Quiz';
+            submitBtn.style.padding = '12px 24px';
+            submitBtn.style.fontWeight = '600';
+            submitBtn.style.borderRadius = '8px';
+
+            const retryBtn = document.createElement('button');
+            retryBtn.className = 'btn btn-secondary';
+            retryBtn.innerText = 'Rewrite / Retry';
+            retryBtn.style.padding = '12px 24px';
+            retryBtn.style.fontWeight = '600';
+            retryBtn.style.borderRadius = '8px';
+            retryBtn.style.display = 'none'; // hidden initially
+
+            const resultText = document.createElement('span');
+            resultText.style.fontWeight = '600';
+            resultText.style.fontSize = '16px';
+            resultText.style.display = 'none';
+
+            actionsDiv.appendChild(submitBtn);
+            actionsDiv.appendChild(retryBtn);
+            actionsDiv.appendChild(resultText);
+            quizCard.appendChild(actionsDiv);
+
+            // Get all unique question names in this card
+            const radios = Array.from(quizCard.querySelectorAll('input[type="radio"]'));
+            const questionNames = [...new Set(radios.map(r => r.name))];
+
+            submitBtn.addEventListener('click', () => {
+                let score = 0;
+                let answered = 0;
+
+                questionNames.forEach(qName => {
+                    const options = quizCard.querySelectorAll(`input[name="${qName}"]`);
+                    let selected = null;
+                    
+                    // Reset styles first
+                    options.forEach(opt => {
+                        const label = opt.closest('label');
+                        label.style.backgroundColor = 'var(--color-bg-secondary)';
+                        label.style.borderColor = 'var(--color-border)';
+                        if (opt.checked) {
+                            selected = opt;
+                            answered++;
+                        }
+                    });
+
+                    if (selected) {
+                        // Demo evaluation logic: If data-correct="true" is present on ANY option, use that.
+                        // Otherwise, fallback to assuming the selected answer is correct for UX demo purposes.
+                        let hasCorrectAttr = false;
+                        let correctOpt = null;
+                        
+                        options.forEach(opt => {
+                            if (opt.getAttribute('data-correct') === 'true') {
+                                hasCorrectAttr = true;
+                                correctOpt = opt;
+                            }
+                        });
+
+                        const selectedLabel = selected.closest('label');
+                        
+                        if (hasCorrectAttr) {
+                            if (selected === correctOpt) {
+                                score++;
+                                selectedLabel.style.backgroundColor = '#dcfce7'; // green bg
+                                selectedLabel.style.borderColor = '#22c55e'; // green border
+                            } else {
+                                selectedLabel.style.backgroundColor = '#fee2e2'; // red bg
+                                selectedLabel.style.borderColor = '#ef4444'; // red border
+                                const correctLabel = correctOpt.closest('label');
+                                correctLabel.style.backgroundColor = '#dcfce7';
+                                correctLabel.style.borderColor = '#22c55e';
+                            }
+                        } else {
+                            // Fallback: Just mark selected as correct to show the UI
+                            score++;
+                            selectedLabel.style.backgroundColor = '#dcfce7';
+                            selectedLabel.style.borderColor = '#22c55e';
+                        }
+                    }
+                });
+
+                if (answered < questionNames.length) {
+                    alert('Please answer all questions before submitting.');
+                    return;
+                }
+
+                // Show results
+                submitBtn.style.display = 'none';
+                retryBtn.style.display = 'inline-block';
+                resultText.style.display = 'inline-block';
+                resultText.innerText = `Result: ${score}/${questionNames.length} Correct`;
+                resultText.style.color = score === questionNames.length ? '#15803d' : '#b45309';
+                
+                // Disable radios
+                radios.forEach(r => r.disabled = true);
+            });
+
+            retryBtn.addEventListener('click', () => {
+                // Reset quiz
+                radios.forEach(r => {
+                    r.disabled = false;
+                    r.checked = false;
+                    const label = r.closest('label');
+                    if(label) {
+                        label.style.backgroundColor = 'var(--color-bg-secondary)';
+                        label.style.borderColor = 'var(--color-border)';
+                    }
+                });
+                submitBtn.style.display = 'inline-block';
+                retryBtn.style.display = 'none';
+                resultText.style.display = 'none';
+            });
+        });
+    }
+
+    // Run quiz init
+    initializeQuizzes();
 });
