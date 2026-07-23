@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Certificate | Prompt Bazaar Academy{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        background-color: var(--color-bg-tertiary);
+    }
+    
+    .verify-container {
+        max-width: 600px;
+        margin: 80px auto;
+        padding: 0 20px;
+    }
+
+    .verify-card {
+        background: var(--color-bg-primary);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--color-border);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Loading State */
+    .verify-loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid var(--color-border);
+        border-top-color: var(--color-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    /* Result State */
+    .verify-result {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .status-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .status-icon.valid {
+        background-color: #dcfce7;
+        color: #22c55e;
+    }
+
+    .status-icon.invalid {
+        background-color: #fee2e2;
+        color: #ef4444;
+    }
+
+    .cert-id-badge {
+        background: var(--color-bg-tertiary);
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-family: monospace;
+        font-size: 14px;
+        color: var(--color-text-secondary);
+        border: 1px dashed var(--color-border);
+        margin: 10px 0;
+    }
+
+    .cert-details {
+        width: 100%;
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 20px;
+        text-align: left;
+        border: 1px solid #e2e8f0;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .detail-value {
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    .btn-view-cert {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--color-primary);
+        color: white;
+        padding: 14px 28px;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        margin-top: 30px;
+        width: 100%;
+        transition: all 0.2s ease;
+    }
+    .btn-view-cert:hover {
+        background: var(--color-primary-hover);
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="verify-container">
+    <div class="verify-card">
+        <!-- Loading State -->
+        <div id="verify-loading" class="verify-loading">
+            <div class="spinner"></div>
+            <h2 class="text-h3">Verifying Certificate...</h2>
+            <p class="text-body" style="color: var(--color-text-secondary);">Connecting to Prompt Bazaar Registry</p>
+        </div>
+
+        <!-- Valid State -->
+        <div id="verify-valid" class="verify-result">
+            <div class="status-icon valid">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <h2 class="text-h2" style="color: #15803d; margin: 0;">Verified Official</h2>
+            <div class="cert-id-badge" id="display-cert-id">PB-XXX-XXX</div>
+            <p class="text-body" style="color: var(--color-text-secondary); margin-top: 0;">This certificate was issued by Prompt Bazaar Academy and is cryptographically authentic.</p>
+            
+            <div class="cert-details">
+                <div class="detail-row">
+                    <span class="detail-label">Issued To</span>
+                    <span class="detail-value" id="display-name">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Course</span>
+                    <span class="detail-value">Prompt Engineering Master Course</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Issue Date</span>
+                    <span class="detail-value" id="display-date">Loading...</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value" style="color: #16a34a;">Active</span>
+                </div>
+            </div>
+
+            <a href="#" id="display-url" target="_blank" class="btn-view-cert">
+                View Original PDF
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+        </div>
+
+        <!-- Invalid State -->
+        <div id="verify-invalid" class="verify-result">
+            <div class="status-icon invalid">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            </div>
+            <h2 class="text-h2" style="color: #b91c1c; margin: 0;">Record Not Found</h2>
+            <div class="cert-id-badge" id="invalid-cert-id">Unknown ID</div>
+            <p class="text-body" style="color: var(--color-text-secondary); margin-top: 10px;">We could not find this certificate in the Prompt Bazaar Registry. It may be invalid, expired, or the ID is incorrect.</p>
+            <a href="/academy" class="btn btn-secondary" style="margin-top: 20px;">Return to Academy</a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+    // Extract ID from URL (e.g. ?id=PB-XXXX)
+    const urlParams = new URLSearchParams(window.location.search);
+    const certId = urlParams.get('id');
+
+    const loadingEl = document.getElementById('verify-loading');
+    const validEl = document.getElementById('verify-valid');
+    const invalidEl = document.getElementById('verify-invalid');
+
+    if (!certId) {
+        loadingEl.style.display = 'none';
+        invalidEl.style.display = 'flex';
+        return;
+    }
+
+    // Set the badges
+    document.getElementById('display-cert-id').innerText = certId;
+    document.getElementById('invalid-cert-id').innerText = certId;
+
+    // Call Webhook to verify
+    // Using the same webhook URL configured in academy.js
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwVm4Hjb9FoS8fQr9hG4o20_lWMIKIRfGb565AQuiEewO44rKHaKNxsAmwmd6WwO6GN/exec";
+    
+    try {
+        const res = await fetch(GAS_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+                action: 'verify',
+                certificateId: certId
+            })
+        });
+        
+        const data = await res.json();
+        
+        loadingEl.style.display = 'none';
+        
+        if (data.valid) {
+            // Fill details
+            document.getElementById('display-name').innerText = data.studentName || 'Unknown';
+            
+            // Format date nicely
+            if (data.issueDate) {
+                const dateObj = new Date(data.issueDate);
+                document.getElementById('display-date').innerText = dateObj.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            }
+            
+            if (data.certificateUrl) {
+                document.getElementById('display-url').href = data.certificateUrl;
+            } else {
+                document.getElementById('display-url').style.display = 'none';
+            }
+
+            validEl.style.display = 'flex';
+        } else {
+            invalidEl.style.display = 'flex';
+        }
+    } catch (e) {
+        console.error("Verification failed:", e);
+        loadingEl.style.display = 'none';
+        invalidEl.style.display = 'flex';
+    }
+});
+</script>
+{% endblock %}

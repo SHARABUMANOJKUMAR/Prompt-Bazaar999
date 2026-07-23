@@ -298,14 +298,22 @@ def login():
         return redirect(url_for('index'))
     return render_template('login.html')
 
-@app.route('/success')
-def success_page():
-    return render_template('success.html')
+@app.route('/gallery')
+def gallery():
+    return render_template('gallery.html')
+
+@app.route('/verify')
+def verify_certificate():
+    return render_template('verify.html')
 
 @app.route('/logout')
 def logout():
     session.pop('user', None)
     return redirect(url_for('login'))
+
+@app.route('/success')
+def success_page():
+    return render_template('success.html')
 
 @app.route('/tools')
 def tools():
