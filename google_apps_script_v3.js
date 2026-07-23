@@ -51,7 +51,81 @@
       const postData = JSON.parse(e.postData.contents);
       const action = postData.action;
 
-      if (action === 'get_academy') {
+      if (action === 'enroll') {
+        var email = postData.email;
+        var fullName = postData.fullName || postData.name || '';
+        
+        var ss = SpreadsheetApp.getActiveSpreadsheet();
+        var sheet = ss.getSheetByName("Academy");
+        if (!sheet) {
+          sheet = ss.insertSheet("Academy");
+          sheet.appendRow(["User ID", "Name", "Email", "Course ID", "Current Module", "Completed Modules", "Progress %", "Certificate Status", "Certificate ID", "QR URL", "Completion Date", "Last Updated"]);
+          sheet.setFrozenRows(1);
+          sheet.getRange(1, 1, 1, 12).setFontWeight("bold").setBackground("#f3f4f6");
+        }
+        
+        var data = sheet.getDataRange().getValues();
+        var headers = data[0];
+        
+        for (var i = 1; i < data.length; i++) {
+          var emailIdx = headers.indexOf("Email");
+          if (emailIdx > -1 && data[i][emailIdx] === email) {
+            var existingUserId = headers.indexOf("User ID") > -1 ? data[i][headers.indexOf("User ID")] : "";
+            return ContentService.createTextOutput(JSON.stringify({
+              success: true,
+              message: "User already enrolled",
+              userId: existingUserId
+            })).setMimeType(ContentService.MimeType.JSON);
+          }
+        }
+        
+        var userId = "USER-" + Utilities.getUuid().split('-')[0].toUpperCase();
+        var now = new Date();
+        var newRow = new Array(headers.length).fill('');
+        
+        function getIdx(col) { return headers.indexOf(col); }
+        if (getIdx("User ID") > -1) newRow[getIdx("User ID")] = userId;
+        if (getIdx("Name") > -1) newRow[getIdx("Name")] = fullName;
+        if (getIdx("Full_Name") > -1) newRow[getIdx("Full_Name")] = fullName;
+        if (getIdx("Email") > -1) newRow[getIdx("Email")] = email;
+        if (getIdx("Course ID") > -1) newRow[getIdx("Course ID")] = "PROMPT_ENG_MASTER";
+        if (getIdx("Current Module") > -1) newRow[getIdx("Current Module")] = 1;
+        if (getIdx("Completed Modules") > -1) newRow[getIdx("Completed Modules")] = 0;
+        if (getIdx("Progress %") > -1) newRow[getIdx("Progress %")] = 0;
+        if (getIdx("Certificate Status") > -1) newRow[getIdx("Certificate Status")] = "Not Started";
+        if (getIdx("Last Updated") > -1) newRow[getIdx("Last Updated")] = now;
+        
+        sheet.appendRow(newRow);
+        
+        try {
+          var subject = "Welcome to Prompt Bazaar Academy! \ud83c\udf93";
+          var htmlBody = `
+            <div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+              <div style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); padding: 40px 20px; text-align: center; color: white;">
+                <h1 style="margin: 0; font-size: 24px;">Welcome to Prompt Bazaar Academy!</h1>
+              </div>
+              <div style="padding: 40px 30px; background: white; color: #0f172a;">
+                <p style="font-size: 16px; line-height: 1.6;">Hi ${fullName || 'there'},</p>
+                <p style="font-size: 16px; line-height: 1.6;">You have successfully enrolled in the <strong>Prompt Engineering Master Course</strong>.</p>
+                
+                <div style="text-align: center; margin: 40px 0;">
+                  <a href="https://promptbazaar.netlify.app/academy" style="background-color: #2563eb; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; display: inline-block;">Start Learning Now</a>
+                </div>
+                
+                <p style="font-size: 16px; line-height: 1.6;">Happy Prompting,<br><strong>The Prompt Bazaar Team</strong></p>
+              </div>
+            </div>
+          `;
+          MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody });
+        } catch (e) {}
+        
+        return ContentService.createTextOutput(JSON.stringify({
+          success: true,
+          userId: userId,
+          message: "Successfully enrolled"
+        })).setMimeType(ContentService.MimeType.JSON);
+        
+      } else if (action === 'get_academy') {
         var ss = SpreadsheetApp.getActiveSpreadsheet();
         var sheet = ss.getSheetByName("Academy");
         if (!sheet) {
