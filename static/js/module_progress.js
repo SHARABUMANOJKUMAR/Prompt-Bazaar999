@@ -243,12 +243,17 @@ document.addEventListener('DOMContentLoaded', () => {
         statusBadge.innerHTML = isCompleted ? 'Completed ✓' : 'Reading';
         card.appendChild(statusBadge);
 
+        const isQuiz = card.getAttribute('data-is-quiz') === 'true';
+
         // 2. Inject Bottom Completion Button
         const completeBtn = document.createElement('button');
         completeBtn.className = `btn-lesson-complete ${isCompleted ? 'completed' : 'pending'}`;
-        completeBtn.innerHTML = isCompleted 
-            ? 'Completed ✓' 
-            : 'Mark Lesson Complete (+50 XP)';
+        
+        if (isQuiz) {
+            completeBtn.innerHTML = isCompleted ? 'Quiz Passed ✓' : 'Submit Final Quiz';
+        } else {
+            completeBtn.innerHTML = isCompleted ? 'Completed ✓' : 'Mark Lesson Complete (+50 XP)';
+        }
         if (isCompleted) {
             completeBtn.disabled = true;
         }
@@ -258,9 +263,53 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             if (progress.completedLessons.includes(lessonId)) return;
 
+            if (isQuiz) {
+                // EXAMINER QUIZ EVALUATION LOGIC
+                const radioGroups = {};
+                const allRadios = card.querySelectorAll('input[type=\"radio\"]');
+                allRadios.forEach(r => {
+                    if (!radioGroups[r.name]) radioGroups[r.name] = [];
+                    radioGroups[r.name].push(r);
+                });
+                
+                let allCorrect = true;
+                Object.keys(radioGroups).forEach(groupName => {
+                    const radios = radioGroups[groupName];
+                    let groupCorrect = false;
+                    let hasSelection = false;
+                    
+                    radios.forEach(r => {
+                        // Reset parent label style
+                        r.parentElement.style.borderColor = 'var(--color-border)';
+                        r.parentElement.style.backgroundColor = 'var(--color-bg-secondary)';
+                        
+                        if (r.checked) {
+                            hasSelection = true;
+                            if (r.getAttribute('data-correct') === 'true') {
+                                groupCorrect = true;
+                                r.parentElement.style.borderColor = '#22c55e';
+                                r.parentElement.style.backgroundColor = '#f0fdf4';
+                            } else {
+                                r.parentElement.style.borderColor = '#ef4444';
+                                r.parentElement.style.backgroundColor = '#fef2f2';
+                            }
+                        }
+                    });
+                    
+                    if (!hasSelection || !groupCorrect) {
+                        allCorrect = false;
+                    }
+                });
+                
+                if (!allCorrect) {
+                    alert(\"Some answers are incorrect or missing. Please review your answers (highlighted in red) and try again.\");
+                    return; // Do not mark as complete!
+                }
+            }
+
             // Update Progress
             progress.completedLessons.push(lessonId);
-            progress.xp += 50;
+            progress.xp += (isQuiz ? 100 : 50);
 
             // Check if all lessons of this module are complete
             let allCompleted = true;
@@ -283,7 +332,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Update local button & card UI
             completeBtn.className = 'btn-lesson-complete completed';
-            completeBtn.innerHTML = 'Completed ✓';
+            if (isQuiz) {
+                completeBtn.innerHTML = 'Quiz Passed ✓';
+            } else {
+                completeBtn.innerHTML = 'Completed ✓';
+            }
             completeBtn.disabled = true;
             card.classList.add('is-completed');
             

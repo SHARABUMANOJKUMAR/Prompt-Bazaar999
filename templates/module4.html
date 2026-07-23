@@ -234,10 +234,7 @@
 </header>
 <main class="academy-main-content">
 <div class="module-container">
-<div style="display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
-    <a class="btn btn-secondary" href="/academy">← Back to Academy Roadmap</a>
-    <a class="btn btn-secondary" href="/academy/module3">← Go back to previous module</a>
-</div>
+
 <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">Module 4: Advanced Prompting Techniques</h1>
 <!-- Lesson 1 -->
 
@@ -608,7 +605,7 @@
 
 <!-- Quiz Section -->
 
-</div><div class="lesson-card"><h2 style="border-bottom: none; margin-bottom: 10px;">🧠 Module 4 Quiz: Test Your Knowledge!</h2>
+</div><div class="lesson-card quiz-card" data-is-quiz="true"><h2 style="border-bottom: none; margin-bottom: 10px;">🧠 Module 4 Quiz: Test Your Knowledge!</h2>
 <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
 <div style="display: flex; flex-direction: column; gap: 20px;">
 <!-- MCQ 1 -->
@@ -616,7 +613,7 @@
 <h4 style="margin-top: 0; color: var(--color-text-primary);">1. What is Chain of Thought Prompting?</h4>
 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="A"/>A) Asking AI to guess the answer instantly.</label>
-<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="B"/>B) Encouraging the AI to solve a problem using logical step-by-step reasoning.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="B"/> data-correct="true"B) Encouraging the AI to solve a problem using logical step-by-step reasoning.</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="C"/>C) Connecting multiple prompts together.</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="D"/>D) Removing constraints from a prompt.</label>
 </div>
@@ -626,7 +623,7 @@
 <h4 style="margin-top: 0; color: var(--color-text-primary);">2. How does Tree of Thought differ from Chain of Thought?</h4>
 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="A"/>A) Tree of Thought does not use logic.</label>
-<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="B"/>B) Tree of Thought explores multiple reasoning branches before deciding, while Chain of Thought follows a single path.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="B"/> data-correct="true"B) Tree of Thought explores multiple reasoning branches before deciding, while Chain of Thought follows a single path.</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="C"/>C) Chain of Thought is only used for image generation.</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="D"/>D) They are exactly the same thing.</label>
 </div>
@@ -637,7 +634,7 @@
 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="A"/>A) Using multiple examples in one prompt.</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="B"/>B) Limiting the AI's output format.</label>
-<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="C"/>C) Connecting multiple prompts so the output of one becomes the input for the next.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="C"/> data-correct="true"C) Connecting multiple prompts so the output of one becomes the input for the next.</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="D"/>D) Repeating the same prompt infinitely.</label>
 </div>
 </div>
@@ -645,7 +642,7 @@
 <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
 <h4 style="margin-top: 0; color: var(--color-text-primary);">4. Which technique involves the AI checking its own answer for mistakes before finalizing it?</h4>
 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="A"/>A) Prompt Chaining</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="A"/> data-correct="true"A) Prompt Chaining</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="B"/>B) Zero-shot Prompting</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="C"/>C) Self Critique</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="D"/>D) Output Templates</label>
@@ -656,20 +653,27 @@
 <h4 style="margin-top: 0; color: var(--color-text-primary);">5. What is the main goal of Verification Prompting?</h4>
 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="A"/>A) To generate images faster.</label>
-<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="B"/>B) To reduce hallucinations and improve factual accuracy by checking evidence.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="B"/> data-correct="true"B) To reduce hallucinations and improve factual accuracy by checking evidence.</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="C"/>C) To ask the user to verify their identity.</label>
 <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="D"/>D) To limit output length.</label>
 </div>
 </div>
 </div>
 
+
+</div></div><div class="module-navigation-footer" style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 50px; margin-bottom: 50px;">
 <!-- Navigation to Next Module -->
-<div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
+<div style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
 <a class="btn btn-primary" href="/academy/module5" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
                     Move Next Module 5 →
                 </a>
 </div>
-</div></div></main>
+<div style="display: flex; gap: 16px; margin-bottom: 0; justify-content: center; flex-wrap: wrap;">
+    <a class="btn btn-secondary" href="/academy">← Back to Academy Roadmap</a>
+    <a class="btn btn-secondary" href="/academy/module3">← Go back to previous module</a>
+</div>
+</div>
+</main>
 </div>
 <script>
     // Include sidebar toggle functionality
