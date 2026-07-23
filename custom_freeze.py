@@ -23,6 +23,7 @@ with app.test_client() as client:
         '/profile': 'profile.html',
         '/admin/dashboard': 'admin-dashboard.html',
         '/academy/': 'academy.html',
+        '/verify': 'verify.html',
     }
     
     for i in range(1, 18):
