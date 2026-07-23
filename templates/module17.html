@@ -858,44 +858,17 @@
             <div class="badge">🤖 AI Agent Builder</div>
         </div>
 
-        <!-- Certificate -->
-        <div class="certificate-wrapper" id="certWrapper">
-            <div class="certificate" id="certificateNode">
-                <div class="cert-border"></div>
-                <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo" style="height: 50px;">
-                <div class="cert-header">Certificate of Completion</div>
-                <div class="cert-title">Professional Prompt Engineering Master Program</div>
-                <div class="cert-body">This certifies that</div>
-                <div class="cert-name">{{ user.displayName if user else 'Student Name' }}</div>
-                <div class="cert-body">has successfully completed the</div>
-                <div class="cert-course">Professional Prompt Engineering Master Program</div>
-                
-                <div class="cert-topics">
-                    Covering Prompt Engineering, AI Image Prompting, Video Prompting, RAG, AI Agents, Automation, LLM APIs, Security, and PromptOps with an overall score of <strong id="certScore">96%</strong> (Grade: <strong id="certGrade">A+</strong>).
-                </div>
-
-                <div class="cert-footer">
-                    <div class="cert-sig">
-                        <div class="cert-sig-img">Antigravity</div>
-                        Instructor Signature
-                    </div>
-                    <div class="cert-seal">PROMPT<br>MASTER</div>
-                    <div class="cert-sig" style="border:none; padding:0; display:flex; flex-direction:column; align-items:center;">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://promptbazaar.com/verify/12345" alt="QR" style="width:70px; height:70px; margin-bottom:10px;">
-                        <div style="font-size:10px;">Verify at promptbazaar.com</div>
-                    </div>
-                </div>
-
-                <div class="cert-meta">
-                    Certificate ID: PB-{{ range(10000, 99999) | random }} | Issued: <span id="issueDate"></span>
+        <!-- Certificate Generator -->
+        <div class="certificate-generator" id="certGenerator">
+            <div class="glass-card" style="text-align: center; padding: 40px;">
+                <h3 style="margin-top:0; color:#1e293b;">Generating Your Official Certificate</h3>
+                <div class="loading-spinner cert-spinner" style="width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #4f46e5; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto;"></div>
+                <p style="color:#64748b; font-size:15px;" id="certStatusMsg">Connecting to backend to generate your secure PDF certificate...</p>
+                <div id="certActions" style="display: none; margin-top: 30px;">
+                    <a href="#" target="_blank" id="btnDownloadPdf" class="btn-action btn-pdf" style="text-decoration:none; display:inline-block;">📄 View Official PDF</a>
+                    <button class="btn-action btn-social" onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url=https://promptbazaar.netlify.app/academy')">🔗 Share LinkedIn</button>
                 </div>
             </div>
-        </div>
-
-        <div class="download-actions">
-            <button class="btn-action btn-pdf" onclick="downloadPDF()">📄 Download PDF</button>
-            <button class="btn-action btn-png" onclick="downloadPNG()"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg> Download PNG</button>
-            <button class="btn-action btn-social">🔗 Share LinkedIn</button>
         </div>
         
         <div style="text-align:center; margin-top:60px;">
@@ -909,10 +882,6 @@
     setTimeout(() => {
         document.getElementById('mainProgress').style.width = '95%';
     }, 500);
-
-    // Set today's date on cert
-    const date = new Date();
-    document.getElementById('issueDate').innerText = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     // Simulated Prompt Evaluation Logic
     function evaluatePrompt(pid) {
@@ -1091,29 +1060,52 @@
                 plugins: { legend: { display: false } },
                 maintainAspectRatio: false
             }
-        });
+        // Trigger real certificate generation
+        let userEmail = null;
+        try {
+            const STORAGE_KEY = 'prompt_academy_progress';
+            let progress = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            if (progress && progress.userEmail) {
+                userEmail = progress.userEmail;
+            }
+        } catch(e) {}
+        generateRealCertificate(userEmail);
     }
 
-    // Download functions
-    function downloadPNG() {
-        const cert = document.getElementById('certificateNode');
-        html2canvas(cert, { scale: 2 }).then(canvas => {
-            const link = document.createElement('a');
-            link.download = 'Prompt_Engineering_Certificate.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-    }
+    async function generateRealCertificate(userEmail) {
+        if (!userEmail) {
+            document.getElementById('certStatusMsg').innerText = "Error: No user email found in progress data. Please enroll first.";
+            document.getElementById('certStatusMsg').style.color = "#ef4444";
+            document.querySelector('.cert-spinner').style.display = 'none';
+            return;
+        }
 
-    function downloadPDF() {
-        const cert = document.getElementById('certificateNode');
-        html2canvas(cert, { scale: 2 }).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            // jsPDF (orientation, unit, format) -> landscape, mm, a4 roughly 297x210
-            const pdf = new jspdf.jsPDF('l', 'mm', [211.6, 282.2]); // adjusted for 800x600 ratio
-            pdf.addImage(imgData, 'PNG', 0, 0, 282.2, 211.6);
-            pdf.save('Prompt_Engineering_Certificate.pdf');
-        });
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzF7droXuNirFZ_NNlfsE7pV6b71yPVf7f-UMAfpTHLQlOvPgnmv8NN5tcbLWpqwZVd/exec";
+        try {
+            const res = await fetch(GAS_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    action: 'generate_certificate',
+                    email: userEmail
+                })
+            });
+            const data = await res.json();
+            
+            document.querySelector('.cert-spinner').style.display = 'none';
+            if (data.success && data.certificateUrl) {
+                document.getElementById('certStatusMsg').innerText = "✅ Your official PDF certificate has been generated!";
+                document.getElementById('certStatusMsg').style.color = "#10b981";
+                document.getElementById('certActions').style.display = "block";
+                document.getElementById('btnDownloadPdf').href = data.certificateUrl;
+            } else {
+                document.getElementById('certStatusMsg').innerText = "Error: " + (data.error || "Failed to generate certificate.");
+                document.getElementById('certStatusMsg').style.color = "#ef4444";
+            }
+        } catch (err) {
+            document.querySelector('.cert-spinner').style.display = 'none';
+            document.getElementById('certStatusMsg').innerText = "Network Error: Could not connect to the certificate server.";
+            document.getElementById('certStatusMsg').style.color = "#ef4444";
+        }
     }
 </script>
 {% endblock %}
