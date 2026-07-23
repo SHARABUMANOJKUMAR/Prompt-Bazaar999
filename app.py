@@ -147,7 +147,7 @@ except Exception as e:
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # --- Configuration ---
-GAS_URL = "https://script.google.com/macros/s/AKfycbx17A9cGKQk70Uf1ysoYqBjjBxfDcyMywNtA7-PaAflmff_hFp9C3mQjS4K7qZk_Wsb/exec"
+GAS_URL = "https://script.google.com/macros/s/AKfycbzF7droXuNirFZ_NNlfsE7pV6b71yPVf7f-UMAfpTHLQlOvPgnmv8NN5tcbLWpqwZVd/exec"
 
 # --- Middleware / Decorators ---
 def login_required(f):

@@ -73,6 +73,76 @@
     </header>
 
     <main class="academy-main-content">
+        <!-- ENROLLMENT MODAL -->
+        <style>
+            .enrollment-modal-overlay {
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: rgba(15, 23, 42, 0.7);
+                backdrop-filter: blur(4px);
+                z-index: 1000;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            .enrollment-modal-overlay.show {
+                display: flex;
+                opacity: 1;
+            }
+            .enrollment-modal {
+                background: white;
+                border-radius: 16px;
+                padding: 40px;
+                width: 100%;
+                max-width: 450px;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+                position: relative;
+                transform: translateY(20px);
+                transition: transform 0.3s ease;
+            }
+            .enrollment-modal-overlay.show .enrollment-modal {
+                transform: translateY(0);
+            }
+            .enrollment-close-btn {
+                position: absolute;
+                top: 15px; right: 20px;
+                background: none; border: none;
+                font-size: 28px; color: #64748b;
+                cursor: pointer;
+            }
+            .enrollment-header { text-align: center; margin-bottom: 25px; }
+            .enrollment-header h2 { margin: 0 0 10px 0; color: #0f172a; font-size: 24px; font-weight: 700; }
+            .enrollment-header p { margin: 0; color: #64748b; font-size: 15px; line-height: 1.5; }
+            .form-group { margin-bottom: 20px; }
+            .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #334155; font-size: 14px; }
+            .form-group input { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
+            .form-group input:focus { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); }
+            .btn-block { width: 100%; padding: 14px; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        </style>
+        <div class="enrollment-modal-overlay" id="enrollmentModal">
+            <div class="enrollment-modal">
+                <button class="enrollment-close-btn" id="enrollmentCloseBtn" aria-label="Close">&times;</button>
+                <div class="enrollment-header">
+                    <h2>Join Prompt Academy</h2>
+                    <p>Enroll now to start learning, track your progress, and earn your verified certificate.</p>
+                </div>
+                <form id="enrollmentForm" class="enrollment-form">
+                    <div class="form-group">
+                        <label for="enrollFullName">Full Name (For Certificate)</label>
+                        <input type="text" id="enrollFullName" required placeholder="e.g., John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="enrollEmail">Email Address</label>
+                        <input type="email" id="enrollEmail" required placeholder="e.g., john@example.com">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="enrollSubmitBtn">Enroll & Start Learning</button>
+                    <div class="enrollment-status" id="enrollmentStatus" style="display: none; text-align: center; margin-top: 15px; font-weight: 500;"></div>
+                </form>
+            </div>
+        </div>
+
         <!-- SECTION 1: HERO -->
         <section class="academy-hero">
             <div class="hero-content">

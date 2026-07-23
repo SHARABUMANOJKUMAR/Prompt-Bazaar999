@@ -14,7 +14,7 @@
 const SHEETS_CONFIG = {
   prompts: {
     csv:    'https://docs.google.com/spreadsheets/d/13JuiTUHecX4js1CRGWSFYBsh6-0EJk0C5hzV0QV681M/export?format=csv&gid=0',
-    webapp: 'https://script.google.com/macros/s/AKfycbx17A9cGKQk70Uf1ysoYqBjjBxfDcyMywNtA7-PaAflmff_hFp9C3mQjS4K7qZk_Wsb/exec'
+    webapp: 'https://script.google.com/macros/s/AKfycbzF7droXuNirFZ_NNlfsE7pV6b71yPVf7f-UMAfpTHLQlOvPgnmv8NN5tcbLWpqwZVd/exec'
   },
   users: {
     csv:    'https://docs.google.com/spreadsheets/d/1JsulLVYcmUrH3MwAV5l0nr4fwXRXVqHcjsz_b8IrQqI/export?format=csv&gid=0',

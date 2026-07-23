@@ -3,7 +3,7 @@
  * Dynamically fetches data from Google Apps Script Backend
  */
 
-const GAS_ACADEMY_URL = "https://script.google.com/macros/s/AKfycbwSbT589gY6HbzPxjeuN3JDzJ5iskug5aWDB4IFGFO84lp9UBMr81KxiHxYMHv3Ml2rfA/exec";
+const GAS_ACADEMY_URL = "https://script.google.com/macros/s/AKfycbzF7droXuNirFZ_NNlfsE7pV6b71yPVf7f-UMAfpTHLQlOvPgnmv8NN5tcbLWpqwZVd/exec";
 
 document.addEventListener('DOMContentLoaded', () => {
     // === Data Cache ===
@@ -23,7 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
         unlockedCourses: [],
         completedCourses: [],
         unlockedModules: [],
-        completedModules: []
+        completedModules: [],
+        isEnrolled: false,
+        userName: "",
+        userEmail: "",
+        userId: ""
     };
 
     function saveProgress() {
@@ -37,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const detailView = document.getElementById('module-detail-view');
     const lessonsContainer = document.getElementById('lessons-container');
     const outcomesContainer = document.getElementById('detail-module-outcomes');
-    
+
     // Header XP
     const xpAmountEl = document.getElementById('user-xp-amount');
 
@@ -63,32 +67,32 @@ document.addEventListener('DOMContentLoaded', () => {
             if (modulesContainer) {
                 modulesContainer.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;"><div class="loading-spinner" style="width: 40px; height: 40px; border: 4px solid var(--color-bg-secondary); border-top: 4px solid var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div><p style="margin-top: 16px; color: var(--color-text-secondary);">Loading Academy Data...</p></div>';
             }
-            
+
             // For the frontend, we only want PUBLISHED courses. 
             const res = await fetch(GAS_ACADEMY_URL, {
                 method: 'POST',
                 body: JSON.stringify({ action: "searchCourse" })
             });
             const data = await res.json();
-            
+
             if (data.success) {
                 academyData.courses = (data && data.data && data.data.results)
-                    ? data.data.results.filter(c => c.Status === 'PUBLISHED').sort((a,b) => a.OrderIndex - b.OrderIndex)
+                    ? data.data.results.filter(c => c.Status === 'PUBLISHED').sort((a, b) => a.OrderIndex - b.OrderIndex)
                     : [];
-                
+
                 // Fetch modules and lessons
                 const resMod = await fetch(GAS_ACADEMY_URL, { method: 'POST', body: JSON.stringify({ action: "searchModule" }) });
                 const dataMod = await resMod.json();
                 academyData.modules = (dataMod && dataMod.data && dataMod.data.results)
-                    ? dataMod.data.results.sort((a,b) => a.OrderIndex - b.OrderIndex)
+                    ? dataMod.data.results.sort((a, b) => a.OrderIndex - b.OrderIndex)
                     : [];
-                
+
                 const resLes = await fetch(GAS_ACADEMY_URL, { method: 'POST', body: JSON.stringify({ action: "searchLesson" }) });
                 const dataLes = await resLes.json();
                 academyData.lessons = (dataLes && dataLes.data && dataLes.data.results)
-                    ? dataLes.data.results.sort((a,b) => a.OrderIndex - b.OrderIndex)
+                    ? dataLes.data.results.sort((a, b) => a.OrderIndex - b.OrderIndex)
                     : [];
-                
+
                 // Fallback if API is empty or hasn't been populated via Admin Dashboard yet
                 if (academyData.courses.length === 0) {
                     academyData.courses = [{
@@ -127,13 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
                     }
                 }
-                
+
                 // Initialize progress for first course if empty
                 if (academyData.courses.length > 0 && progress.unlockedCourses.length === 0) {
                     progress.unlockedCourses.push(academyData.courses[0].CourseID);
                     saveProgress();
                 }
-                
+
                 if (modulesContainer) {
                     renderCourses();
                 }
@@ -164,10 +168,10 @@ document.addEventListener('DOMContentLoaded', () => {
         academyData.courses.forEach((course, index) => {
             const isUnlocked = index === 0 || progress.unlockedCourses.includes(course.CourseID);
             const courseModules = academyData.modules.filter(m => m.CourseID === course.CourseID);
-            
+
             const card = document.createElement('div');
             card.className = `module-card ${isUnlocked ? '' : 'locked'}`;
-            
+
             card.innerHTML = `
                 <div class="module-card-left">
                     <div class="module-number">${index + 1}</div>
@@ -193,12 +197,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isUnlocked) {
                 card.addEventListener('click', () => openCourseDetail(course.CourseID));
             }
-            
+
             modulesContainer.appendChild(card);
         });
     }
 
     function openCourseDetail(courseId) {
+        if (!progress.isEnrolled) {
+            document.getElementById('enrollmentModal').classList.add('show');
+            return;
+        }
+
         currentCourse = academyData.courses.find(c => c.CourseID === courseId);
         if (!currentCourse) return;
 
@@ -210,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         detailTitle.textContent = currentCourse.CourseName;
         document.getElementById('detail-module-difficulty').textContent = currentCourse.CourseLevel || 'Beginner';
-        
+
         if (currentCourse.CourseDescription) {
             outcomesContainer.innerHTML = currentCourse.CourseDescription.split('.').filter(x => x.trim()).map(o => `<li>${o.trim()}</li>`).join('');
         } else {
@@ -222,9 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderCourseContent(courseId) {
         lessonsContainer.innerHTML = '';
-        
+
         const modules = academyData.modules.filter(m => m.CourseID === courseId);
-        
+
         let totalLessons = 0;
         let completedLessonsInCourse = 0;
 
@@ -235,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
             lessonsContainer.appendChild(modHeader);
 
             const lessons = academyData.lessons.filter(l => l.ModuleID === mod.ModuleID);
-            
+
             if (lessons.length === 0) {
                 const empty = document.createElement('div');
                 empty.className = 'lesson-placeholder';
@@ -247,18 +256,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 totalLessons++;
                 const isCompleted = progress.completedLessons.includes(lesson.LessonID);
                 if (isCompleted) completedLessonsInCourse++;
-                
-                const isUnlocked = true; 
-                
+
+                const isUnlocked = true;
+
                 const card = document.createElement('div');
                 card.className = `lesson-card ${isUnlocked ? '' : 'locked'} ${isCompleted ? 'completed' : ''}`;
-                
-                let statusBadge = isCompleted ? `<span class="status-badge completed">Completed</span>` : 
-                                 (isUnlocked ? `<span class="status-badge pending">Start</span>` : 
-                                               `<span class="status-badge locked">Locked</span>`);
-                                               
-                let iconSvg = isCompleted ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>` : 
-                                            `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`;
+
+                let statusBadge = isCompleted ? `<span class="status-badge completed">Completed</span>` :
+                    (isUnlocked ? `<span class="status-badge pending">Start</span>` :
+                        `<span class="status-badge locked">Locked</span>`);
+
+                let iconSvg = isCompleted ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>` :
+                    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`;
 
                 card.innerHTML = `
                     <div class="lesson-header" ${isUnlocked ? `onclick="toggleLesson('${lesson.LessonID}')"` : ''}>
@@ -289,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 `;
-                
+
                 lessonsContainer.appendChild(card);
             });
         });
@@ -298,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const percentage = totalLessons === 0 ? 0 : Math.round((completedLessonsInCourse / totalLessons) * 100);
         detailProgressText.innerText = `${percentage}%`;
         detailProgressFill.style.width = `${percentage}%`;
-        
+
         document.getElementById('detail-module-lessons').innerText = `${totalLessons} Lessons`;
     }
 
@@ -310,20 +319,20 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCourses();
     });
 
-    window.toggleLesson = function(id) {
+    window.toggleLesson = function (id) {
         const body = document.querySelector(`#lesson-body-${id}`);
-        if(body) {
+        if (body) {
             const card = body.parentElement;
             card.classList.toggle('expanded');
         }
     }
 
-    window.markLessonComplete = function(id, xp) {
+    window.markLessonComplete = function (id, xp) {
         if (!progress.completedLessons.includes(id)) {
             progress.completedLessons.push(id);
             progress.xp += xp;
             saveProgress();
-            
+
             if (currentCourse) {
                 renderCourseContent(currentCourse.CourseID);
             }
@@ -343,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapper.innerHTML = '';
         let lastPhase = null;
         let nextIncompleteModuleNum = null;
-        
+
         let totalLessonsCourse = 0;
         let totalCompletedLessonsCourse = 0;
         let completedModulesCount = 0;
@@ -364,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Count lesson completion
             const totalLessons = module.lessons.length;
             totalLessonsCourse += totalLessons;
-            
+
             let completedInModule = 0;
             module.lessons.forEach((l, lessonIndex) => {
                 const lessonId = `${moduleId}_L${lessonIndex + 1}`;
@@ -425,8 +434,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 badgeHtml = '<span class="rm-module-progress-badge">0%</span>';
             }
 
-            const metaText = totalLessons > 0 
-                ? `${totalLessons} Lessons` 
+            const metaText = totalLessons > 0
+                ? `${totalLessons} Lessons`
                 : 'Capstone Assessment';
 
             card.innerHTML = `
@@ -461,10 +470,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="rm-project-tag">🏆 Final Deliverable: Prompt Bazaar SaaS Platform — Live & Deployed</div>
                     <div class="rm-action-row">
                         <span class="rm-action-hint">Graduation Reward: +500 XP & Certificate</span>
-                        ${isUnlocked 
-                            ? `<a href="/academy/module17" class="btn btn-primary btn-sm rm-study-btn" style="background:#7C3AED; border-color:#7C3AED;">Launch Capstone Assessment →</a>`
-                            : `<button class="btn btn-secondary btn-sm rm-study-btn locked" disabled>Locked 🔒</button>`
-                        }
+                        ${isUnlocked
+                        ? `<a href="/academy/module17" class="btn btn-primary btn-sm rm-study-btn" style="background:#7C3AED; border-color:#7C3AED;">Launch Capstone Assessment →</a>`
+                        : `<button class="btn btn-secondary btn-sm rm-study-btn locked" disabled>Locked 🔒</button>`
+                    }
                     </div>
                 `;
             } else {
@@ -535,6 +544,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (resumeBtn) {
             resumeBtn.onclick = (e) => {
                 e.preventDefault();
+                if (!progress.isEnrolled) {
+                    document.getElementById('enrollmentModal').classList.add('show');
+                    return;
+                }
                 const targetModule = nextIncompleteModuleNum || 1;
                 window.location.href = `/academy/module${targetModule}`;
             };
@@ -545,6 +558,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (startBtn) {
             startBtn.onclick = (e) => {
                 e.preventDefault();
+                if (!progress.isEnrolled) {
+                    document.getElementById('enrollmentModal').classList.add('show');
+                    return;
+                }
                 const targetModule = nextIncompleteModuleNum || 1;
                 window.location.href = `/academy/module${targetModule}`;
             };
@@ -570,6 +587,78 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Toggle current card
         parentCard.classList.toggle('expanded');
+    }
+
+    // === Enrollment Modal Logic ===
+    const enrollModal = document.getElementById('enrollmentModal');
+    const enrollCloseBtn = document.getElementById('enrollmentCloseBtn');
+    const enrollForm = document.getElementById('enrollmentForm');
+    const enrollStatus = document.getElementById('enrollmentStatus');
+    const enrollSubmitBtn = document.getElementById('enrollSubmitBtn');
+
+    if (enrollCloseBtn) {
+        enrollCloseBtn.addEventListener('click', () => {
+            enrollModal.classList.remove('show');
+        });
+    }
+
+    if (enrollForm) {
+        enrollForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('enrollFullName').value;
+            const email = document.getElementById('enrollEmail').value;
+
+            enrollSubmitBtn.disabled = true;
+            enrollSubmitBtn.innerHTML = 'Enrolling... <div class="loading-spinner" style="width: 16px; height: 16px; border: 2px solid #fff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-left: 8px;"></div>';
+            enrollStatus.style.display = 'block';
+            enrollStatus.style.color = '#334155';
+            enrollStatus.innerText = 'Creating your account...';
+
+            try {
+                const res = await fetch(GAS_ACADEMY_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'enroll',
+                        fullName: fullName,
+                        email: email
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    progress.isEnrolled = true;
+                    progress.userName = fullName;
+                    progress.userEmail = email;
+                    progress.userId = data.userId;
+                    saveProgress();
+
+                    enrollStatus.style.color = '#10b981';
+                    enrollStatus.innerText = 'Successfully enrolled! You can now start learning.';
+
+                    setTimeout(() => {
+                        enrollModal.classList.remove('show');
+                        enrollSubmitBtn.disabled = false;
+                        enrollSubmitBtn.innerText = 'Enroll & Start Learning';
+
+                        if (academyData.courses.length > 0) {
+                            openCourseDetail(academyData.courses[0].CourseID);
+                        }
+                    }, 1500);
+                } else {
+                    enrollStatus.style.color = '#ef4444';
+                    enrollStatus.innerText = data.error || 'Failed to enroll. Please try again.';
+                    enrollSubmitBtn.disabled = false;
+                    enrollSubmitBtn.innerText = 'Enroll & Start Learning';
+                }
+            } catch (err) {
+                console.error(err);
+                enrollStatus.style.color = '#ef4444';
+                enrollStatus.innerText = 'Network error. Please try again.';
+                enrollSubmitBtn.disabled = false;
+                enrollSubmitBtn.innerText = 'Enroll & Start Learning';
+            }
+        });
     }
 });
 
