@@ -28,6 +28,47 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
         updateHeaderXP();
         updateProgressUI();
+        syncProgressToBackend();
+    }
+    
+    function syncProgressToBackend() {
+        const GAS_ACADEMY_URL = "https://script.google.com/macros/s/AKfycbwVm4Hjb9FoS8fQr9hG4o20_lWMIKIRfGb565AQuiEewO44rKHaKNxsAmwmd6WwO6GN/exec";
+        
+        // We might not have a userId if they haven't enrolled on this browser session, 
+        // but we'll try to sync if possible. If userId is missing, try to find it.
+        let uId = progress.userId || localStorage.getItem('currentUser') || "";
+        if (!uId) {
+            try {
+                let userObj = JSON.parse(localStorage.getItem('user'));
+                if (userObj && userObj.id) uId = userObj.id;
+            } catch (e) {}
+        }
+        
+        if (!uId) return; // Cannot sync without User ID
+        
+        let completedModulesCount = progress.completedModules.length;
+        let pct = Math.round((completedModulesCount / 16) * 100);
+        let lastCompletedLesson = progress.completedLessons.length > 0 ? progress.completedLessons[progress.completedLessons.length - 1] : "";
+        let lastCompletedModule = progress.completedModules.length > 0 ? progress.completedModules[progress.completedModules.length - 1] : "";
+        
+        let payload = {
+            action: 'update_academy',
+            user_id: uId,
+            completedModules: completedModulesCount,
+            currentModule: moduleNum,
+            progressPct: pct,
+            xp: progress.xp,
+            phases: "", 
+            lastCompletedModule: lastCompletedModule,
+            lastCompletedLesson: lastCompletedLesson,
+            quizScores: "", 
+            assignmentLinks: ""
+        };
+        
+        fetch(GAS_ACADEMY_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        }).catch(err => console.error("Failed to sync progress:", err));
     }
 
     // Update Header XP if present
