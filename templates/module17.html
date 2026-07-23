@@ -865,7 +865,10 @@
                 <div class="loading-spinner cert-spinner" style="width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #4f46e5; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto;"></div>
                 <p style="color:#64748b; font-size:15px;" id="certStatusMsg">Connecting to backend to generate your secure PDF certificate...</p>
                 <div id="certActions" style="display: none; margin-top: 30px;">
-                    <a href="#" target="_blank" id="btnDownloadPdf" class="btn-action btn-pdf" style="text-decoration:none; display:inline-block;">📄 View Official PDF</a>
+                    <div id="certEmbedContainer" style="margin-bottom: 30px; width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;">
+                        <iframe id="certIframe" src="" width="100%" height="500px" style="border: none;"></iframe>
+                    </div>
+                    <a href="#" target="_blank" id="btnDownloadPdf" class="btn-action btn-pdf" style="text-decoration:none; display:inline-block;">📄 View in Full Screen</a>
                     <button class="btn-action btn-social" onclick="window.open('https://www.linkedin.com/sharing/share-offsite/?url=https://promptbazaar.netlify.app/academy')">🔗 Share LinkedIn</button>
                 </div>
             </div>
@@ -1099,6 +1102,10 @@
                 document.getElementById('certStatusMsg').innerText = "✅ Your official PDF certificate has been generated!";
                 document.getElementById('certStatusMsg').style.color = "#10b981";
                 document.getElementById('certActions').style.display = "block";
+                
+                // Convert Google Drive view link to preview link for embedding
+                let previewUrl = data.certificateUrl.replace(/\/view\?.*/, '/preview');
+                document.getElementById('certIframe').src = previewUrl;
                 document.getElementById('btnDownloadPdf').href = data.certificateUrl;
             } else {
                 document.getElementById('certStatusMsg').innerText = "Error: " + (data.error || "Failed to generate certificate.");
