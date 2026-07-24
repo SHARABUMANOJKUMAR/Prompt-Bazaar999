@@ -111,8 +111,14 @@ function doPost(e) {
               </div>
             </div>
           `;
-        MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody });
-      } catch (e) { }
+        if (email && email.trim() !== '') {
+          GmailApp.sendEmail(email, subject, "", { htmlBody: htmlBody });
+        } else {
+          logErrorToSheet("Enrollment Email Error: Missing email address", null);
+        }
+      } catch (e) { 
+        logErrorToSheet("Enrollment Email Error for: " + email, e); 
+      }
 
       return ContentService.createTextOutput(JSON.stringify({
         success: true,
@@ -441,14 +447,17 @@ function processUserCompletion(userId, userName, userEmail, sheet, rowIndex, hea
               </div>
             </div>
           `;
-        // Attach PDF
-        MailApp.sendEmail({
-          to: userEmail,
-          subject: subject,
-          htmlBody: htmlBody,
-          attachments: [certResult.fileBlob]
-        });
-      } catch (e) { }
+        if (userEmail && userEmail.trim() !== '') {
+          GmailApp.sendEmail(userEmail, subject, "", {
+            htmlBody: htmlBody,
+            attachments: [certResult.fileBlob]
+          });
+        } else {
+          logErrorToSheet("Certificate Email Error: Missing email address", null);
+        }
+      } catch (e) { 
+        logErrorToSheet("Certificate Email Error for: " + userEmail, e);
+      }
     }
 
     return { success: true, fileUrl: certResult.fileUrl };
