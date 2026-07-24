@@ -1412,7 +1412,7 @@ def health_check():
     """Returns system health, cache stats, rate-limiter stats, and shield stats."""
     health = {
         "status": "healthy",
-        "version": "3.1.0",
+        "version": "3.2.0",
         "firebase_connected": firebase_db is not None,
         "security_shield": security_shield.stats if security_shield else "disabled",
         "cache": app_cache.stats if app_cache else "disabled",
