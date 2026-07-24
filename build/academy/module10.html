@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="/static/css/style.css?v=9">
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
     
-<link rel="stylesheet" href="/static/css/gallery.css?v=3">
-<link rel="stylesheet" href="/static/css/tools.css">
-<link rel="stylesheet" href="/static/css/academy.css">
+<link href="/static/css/gallery.css?v=3" rel="stylesheet"/>
+<link href="/static/css/tools.css" rel="stylesheet"/>
+<link href="/static/css/academy.css" rel="stylesheet"/>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -165,397 +165,392 @@
     
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <aside class="sidebar-drawer" id="sidebarDrawer">
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-left">
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+<div class="sidebar-brand">
+<div class="sidebar-brand-left">
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="sidebar-section-label">Navigation</div>
-        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Home</a>
-        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></span> Prompt Gallery</a>
-        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span> Prompt Tools</a>
-        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span> Prompt Academy</a>
-    </nav>
-    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+<button aria-label="Close menu" class="sidebar-close-btn" id="sidebarCloseBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</button>
+</div>
+<nav class="sidebar-nav">
+<div class="sidebar-section-label">Navigation</div>
+<a class="sidebar-nav-item" href="/"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Home</a>
+<a class="sidebar-nav-item" href="/gallery"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></span> Prompt Gallery</a>
+<a class="sidebar-nav-item" href="/tools"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span> Prompt Tools</a>
+<a class="sidebar-nav-item active" href="/academy"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span> Prompt Academy</a>
+</nav>
+<div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
 </aside>
-
 <div class="gallery-layout">
-    <header class="gallery-header">
-        <div class="header-left">
-            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+<header class="gallery-header">
+<div class="header-left">
+<button aria-label="Open menu" class="menu-toggle-btn" id="menuToggleBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <div class="header-right">
-            <div class="xp-badge" id="user-xp-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                </svg>
-                <span id="user-xp-amount">0</span> XP
+<div class="header-right">
+<div class="xp-badge" id="user-xp-badge">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+<span id="user-xp-amount">0</span> XP
             </div>
-            <a href="/profile" class="user-avatar" title="Profile">
+<a class="user-avatar" href="/profile" title="Profile">
                 
                 U
                 
             </a>
-        </div>
-    </header>
+</div>
+</header>
+<main class="academy-main-content">
+<div class="module-container">
 
-    <main class="academy-main-content">
-        <div class="module-container">
-            <a href="/academy" class="btn btn-secondary" style="margin-bottom: 24px;">&larr; Back to Academy Roadmap</a>
-            <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">📘 Module 10: Retrieval-Augmented Generation (RAG)</h1>
-            
-            <div class="lesson-card" style="border: 2px solid var(--primary-color);">
-                <h2>🎯 Module Objective</h2>
-                <p>Learn how Large Language Models (LLMs) retrieve external knowledge using Vector Databases and Semantic Search to generate accurate, up-to-date, and context-aware responses while reducing hallucinations.</p>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 1: What is RAG?</h2>
-                <h3>Definition</h3>
-                <p>Retrieval-Augmented Generation (RAG) is an AI architecture that combines a Large Language Model (LLM) with an external knowledge source. Before generating a response, the AI retrieves relevant information from documents, databases, or vector databases and uses that information to produce more accurate, up-to-date, and reliable answers.<br>Unlike a standard LLM that answers only from its training data, RAG first searches for relevant information and then generates a response based on that retrieved context.</p>
-                <h3>Why is RAG Important?</h3>
-                <ul>
-                    <li>RAG helps AI:</li>
-                    <li>Reduce hallucinations.</li>
-                    <li>Access the latest information.</li>
-                    <li>Answer questions using private company data.</li>
-                    <li>Improve factual accuracy.</li>
-                    <li>Generate context-aware responses.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <p>Uses external knowledge.<br>Retrieves relevant documents before answering.<br>Works with Vector Databases.<br>Supports private data.<br>Improves LLM accuracy.</p>
-                <h3>Uses</h3>
-                <ul>
-                    <li>AI Chatbots</li>
-                    <li>Legal Assistants</li>
-                    <li>Healthcare AI</li>
-                    <li>Enterprise Search</li>
-                    <li>Customer Support</li>
-                    <li>Research Assistants</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">User Question<br>↓<br>Convert Question to Embedding<br>↓<br>Vector Database Search<br>↓<br>Retrieve Relevant Chunks<br>↓<br>Context Injection<br>↓<br>Large Language Model<br>↓<br>Final Answer</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
-                    User asks:<br>What are the consumer rights under the Consumer Protection Act?<br>Without RAG:<br>The AI answers from its training data, which may be outdated or incomplete.<br>With RAG:<br>The AI searches the latest Consumer Protection Act documents, retrieves the relevant sections, and generates an answer based on those documents.
+<h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">📘 Module 10: Retrieval-Augmented Generation (RAG)</h1>
+
+<div class="lesson-card"><h2>🎯 Module Objective</h2>
+<p>Learn how Large Language Models (LLMs) retrieve external knowledge using Vector Databases and Semantic Search to generate accurate, up-to-date, and context-aware responses while reducing hallucinations.</p>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 1: What is RAG?</h2>
+<h3>Definition</h3>
+<p>Retrieval-Augmented Generation (RAG) is an AI architecture that combines a Large Language Model (LLM) with an external knowledge source. Before generating a response, the AI retrieves relevant information from documents, databases, or vector databases and uses that information to produce more accurate, up-to-date, and reliable answers.<br/>Unlike a standard LLM that answers only from its training data, RAG first searches for relevant information and then generates a response based on that retrieved context.</p>
+<h3>Why is RAG Important?</h3>
+<ul>
+<li>RAG helps AI:</li>
+<li>Reduce hallucinations.</li>
+<li>Access the latest information.</li>
+<li>Answer questions using private company data.</li>
+<li>Improve factual accuracy.</li>
+<li>Generate context-aware responses.</li>
+</ul>
+<h3>Characteristics</h3>
+<p>Uses external knowledge.<br/>Retrieves relevant documents before answering.<br/>Works with Vector Databases.<br/>Supports private data.<br/>Improves LLM accuracy.</p>
+<h3>Uses</h3>
+<ul>
+<li>AI Chatbots</li>
+<li>Legal Assistants</li>
+<li>Healthcare AI</li>
+<li>Enterprise Search</li>
+<li>Customer Support</li>
+<li>Research Assistants</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">User Question<br/>↓<br/>Convert Question to Embedding<br/>↓<br/>Vector Database Search<br/>↓<br/>Retrieve Relevant Chunks<br/>↓<br/>Context Injection<br/>↓<br/>Large Language Model<br/>↓<br/>Final Answer</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
+                    User asks:<br/>What are the consumer rights under the Consumer Protection Act?<br/>Without RAG:<br/>The AI answers from its training data, which may be outdated or incomplete.<br/>With RAG:<br/>The AI searches the latest Consumer Protection Act documents, retrieves the relevant sections, and generates an answer based on those documents.
                 </div>
-                <h3>Real-Life Analogy</h3>
-                <p>Imagine taking an open-book exam.<br>Without RAG:<br>You answer only from memory.<br>With RAG:<br>You first open the textbook, find the correct chapter, read it, and then answer the question.</p>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
-                    Q: What is RAG?<br><ul><li>Answer:</li><li>Retrieval-Augmented Generation (RAG) is an AI technique that retrieves relevant external information before generating a response, improving accuracy and reducing hallucinations.</li></ul>
-                </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<h3>Real-Life Analogy</h3>
+<p>Imagine taking an open-book exam.<br/>Without RAG:<br/>You answer only from memory.<br/>With RAG:<br/>You first open the textbook, find the correct chapter, read it, and then answer the question.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
+                    Q: What is RAG?<br/><ul><li>Answer:</li><li>Retrieval-Augmented Generation (RAG) is an AI technique that retrieves relevant external information before generating a response, improving accuracy and reducing hallucinations.</li></ul>
+</div>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     RAG is ideal whenever your AI needs to answer questions using private documents or frequently changing information.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 2: Why Do We Need RAG?</h2>
-                <h3>Definition</h3>
-                <p>RAG addresses the limitations of traditional LLMs by allowing them to access external knowledge sources at the time of answering.</p>
-                <h3>Problems Without RAG</h3>
-                <ul>
-                    <li>Hallucinations</li>
-                    <li>Outdated information</li>
-                    <li>Cannot access private company documents</li>
-                    <li>Limited knowledge after training</li>
-                </ul>
-                <h3>Benefits of RAG</h3>
-                <ul>
-                    <li>Current information</li>
-                    <li>Enterprise knowledge access</li>
-                    <li>Better accuracy</li>
-                    <li>Trustworthy answers</li>
-                    <li>Lower retraining cost</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">LLM Alone<br>↓<br>Limited Knowledge<br>↓<br>Possible Hallucination<br>----------------------------<br>LLM + RAG<br>↓<br>Retrieve Documents<br>↓<br>Accurate Answer</div>
-                <h3>Real Example</h3>
-                <div class="highlight-box">
-                    Company Policy Chatbot:<br>Without RAG → Cannot answer questions about new HR policies.<br>With RAG → Searches the latest HR policy documents before answering.
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 2: Why Do We Need RAG?</h2>
+<h3>Definition</h3>
+<p>RAG addresses the limitations of traditional LLMs by allowing them to access external knowledge sources at the time of answering.</p>
+<h3>Problems Without RAG</h3>
+<ul>
+<li>Hallucinations</li>
+<li>Outdated information</li>
+<li>Cannot access private company documents</li>
+<li>Limited knowledge after training</li>
+</ul>
+<h3>Benefits of RAG</h3>
+<ul>
+<li>Current information</li>
+<li>Enterprise knowledge access</li>
+<li>Better accuracy</li>
+<li>Trustworthy answers</li>
+<li>Lower retraining cost</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">LLM Alone<br/>↓<br/>Limited Knowledge<br/>↓<br/>Possible Hallucination<br/>----------------------------<br/>LLM + RAG<br/>↓<br/>Retrieve Documents<br/>↓<br/>Accurate Answer</div>
+<h3>Real Example</h3>
+<div class="highlight-box">
+                    Company Policy Chatbot:<br/>Without RAG → Cannot answer questions about new HR policies.<br/>With RAG → Searches the latest HR policy documents before answering.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 3: Chunking</h2>
-                <h3>Definition</h3>
-                <p>Chunking is the process of dividing large documents into smaller, meaningful pieces called chunks before storing them in a vector database.</p>
-                <h3>Why is it Important?</h3>
-                <p>Improves search accuracy.<br>Makes retrieval faster.<br>Reduces irrelevant information.<br>Fits within LLM context windows.</p>
-                <h3>Characteristics</h3>
-                <p>Smaller document pieces.<br>Semantic grouping.<br>Easy retrieval.<br>Better embeddings.</p>
-                <h3>Types of Chunking</h3>
-                <ul>
-                    <li>Fixed-size</li>
-                    <li>Sentence-based</li>
-                    <li>Paragraph-based</li>
-                    <li>Semantic Chunking</li>
-                    <li>Recursive Chunking</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Large PDF<br>↓<br>Chunking<br>↓<br>Small Chunks<br>↓<br>Embeddings</div>
-                <h3>Example</h3>
-                <div class="highlight-box">
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 3: Chunking</h2>
+<h3>Definition</h3>
+<p>Chunking is the process of dividing large documents into smaller, meaningful pieces called chunks before storing them in a vector database.</p>
+<h3>Why is it Important?</h3>
+<p>Improves search accuracy.<br/>Makes retrieval faster.<br/>Reduces irrelevant information.<br/>Fits within LLM context windows.</p>
+<h3>Characteristics</h3>
+<p>Smaller document pieces.<br/>Semantic grouping.<br/>Easy retrieval.<br/>Better embeddings.</p>
+<h3>Types of Chunking</h3>
+<ul>
+<li>Fixed-size</li>
+<li>Sentence-based</li>
+<li>Paragraph-based</li>
+<li>Semantic Chunking</li>
+<li>Recursive Chunking</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Large PDF<br/>↓<br/>Chunking<br/>↓<br/>Small Chunks<br/>↓<br/>Embeddings</div>
+<h3>Example</h3>
+<div class="highlight-box">
                     A 500-page Constitution book becomes thousands of smaller chunks before storage.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 4: Embeddings</h2>
-                <h3>Definition</h3>
-                <p>Embeddings convert text into numerical vectors that capture semantic meaning, allowing AI to compare ideas based on meaning rather than exact words.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Embeddings enable:</li>
-                    <li>Semantic Search</li>
-                    <li>Similarity Matching</li>
-                    <li>RAG Retrieval</li>
-                    <li>Recommendation Systems</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Text<br>↓<br>Embedding Model<br>↓<br>Vector<br>↓<br>Vector Database</div>
-                <h3>Example</h3>
-                <div class="highlight-box">
-                    Lawyer → [0.21,0.44,0.61]<br>Advocate → [0.20,0.45,0.60]<br>Similar meanings produce similar vectors.
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 4: Embeddings</h2>
+<h3>Definition</h3>
+<p>Embeddings convert text into numerical vectors that capture semantic meaning, allowing AI to compare ideas based on meaning rather than exact words.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Embeddings enable:</li>
+<li>Semantic Search</li>
+<li>Similarity Matching</li>
+<li>RAG Retrieval</li>
+<li>Recommendation Systems</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Text<br/>↓<br/>Embedding Model<br/>↓<br/>Vector<br/>↓<br/>Vector Database</div>
+<h3>Example</h3>
+<div class="highlight-box">
+                    Lawyer → [0.21,0.44,0.61]<br/>Advocate → [0.20,0.45,0.60]<br/>Similar meanings produce similar vectors.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 5: Vector Databases</h2>
-                <h3>Definition</h3>
-                <p>A Vector Database stores embeddings (numerical vectors) instead of plain text, enabling fast similarity search.</p>
-                <h3>Why is it Important?</h3>
-                <p>Stores embeddings.<br>Enables semantic search.<br>Supports millions of vectors.<br>Fast retrieval.</p>
-                <h3>Examples</h3>
-                <ul>
-                    <li>Pinecone</li>
-                    <li>Qdrant</li>
-                    <li>Chroma</li>
-                    <li>FAISS</li>
-                    <li>Milvus</li>
-                    <li>Weaviate</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Documents<br>↓<br>Embeddings<br>↓<br>Vector Database<br>↓<br>Search</div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 6: Semantic Search</h2>
-                <h3>Definition</h3>
-                <p>Semantic Search retrieves information based on the meaning of a query rather than exact keyword matching.</p>
-                <h3>Example</h3>
-                <div class="highlight-box">
-                    User searches:<br>"Car"<br>Semantic Search also finds:<br>Automobile<br>Vehicle<br>SUV<br>Sedan
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 5: Vector Databases</h2>
+<h3>Definition</h3>
+<p>A Vector Database stores embeddings (numerical vectors) instead of plain text, enabling fast similarity search.</p>
+<h3>Why is it Important?</h3>
+<p>Stores embeddings.<br/>Enables semantic search.<br/>Supports millions of vectors.<br/>Fast retrieval.</p>
+<h3>Examples</h3>
+<ul>
+<li>Pinecone</li>
+<li>Qdrant</li>
+<li>Chroma</li>
+<li>FAISS</li>
+<li>Milvus</li>
+<li>Weaviate</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Documents<br/>↓<br/>Embeddings<br/>↓<br/>Vector Database<br/>↓<br/>Search</div>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 6: Semantic Search</h2>
+<h3>Definition</h3>
+<p>Semantic Search retrieves information based on the meaning of a query rather than exact keyword matching.</p>
+<h3>Example</h3>
+<div class="highlight-box">
+                    User searches:<br/>"Car"<br/>Semantic Search also finds:<br/>Automobile<br/>Vehicle<br/>SUV<br/>Sedan
                 </div>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Meaning-based</li>
-                    <li>Intelligent</li>
-                    <li>Context-aware</li>
-                    <li>Better than keyword search</li>
-                </ul>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 7: Retrieval Pipeline</h2>
-                <h3>Definition</h3>
-                <p>The Retrieval Pipeline is the sequence of steps that retrieves relevant information before the LLM generates a response.</p>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Documents<br>↓<br>Chunking<br>↓<br>Embeddings<br>↓<br>Vector Database<br>↓<br>User Query<br>↓<br>Embedding<br>↓<br>Similarity Search<br>↓<br>Top Chunks<br>↓<br>LLM<br>↓<br>Answer</div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 8: Re-ranking</h2>
-                <h3>Definition</h3>
-                <p>Re-ranking is the process of reordering retrieved documents based on their relevance before sending them to the LLM.</p>
-                <h3>Why is it Important?</h3>
-                <p>Improves relevance.<br>Removes noisy results.<br>Better final answers.</p>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Retrieve Top 20 Chunks<br>↓<br>Re-ranker<br>↓<br>Best 5 Chunks<br>↓<br>LLM</div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 9: Context Injection</h2>
-                <h3>Definition</h3>
-                <p>Context Injection is the process of inserting retrieved information into the prompt before sending it to the LLM.</p>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Retrieved Chunks<br>↓<br>Prompt Template<br>↓<br>LLM<br>↓<br>Answer</div>
-                <h3>Example</h3>
-                <div class="highlight-box">
-                    Context:<br>Consumer Rights Act...<br>Question:<br>What are consumer rights?
+<h3>Characteristics</h3>
+<ul>
+<li>Meaning-based</li>
+<li>Intelligent</li>
+<li>Context-aware</li>
+<li>Better than keyword search</li>
+</ul>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 7: Retrieval Pipeline</h2>
+<h3>Definition</h3>
+<p>The Retrieval Pipeline is the sequence of steps that retrieves relevant information before the LLM generates a response.</p>
+<h3>Workflow</h3>
+<div class="diagram-box">Documents<br/>↓<br/>Chunking<br/>↓<br/>Embeddings<br/>↓<br/>Vector Database<br/>↓<br/>User Query<br/>↓<br/>Embedding<br/>↓<br/>Similarity Search<br/>↓<br/>Top Chunks<br/>↓<br/>LLM<br/>↓<br/>Answer</div>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 8: Re-ranking</h2>
+<h3>Definition</h3>
+<p>Re-ranking is the process of reordering retrieved documents based on their relevance before sending them to the LLM.</p>
+<h3>Why is it Important?</h3>
+<p>Improves relevance.<br/>Removes noisy results.<br/>Better final answers.</p>
+<h3>Workflow</h3>
+<div class="diagram-box">Retrieve Top 20 Chunks<br/>↓<br/>Re-ranker<br/>↓<br/>Best 5 Chunks<br/>↓<br/>LLM</div>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 9: Context Injection</h2>
+<h3>Definition</h3>
+<p>Context Injection is the process of inserting retrieved information into the prompt before sending it to the LLM.</p>
+<h3>Workflow</h3>
+<div class="diagram-box">Retrieved Chunks<br/>↓<br/>Prompt Template<br/>↓<br/>LLM<br/>↓<br/>Answer</div>
+<h3>Example</h3>
+<div class="highlight-box">
+                    Context:<br/>Consumer Rights Act...<br/>Question:<br/>What are consumer rights?
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 10: Hybrid Search</h2>
-                <h3>Definition</h3>
-                <p>Hybrid Search combines Keyword Search and Semantic Search to improve retrieval accuracy.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>It captures both:</li>
-                    <li>Exact keyword matches.</li>
-                    <li>Meaning-based matches.</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">User Query<br>↓<br>Keyword Search<br>+<br>Semantic Search<br>↓<br>Merge Results<br>↓<br>Best Documents<br>↓<br>LLM</div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 11: Qdrant</h2>
-                <h3>Definition</h3>
-                <p>Qdrant is an open-source vector database optimized for storing and searching embeddings efficiently.</p>
-                <h3>Best For</h3>
-                <ul>
-                    <li>Production RAG</li>
-                    <li>AI Chatbots</li>
-                    <li>Enterprise Search</li>
-                </ul>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 12: Chroma</h2>
-                <h3>Definition</h3>
-                <p>Chroma is a lightweight, open-source vector database designed for local AI development and rapid prototyping.</p>
-                <h3>Best For</h3>
-                <ul>
-                    <li>Local development</li>
-                    <li>Small to medium RAG projects</li>
-                    <li>Beginners</li>
-                </ul>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 13: Pinecone</h2>
-                <h3>Definition</h3>
-                <p>Pinecone is a fully managed cloud vector database that provides scalable, high-performance similarity search for production AI applications.</p>
-                <h3>Best For</h3>
-                <ul>
-                    <li>Enterprise applications</li>
-                    <li>Cloud deployment</li>
-                    <li>Large-scale AI systems</li>
-                </ul>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 14: FAISS</h2>
-                <h3>Definition</h3>
-                <p>FAISS (Facebook AI Similarity Search) is an open-source library developed by Meta for fast similarity search and clustering of dense vectors.<br>Unlike Pinecone, Qdrant, or Chroma, FAISS is a library, not a standalone database.</p>
-                <h3>Best For</h3>
-                <ul>
-                    <li>Local vector search</li>
-                    <li>Research</li>
-                    <li>Offline AI applications</li>
-                </ul>
-            </div>
-            <div class="lesson-card">
-                <h2>🚀 Mini Project: Legal AI Assistant (RAG)</h2>
-                <h3>Project Objective</h3>
-                <p>Build an AI-powered Legal Assistant that answers legal questions using your own legal documents instead of relying only on an LLM's training data.</p>
-                <h3>Features</h3>
-                <ul>
-                    <li>Upload legal PDFs</li>
-                    <li>Automatic chunking</li>
-                    <li>Generate embeddings</li>
-                    <li>Store vectors in a vector database</li>
-                    <li>Semantic search</li>
-                    <li>Retrieve relevant legal sections</li>
-                    <li>Generate accurate legal answers with citations</li>
-                </ul>
-                <h3>Technology Stack</h3>
-                <ul>
-                    <li>Python</li>
-                    <li>LangChain</li>
-                    <li>OpenAI / Gemini LLM</li>
-                    <li>Qdrant or Chroma</li>
-                    <li>Sentence Transformers / OpenAI Embeddings</li>
-                    <li>FastAPI / Flask</li>
-                    <li>Streamlit or React Frontend</li>
-                </ul>
-            </div>
 
-            <!-- Module Summary -->
-            <div class="lesson-card" style="background: rgba(34, 197, 94, 0.05); border-left: 4px solid #22c55e;">
-                <h2><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg> Skills Learned</h2>
-                <p>This module gives learners a complete understanding of the RAG pipeline, from document preparation and embeddings to retrieval, re-ranking, and context injection, culminating in a practical Legal AI Assistant project.</p>
-            </div>
 
-            <!-- Quiz Section -->
-            <div class="lesson-card" style="border: 2px solid var(--primary-color); background: rgba(37,99,235,0.02);">
-                <h2 style="border-bottom: none; margin-bottom: 10px;">📝 Module 10 Assessment</h2>
-                <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
-                
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <!-- MCQ 1 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q1. What is the primary purpose of RAG?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="A" style="margin-right: 10px;">A) Train an LLM from scratch</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="B" style="margin-right: 10px;">B) Retrieve external knowledge before generating an answer</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="C" style="margin-right: 10px;">C) Compress documents</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="D" style="margin-right: 10px;">D) Create images</label>
-                        </div>
-                    </div>
+</div><div class="lesson-card"><h2>📖 Lesson 10: Hybrid Search</h2>
+<h3>Definition</h3>
+<p>Hybrid Search combines Keyword Search and Semantic Search to improve retrieval accuracy.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>It captures both:</li>
+<li>Exact keyword matches.</li>
+<li>Meaning-based matches.</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">User Query<br/>↓<br/>Keyword Search<br/>+<br/>Semantic Search<br/>↓<br/>Merge Results<br/>↓<br/>Best Documents<br/>↓<br/>LLM</div>
 
-                    <!-- MCQ 2 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q2. Why is chunking used in RAG?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="A" style="margin-right: 10px;">A) To reduce internet usage</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="B" style="margin-right: 10px;">B) To split large documents into smaller meaningful sections for better retrieval</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="C" style="margin-right: 10px;">C) To translate documents</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="D" style="margin-right: 10px;">D) To encrypt files</label>
-                        </div>
-                    </div>
 
-                    <!-- MCQ 3 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q3. What do embeddings represent?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="A" style="margin-right: 10px;">A) Images</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="B" style="margin-right: 10px;">B) Numerical vectors that capture the semantic meaning of text</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="C" style="margin-right: 10px;">C) PDF files</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="D" style="margin-right: 10px;">D) HTML pages</label>
-                        </div>
-                    </div>
+</div><div class="lesson-card"><h2>📖 Lesson 11: Qdrant</h2>
+<h3>Definition</h3>
+<p>Qdrant is an open-source vector database optimized for storing and searching embeddings efficiently.</p>
+<h3>Best For</h3>
+<ul>
+<li>Production RAG</li>
+<li>AI Chatbots</li>
+<li>Enterprise Search</li>
+</ul>
 
-                    <!-- MCQ 4 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q4. Which type of database is commonly used in RAG systems?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="A" style="margin-right: 10px;">A) Relational Database</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="B" style="margin-right: 10px;">B) Graph Database</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="C" style="margin-right: 10px;">C) Vector Database</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="D" style="margin-right: 10px;">D) Time-Series Database</label>
-                        </div>
-                    </div>
-                    
-                    <!-- MCQ 5 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q5. What is the purpose of Hybrid Search?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="A" style="margin-right: 10px;">A) Use only keyword search</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="B" style="margin-right: 10px;">B) Use only semantic search</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="C" style="margin-right: 10px;">C) Combine keyword search and semantic search for better retrieval</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="D" style="margin-right: 10px;">D) Compress embeddings</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Navigation to Next Module -->
-            <div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
-                <a href="/academy/module11" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
-                    Move Next Module 11 &rarr;
-                </a>
-            </div>
-        </div>
-    </main>
+</div><div class="lesson-card"><h2>📖 Lesson 12: Chroma</h2>
+<h3>Definition</h3>
+<p>Chroma is a lightweight, open-source vector database designed for local AI development and rapid prototyping.</p>
+<h3>Best For</h3>
+<ul>
+<li>Local development</li>
+<li>Small to medium RAG projects</li>
+<li>Beginners</li>
+</ul>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 13: Pinecone</h2>
+<h3>Definition</h3>
+<p>Pinecone is a fully managed cloud vector database that provides scalable, high-performance similarity search for production AI applications.</p>
+<h3>Best For</h3>
+<ul>
+<li>Enterprise applications</li>
+<li>Cloud deployment</li>
+<li>Large-scale AI systems</li>
+</ul>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 14: FAISS</h2>
+<h3>Definition</h3>
+<p>FAISS (Facebook AI Similarity Search) is an open-source library developed by Meta for fast similarity search and clustering of dense vectors.<br/>Unlike Pinecone, Qdrant, or Chroma, FAISS is a library, not a standalone database.</p>
+<h3>Best For</h3>
+<ul>
+<li>Local vector search</li>
+<li>Research</li>
+<li>Offline AI applications</li>
+</ul>
+
+
+</div><div class="lesson-card"><h2>🚀 Mini Project: Legal AI Assistant (RAG)</h2>
+<h3>Project Objective</h3>
+<p>Build an AI-powered Legal Assistant that answers legal questions using your own legal documents instead of relying only on an LLM's training data.</p>
+<h3>Features</h3>
+<ul>
+<li>Upload legal PDFs</li>
+<li>Automatic chunking</li>
+<li>Generate embeddings</li>
+<li>Store vectors in a vector database</li>
+<li>Semantic search</li>
+<li>Retrieve relevant legal sections</li>
+<li>Generate accurate legal answers with citations</li>
+</ul>
+<h3>Technology Stack</h3>
+<ul>
+<li>Python</li>
+<li>LangChain</li>
+<li>OpenAI / Gemini LLM</li>
+<li>Qdrant or Chroma</li>
+<li>Sentence Transformers / OpenAI Embeddings</li>
+<li>FastAPI / Flask</li>
+<li>Streamlit or React Frontend</li>
+</ul>
+
+<!-- Module Summary -->
+
+<h2><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg> Skills Learned</h2>
+<p>This module gives learners a complete understanding of the RAG pipeline, from document preparation and embeddings to retrieval, re-ranking, and context injection, culminating in a practical Legal AI Assistant project.</p>
+
+<!-- Quiz Section -->
+
+</div><div data-is-quiz="true" class="lesson-card quiz-card"><h2 style="border-bottom: none; margin-bottom: 10px;">📝 Module 10 Assessment</h2>
+<p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
+<div style="display: flex; flex-direction: column; gap: 20px;">
+<!-- MCQ 1 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q1. What is the primary purpose of RAG?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="A"/>A) Train an LLM from scratch</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="B" data-correct="true"> B) Retrieve external knowledge before generating an answer</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="C"/>C) Compress documents</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="D"/>D) Create images</label>
+</div>
+</div>
+<!-- MCQ 2 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q2. Why is chunking used in RAG?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="A"/>A) To reduce internet usage</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="B" data-correct="true"> B) To split large documents into smaller meaningful sections for better retrieval</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="C"/>C) To translate documents</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="D"/>D) To encrypt files</label>
+</div>
+</div>
+<!-- MCQ 3 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q3. What do embeddings represent?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="A"/>A) Images</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="B" data-correct="true"> B) Numerical vectors that capture the semantic meaning of text</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="C"/>C) PDF files</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="D"/>D) HTML pages</label>
+</div>
+</div>
+<!-- MCQ 4 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q4. Which type of database is commonly used in RAG systems?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="A"/>A) Relational Database</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="B"/>B) Graph Database</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="C" data-correct="true"> C) Vector Database</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="D"/>D) Time-Series Database</label>
+</div>
+</div>
+<!-- MCQ 5 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q5. What is the purpose of Hybrid Search?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="A"/>A) Use only keyword search</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="B"/>B) Use only semantic search</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="C" data-correct="true"> C) Combine keyword search and semantic search for better retrieval</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="D"/>D) Compress embeddings</label>
+</div>
+</div>
 </div>
 
+
+</div></div>
+<div class="module-navigation-footer" style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 50px; margin-bottom: 50px;">
+<!-- Navigation to Next Module -->
+<div style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
+<a class="btn btn-primary" href="/academy/module11" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    Move Next Module 11 →
+                </a>
+</div>
+<div style="display: flex; gap: 16px; margin-bottom: 0; justify-content: center; flex-wrap: wrap;">
+    <a class="btn btn-secondary" href="/academy">← Back to Academy Roadmap</a>
+    <a class="btn btn-secondary" href="/academy/module9">← Go back to previous module</a>
+</div>
+</div>
+</main>
+</div>
 <script>
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
@@ -570,6 +565,9 @@
     
     <!-- Web Push Notifications -->
     <script type="module" src="/static/js/notifications.js?v=3"></script>
+
+    <!-- Academy Module Progress Tracker -->
+    <script src="/static/js/module_progress.js?v=1"></script>
 
     
 </body>

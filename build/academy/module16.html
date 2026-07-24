@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="/static/css/style.css?v=9">
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
     
-<link rel="stylesheet" href="/static/css/gallery.css?v=3">
-<link rel="stylesheet" href="/static/css/tools.css">
-<link rel="stylesheet" href="/static/css/academy.css">
+<link href="/static/css/gallery.css?v=3" rel="stylesheet"/>
+<link href="/static/css/tools.css" rel="stylesheet"/>
+<link href="/static/css/academy.css" rel="stylesheet"/>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -165,494 +165,489 @@
     
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <aside class="sidebar-drawer" id="sidebarDrawer">
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-left">
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+<div class="sidebar-brand">
+<div class="sidebar-brand-left">
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="sidebar-section-label">Navigation</div>
-        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Home</a>
-        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></span> Prompt Gallery</a>
-        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span> Prompt Tools</a>
-        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span> Prompt Academy</a>
-    </nav>
-    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+<button aria-label="Close menu" class="sidebar-close-btn" id="sidebarCloseBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</button>
+</div>
+<nav class="sidebar-nav">
+<div class="sidebar-section-label">Navigation</div>
+<a class="sidebar-nav-item" href="/"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Home</a>
+<a class="sidebar-nav-item" href="/gallery"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></span> Prompt Gallery</a>
+<a class="sidebar-nav-item" href="/tools"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span> Prompt Tools</a>
+<a class="sidebar-nav-item active" href="/academy"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span> Prompt Academy</a>
+</nav>
+<div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
 </aside>
-
 <div class="gallery-layout">
-    <header class="gallery-header">
-        <div class="header-left">
-            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+<header class="gallery-header">
+<div class="header-left">
+<button aria-label="Open menu" class="menu-toggle-btn" id="menuToggleBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <div class="header-right">
-            <div class="xp-badge" id="user-xp-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                </svg>
-                <span id="user-xp-amount">0</span> XP
+<div class="header-right">
+<div class="xp-badge" id="user-xp-badge">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+<span id="user-xp-amount">0</span> XP
             </div>
-            <a href="/profile" class="user-avatar" title="Profile">
+<a class="user-avatar" href="/profile" title="Profile">
                 
                 U
                 
             </a>
-        </div>
-    </header>
+</div>
+</header>
+<main class="academy-main-content">
+<div class="module-container">
 
-    <main class="academy-main-content">
-        <div class="module-container">
-            <a href="/academy" class="btn btn-secondary" style="margin-bottom: 24px;">&larr; Back to Academy Roadmap</a>
-            <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">📘 Module 16: Enterprise Prompt Engineering & PromptOps</h1>
-            
-            <div class="lesson-card" style="border: 2px solid var(--primary-color);">
-                <h2>🎯 Module Objective</h2>
-                <p>PromptOps (Prompt Operations) is to Prompt Engineering what DevOps is to Software Engineering. It focuses on managing prompts throughout their lifecycle—from creation and testing to deployment, monitoring, versioning, and continuous improvement.</p>
-                <p>Learn how to manage prompts in production AI applications using PromptOps practices, including versioning, prompt libraries, testing, analytics, collaboration, CI/CD pipelines, and deployment.</p>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 1: PromptOps Introduction</h2>
-                <h3>Definition</h3>
-                <p>PromptOps (Prompt Operations) is the discipline of managing prompts throughout their entire lifecycle, including designing, testing, versioning, deploying, monitoring, and improving prompts used in AI applications.<br>Just as DevOps manages software, PromptOps manages prompts in production.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>PromptOps helps teams:</li>
-                    <li>Maintain prompt quality.</li>
-                    <li>Track prompt changes.</li>
-                    <li>Reduce deployment risks.</li>
-                    <li>Improve collaboration.</li>
-                    <li>Continuously optimize AI applications.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Repeatable</li>
-                    <li>Collaborative</li>
-                    <li>Version-controlled</li>
-                    <li>Production-ready</li>
-                    <li>Measurable</li>
-                </ul>
-                <h3>Uses</h3>
-                <ul>
-                    <li>AI Chatbots</li>
-                    <li>AI Agents</li>
-                    <li>Enterprise AI</li>
-                    <li>SaaS Products</li>
-                    <li>Customer Support</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Create Prompt<br>↓<br>Test<br>↓<br>Version<br>↓<br>Deploy<br>↓<br>Monitor<br>↓<br>Improve</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+<h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">📘 Module 16: Enterprise Prompt Engineering &amp; PromptOps</h1>
+
+<div class="lesson-card"><h2>🎯 Module Objective</h2>
+<p>PromptOps (Prompt Operations) is to Prompt Engineering what DevOps is to Software Engineering. It focuses on managing prompts throughout their lifecycle—from creation and testing to deployment, monitoring, versioning, and continuous improvement.</p>
+<p>Learn how to manage prompts in production AI applications using PromptOps practices, including versioning, prompt libraries, testing, analytics, collaboration, CI/CD pipelines, and deployment.</p>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 1: PromptOps Introduction</h2>
+<h3>Definition</h3>
+<p>PromptOps (Prompt Operations) is the discipline of managing prompts throughout their entire lifecycle, including designing, testing, versioning, deploying, monitoring, and improving prompts used in AI applications.<br/>Just as DevOps manages software, PromptOps manages prompts in production.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>PromptOps helps teams:</li>
+<li>Maintain prompt quality.</li>
+<li>Track prompt changes.</li>
+<li>Reduce deployment risks.</li>
+<li>Improve collaboration.</li>
+<li>Continuously optimize AI applications.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Repeatable</li>
+<li>Collaborative</li>
+<li>Version-controlled</li>
+<li>Production-ready</li>
+<li>Measurable</li>
+</ul>
+<h3>Uses</h3>
+<ul>
+<li>AI Chatbots</li>
+<li>AI Agents</li>
+<li>Enterprise AI</li>
+<li>SaaS Products</li>
+<li>Customer Support</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Create Prompt<br/>↓<br/>Test<br/>↓<br/>Version<br/>↓<br/>Deploy<br/>↓<br/>Monitor<br/>↓<br/>Improve</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     A company updates its customer-support prompt to improve accuracy. The previous version is preserved, the new version is tested, deployed to production, and monitored before becoming the default.
                 </div>
-                <h3>Real-Life Analogy</h3>
-                <p>A software team doesn't edit production code directly. They use Git, testing, code reviews, deployment pipelines, and monitoring. PromptOps applies the same disciplined approach to prompts.</p>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<h3>Real-Life Analogy</h3>
+<p>A software team doesn't edit production code directly. They use Git, testing, code reviews, deployment pipelines, and monitoring. PromptOps applies the same disciplined approach to prompts.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     PromptOps is the practice of managing prompts throughout their lifecycle using engineering and operational best practices.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Treat prompts as production assets, not temporary text.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 2: Prompt Versioning</h2>
-                <h3>Definition</h3>
-                <p>Prompt Versioning is the practice of tracking and managing changes to prompts over time using version numbers and change history.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Versioning helps teams:</li>
-                    <li>Restore older prompts.</li>
-                    <li>Compare improvements.</li>
-                    <li>Track changes.</li>
-                    <li>Reduce deployment risk.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Version history</li>
-                    <li>Rollback support</li>
-                    <li>Change tracking</li>
-                    <li>Auditability</li>
-                </ul>
-                <h3>Example Versions</h3>
-                <div class="highlight-box">
-                    v1.0<br>↓<br>v1.1<br>↓<br>v2.0
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 2: Prompt Versioning</h2>
+<h3>Definition</h3>
+<p>Prompt Versioning is the practice of tracking and managing changes to prompts over time using version numbers and change history.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Versioning helps teams:</li>
+<li>Restore older prompts.</li>
+<li>Compare improvements.</li>
+<li>Track changes.</li>
+<li>Reduce deployment risk.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Version history</li>
+<li>Rollback support</li>
+<li>Change tracking</li>
+<li>Auditability</li>
+</ul>
+<h3>Example Versions</h3>
+<div class="highlight-box">
+                    v1.0<br/>↓<br/>v1.1<br/>↓<br/>v2.0
                 </div>
-                <h3>Uses</h3>
-                <ul>
-                    <li>AI Products</li>
-                    <li>Enterprise Applications</li>
-                    <li>SaaS Platforms</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt<br>↓<br>Edit<br>↓<br>New Version<br>↓<br>Testing<br>↓<br>Deployment</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
-                    Version 1 generates generic email replies.<br>Version 2 includes customer tone and personalization.<br>If Version 2 causes problems, the team can quickly roll back to Version 1.
+<h3>Uses</h3>
+<ul>
+<li>AI Products</li>
+<li>Enterprise Applications</li>
+<li>SaaS Platforms</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt<br/>↓<br/>Edit<br/>↓<br/>New Version<br/>↓<br/>Testing<br/>↓<br/>Deployment</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
+                    Version 1 generates generic email replies.<br/>Version 2 includes customer tone and personalization.<br/>If Version 2 causes problems, the team can quickly roll back to Version 1.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Prompt Versioning enables teams to track changes and safely roll back to previous prompt versions.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Document what changed and why with every new prompt version.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 3: Prompt Libraries</h2>
-                <h3>Definition</h3>
-                <p>A Prompt Library is a centralized collection of reusable prompts organized by category, purpose, or domain.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Prompt libraries:</li>
-                    <li>Save time.</li>
-                    <li>Promote consistency.</li>
-                    <li>Encourage reuse.</li>
-                    <li>Improve team productivity.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Organized</li>
-                    <li>Searchable</li>
-                    <li>Reusable</li>
-                    <li>Maintainable</li>
-                </ul>
-                <h3>Uses</h3>
-                <ul>
-                    <li>Marketing</li>
-                    <li>Coding</li>
-                    <li>HR</li>
-                    <li>Education</li>
-                    <li>Customer Support</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt Library<br>↓<br>Select Prompt<br>↓<br>Customize<br>↓<br>Use</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 3: Prompt Libraries</h2>
+<h3>Definition</h3>
+<p>A Prompt Library is a centralized collection of reusable prompts organized by category, purpose, or domain.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Prompt libraries:</li>
+<li>Save time.</li>
+<li>Promote consistency.</li>
+<li>Encourage reuse.</li>
+<li>Improve team productivity.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Organized</li>
+<li>Searchable</li>
+<li>Reusable</li>
+<li>Maintainable</li>
+</ul>
+<h3>Uses</h3>
+<ul>
+<li>Marketing</li>
+<li>Coding</li>
+<li>HR</li>
+<li>Education</li>
+<li>Customer Support</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt Library<br/>↓<br/>Select Prompt<br/>↓<br/>Customize<br/>↓<br/>Use</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     An AI company stores approved prompts for customer support, resume generation, legal summarization, and coding assistance in one shared repository.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Prompt Libraries centralize reusable prompts for consistent and efficient AI development.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Tag prompts with metadata such as domain, purpose, model compatibility, and owner.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 4: Prompt Testing</h2>
-                <h3>Definition</h3>
-                <p>Prompt Testing verifies that prompts consistently produce accurate, reliable, and safe outputs across different scenarios.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Testing helps:</li>
-                    <li>Detect failures.</li>
-                    <li>Prevent regressions.</li>
-                    <li>Improve reliability.</li>
-                    <li>Validate prompt updates.</li>
-                </ul>
-                <h3>Types of Testing</h3>
-                <ul>
-                    <li>Functional Testing</li>
-                    <li>Edge Case Testing</li>
-                    <li>Safety Testing</li>
-                    <li>Regression Testing</li>
-                    <li>Performance Testing</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt<br>↓<br>Test Cases<br>↓<br>Results<br>↓<br>Fix Issues<br>↓<br>Approve</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 4: Prompt Testing</h2>
+<h3>Definition</h3>
+<p>Prompt Testing verifies that prompts consistently produce accurate, reliable, and safe outputs across different scenarios.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Testing helps:</li>
+<li>Detect failures.</li>
+<li>Prevent regressions.</li>
+<li>Improve reliability.</li>
+<li>Validate prompt updates.</li>
+</ul>
+<h3>Types of Testing</h3>
+<ul>
+<li>Functional Testing</li>
+<li>Edge Case Testing</li>
+<li>Safety Testing</li>
+<li>Regression Testing</li>
+<li>Performance Testing</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt<br/>↓<br/>Test Cases<br/>↓<br/>Results<br/>↓<br/>Fix Issues<br/>↓<br/>Approve</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     Before deploying a new support prompt, the team tests it with common customer questions, unusual requests, and incomplete information.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Regression testing ensures prompt updates do not unintentionally reduce performance.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Maintain an automated test suite with representative user scenarios.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 5: Prompt Analytics</h2>
-                <h3>Definition</h3>
-                <p>Prompt Analytics is the process of measuring how prompts perform in production using metrics such as quality, cost, latency, success rate, and user feedback.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Analytics helps teams:</li>
-                    <li>Identify weak prompts.</li>
-                    <li>Improve user experience.</li>
-                    <li>Reduce costs.</li>
-                    <li>Increase response quality.</li>
-                </ul>
-                <h3>Common Metrics</h3>
-                <ul>
-                    <li>Success Rate</li>
-                    <li>User Satisfaction</li>
-                    <li>Latency</li>
-                    <li>Token Usage</li>
-                    <li>Cost per Request</li>
-                    <li>Error Rate</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt<br>↓<br>Production Usage<br>↓<br>Collect Metrics<br>↓<br>Analyze<br>↓<br>Optimize</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 5: Prompt Analytics</h2>
+<h3>Definition</h3>
+<p>Prompt Analytics is the process of measuring how prompts perform in production using metrics such as quality, cost, latency, success rate, and user feedback.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Analytics helps teams:</li>
+<li>Identify weak prompts.</li>
+<li>Improve user experience.</li>
+<li>Reduce costs.</li>
+<li>Increase response quality.</li>
+</ul>
+<h3>Common Metrics</h3>
+<ul>
+<li>Success Rate</li>
+<li>User Satisfaction</li>
+<li>Latency</li>
+<li>Token Usage</li>
+<li>Cost per Request</li>
+<li>Error Rate</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt<br/>↓<br/>Production Usage<br/>↓<br/>Collect Metrics<br/>↓<br/>Analyze<br/>↓<br/>Optimize</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     A dashboard shows that one prompt has higher costs and lower user satisfaction than another, leading the team to improve it.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Prompt Analytics provides measurable insights into prompt performance in production.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Monitor trends over time instead of relying on a single day's data.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 6: Team Collaboration</h2>
-                <h3>Definition</h3>
-                <p>Team Collaboration is the process of multiple team members working together to design, review, test, approve, and improve prompts.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Collaboration:</li>
-                    <li>Improves quality.</li>
-                    <li>Reduces mistakes.</li>
-                    <li>Encourages knowledge sharing.</li>
-                    <li>Supports governance.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Reviews</li>
-                    <li>Feedback</li>
-                    <li>Shared ownership</li>
-                    <li>Documentation</li>
-                </ul>
-                <h3>Roles</h3>
-                <ul>
-                    <li>Prompt Engineer</li>
-                    <li>AI Engineer</li>
-                    <li>Product Manager</li>
-                    <li>QA Engineer</li>
-                    <li>Domain Expert</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Create Prompt<br>↓<br>Peer Review<br>↓<br>Testing<br>↓<br>Approval<br>↓<br>Production</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 6: Team Collaboration</h2>
+<h3>Definition</h3>
+<p>Team Collaboration is the process of multiple team members working together to design, review, test, approve, and improve prompts.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Collaboration:</li>
+<li>Improves quality.</li>
+<li>Reduces mistakes.</li>
+<li>Encourages knowledge sharing.</li>
+<li>Supports governance.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Reviews</li>
+<li>Feedback</li>
+<li>Shared ownership</li>
+<li>Documentation</li>
+</ul>
+<h3>Roles</h3>
+<ul>
+<li>Prompt Engineer</li>
+<li>AI Engineer</li>
+<li>Product Manager</li>
+<li>QA Engineer</li>
+<li>Domain Expert</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Create Prompt<br/>↓<br/>Peer Review<br/>↓<br/>Testing<br/>↓<br/>Approval<br/>↓<br/>Production</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     A legal prompt is reviewed by both a Prompt Engineer and a legal expert before deployment.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Prompt collaboration combines technical expertise with domain knowledge to improve quality.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Use structured review checklists before approving prompts.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 7: CI/CD for Prompts</h2>
-                <h3>Definition</h3>
-                <p>CI/CD for Prompts applies Continuous Integration and Continuous Deployment principles to prompt development, allowing prompt updates to be tested, approved, and deployed automatically.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>CI/CD:</li>
-                    <li>Automates deployments.</li>
-                    <li>Reduces manual errors.</li>
-                    <li>Speeds releases.</li>
-                    <li>Improves reliability.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Automated</li>
-                    <li>Repeatable</li>
-                    <li>Reliable</li>
-                    <li>Fast</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt Update<br>↓<br>Automated Tests<br>↓<br>Approval<br>↓<br>Deploy<br>↓<br>Monitor</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 7: CI/CD for Prompts</h2>
+<h3>Definition</h3>
+<p>CI/CD for Prompts applies Continuous Integration and Continuous Deployment principles to prompt development, allowing prompt updates to be tested, approved, and deployed automatically.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>CI/CD:</li>
+<li>Automates deployments.</li>
+<li>Reduces manual errors.</li>
+<li>Speeds releases.</li>
+<li>Improves reliability.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Automated</li>
+<li>Repeatable</li>
+<li>Reliable</li>
+<li>Fast</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt Update<br/>↓<br/>Automated Tests<br/>↓<br/>Approval<br/>↓<br/>Deploy<br/>↓<br/>Monitor</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     Every time a prompt is updated, automated tests run. If all tests pass, the prompt is deployed automatically.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     CI/CD brings software engineering best practices to prompt management.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Never deploy prompt changes directly to production without automated testing.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 8: Production Deployment</h2>
-                <h3>Definition</h3>
-                <p>Production Deployment is the process of releasing tested and approved prompts into a live AI application for real users.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Deployment ensures:</li>
-                    <li>Stable releases.</li>
-                    <li>Reliable AI behavior.</li>
-                    <li>Controlled updates.</li>
-                    <li>Safe rollouts.</li>
-                </ul>
-                <h3>Deployment Strategies</h3>
-                <ul>
-                    <li>Blue-Green Deployment</li>
-                    <li>Canary Release</li>
-                    <li>Rolling Deployment</li>
-                    <li>Feature Flags</li>
-                    <li>A/B Testing</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Tested Prompt<br>↓<br>Staging<br>↓<br>Production<br>↓<br>Monitoring<br>↓<br>Continuous Improvement</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 8: Production Deployment</h2>
+<h3>Definition</h3>
+<p>Production Deployment is the process of releasing tested and approved prompts into a live AI application for real users.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Deployment ensures:</li>
+<li>Stable releases.</li>
+<li>Reliable AI behavior.</li>
+<li>Controlled updates.</li>
+<li>Safe rollouts.</li>
+</ul>
+<h3>Deployment Strategies</h3>
+<ul>
+<li>Blue-Green Deployment</li>
+<li>Canary Release</li>
+<li>Rolling Deployment</li>
+<li>Feature Flags</li>
+<li>A/B Testing</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Tested Prompt<br/>↓<br/>Staging<br/>↓<br/>Production<br/>↓<br/>Monitoring<br/>↓<br/>Continuous Improvement</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     A company releases a new prompt to 10% of users first. After confirming improved quality and no regressions, it gradually rolls the update out to all users.
                 </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Production deployment should include monitoring and a rollback strategy in case issues arise.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
                     Deploy incrementally whenever possible rather than replacing all prompts at once.
                 </div>
-            </div>
-            <div class="lesson-card">
-                <h2>🚀 Capstone Project: Enterprise Prompt Management Platform</h2>
-                <h3>Project Objective</h3>
-                <p>Build a platform for creating, managing, testing, deploying, and monitoring prompts across multiple AI applications.</p>
-                <h3>Features</h3>
-                <ul>
-                    <li>Prompt Repository</li>
-                    <li>Prompt Versioning</li>
-                    <li>Prompt Library</li>
-                    <li>Automated Testing</li>
-                    <li>Performance Analytics</li>
-                    <li>Team Collaboration</li>
-                    <li>Approval Workflow</li>
-                    <li>CI/CD Pipeline</li>
-                    <li>Production Deployment</li>
-                    <li>Rollback Support</li>
-                    <li>A/B Testing</li>
-                    <li>Usage Dashboard</li>
-                </ul>
-                <h3>Technology Stack</h3>
-                <ul>
-                    <li>React or Next.js</li>
-                    <li>Python (FastAPI or Flask)</li>
-                    <li>PostgreSQL or Supabase</li>
-                    <li>GitHub</li>
-                    <li>Docker</li>
-                    <li>n8n (optional)</li>
-                    <li>OpenAI / Claude / Gemini APIs</li>
-                </ul>
-                <h3>Sample Workflow</h3>
-                <div class="highlight-box">
-                    Create Prompt<br>↓<br>Version Control<br>↓<br>Testing<br>↓<br>Peer Review<br>↓<br>Approval<br>↓<br>CI/CD Pipeline<br>↓<br>Production<br>↓<br>Analytics<br>↓<br>Optimization
+
+
+</div><div class="lesson-card"><h2>🚀 Capstone Project: Enterprise Prompt Management Platform</h2>
+<h3>Project Objective</h3>
+<p>Build a platform for creating, managing, testing, deploying, and monitoring prompts across multiple AI applications.</p>
+<h3>Features</h3>
+<ul>
+<li>Prompt Repository</li>
+<li>Prompt Versioning</li>
+<li>Prompt Library</li>
+<li>Automated Testing</li>
+<li>Performance Analytics</li>
+<li>Team Collaboration</li>
+<li>Approval Workflow</li>
+<li>CI/CD Pipeline</li>
+<li>Production Deployment</li>
+<li>Rollback Support</li>
+<li>A/B Testing</li>
+<li>Usage Dashboard</li>
+</ul>
+<h3>Technology Stack</h3>
+<ul>
+<li>React or Next.js</li>
+<li>Python (FastAPI or Flask)</li>
+<li>PostgreSQL or Supabase</li>
+<li>GitHub</li>
+<li>Docker</li>
+<li>n8n (optional)</li>
+<li>OpenAI / Claude / Gemini APIs</li>
+</ul>
+<h3>Sample Workflow</h3>
+<div class="highlight-box">
+                    Create Prompt<br/>↓<br/>Version Control<br/>↓<br/>Testing<br/>↓<br/>Peer Review<br/>↓<br/>Approval<br/>↓<br/>CI/CD Pipeline<br/>↓<br/>Production<br/>↓<br/>Analytics<br/>↓<br/>Optimization
                 </div>
-            </div>
 
-            <!-- Module Summary -->
-            <div class="lesson-card" style="background: rgba(34, 197, 94, 0.05); border-left: 4px solid #22c55e;">
-                <h2><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg> Skills Learned</h2>
-                <p>This module provides a comprehensive understanding of Enterprise PromptOps, including versioning, prompt libraries, testing, analytics, CI/CD workflows, and best practices for safe production deployment.</p>
-            </div>
+<!-- Module Summary -->
 
-            <!-- Quiz Section -->
-            <div class="lesson-card" style="border: 2px solid var(--primary-color); background: rgba(37,99,235,0.02);">
-                <h2 style="border-bottom: none; margin-bottom: 10px;">📝 Module 16 Assessment</h2>
-                <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
-                
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <!-- MCQ 1 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q1. What is PromptOps?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="A" style="margin-right: 10px;">A) A programming language</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="B" style="margin-right: 10px;">B) The discipline of managing prompts throughout their lifecycle using engineering best practices</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="C" style="margin-right: 10px;">C) A vector database</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="D" style="margin-right: 10px;">D) An image generation model</label>
-                        </div>
-                    </div>
+<h2><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg> Skills Learned</h2>
+<p>This module provides a comprehensive understanding of Enterprise PromptOps, including versioning, prompt libraries, testing, analytics, CI/CD workflows, and best practices for safe production deployment.</p>
 
-                    <!-- MCQ 2 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q2. Why is Prompt Versioning important?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="A" style="margin-right: 10px;">A) It increases internet speed.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="B" style="margin-right: 10px;">B) It tracks prompt changes and allows rollback to previous versions.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="C" style="margin-right: 10px;">C) It replaces testing.</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="D" style="margin-right: 10px;">D) It generates embeddings.</label>
-                        </div>
-                    </div>
+<!-- Quiz Section -->
 
-                    <!-- MCQ 3 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q3. What is the primary purpose of a Prompt Library?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="A" style="margin-right: 10px;">A) Store images</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="B" style="margin-right: 10px;">B) Organize reusable prompts for efficient and consistent use</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="C" style="margin-right: 10px;">C) Replace APIs</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="D" style="margin-right: 10px;">D) Compress prompts</label>
-                        </div>
-                    </div>
-
-                    <!-- MCQ 4 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q4. Which metric is commonly monitored in Prompt Analytics?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="A" style="margin-right: 10px;">A) CPU temperature only</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="B" style="margin-right: 10px;">B) User satisfaction, token usage, latency, and cost</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="C" style="margin-right: 10px;">C) Screen resolution</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="D" style="margin-right: 10px;">D) File extension</label>
-                        </div>
-                    </div>
-                    
-                    <!-- MCQ 5 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q5. What is the goal of CI/CD for Prompts?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="A" style="margin-right: 10px;">A) Train new LLMs automatically</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="B" style="margin-right: 10px;">B) Automate testing, validation, and deployment of prompt updates</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="C" style="margin-right: 10px;">C) Replace version control</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="D" style="margin-right: 10px;">D) Eliminate monitoring</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation to Next Module -->
-            <div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
-                <a href="/academy/module17" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
-                    Move Next Module 17 &rarr;
-                </a>
-            </div>
-        </div>
-    </main>
+</div><div data-is-quiz="true" class="lesson-card quiz-card"><h2 style="border-bottom: none; margin-bottom: 10px;">📝 Module 16 Assessment</h2>
+<p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
+<div style="display: flex; flex-direction: column; gap: 20px;">
+<!-- MCQ 1 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q1. What is PromptOps?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="A"/>A) A programming language</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="B" data-correct="true"> B) The discipline of managing prompts throughout their lifecycle using engineering best practices</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="C"/>C) A vector database</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="D"/>D) An image generation model</label>
+</div>
+</div>
+<!-- MCQ 2 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q2. Why is Prompt Versioning important?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="A"/>A) It increases internet speed.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="B" data-correct="true"> B) It tracks prompt changes and allows rollback to previous versions.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="C"/>C) It replaces testing.</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="D"/>D) It generates embeddings.</label>
+</div>
+</div>
+<!-- MCQ 3 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q3. What is the primary purpose of a Prompt Library?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="A"/>A) Store images</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="B" data-correct="true"> B) Organize reusable prompts for efficient and consistent use</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="C"/>C) Replace APIs</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="D"/>D) Compress prompts</label>
+</div>
+</div>
+<!-- MCQ 4 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q4. Which metric is commonly monitored in Prompt Analytics?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="A"/>A) CPU temperature only</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="B" data-correct="true"> B) User satisfaction, token usage, latency, and cost</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="C"/>C) Screen resolution</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="D"/>D) File extension</label>
+</div>
+</div>
+<!-- MCQ 5 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q5. What is the goal of CI/CD for Prompts?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="A"/>A) Train new LLMs automatically</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="B" data-correct="true"> B) Automate testing, validation, and deployment of prompt updates</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="C"/>C) Replace version control</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="D"/>D) Eliminate monitoring</label>
+</div>
+</div>
 </div>
 
+
+</div></div>
+<div class="module-navigation-footer" style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 50px; margin-bottom: 50px;">
+<!-- Navigation to Next Module -->
+<div style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
+<a class="btn btn-primary" href="/academy/module17" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    Move Next Module 17 →
+                </a>
+</div>
+<div style="display: flex; gap: 16px; margin-bottom: 0; justify-content: center; flex-wrap: wrap;">
+    <a class="btn btn-secondary" href="/academy">← Back to Academy Roadmap</a>
+    <a class="btn btn-secondary" href="/academy/module15">← Go back to previous module</a>
+</div>
+</div>
+</main>
+</div>
 <script>
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
@@ -667,6 +662,9 @@
     
     <!-- Web Push Notifications -->
     <script type="module" src="/static/js/notifications.js?v=3"></script>
+
+    <!-- Academy Module Progress Tracker -->
+    <script src="/static/js/module_progress.js?v=1"></script>
 
     
 </body>

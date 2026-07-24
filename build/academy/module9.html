@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="/static/css/style.css?v=9">
     <link rel="icon" type="image/png" href="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778936080/Prompt_Bazaar_Favican_sk4rnu.png">
     
-<link rel="stylesheet" href="/static/css/gallery.css?v=3">
-<link rel="stylesheet" href="/static/css/tools.css">
-<link rel="stylesheet" href="/static/css/academy.css">
+<link href="/static/css/gallery.css?v=3" rel="stylesheet"/>
+<link href="/static/css/tools.css" rel="stylesheet"/>
+<link href="/static/css/academy.css" rel="stylesheet"/>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
@@ -165,508 +165,503 @@
     
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 <aside class="sidebar-drawer" id="sidebarDrawer">
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-left">
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+<div class="sidebar-brand">
+<div class="sidebar-brand-left">
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-        </button>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="sidebar-section-label">Navigation</div>
-        <a href="/" class="sidebar-nav-item"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Home</a>
-        <a href="/gallery" class="sidebar-nav-item"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></span> Prompt Gallery</a>
-        <a href="/tools" class="sidebar-nav-item"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span> Prompt Tools</a>
-        <a href="/academy" class="sidebar-nav-item active"><span class="sidebar-icon"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span> Prompt Academy</a>
-    </nav>
-    <div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
+<button aria-label="Close menu" class="sidebar-close-btn" id="sidebarCloseBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="18" x2="6" y1="6" y2="18"></line>
+<line x1="6" x2="18" y1="6" y2="18"></line>
+</svg>
+</button>
+</div>
+<nav class="sidebar-nav">
+<div class="sidebar-section-label">Navigation</div>
+<a class="sidebar-nav-item" href="/"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></span> Home</a>
+<a class="sidebar-nav-item" href="/gallery"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><rect height="18" rx="2" ry="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg></span> Prompt Gallery</a>
+<a class="sidebar-nav-item" href="/tools"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span> Prompt Tools</a>
+<a class="sidebar-nav-item active" href="/academy"><span class="sidebar-icon"><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span> Prompt Academy</a>
+</nav>
+<div class="sidebar-footer">© 2025 Prompt Bazaar. All rights reserved.</div>
 </aside>
-
 <div class="gallery-layout">
-    <header class="gallery-header">
-        <div class="header-left">
-            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Open menu">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-            <img src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png" alt="Logo">
+<header class="gallery-header">
+<div class="header-left">
+<button aria-label="Open menu" class="menu-toggle-btn" id="menuToggleBtn">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+<img alt="Logo" src="https://res.cloudinary.com/dwv8kc9vb/image/upload/v1778935629/Prompt_Bazaar_Logo_h4ga2c.png"/>
             Prompt Bazaar
         </div>
-        <div class="header-right">
-            <div class="xp-badge" id="user-xp-badge">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                </svg>
-                <span id="user-xp-amount">0</span> XP
+<div class="header-right">
+<div class="xp-badge" id="user-xp-badge">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+</svg>
+<span id="user-xp-amount">0</span> XP
             </div>
-            <a href="/profile" class="user-avatar" title="Profile">
+<a class="user-avatar" href="/profile" title="Profile">
                 
                 U
                 
             </a>
-        </div>
-    </header>
+</div>
+</header>
+<main class="academy-main-content">
+<div class="module-container">
 
-    <main class="academy-main-content">
-        <div class="module-container">
-            <a href="/academy" class="btn btn-secondary" style="margin-bottom: 24px;">&larr; Back to Academy Roadmap</a>
-            <h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">📘 Module 9: AI Video Prompt Engineering</h1>
-            
-            <div class="lesson-card" style="border: 2px solid var(--primary-color);">
-                <h2>🎯 Objective</h2>
-                <p>Learn how to create professional AI-generated videos using modern video generation platforms and cinematic prompting techniques.</p>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 1: Veo</h2>
-                <h3>Definition</h3>
-                <p>Veo is Google's AI video generation model that creates high-quality videos from natural language prompts. It understands cinematic instructions such as camera movement, lighting, emotions, and scene descriptions to generate realistic videos.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Veo helps creators:</li>
-                    <li>Produce realistic AI videos.</li>
-                    <li>Generate cinematic scenes.</li>
-                    <li>Create marketing videos.</li>
-                    <li>Produce educational content.</li>
-                    <li>Prototype movie concepts.</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>High-quality video generation</li>
-                    <li>Realistic motion</li>
-                    <li>Strong prompt understanding</li>
-                    <li>Cinematic camera control</li>
-                    <li>Natural lighting</li>
-                </ul>
-                <h3>Uses</h3>
-                <ul>
-                    <li>Advertisements</li>
-                    <li>Short Films</li>
-                    <li>Product Videos</li>
-                    <li>Educational Videos</li>
-                    <li>Storytelling</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt<br>↓<br>Veo AI<br>↓<br>Video Generation<br>↓<br>Cinematic Output</div>
-                <h3>Real-Time Example</h3>
-                <div class="highlight-box">
+<h1 style="font-size: 32px; margin-bottom: 40px; color: var(--color-text-primary);">📘 Module 9: AI Video Prompt Engineering</h1>
+
+<div class="lesson-card"><h2>🎯 Objective</h2>
+<p>Learn how to create professional AI-generated videos using modern video generation platforms and cinematic prompting techniques.</p>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 1: Veo</h2>
+<h3>Definition</h3>
+<p>Veo is Google's AI video generation model that creates high-quality videos from natural language prompts. It understands cinematic instructions such as camera movement, lighting, emotions, and scene descriptions to generate realistic videos.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Veo helps creators:</li>
+<li>Produce realistic AI videos.</li>
+<li>Generate cinematic scenes.</li>
+<li>Create marketing videos.</li>
+<li>Produce educational content.</li>
+<li>Prototype movie concepts.</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>High-quality video generation</li>
+<li>Realistic motion</li>
+<li>Strong prompt understanding</li>
+<li>Cinematic camera control</li>
+<li>Natural lighting</li>
+</ul>
+<h3>Uses</h3>
+<ul>
+<li>Advertisements</li>
+<li>Short Films</li>
+<li>Product Videos</li>
+<li>Educational Videos</li>
+<li>Storytelling</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt<br/>↓<br/>Veo AI<br/>↓<br/>Video Generation<br/>↓<br/>Cinematic Output</div>
+<h3>Real-Time Example</h3>
+<div class="highlight-box">
                     Create a cinematic 10-second video of a futuristic city at sunrise with flying cars, smooth drone camera movement, golden-hour lighting, ultra-realistic style, 4K.
                 </div>
-                <h3>Real-Life Analogy</h3>
-                <p>Imagine giving a movie director a written script and receiving a professionally filmed scene.</p>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
+<h3>Real-Life Analogy</h3>
+<p>Imagine giving a movie director a written script and receiving a professionally filmed scene.</p>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
                     Veo excels at understanding complex cinematic prompts and producing realistic AI-generated videos.
                 </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
-                    Always specify:<br><ul><li>Subject</li><li>Action</li><li>Camera movement</li><li>Lighting</li><li>Duration</li><li>Style</li><li>Resolution</li></ul>
-                </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 2: Runway</h2>
-                <h3>Definition</h3>
-                <p>Runway is an AI-powered creative platform that generates, edits, and enhances videos using text prompts, images, and existing video clips.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Runway supports:</li>
-                    <li>Text-to-video</li>
-                    <li>Image-to-video</li>
-                    <li>Video editing</li>
-                    <li>Background removal</li>
-                    <li>Motion generation</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Easy to use</li>
-                    <li>Fast rendering</li>
-                    <li>Creative workflows</li>
-                    <li>Professional editing tools</li>
-                </ul>
-                <h3>Uses</h3>
-                <ul>
-                    <li>YouTube Videos</li>
-                    <li>Social Media</li>
-                    <li>Commercial Ads</li>
-                    <li>Short Films</li>
-                </ul>
-                <h3>Example</h3>
-                <div class="highlight-box">
-                    Generate a product advertisement for a smartwatch with smooth camera rotation, premium studio lighting, slow motion, and luxury branding.
-                </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
-                    Runway combines AI video generation with professional video editing capabilities.
-                </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 3: Kling</h2>
-                <h3>Definition</h3>
-                <p>Kling is an advanced AI video generation platform designed to create highly realistic videos with natural character movement, physics, and cinematic quality from text prompts.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Kling is known for:</li>
-                    <li>Realistic human motion</li>
-                    <li>Natural facial expressions</li>
-                    <li>High-quality animations</li>
-                    <li>Smooth camera movement</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Photorealistic</li>
-                    <li>Natural motion</li>
-                    <li>Detailed scenes</li>
-                    <li>Strong prompt understanding</li>
-                </ul>
-                <h3>Uses</h3>
-                <ul>
-                    <li>Commercial Videos</li>
-                    <li>Storytelling</li>
-                    <li>AI Films</li>
-                    <li>Character Animation</li>
-                </ul>
-                <h3>Example</h3>
-                <div class="highlight-box">
-                    Create a realistic video of a young entrepreneur walking through a modern office while speaking confidently, cinematic lighting, smooth tracking shot.
-                </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 4: Pika</h2>
-                <h3>Definition</h3>
-                <p>Pika is an AI video generation platform that transforms text prompts or images into animated videos with creative motion, transitions, and cinematic effects.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Pika helps users:</li>
-                    <li>Animate images</li>
-                    <li>Create short videos</li>
-                    <li>Produce social media content</li>
-                    <li>Build creative visual stories</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Fast generation</li>
-                    <li>Easy animation</li>
-                    <li>Smooth transitions</li>
-                    <li>Beginner-friendly</li>
-                </ul>
-                <h3>Uses</h3>
-                <ul>
-                    <li>Reels</li>
-                    <li>Shorts</li>
-                    <li>Instagram Videos</li>
-                    <li>Promotional Clips</li>
-                </ul>
-                <h3>Example</h3>
-                <div class="highlight-box">
-                    Animate a modern AI logo with glowing effects, smooth zoom-in camera motion, futuristic background, 5-second duration.
-                </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 5: Luma</h2>
-                <h3>Definition</h3>
-                <p>Luma is an AI-powered platform that creates realistic videos and 3D scenes from text prompts or images, with a strong focus on cinematic quality and spatial realism.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Luma enables:</li>
-                    <li>High-quality AI videos</li>
-                    <li>3D scene generation</li>
-                    <li>Product showcases</li>
-                    <li>Architectural visualization</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Realistic rendering</li>
-                    <li>Advanced lighting</li>
-                    <li>Smooth camera movement</li>
-                    <li>3D scene understanding</li>
-                </ul>
-                <h3>Uses</h3>
-                <ul>
-                    <li>Product Videos</li>
-                    <li>Architecture</li>
-                    <li>Virtual Tours</li>
-                    <li>Advertising</li>
-                </ul>
-                <h3>Example</h3>
-                <div class="highlight-box">
-                    Generate a cinematic video of a luxury villa with a drone fly-through, sunset lighting, realistic reflections, and ultra-high quality.
-                </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 6: Camera Motion</h2>
-                <h3>Definition</h3>
-                <p>Camera Motion refers to how the virtual camera moves during an AI-generated video. It determines the perspective, storytelling, and cinematic feel of the scene.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Camera motion:</li>
-                    <li>Creates realism</li>
-                    <li>Directs viewer attention</li>
-                    <li>Adds cinematic quality</li>
-                    <li>Enhances storytelling</li>
-                </ul>
-                <h3>Common Camera Movements</h3>
-                <ul>
-                    <li>Pan</li>
-                    <li>Tilt</li>
-                    <li>Zoom In</li>
-                    <li>Zoom Out</li>
-                    <li>Dolly In</li>
-                    <li>Dolly Out</li>
-                    <li>Tracking Shot</li>
-                    <li>Crane Shot</li>
-                    <li>Orbit Shot</li>
-                    <li>Handheld</li>
-                    <li>Static Shot</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Scene<br>↓<br>Camera Movement<br>↓<br>AI Video<br>↓<br>Cinematic Scene</div>
-                <h3>Example Prompt</h3>
-                <div class="highlight-box">
-                    Slow cinematic tracking shot following a runner through a forest during sunrise.
-                </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
-                    Good camera movement can make an AI-generated video look like a professionally filmed movie.
-                </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 7: Cinematic Language</h2>
-                <h3>Definition</h3>
-                <p>Cinematic Language is the collection of filmmaking techniques used to communicate emotion, mood, storytelling, and visual style in AI-generated videos.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Cinematic language helps create:</li>
-                    <li>Emotional impact</li>
-                    <li>Better storytelling</li>
-                    <li>Professional-quality videos</li>
-                    <li>Visual consistency</li>
-                </ul>
-                <h3>Common Cinematic Terms</h3>
-                <ul>
-                    <li>Establishing Shot</li>
-                    <li>Close-Up</li>
-                    <li>Medium Shot</li>
-                    <li>Wide Shot</li>
-                    <li>Over-the-Shoulder Shot</li>
-                    <li>Slow Motion</li>
-                    <li>Time Lapse</li>
-                    <li>Depth of Field</li>
-                    <li>Bokeh</li>
-                    <li>Cinematic Lighting</li>
-                </ul>
-                <h3>Uses</h3>
-                <ul>
-                    <li>Films</li>
-                    <li>Advertisements</li>
-                    <li>Documentaries</li>
-                    <li>Product Videos</li>
-                </ul>
-                <h3>Example</h3>
-                <div class="highlight-box">
-                    Wide establishing shot of a futuristic city followed by a close-up of the main character with shallow depth of field and dramatic lighting.
-                </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
-                    Combine camera angles, lighting, and emotions to create more cinematic AI videos.
-                </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 8: Character Consistency</h2>
-                <h3>Definition</h3>
-                <p>Character Consistency ensures that the same character maintains identical facial features, hairstyle, clothing, body proportions, and personality throughout every scene of a video.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Consistency is essential for:</li>
-                    <li>Movies</li>
-                    <li>Commercials</li>
-                    <li>Storytelling</li>
-                    <li>Brand mascots</li>
-                    <li>Educational videos</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Same face</li>
-                    <li>Same hairstyle</li>
-                    <li>Same clothing</li>
-                    <li>Same accessories</li>
-                    <li>Same expressions</li>
-                </ul>
-                <h3>Example Prompt</h3>
-                <div class="highlight-box">
-                    Generate a confident young woman wearing a blue business suit with shoulder-length black hair and glasses. Maintain the same appearance across all scenes and camera angles.
-                </div>
-                <div class="highlight-box">
-                    <strong>📌 Interview Tip</strong><br><br>
-                    Character consistency is one of the biggest challenges in AI video generation and is essential for multi-scene storytelling.
-                </div>
-            </div>
-            <div class="lesson-card">
-                <h2>📖 Lesson 9: Scene Control</h2>
-                <h3>Definition</h3>
-                <p>Scene Control is the process of guiding the AI to maintain consistent environments, objects, lighting, actions, and transitions across different scenes in a video.</p>
-                <h3>Why is it Important?</h3>
-                <ul>
-                    <li>Scene control helps:</li>
-                    <li>Maintain continuity</li>
-                    <li>Improve storytelling</li>
-                    <li>Reduce visual inconsistencies</li>
-                    <li>Create professional videos</li>
-                </ul>
-                <h3>Characteristics</h3>
-                <ul>
-                    <li>Consistent backgrounds</li>
-                    <li>Controlled object placement</li>
-                    <li>Stable lighting</li>
-                    <li>Smooth transitions</li>
-                    <li>Scene continuity</li>
-                </ul>
-                <h3>Workflow</h3>
-                <div class="diagram-box">Prompt<br>↓<br>Scene Description<br>↓<br>Character Actions<br>↓<br>Environment<br>↓<br>Camera Motion<br>↓<br>Final Video</div>
-                <h3>Example Prompt</h3>
-                <div class="highlight-box">
-                    Scene 1:<br>A modern office during sunrise.<br>Scene 2:<br>The same office at noon with the same furniture and character.<br>Scene 3:<br>The same office during sunset while maintaining identical room layout and lighting style.
-                </div>
-                <div class="highlight-box">
-                    <strong>💡 Prompt Engineer Tip</strong><br><br>
-                    Describe every scene using the same environment, character details, lighting, and camera style to maintain continuity.
-                </div>
-            </div>
-            <div class="lesson-card">
-                <h2>🚀 Mini Project 1: AI Commercial Advertisement</h2>
-                <h3>Objective</h3>
-                <p>Create a professional 20-second AI-generated advertisement for a smartwatch.</p>
-                <h3>Skills Used</h3>
-                <ul>
-                    <li>Veo</li>
-                    <li>Runway</li>
-                    <li>Camera Motion</li>
-                    <li>Cinematic Language</li>
-                    <li>Scene Control</li>
-                </ul>
-                <h3>Sample Prompt</h3>
-                <div class="highlight-box">
-                    Create a 20-second luxury smartwatch advertisement.<br>Scene 1:<br>Close-up of the watch on a black marble table.<br>Scene 2:<br>A business professional wearing the watch while walking through a modern office.<br>Scene 3:<br>Product rotating slowly with premium studio lighting.<br>Camera:<br>Tracking shot, slow zoom, cinematic lighting, 4K, luxury branding.
-                </div>
-            </div>
-            <div class="lesson-card">
-                <h2>🚀 Mini Project 2: AI Story Trailer</h2>
-                <h3>Objective</h3>
-                <p>Create a cinematic movie trailer with consistent characters and multiple scenes.</p>
-                <h3>Skills Used</h3>
-                <ul>
-                    <li>Character Consistency</li>
-                    <li>Scene Control</li>
-                    <li>Camera Motion</li>
-                    <li>Cinematic Language</li>
-                </ul>
-            </div>
-            <div class="lesson-card">
-                <h2>🚀 Mini Project 3: Product Showcase Video</h2>
-                <h3>Objective</h3>
-                <p>Generate an AI-powered promotional video for an e-commerce product.</p>
-                <h3>Skills Used</h3>
-                <ul>
-                    <li>Luma</li>
-                    <li>Kling</li>
-                    <li>Camera Motion</li>
-                    <li>Lighting</li>
-                    <li>Scene Control</li>
-                </ul>
-            </div>
-
-            <!-- Module Summary -->
-            <div class="lesson-card" style="background: rgba(34, 197, 94, 0.05); border-left: 4px solid #22c55e;">
-                <h2><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg> Skills Learned</h2>
-                <p>After completing Module 9, learners will be able to:</p>
-                <ul style="list-style-type: none; padding-left: 0;">
-                    <li>✅ Write professional prompts for Veo, Runway, Kling, Pika, and Luma.</li>
-                    <li>✅ Control camera movement and cinematic storytelling.</li>
-                    <li>✅ Maintain consistent characters across multiple scenes.</li>
-                    <li>✅ Design structured multi-scene AI videos.</li>
-                    <li>✅ Create advertisements, trailers, and product showcase videos using AI.</li>
-                </ul>
-            </div>
-
-            <!-- Quiz Section -->
-            <div class="lesson-card" style="border: 2px solid var(--primary-color); background: rgba(37,99,235,0.02);">
-                <h2 style="border-bottom: none; margin-bottom: 10px;">📝 Module 9 Assessment</h2>
-                <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
-                
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <!-- MCQ 1 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q1. Which platform is developed by Google for AI video generation?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="A" style="margin-right: 10px;">A) Kling</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="B" style="margin-right: 10px;">B) Runway</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="C" style="margin-right: 10px;">C) Veo</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="D" style="margin-right: 10px;">D) Pika</label>
-                        </div>
-                    </div>
-
-                    <!-- MCQ 2 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q2. Which topic focuses on how the virtual camera moves during a video?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="A" style="margin-right: 10px;">A) Character Consistency</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="B" style="margin-right: 10px;">B) Camera Motion</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="C" style="margin-right: 10px;">C) Scene Control</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="D" style="margin-right: 10px;">D) Lighting</label>
-                        </div>
-                    </div>
-
-                    <!-- MCQ 3 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q3. Why is Character Consistency important in AI-generated videos?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="A" style="margin-right: 10px;">A) To reduce video file size</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="B" style="margin-right: 10px;">B) To keep the same character appearance across multiple scenes</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="C" style="margin-right: 10px;">C) To increase rendering speed</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="D" style="margin-right: 10px;">D) To improve internet connectivity</label>
-                        </div>
-                    </div>
-
-                    <!-- MCQ 4 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q4. Which platform combines AI video generation with powerful editing tools?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="A" style="margin-right: 10px;">A) Runway</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="B" style="margin-right: 10px;">B) Ideogram</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="C" style="margin-right: 10px;">C) Midjourney</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="D" style="margin-right: 10px;">D) FLUX</label>
-                        </div>
-                    </div>
-                    
-                    <!-- MCQ 5 -->
-                    <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
-                        <h4 style="margin-top: 0; color: var(--color-text-primary);">Q5. What is the main purpose of Scene Control?</h4>
-                        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="A" style="margin-right: 10px;">A) Change video resolution automatically</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="B" style="margin-right: 10px;">B) Maintain continuity of environments, objects, lighting, and actions across scenes</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="C" style="margin-right: 10px;">C) Increase frame rate</label>
-                            <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="D" style="margin-right: 10px;">D) Compress video files</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation to Next Module -->
-            <div style="text-align: right; margin-top: 40px; margin-bottom: 20px;">
-                <a href="/academy/module10" class="btn btn-primary" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
-                    Move Next Module 10 &rarr;
-                </a>
-            </div>
-        </div>
-    </main>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
+                    Always specify:<br/><ul><li>Subject</li><li>Action</li><li>Camera movement</li><li>Lighting</li><li>Duration</li><li>Style</li><li>Resolution</li></ul>
 </div>
 
+
+</div><div class="lesson-card"><h2>📖 Lesson 2: Runway</h2>
+<h3>Definition</h3>
+<p>Runway is an AI-powered creative platform that generates, edits, and enhances videos using text prompts, images, and existing video clips.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Runway supports:</li>
+<li>Text-to-video</li>
+<li>Image-to-video</li>
+<li>Video editing</li>
+<li>Background removal</li>
+<li>Motion generation</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Easy to use</li>
+<li>Fast rendering</li>
+<li>Creative workflows</li>
+<li>Professional editing tools</li>
+</ul>
+<h3>Uses</h3>
+<ul>
+<li>YouTube Videos</li>
+<li>Social Media</li>
+<li>Commercial Ads</li>
+<li>Short Films</li>
+</ul>
+<h3>Example</h3>
+<div class="highlight-box">
+                    Generate a product advertisement for a smartwatch with smooth camera rotation, premium studio lighting, slow motion, and luxury branding.
+                </div>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
+                    Runway combines AI video generation with professional video editing capabilities.
+                </div>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 3: Kling</h2>
+<h3>Definition</h3>
+<p>Kling is an advanced AI video generation platform designed to create highly realistic videos with natural character movement, physics, and cinematic quality from text prompts.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Kling is known for:</li>
+<li>Realistic human motion</li>
+<li>Natural facial expressions</li>
+<li>High-quality animations</li>
+<li>Smooth camera movement</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Photorealistic</li>
+<li>Natural motion</li>
+<li>Detailed scenes</li>
+<li>Strong prompt understanding</li>
+</ul>
+<h3>Uses</h3>
+<ul>
+<li>Commercial Videos</li>
+<li>Storytelling</li>
+<li>AI Films</li>
+<li>Character Animation</li>
+</ul>
+<h3>Example</h3>
+<div class="highlight-box">
+                    Create a realistic video of a young entrepreneur walking through a modern office while speaking confidently, cinematic lighting, smooth tracking shot.
+                </div>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 4: Pika</h2>
+<h3>Definition</h3>
+<p>Pika is an AI video generation platform that transforms text prompts or images into animated videos with creative motion, transitions, and cinematic effects.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Pika helps users:</li>
+<li>Animate images</li>
+<li>Create short videos</li>
+<li>Produce social media content</li>
+<li>Build creative visual stories</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Fast generation</li>
+<li>Easy animation</li>
+<li>Smooth transitions</li>
+<li>Beginner-friendly</li>
+</ul>
+<h3>Uses</h3>
+<ul>
+<li>Reels</li>
+<li>Shorts</li>
+<li>Instagram Videos</li>
+<li>Promotional Clips</li>
+</ul>
+<h3>Example</h3>
+<div class="highlight-box">
+                    Animate a modern AI logo with glowing effects, smooth zoom-in camera motion, futuristic background, 5-second duration.
+                </div>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 5: Luma</h2>
+<h3>Definition</h3>
+<p>Luma is an AI-powered platform that creates realistic videos and 3D scenes from text prompts or images, with a strong focus on cinematic quality and spatial realism.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Luma enables:</li>
+<li>High-quality AI videos</li>
+<li>3D scene generation</li>
+<li>Product showcases</li>
+<li>Architectural visualization</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Realistic rendering</li>
+<li>Advanced lighting</li>
+<li>Smooth camera movement</li>
+<li>3D scene understanding</li>
+</ul>
+<h3>Uses</h3>
+<ul>
+<li>Product Videos</li>
+<li>Architecture</li>
+<li>Virtual Tours</li>
+<li>Advertising</li>
+</ul>
+<h3>Example</h3>
+<div class="highlight-box">
+                    Generate a cinematic video of a luxury villa with a drone fly-through, sunset lighting, realistic reflections, and ultra-high quality.
+                </div>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 6: Camera Motion</h2>
+<h3>Definition</h3>
+<p>Camera Motion refers to how the virtual camera moves during an AI-generated video. It determines the perspective, storytelling, and cinematic feel of the scene.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Camera motion:</li>
+<li>Creates realism</li>
+<li>Directs viewer attention</li>
+<li>Adds cinematic quality</li>
+<li>Enhances storytelling</li>
+</ul>
+<h3>Common Camera Movements</h3>
+<ul>
+<li>Pan</li>
+<li>Tilt</li>
+<li>Zoom In</li>
+<li>Zoom Out</li>
+<li>Dolly In</li>
+<li>Dolly Out</li>
+<li>Tracking Shot</li>
+<li>Crane Shot</li>
+<li>Orbit Shot</li>
+<li>Handheld</li>
+<li>Static Shot</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Scene<br/>↓<br/>Camera Movement<br/>↓<br/>AI Video<br/>↓<br/>Cinematic Scene</div>
+<h3>Example Prompt</h3>
+<div class="highlight-box">
+                    Slow cinematic tracking shot following a runner through a forest during sunrise.
+                </div>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
+                    Good camera movement can make an AI-generated video look like a professionally filmed movie.
+                </div>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 7: Cinematic Language</h2>
+<h3>Definition</h3>
+<p>Cinematic Language is the collection of filmmaking techniques used to communicate emotion, mood, storytelling, and visual style in AI-generated videos.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Cinematic language helps create:</li>
+<li>Emotional impact</li>
+<li>Better storytelling</li>
+<li>Professional-quality videos</li>
+<li>Visual consistency</li>
+</ul>
+<h3>Common Cinematic Terms</h3>
+<ul>
+<li>Establishing Shot</li>
+<li>Close-Up</li>
+<li>Medium Shot</li>
+<li>Wide Shot</li>
+<li>Over-the-Shoulder Shot</li>
+<li>Slow Motion</li>
+<li>Time Lapse</li>
+<li>Depth of Field</li>
+<li>Bokeh</li>
+<li>Cinematic Lighting</li>
+</ul>
+<h3>Uses</h3>
+<ul>
+<li>Films</li>
+<li>Advertisements</li>
+<li>Documentaries</li>
+<li>Product Videos</li>
+</ul>
+<h3>Example</h3>
+<div class="highlight-box">
+                    Wide establishing shot of a futuristic city followed by a close-up of the main character with shallow depth of field and dramatic lighting.
+                </div>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
+                    Combine camera angles, lighting, and emotions to create more cinematic AI videos.
+                </div>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 8: Character Consistency</h2>
+<h3>Definition</h3>
+<p>Character Consistency ensures that the same character maintains identical facial features, hairstyle, clothing, body proportions, and personality throughout every scene of a video.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Consistency is essential for:</li>
+<li>Movies</li>
+<li>Commercials</li>
+<li>Storytelling</li>
+<li>Brand mascots</li>
+<li>Educational videos</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Same face</li>
+<li>Same hairstyle</li>
+<li>Same clothing</li>
+<li>Same accessories</li>
+<li>Same expressions</li>
+</ul>
+<h3>Example Prompt</h3>
+<div class="highlight-box">
+                    Generate a confident young woman wearing a blue business suit with shoulder-length black hair and glasses. Maintain the same appearance across all scenes and camera angles.
+                </div>
+<div class="highlight-box">
+<strong>📌 Interview Tip</strong><br/><br/>
+                    Character consistency is one of the biggest challenges in AI video generation and is essential for multi-scene storytelling.
+                </div>
+
+
+</div><div class="lesson-card"><h2>📖 Lesson 9: Scene Control</h2>
+<h3>Definition</h3>
+<p>Scene Control is the process of guiding the AI to maintain consistent environments, objects, lighting, actions, and transitions across different scenes in a video.</p>
+<h3>Why is it Important?</h3>
+<ul>
+<li>Scene control helps:</li>
+<li>Maintain continuity</li>
+<li>Improve storytelling</li>
+<li>Reduce visual inconsistencies</li>
+<li>Create professional videos</li>
+</ul>
+<h3>Characteristics</h3>
+<ul>
+<li>Consistent backgrounds</li>
+<li>Controlled object placement</li>
+<li>Stable lighting</li>
+<li>Smooth transitions</li>
+<li>Scene continuity</li>
+</ul>
+<h3>Workflow</h3>
+<div class="diagram-box">Prompt<br/>↓<br/>Scene Description<br/>↓<br/>Character Actions<br/>↓<br/>Environment<br/>↓<br/>Camera Motion<br/>↓<br/>Final Video</div>
+<h3>Example Prompt</h3>
+<div class="highlight-box">
+                    Scene 1:<br/>A modern office during sunrise.<br/>Scene 2:<br/>The same office at noon with the same furniture and character.<br/>Scene 3:<br/>The same office during sunset while maintaining identical room layout and lighting style.
+                </div>
+<div class="highlight-box">
+<strong>💡 Prompt Engineer Tip</strong><br/><br/>
+                    Describe every scene using the same environment, character details, lighting, and camera style to maintain continuity.
+                </div>
+
+
+</div><div class="lesson-card"><h2>🚀 Mini Project 1: AI Commercial Advertisement</h2>
+<h3>Objective</h3>
+<p>Create a professional 20-second AI-generated advertisement for a smartwatch.</p>
+<h3>Skills Used</h3>
+<ul>
+<li>Veo</li>
+<li>Runway</li>
+<li>Camera Motion</li>
+<li>Cinematic Language</li>
+<li>Scene Control</li>
+</ul>
+<h3>Sample Prompt</h3>
+<div class="highlight-box">
+                    Create a 20-second luxury smartwatch advertisement.<br/>Scene 1:<br/>Close-up of the watch on a black marble table.<br/>Scene 2:<br/>A business professional wearing the watch while walking through a modern office.<br/>Scene 3:<br/>Product rotating slowly with premium studio lighting.<br/>Camera:<br/>Tracking shot, slow zoom, cinematic lighting, 4K, luxury branding.
+                </div>
+
+
+</div><div class="lesson-card"><h2>🚀 Mini Project 2: AI Story Trailer</h2>
+<h3>Objective</h3>
+<p>Create a cinematic movie trailer with consistent characters and multiple scenes.</p>
+<h3>Skills Used</h3>
+<ul>
+<li>Character Consistency</li>
+<li>Scene Control</li>
+<li>Camera Motion</li>
+<li>Cinematic Language</li>
+</ul>
+
+
+</div><div class="lesson-card"><h2>🚀 Mini Project 3: Product Showcase Video</h2>
+<h3>Objective</h3>
+<p>Generate an AI-powered promotional video for an e-commerce product.</p>
+<h3>Skills Used</h3>
+<ul>
+<li>Luma</li>
+<li>Kling</li>
+<li>Camera Motion</li>
+<li>Lighting</li>
+<li>Scene Control</li>
+</ul>
+
+<!-- Module Summary -->
+
+<h2><svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg> Skills Learned</h2>
+<p>After completing Module 9, learners will be able to:</p>
+<ul style="list-style-type: none; padding-left: 0;">
+<li>✅ Write professional prompts for Veo, Runway, Kling, Pika, and Luma.</li>
+<li>✅ Control camera movement and cinematic storytelling.</li>
+<li>✅ Maintain consistent characters across multiple scenes.</li>
+<li>✅ Design structured multi-scene AI videos.</li>
+<li>✅ Create advertisements, trailers, and product showcase videos using AI.</li>
+</ul>
+
+<!-- Quiz Section -->
+
+</div><div data-is-quiz="true" class="lesson-card quiz-card"><h2 style="border-bottom: none; margin-bottom: 10px;">📝 Module 9 Assessment</h2>
+<p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
+<div style="display: flex; flex-direction: column; gap: 20px;">
+<!-- MCQ 1 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q1. Which platform is developed by Google for AI video generation?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="A"/>A) Kling</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="B"/>B) Runway</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="C" data-correct="true"> C) Veo</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q1" style="margin-right: 10px;" type="radio" value="D"/>D) Pika</label>
+</div>
+</div>
+<!-- MCQ 2 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q2. Which topic focuses on how the virtual camera moves during a video?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="A" data-correct="true"> A) Character Consistency</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="B"/>B) Camera Motion</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="C"/>C) Scene Control</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q2" style="margin-right: 10px;" type="radio" value="D"/>D) Lighting</label>
+</div>
+</div>
+<!-- MCQ 3 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q3. Why is Character Consistency important in AI-generated videos?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="A"/>A) To reduce video file size</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="B" data-correct="true"> B) To keep the same character appearance across multiple scenes</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="C"/>C) To increase rendering speed</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q3" style="margin-right: 10px;" type="radio" value="D"/>D) To improve internet connectivity</label>
+</div>
+</div>
+<!-- MCQ 4 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q4. Which platform combines AI video generation with powerful editing tools?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="A" data-correct="true"> A) Runway</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="B"/>B) Ideogram</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="C"/>C) Midjourney</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q4" style="margin-right: 10px;" type="radio" value="D"/>D) FLUX</label>
+</div>
+</div>
+<!-- MCQ 5 -->
+<div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+<h4 style="margin-top: 0; color: var(--color-text-primary);">Q5. What is the main purpose of Scene Control?</h4>
+<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="A"/>A) Change video resolution automatically</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="B" data-correct="true"> B) Maintain continuity of environments, objects, lighting, and actions across scenes</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="C"/>C) Increase frame rate</label>
+<label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input name="q5" style="margin-right: 10px;" type="radio" value="D"/>D) Compress video files</label>
+</div>
+</div>
+</div>
+
+
+</div></div>
+<div class="module-navigation-footer" style="display: flex; flex-direction: column; align-items: center; gap: 20px; margin-top: 50px; margin-bottom: 50px;">
+<!-- Navigation to Next Module -->
+<div style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
+<a class="btn btn-primary" href="/academy/module10" style="font-size: 18px; padding: 12px 24px; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">
+                    Move Next Module 10 →
+                </a>
+</div>
+<div style="display: flex; gap: 16px; margin-bottom: 0; justify-content: center; flex-wrap: wrap;">
+    <a class="btn btn-secondary" href="/academy">← Back to Academy Roadmap</a>
+    <a class="btn btn-secondary" href="/academy/module8">← Go back to previous module</a>
+</div>
+</div>
+</main>
+</div>
 <script>
     const menuToggleBtn = document.getElementById('menuToggleBtn');
     const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
@@ -681,6 +676,9 @@
     
     <!-- Web Push Notifications -->
     <script type="module" src="/static/js/notifications.js?v=3"></script>
+
+    <!-- Academy Module Progress Tracker -->
+    <script src="/static/js/module_progress.js?v=1"></script>
 
     
 </body>
