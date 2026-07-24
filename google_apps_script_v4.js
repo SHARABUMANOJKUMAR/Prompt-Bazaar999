@@ -348,8 +348,8 @@
     slidePresentation.replaceAllText('{{CERT_ID}}', certId); 
     
     step = "Fetching QR Code";
-    // Fixed QR URL to point to /academy/verify instead of just /verify, and encode properly
-    var verificationUrl = "https://promptbazzar.netlify.app/academy/verify?certId=" + encodeURIComponent(certId);
+    // Fixed QR URL to point to /verify?id= and spelled with two z's
+    var verificationUrl = "https://promptbazzar.netlify.app/verify?id=" + encodeURIComponent(certId);
     var qrApiUrl = "https://quickchart.io/qr?text=" + encodeURIComponent(verificationUrl) + "&size=150";
     var qrBlob = UrlFetchApp.fetch(qrApiUrl).getBlob();
     
