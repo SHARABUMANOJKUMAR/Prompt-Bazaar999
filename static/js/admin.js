@@ -11,7 +11,7 @@ const API_BASE_URL = (window.location.hostname === 'localhost' || window.locatio
 const GAS_PROMPTS_URL = "https://script.google.com/macros/s/AKfycbzF7droXuNirFZ_NNlfsE7pV6b71yPVf7f-UMAfpTHLQlOvPgnmv8NN5tcbLWpqwZVd/exec";
 const GAS_USERS_URL = "https://script.google.com/macros/s/AKfycby92lgxoV3RgYwn6hIj1A7ErMlqXwxAyCSXajDO2Zc4x9a9jR-wnU9DQWdUxdMVDtTn/exec";
 const GAS_PAYMENTS_URL = "https://script.google.com/macros/s/AKfycbyifHkwPbUjkptWjhWT--FmcKBivrsJEGarfEALgf6GLY_S-8y8VvtehVSlSjy7DWs_/exec";
-const GAS_ACADEMY_URL = "https://script.google.com/macros/s/AKfycbwSbT589gY6HbzPxjeuN3JDzJ5iskug5aWDB4IFGFO84lp9UBMr81KxiHxYMHv3Ml2rfA/exec";
+const GAS_ACADEMY_URL = "https://script.google.com/macros/s/AKfycbz2tLd0RahqFHzAZ4BNJYSkwnuvZ11XqCDga-B3vBgyYVtcOm-0Roz08_XkEUobi0Cu/exec";
 
 const CACHE_TTL = 60 * 1000; // 60 seconds
 const REFRESH_INTERVAL = 60 * 1000; // 60 seconds

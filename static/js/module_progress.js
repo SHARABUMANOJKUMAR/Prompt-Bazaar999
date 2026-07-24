@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
-            fetch("https://script.google.com/macros/s/AKfycbxpQvDzPrtbR56oV9QUNerOQ5mN3W2c-x0ra-BDs-IBsFJ--SIml-2srIf-ydnmaC42/exec", {
+            fetch("https://script.google.com/macros/s/AKfycbz2tLd0RahqFHzAZ4BNJYSkwnuvZ11XqCDga-B3vBgyYVtcOm-0Roz08_XkEUobi0Cu/exec", {
                 method: "POST",
                 body: JSON.stringify(payload)
             }).catch(e => console.log("Sync error", e));
