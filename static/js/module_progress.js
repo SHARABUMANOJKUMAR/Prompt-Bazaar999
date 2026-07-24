@@ -642,5 +642,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Run quiz init
-    initializeQuizzes();
+    // initializeQuizzes();
 });
