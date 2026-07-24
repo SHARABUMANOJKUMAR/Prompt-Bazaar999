@@ -4,7 +4,7 @@
  */
 
 const GAS_ACADEMY_URL = "https://script.google.com/macros/s/AKfycbz2tLd0RahqFHzAZ4BNJYSkwnuvZ11XqCDga-B3vBgyYVtcOm-0Roz08_XkEUobi0Cu/exec";
-
+                        
 document.addEventListener('DOMContentLoaded', () => {
     // === Data Cache ===
     let academyData = {
