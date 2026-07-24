@@ -2183,29 +2183,27 @@
 
           var formData = new FormData();
           formData.append('file', file);
+          formData.append('upload_preset', 'prompt_bazaar');
+          formData.append('folder', 'protofolio-resumes');
           
-          const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:') 
-              ? 'http://127.0.0.1:5000/upload' 
-              : 'https://promptbazaarbackend.onrender.com/upload';
-
           try {
-            const response = await fetch(backendUrl, {
+            const response = await fetch('https://api.cloudinary.com/v1_1/dwv8kc9vb/auto/upload', {
                 method: 'POST',
                 body: formData
             });
-            const result = await response.json();
+            const data = await response.json();
             
-            if (result.success) {
-              state.personal.resumeUrl = result.viewUrl;
+            if (data.secure_url) {
+              state.personal.resumeUrl = data.secure_url;
               var urlInput = document.getElementById('pbResumeUrl');
-              if (urlInput) urlInput.value = result.viewUrl;
+              if (urlInput) urlInput.value = data.secure_url;
               saveCurrentStep();
               renderStep();
             } else {
-              throw new Error(result.error || result.message || 'Upload failed');
+              throw new Error(data.error ? data.error.message : 'Unknown Cloudinary error');
             }
           } catch (err) {
-            console.error("Google Drive upload failed:", err);
+            console.error("Cloudinary upload failed:", err);
             alert("Resume upload failed: " + err.message);
           } finally {
             labelEl.innerHTML = originalText;
