@@ -161,7 +161,7 @@ function doPost(e) {
       var sheet = ss.getSheetByName("Academy");
       if (!sheet) {
         sheet = ss.insertSheet("Academy");
-        sheet.appendRow(["User_ID", "Email", "Full_Name", "Registration_Date", "Last_Active_Date", "Overall_Progress_Percent", "Current_Phase", "Last_Completed_Module", "Last_Completed_Lesson", "Quiz_Scores", "Assignment_Links", "Course_Completed", "Certificate_Issued_Date", "Certificate_ID", "Certificate_URL"]);
+        sheet.appendRow(["User_ID", "Email", "Full_Name", "Registration_Date", "Last_Active_Date", "Overall_Progress_Percent", "Current_Phase", "Last_Completed_Module", "Last_Completed_Lesson", "Quiz_Scores", "Assignment_Links", "Course_Completed", "Certificate_Issued_Date", "Certificate_ID", "Certificate_URL", "Progress %", "XP Score"]);
         sheet.setFrozenRows(1);
         sheet.getRange(1, 1, 1, 15).setFontWeight("bold").setBackground("#f3f4f6");
       }
@@ -194,7 +194,13 @@ function doPost(e) {
 
       if (rowIndex > -1) {
         setColValue(rowIndex, "Last_Active_Date", now);
-        if (postData.progressPct !== undefined) setColValue(rowIndex, "Overall_Progress_Percent", postData.progressPct);
+        if (postData.progressPct !== undefined) {
+          setColValue(rowIndex, "Overall_Progress_Percent", postData.progressPct);
+          setColValue(rowIndex, "Progress %", postData.progressPct + "%");
+        }
+        if (postData.xp !== undefined) {
+          setColValue(rowIndex, "XP Score", postData.xp);
+        }
         if (postData.currentModule !== undefined) setColValue(rowIndex, "Current_Phase", postData.currentModule);
         if (postData.lastCompletedModule !== undefined) setColValue(rowIndex, "Last_Completed_Module", postData.lastCompletedModule);
         if (postData.lastCompletedLesson !== undefined) setColValue(rowIndex, "Last_Completed_Lesson", postData.lastCompletedLesson);
