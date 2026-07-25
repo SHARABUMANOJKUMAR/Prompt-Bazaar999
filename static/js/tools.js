@@ -1929,20 +1929,47 @@
   // ── Portfolio Builder Pro ────────────────────────────────────
   TOOL_RENDERERS['portfolio-builder'] = function (el) {
     el.innerHTML = `
-      <div class="tool-header" style="margin-bottom: 24px; display:flex; align-items:center; gap:14px;">
+      <style>
+        .pb-premium-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.04), transparent 50%), radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.04), transparent 50%); overflow: hidden; pointer-events: none; border-radius: inherit; }
+        .pb-sticker { position: absolute; opacity: 0.15; filter: blur(1px); animation: pbFloatSticker 20s ease-in-out infinite alternate; z-index: -1; }
+        .pb-sticker img { width: 100%; height: 100%; object-fit: contain; }
+        .pb-sticker-1 { top: 5%; left: 5%; width: 140px; height: 140px; transform: translateZ(-200px) rotate(15deg); animation-delay: 0s; }
+        .pb-sticker-2 { bottom: 10%; right: 5%; width: 200px; height: 200px; transform: translateZ(-300px) rotate(-10deg); animation-delay: -5s; }
+        .pb-sticker-3 { top: 20%; right: 15%; width: 100px; height: 100px; transform: translateZ(-100px) rotate(25deg); animation-delay: -10s; }
+        .pb-sticker-4 { bottom: 15%; left: 10%; width: 160px; height: 160px; transform: translateZ(-250px) rotate(-20deg); animation-delay: -15s; }
+        
+        @keyframes pbFloatSticker {
+            0% { transform: translateY(0) rotate(0deg) scale(1); }
+            50% { transform: translateY(-30px) rotate(10deg) scale(1.05); }
+            100% { transform: translateY(20px) rotate(-10deg) scale(0.95); }
+        }
+        
+        /* 3D Builder Layout */
+        .wizard-layout { position: relative; z-index: 1; perspective: 1000px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.4); border-radius: 24px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(255,255,255,0.6); }
+        body.dark-mode .wizard-layout { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255,255,255,0.02); }
+      </style>
+      
+      <div class="pb-premium-bg">
+        <div class="pb-sticker pb-sticker-1"><img src="/static/img/pb-logo-blue.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1157/1157109.png'"></div>
+        <div class="pb-sticker pb-sticker-2"><img src="/static/img/pb-logo-blue.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3067/3067258.png'"></div>
+        <div class="pb-sticker pb-sticker-3"><img src="/static/img/pb-logo-blue.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2621/2621040.png'"></div>
+        <div class="pb-sticker pb-sticker-4"><img src="/static/img/pb-logo-blue.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1085/1085685.png'"></div>
+      </div>
+
+      <div class="tool-header" style="margin-bottom: 24px; display:flex; align-items:center; gap:14px; position:relative; z-index:10;">
         <button class="tool-back-btn" id="pbBackBtn" style="display:flex; align-items:center; gap:6px; font-weight:600; padding: 6px 12px; border-radius: 8px;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
           Go Back
         </button>
         <div class="tool-title-group">
-          <div class="tool-title" style="font-weight:800; font-size:1.55rem; color:#0f172a;">💼 Portfolio Builder Pro</div>
-          <div class="tool-subtitle">AI-powered portfolio generator for students & professionals</div>
+          <div class="tool-title" style="font-weight:800; font-size:1.8rem; background: linear-gradient(135deg, #0f172a, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">✨ Portfolio Builder Pro</div>
+          <div class="tool-subtitle" style="font-size: 1rem;">Ultra-Premium AI-powered 3D portfolio generator for students & professionals</div>
         </div>
       </div>
       
       <div class="wizard-layout">
         <div class="wizard-main">
-          <div class="tool-panel" id="pbStepContainer" style="padding: 32px 24px;"></div>
+          <div class="tool-panel" id="pbStepContainer" style="padding: 32px 24px; background: transparent; border: none; box-shadow: none;"></div>
         </div>
         <div class="wizard-preview-panel">
           <div style="font-weight:700;margin-bottom:12px;font-size:0.9rem;">Generation Status</div>
@@ -2102,10 +2129,10 @@
           var isAct = state.animation === anim.name;
           html += '<div class="wizard-card '+(isAct ? 'active' : '')+'" data-type="animation" data-val="'+anim.name+'" style="text-align:left; padding:18px; border:'+(isAct?'2px solid '+anim.color:'1px solid rgba(255,255,255,0.12)')+'; background:'+(isAct?'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))':'rgba(255,255,255,0.03)')+'; box-shadow:'+(isAct?'0 0 20px '+anim.color+'33':'none')+'; position:relative;">';
           html += '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">';
-          html += '<span style="font-weight:700; color:'+(isAct?'#fff':'var(--text-main, #1e293b)')+'; font-size:1rem; display:flex; align-items:center; gap:8px;"><i class="fas '+anim.icon+'" style="color:'+anim.color+'; font-size:1.15rem;"></i> '+anim.name+'</span>';
+          html += '<span style="font-weight:700; color:'+(isAct?anim.color:'var(--text-main, #1e293b)')+'; font-size:1rem; display:flex; align-items:center; gap:8px;"><i class="fas '+anim.icon+'" style="color:'+anim.color+'; font-size:1.15rem;"></i> '+anim.name+'</span>';
           if (isAct) html += '<span style="background:'+anim.color+'; color:#fff; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:9999px;">ACTIVE</span>';
           html += '</div>';
-          html += '<div style="font-size:0.84rem; color:'+(isAct?'rgba(255,255,255,0.8)':'#64748b')+'; line-height:1.5;">'+anim.desc+'</div>';
+          html += '<div style="font-size:0.84rem; color:'+(isAct?'#334155':'#64748b')+'; line-height:1.5;">'+anim.desc+'</div>';
           html += '</div>';
         });
         html += '</div>';
