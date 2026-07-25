@@ -2544,3 +2544,75 @@ textarea.form-control-premium {
 }
 
 
+/* ---- PORTFOLIO BUILDER WIZARD STYLES ---- */
+.wizard-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+@media (min-width: 900px) {
+  .wizard-layout {
+    flex-direction: row;
+  }
+}
+.wizard-main {
+  flex: 1;
+  background: var(--color-bg-secondary, #F8FAFC);
+  border: 1px solid var(--color-border, #E5E7EB);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.wizard-preview-panel {
+  width: 100%;
+  background: var(--color-bg-tertiary, #F1F5F9);
+  border: 1px solid var(--color-border, #E5E7EB);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 900px) {
+  .wizard-preview-panel {
+    width: 340px;
+    position: sticky;
+    top: 80px;
+    height: calc(100vh - 120px);
+  }
+}
+.wizard-form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wizard-form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-secondary, #475569);
+}
+.wizard-grid {
+  display: grid;
+  gap: 16px;
+}
+.wizard-card {
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+.wizard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.wizard-card.active {
+  box-shadow: 0 0 0 2px var(--color-primary, #3B82F6);
+}
+.live-preview-box {
+  background: var(--color-bg-primary, #fff);
+  border: 1px solid var(--color-border, #E5E7EB);
+  border-radius: 12px;
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary, #475569);
+  margin-bottom: 16px;
+}
