@@ -2100,12 +2100,12 @@
         html += '<h4>3D Professional Animation Style</h4><div class="wizard-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 24px;">';
         ANIMATIONS.forEach(function(anim) {
           var isAct = state.animation === anim.name;
-          html += '<div class="wizard-card '+(isAct ? 'active' : '')+'" data-type="animation" data-val="'+anim.name+'" style="text-align:left; padding:18px; border:'+(isAct?'2px solid '+anim.color:'1px solid rgba(255,255,255,0.12)')+'; background:'+(isAct?'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02))':'rgba(255,255,255,0.03)')+'; box-shadow:'+(isAct?'0 0 20px '+anim.color+'33':'none')+'; position:relative;">';
+          html += '<div class="wizard-card '+(isAct ? 'active' : '')+'" data-type="animation" data-val="'+anim.name+'" style="text-align:left; padding:18px; border:'+(isAct?'2px solid '+anim.color:'1px solid rgba(0,0,0,0.12)')+'; background:'+(isAct?anim.color+'15':'#fff')+'; box-shadow:'+(isAct?'0 4px 12px '+anim.color+'33':'0 2px 5px rgba(0,0,0,0.05)')+'; position:relative;">';
           html += '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">';
-          html += '<span style="font-weight:700; color:'+(isAct?'#fff':'var(--text-main, #1e293b)')+'; font-size:1rem; display:flex; align-items:center; gap:8px;"><i class="fas '+anim.icon+'" style="color:'+anim.color+'; font-size:1.15rem;"></i> '+anim.name+'</span>';
+          html += '<span style="font-weight:700; color:'+(isAct?anim.color:'var(--color-text-primary, #1e293b)')+'; font-size:1rem; display:flex; align-items:center; gap:8px;"><i class="fas '+anim.icon+'" style="color:'+anim.color+'; font-size:1.15rem;"></i> '+anim.name+'</span>';
           if (isAct) html += '<span style="background:'+anim.color+'; color:#fff; font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:9999px;">ACTIVE</span>';
           html += '</div>';
-          html += '<div style="font-size:0.84rem; color:'+(isAct?'rgba(255,255,255,0.8)':'#64748b')+'; line-height:1.5;">'+anim.desc+'</div>';
+          html += '<div style="font-size:0.84rem; color:'+(isAct?'#334155':'#64748b')+'; line-height:1.5;">'+anim.desc+'</div>';
           html += '</div>';
         });
         html += '</div>';

@@ -80,7 +80,8 @@ function buildClientSidePortfolioHtml(username, state) {
   // Mesmerizing Background Animation
   html += 'body::before { content: ""; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.08), transparent 60%), radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08), transparent 50%); animation: rotateGlow 40s linear infinite; z-index: -1; pointer-events: none; will-change: transform; }';
   html += '@keyframes rotateGlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-  html += '@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }';
+  html += '.animate-on-scroll { opacity: 1; }';
+  html += '.section-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 32px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: transform 0.3s ease, box-shadow 0.3s ease; }';
   
   // Stunning Navbar
   html += '.navbar { position: fixed; top: 0; width: 100%; background: rgba(2, 6, 23, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 16px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); z-index: 1000; transition: all 0.3s; }';

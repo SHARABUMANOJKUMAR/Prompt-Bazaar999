@@ -8,34 +8,8 @@
     <style>
         body { font-family: 'Inter', sans-serif; background: #020617; color: #fff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; position: relative; perspective: 1000px; }
         
-        /* 3D Floating Stickers Background */
-        .bg-sticker { position: absolute; opacity: 0.15; filter: blur(2px); animation: floatSticker 20s ease-in-out infinite alternate; pointer-events: none; z-index: -1; }
-        .bg-sticker img { width: 100%; height: 100%; object-fit: contain; }
-        .bg-sticker-1 { top: 10%; left: 10%; width: 120px; height: 120px; transform: translateZ(-200px) rotate(15deg); animation-delay: 0s; }
-        .bg-sticker-2 { bottom: 20%; right: 15%; width: 180px; height: 180px; transform: translateZ(-300px) rotate(-10deg); animation-delay: -5s; }
-        .bg-sticker-3 { top: 30%; right: 25%; width: 100px; height: 100px; transform: translateZ(-100px) rotate(25deg); animation-delay: -10s; }
-        .bg-sticker-4 { bottom: 10%; left: 20%; width: 150px; height: 150px; transform: translateZ(-250px) rotate(-20deg); animation-delay: -15s; }
-        .bg-sticker-5 { top: 50%; left: 40%; width: 250px; height: 250px; transform: translateZ(-400px) rotate(5deg); animation-delay: -7s; opacity: 0.05; }
-        
-        @keyframes floatSticker {
-            0% { transform: translateY(0) rotate(0deg) scale(1); }
-            50% { transform: translateY(-30px) rotate(10deg) scale(1.05); }
-            100% { transform: translateY(20px) rotate(-10deg) scale(0.95); }
-        }
-
-        .loader-container { text-align: center; z-index: 10; padding: 40px; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.4); transform-style: preserve-3d; animation: tiltIntro 1s cubic-bezier(0.25, 1, 0.5, 1); }
-        
-        @keyframes tiltIntro {
-            0% { transform: translateY(50px) rotateX(20deg) scale(0.9); opacity: 0; }
-            100% { transform: translateY(0) rotateX(0deg) scale(1); opacity: 1; }
-        }
-
-        .spinner-wrapper { position: relative; width: 80px; height: 80px; margin: 0 auto 24px; }
-        .spinner { border: 4px solid rgba(59, 130, 246, 0.1); width: 100%; height: 100%; border-radius: 50%; border-left-color: #3B82F6; animation: spin 1s linear infinite; position: absolute; top:0; left:0; }
-        .spinner-glow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; background: #3B82F6; filter: blur(20px); opacity: 0.4; animation: pulse 2s ease-in-out infinite; }
-        
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 0.5; transform: scale(1.2); } }
+        /* Minimal Loader Styles */
+        .loader-container { text-align: center; z-index: 10; padding: 30px; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
 
         h1 { font-family: 'Outfit', sans-serif; font-size: 2.2rem; margin-bottom: 12px; background: linear-gradient(to right, #60A5FA, #A78BFA); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         p { color: #94A3B8; font-size: 1.1rem; }
@@ -49,20 +23,9 @@
     <script src="/static/js/portfolio-engine.js"></script>
 </head>
 <body>
-    <!-- 3D Background Stickers -->
-    <div class="bg-sticker bg-sticker-1"><img src="/static/img/pb-logo-blue.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1157/1157109.png'"></div>
-    <div class="bg-sticker bg-sticker-2"><img src="/static/img/pb-logo-blue.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3067/3067258.png'"></div>
-    <div class="bg-sticker bg-sticker-3"><img src="/static/img/pb-logo-blue.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2621/2621040.png'"></div>
-    <div class="bg-sticker bg-sticker-4"><img src="/static/img/pb-logo-blue.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1085/1085685.png'"></div>
-    <div class="bg-sticker bg-sticker-5"><img src="/static/img/pb-logo-blue.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1157/1157109.png'"></div>
-
     <div class="loader-container" id="loader">
-        <div class="spinner-wrapper">
-            <div class="spinner-glow"></div>
-            <div class="spinner"></div>
-        </div>
-        <h1>Initializing Portfolio</h1>
-        <p>Loading ultra-premium 3D experience...</p>
+        <h1 style="font-size:1.5rem; margin-bottom: 8px;">Loading Portfolio...</h1>
+        <p style="font-size:0.9rem; color:#94A3B8;">Please wait a moment while we fetch the data.</p>
     </div>
 
     <div class="error-card" id="errorCard">
