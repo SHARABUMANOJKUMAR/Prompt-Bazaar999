@@ -38,6 +38,8 @@
         html += '*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }';
         html += 'html { scroll-behavior: smooth; overflow-x: hidden; }';
         html += 'body { font-family: "'+font+'", "Inter", sans-serif; background: var(--bg-base); color: var(--text-main); line-height: 1.65; overflow-x: hidden; width: 100%; }';
+        html += 'body::before { content: ""; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.08), transparent 60%), radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08), transparent 50%); animation: rotateGlow 40s linear infinite; z-index: -1; pointer-events: none; will-change: transform; }';
+        html += '@keyframes rotateGlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
 
         html += '@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }';
         html += '.navbar { position: sticky; top: 0; background: rgba(10, 15, 29, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); z-index: 1000; }';

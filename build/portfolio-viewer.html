@@ -80,7 +80,7 @@
             const pathSegments = window.location.pathname.split('/').filter(Boolean);
             let username = '';
             if (pathSegments.length >= 2 && (pathSegments[0] === 'p' || pathSegments[0] === 'portfolio' || pathSegments[0] === 'u')) {
-                username = pathSegments[1];
+                username = decodeURIComponent(pathSegments[1]);
             }
 
             if (!username) {
@@ -106,6 +106,14 @@
                             const html = data.html || (portfolioState ? buildClientSidePortfolioHtml(username, typeof portfolioState === 'string' ? JSON.parse(portfolioState) : portfolioState) : null);
                             
                             if (html) {
+                                // Cache for faster subsequent loads on this device
+                                try {
+                                    localStorage.setItem('portfolio_html_' + username, html);
+                                    if (portfolioState) {
+                                        localStorage.setItem('portfolio_state_' + username, typeof portfolioState === 'string' ? portfolioState : JSON.stringify(portfolioState));
+                                    }
+                                } catch (e) {}
+
                                 document.open();
                                 document.write(html);
                                 document.close();

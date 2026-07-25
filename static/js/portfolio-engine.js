@@ -78,7 +78,7 @@ function buildClientSidePortfolioHtml(username, state) {
   html += 'body { font-family: "'+font+'", "Inter", sans-serif; background: var(--bg-base); color: var(--text-main); line-height: 1.7; overflow-x: hidden; width: 100%; position: relative; }';
   
   // Mesmerizing Background Animation
-  html += 'body::before { content: ""; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.08), transparent 60%), radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08), transparent 50%); animation: rotateGlow 40s linear infinite; z-index: -1; pointer-events: none; }';
+  html += 'body::before { content: ""; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.08), transparent 60%), radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08), transparent 50%); animation: rotateGlow 40s linear infinite; z-index: -1; pointer-events: none; will-change: transform; }';
   html += '@keyframes rotateGlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
   html += '@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }';
   
