@@ -2823,7 +2823,7 @@
         html += '<section class="section" id="contact"><div class="container">';
         html += '<div class="contact-card">';
         html += '<h2>Ready to collaborate?</h2>';
-        html += '<p>I am always open to discussing product design work, new projects, or opportunities to be part of your vision. Let\\'s create something amazing together.</p>';
+        html += '<p>I am always open to discussing product design work, new projects, or opportunities to be part of your vision. Let&#39;s create something amazing together.</p>';
         html += '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px;">';
         if (email) {
           html += '<a href="mailto:'+email+'" class="btn-primary"><i class="fas fa-envelope"></i> Send an Email</a>';
