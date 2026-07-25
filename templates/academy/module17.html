@@ -798,6 +798,69 @@
             </div>
         </div>
 
+        <!-- Quiz Section -->
+        <div data-is-quiz="true" class="glass-card quiz-card">
+            <h2 style="border-bottom: none; margin-bottom: 10px;">📝 Module 17 Assessment</h2>
+            <p style="margin-bottom: 24px; color: var(--color-text-secondary);">Choose the correct answer for each question below.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- MCQ 1 -->
+                <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                    <h4 style="margin-top: 0; color: var(--color-text-primary);">Q1. What is the primary purpose of a Prompt Engineering Framework like RTF or COSTAR?</h4>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="A" style="margin-right: 10px;">A) To write shorter prompts.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="B" style="margin-right: 10px;" data-correct="true">B) To structure prompts for clarity, context, and consistent AI responses.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="C" style="margin-right: 10px;">C) To train a new LLM from scratch.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q1" value="D" style="margin-right: 10px;">D) To reduce API costs.</label>
+                    </div>
+                </div>
+
+                <!-- MCQ 2 -->
+                <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                    <h4 style="margin-top: 0; color: var(--color-text-primary);">Q2. Which of the following is essential for preventing AI hallucinations?</h4>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="A" style="margin-right: 10px;" data-correct="true">A) Providing clear context and grounding the AI with factual data.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="B" style="margin-right: 10px;">B) Increasing the temperature parameter.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="C" style="margin-right: 10px;">C) Using the shortest possible prompt.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q2" value="D" style="margin-right: 10px;">D) Removing constraints from the prompt.</label>
+                    </div>
+                </div>
+
+                <!-- MCQ 3 -->
+                <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                    <h4 style="margin-top: 0; color: var(--color-text-primary);">Q3. In a production environment, why is Prompt Versioning critical?</h4>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="A" style="margin-right: 10px;">A) It speeds up the AI model's response time.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="B" style="margin-right: 10px;" data-correct="true">B) It allows tracking changes and rolling back if a new prompt performs poorly.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="C" style="margin-right: 10px;">C) It automatically formats the output into JSON.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q3" value="D" style="margin-right: 10px;">D) It eliminates the need for prompt testing.</label>
+                    </div>
+                </div>
+
+                <!-- MCQ 4 -->
+                <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                    <h4 style="margin-top: 0; color: var(--color-text-primary);">Q4. What should be included in a high-quality prompt to ensure the output format is predictable?</h4>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="A" style="margin-right: 10px;">A) Multiple contradictory instructions to test the AI.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="B" style="margin-right: 10px;">B) Open-ended questions without boundaries.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="C" style="margin-right: 10px;" data-correct="true">C) Explicit format constraints, such as 'Output strictly as a Markdown table'.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q4" value="D" style="margin-right: 10px;">D) Only the role and the task.</label>
+                    </div>
+                </div>
+                
+                <!-- MCQ 5 -->
+                <div style="background: var(--color-bg-primary); padding: 20px; border-radius: 12px; border: 1px solid var(--color-border); box-shadow: 0 2px 8px rgba(0,0,0,0.02);">
+                    <h4 style="margin-top: 0; color: var(--color-text-primary);">Q5. When designing secure AI applications, which technique helps mitigate Prompt Injection?</h4>
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="A" style="margin-right: 10px;">A) Sharing system prompts publicly.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="B" style="margin-right: 10px;" data-correct="true">B) Using delimiters to separate instructions from user input and applying security validations.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="C" style="margin-right: 10px;">C) Allowing the AI to execute any command requested by the user.</label>
+                        <label style="padding: 12px 16px; background: var(--color-bg-secondary); border: 1px solid var(--color-border); border-radius: 8px; cursor: pointer; transition: all 0.2s;"><input type="radio" name="q5" value="D" style="margin-right: 10px;">D) Removing all guardrails to increase creativity.</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Project 1 -->
         <div class="glass-card">
             <div class="project-header">
