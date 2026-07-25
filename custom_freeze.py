@@ -24,6 +24,7 @@ with app.test_client() as client:
         '/admin/dashboard': 'admin-dashboard.html',
         '/academy/': 'academy.html',
         '/verify': 'verify.html',
+        '/portfolio-viewer': 'portfolio-viewer.html',
     }
     
     for i in range(1, 18):

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Viewer | Prompt Bazaar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #020617; color: #fff; margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .loader-container { text-align: center; }
+        .spinner { border: 4px solid rgba(255,255,255,0.1); width: 50px; height: 50px; border-radius: 50%; border-left-color: #3B82F6; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        h1 { font-family: 'Outfit', sans-serif; font-size: 2rem; margin-bottom: 10px; }
+        p { color: #94A3B8; }
+        .error-card { background: rgba(255,255,255,0.05); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); max-width: 500px; text-align: center; display: none; }
+        .error-card a { display: inline-block; margin-top: 20px; background: #3B82F6; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="loader-container" id="loader">
+        <div class="spinner"></div>
+        <h1>Loading Portfolio...</h1>
+        <p>Fetching data, please wait.</p>
+    </div>
+
+    <div class="error-card" id="errorCard">
+        <h1 style="color: #ef4444;">Portfolio Not Found</h1>
+        <p>We couldn't find a portfolio for this username. It may have been deleted or the link is incorrect.</p>
+        <a href="/tools">Build Your Own Portfolio</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Extract username from URL path: /p/username or /portfolio/username
+            const pathSegments = window.location.pathname.split('/').filter(Boolean);
+            let username = '';
+            if (pathSegments.length >= 2 && (pathSegments[0] === 'p' || pathSegments[0] === 'portfolio' || pathSegments[0] === 'u')) {
+                username = pathSegments[1];
+            }
+
+            if (!username) {
+                showError();
+                return;
+            }
+
+            // 1. Check LocalStorage First (Instant load for the owner)
+            const localHtml = localStorage.getItem('portfolio_html_' + username);
+            if (localHtml) {
+                document.open();
+                document.write(localHtml);
+                document.close();
+                return;
+            }
+
+            // 2. Not in LocalStorage, let's fetch from Google Apps Script Backend
+            const scriptUrl = 'https://script.google.com/macros/s/AKfycbxcKwme0jLTjaGL5jxLSa7i0FBejw1FD9TjwIBdSuIsNFekr0LW5Vv7WFhZA84vGdUg/exec';
+            fetch(scriptUrl + '?action=get_portfolio&username=' + encodeURIComponent(username))
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.success && data.data) {
+                        // Unfortunately we don't have the JS function to render HTML from JSON here.
+                        // But since local storage saving is primary, we'll just advise them.
+                        showError("Remote portfolio viewer is currently being upgraded. Please view from the device you created it on.");
+                    } else {
+                        showError();
+                    }
+                })
+                .catch(err => {
+                    console.error("Fetch error:", err);
+                    showError();
+                });
+        });
+
+        function showError(msg) {
+            document.getElementById('loader').style.display = 'none';
+            const errorCard = document.getElementById('errorCard');
+            errorCard.style.display = 'block';
+            if (msg) {
+                errorCard.querySelector('p').innerText = msg;
+            }
+        }
+    </script>
+</body>
+</html>
