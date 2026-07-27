@@ -616,12 +616,10 @@ def api_delete_user(user_id):
 
 @app.route('/admin')
 @app.route('/admin/')
-@login_required
 def admin_redirect():
     return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin/dashboard')
-@login_required
 def admin_dashboard():
     # Verify admin here if needed in production
     return render_template('admin/dashboard.html')

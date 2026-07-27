@@ -418,8 +418,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
         if (auth) {
             onAuthStateChanged(auth, (user) => {
+                const currentPath = window.location.pathname;
                 if (user) {
-                    const currentPath = window.location.pathname;
                     if (currentPath.includes('login') || currentPath.includes('signup')) {
                         // Ensure local storage has at least the basic details
                         if (!localStorage.getItem("currentUser")) {
@@ -436,6 +436,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.replace("/gallery");
                     } else {
                         updateNavbarProfileAvatar(user);
+                    }
+                } else {
+                    const protectedPaths = ['/admin', '/profile', '/payments', '/wishlist'];
+                    if (protectedPaths.some(path => currentPath.startsWith(path))) {
+                        window.location.replace("/login");
+                    } else {
+                        updateNavbarProfileAvatar(null);
                     }
                 }
             });
