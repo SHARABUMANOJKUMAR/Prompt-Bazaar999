@@ -13,7 +13,7 @@
 // =====================================================================
 const SHEETS_CONFIG = {
   prompts: {
-    csv:    'https://docs.google.com/spreadsheets/d/13JuiTUHecX4js1CRGWSFYBsh6-0EJk0C5hzV0QV681M/export?format=csv&gid=0',
+    csv:    'https://docs.google.com/spreadsheets/d/13JuiTUHecX4js1CRGWSFYBsh6-0EJk0C5hzV0QV681M/export?format=csv&gid=594416860',
     webapp: 'https://script.google.com/macros/s/AKfycbx17A9cGKQk70Uf1ysoYqBjjBxfDcyMywNtA7-PaAflmff_hFp9C3mQjS4K7qZk_Wsb/exec'
   },
   users: {
