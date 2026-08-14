@@ -1929,7 +1929,7 @@
   // ── Portfolio Builder Pro ────────────────────────────────────
   TOOL_RENDERERS['portfolio-builder'] = function (el) {
     el.innerHTML = `
-      <button class="tool-back-btn" id="pbBackBtn" style="display:inline-flex; align-items:center; gap:6px; font-weight:600; padding: 6px 12px; border-radius: 8px;">
+      <button class="tool-back-btn" onclick="window.__closeTool()" style="display:inline-flex; align-items:center; gap:6px; font-weight:600; padding: 6px 12px; border-radius: 8px;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Go Back
       </button>
       <div class="tool-header" style="margin-bottom: 24px;">
@@ -2324,13 +2324,7 @@
         }
       });
       
-      var backBtn = el.querySelector('#pbBackBtn');
-      if (backBtn) {
-        backBtn.addEventListener('click', function () {
-          document.getElementById('toolView').style.display = 'none';
-          document.getElementById('toolsGridContainer').style.display = '';
-        });
-      }
+
     }
 
     function saveCurrentStep() {
