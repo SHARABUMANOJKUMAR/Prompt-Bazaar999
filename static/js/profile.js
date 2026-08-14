@@ -460,6 +460,7 @@ if (profileForm) {
                     full_name: fullName,
                     mobile_number: mobileNumber,
                     profile_picture: photoURL,
+                    current_password: currentPassword || "",
                     password: newPassword || ""
                 };
                 try {
