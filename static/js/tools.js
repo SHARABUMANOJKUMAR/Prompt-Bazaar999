@@ -1929,17 +1929,14 @@
   // ── Portfolio Builder Pro ────────────────────────────────────
   TOOL_RENDERERS['portfolio-builder'] = function (el) {
     el.innerHTML = `
-      <div class="tool-header" style="margin-bottom: 24px; display:flex; align-items:center; gap:14px;">
-        <button class="tool-back-btn" id="pbBackBtn" style="display:flex; align-items:center; gap:6px; font-weight:600; padding: 6px 12px; border-radius: 8px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          Go Back
-        </button>
-        <div class="tool-title-group">
-          <div class="tool-title" style="font-weight:800; font-size:1.55rem; color:#0f172a;">💼 Portfolio Builder Pro</div>
-          <div class="tool-subtitle">AI-powered portfolio generator for students & professionals</div>
-        </div>
+      <button class="tool-back-btn" id="pbBackBtn" style="display:inline-flex; align-items:center; gap:6px; font-weight:600; padding: 6px 12px; border-radius: 8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg> Go Back
+      </button>
+      <div class="tool-header" style="margin-bottom: 24px;">
+        <h2 style="font-weight:800; font-size:1.55rem; color:#0f172a; margin-bottom:6px;">💼 Portfolio Builder Pro</h2>
+        <p style="margin:0; font-size: 0.92rem; color: #64748b;">AI-powered portfolio generator for students & professionals</p>
       </div>
-      
+
       <div class="wizard-layout">
         <div class="wizard-main">
           <div class="tool-panel" id="pbStepContainer" style="padding: 32px 24px;"></div>
